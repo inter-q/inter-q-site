@@ -23,7 +23,7 @@
   body {
     margin:0; padding:16px; min-height:100vh;
     background:#000;
-    color:var(--phosphor); font-family:var(--font-ui); font-size:15.5px;
+    color:var(--phosphor); font-family:var(--font-ui); font-size:16.5px;
     text-shadow:0 0 3px rgba(0,255,110,.35);
   }
   .wrap { position:relative; z-index:1; max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
@@ -46,7 +46,7 @@
   .bar .ts { font-weight:normal; font-family:var(--font-mono); font-size:12px; opacity:.9; }
   .body { padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; }
   .well { background:var(--well); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); padding:8px; min-width:0; overflow-x:auto; }
-  .muted { color:var(--ink-dim); font-size:12.5px; }
+  .muted { color:var(--ink-dim); font-size:13.5px; }
   .err { color:var(--crit); font-size:13px; }
 
   .cond { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
@@ -70,7 +70,7 @@
   .pill { display:inline-block; font-size:11px; font-weight:bold; padding:1px 6px; border:1px solid currentColor; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; }
   .p-ok { color:var(--ok); background:var(--ok-bg); } .p-warn { color:var(--warn); background:var(--warn-bg); } .p-crit { color:var(--crit); background:var(--crit-bg); }
 
-  table { border-collapse:collapse; width:100%; font-size:14px; }
+  table { border-collapse:collapse; width:100%; font-size:15px; }
   th { text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-dim); padding:2px 6px 4px 0; border-bottom:1px solid var(--lo); }
   td { padding:4px 6px 4px 0; border-bottom:1px dotted #0c3a1e; vertical-align:top; }
   td.n { font-family:var(--font-mono); text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
@@ -87,7 +87,7 @@
   fieldset.grp li { display:flex; gap:6px; align-items:baseline; padding:3px 0; border-bottom:1px dotted #0c3a1e; }
   fieldset.grp li:last-child { border-bottom:0; }
   fieldset.grp li .mk { font-family:var(--font-mono); color:var(--ink-dim); font-size:12px; }
-  a.reflink { font-size:14px; }
+  a.reflink { font-size:15px; }
   a.reflink::after { content:" \2197"; font-size:12px; color:var(--ink-dim); }
 
   .btn { background:#06220f; color:var(--ink); cursor:pointer; padding:4px 12px; font-family:var(--font-ui);
@@ -166,8 +166,8 @@
         <button class="btn" id="useGps" type="button">Use my location</button>
         <button class="btn" id="useHome" type="button" hidden>Reset</button>
       </div>
-      <form class="manual" id="manualForm" hidden>
-        <label for="placeInput" class="sr">City, ZIP, or place</label>
+      <form class="manual" id="manualForm">
+        <label for="placeInput" style="align-self:center">Set location:</label>
         <input id="placeInput" class="fld" type="text" placeholder="City, ZIP, or place — e.g. Nairobi, Kenya" autocomplete="off">
         <button class="btn" type="submit">Go</button>
         <span class="muted" id="manualMsg"></span>
@@ -972,8 +972,9 @@
     $("manualMsg").textContent="Searching…";
     try{ const j=await getJSON(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,{headers:{Accept:"application/json"}});
       if(!j.length){ $("manualMsg").textContent="No match. Try a nearby city or a ZIP/postal code."; return; }
-      const rr=j[0]; $("manualMsg").textContent=""; $("manualForm").hidden=true;
+      const rr=j[0]; $("manualMsg").textContent="✓ set"; $("placeInput").value="";
       setLocation(parseFloat(rr.lat),parseFloat(rr.lon),rr.display_name.split(",").slice(0,2).join(",").trim(),"manual");
+      setTimeout(()=>{ $("manualMsg").textContent=""; },2500);
     }catch(err){ $("manualMsg").textContent="Lookup failed. Try again."; }
   });
   $("useHome").addEventListener("click",()=>setLocation(DEFAULT_HOME.lat,DEFAULT_HOME.lon,DEFAULT_HOME.name,"default"));
