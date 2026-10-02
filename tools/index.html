@@ -1,0 +1,1333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Inter-Q SITREP</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+  /* The Matrix: green code rain on black, phosphor-green monospace UI. */
+  :root {
+    color-scheme: dark;
+    --ground:#000; --win:#0d2516; --ink:#4dff88; --ink-dim:#4fbf74;
+    --hi:#4dff88; --lo:#1f9a50;
+    --title-a:#0c3f1d; --title-b:#082a13; --title-ink:#9dffbe;
+    --well:#06140c; --phosphor:#4dff88;
+    --ok:#4dff88; --ok-bg:#0a4417; --warn:#ffd21a; --warn-bg:#3c3009; --crit:#ff6b6b; --crit-bg:#431010;
+    --link:#78ffa0;
+    --font-ui:"Courier New",Consolas,"Lucida Console",monospace;
+    --font-mono:"Courier New",Consolas,"Lucida Console",monospace;
+  }
+  * { box-sizing:border-box; }
+  [hidden] { display:none !important; }
+  body {
+    margin:0; padding:16px; min-height:100vh;
+    background:#000;
+    color:var(--phosphor); font-family:var(--font-ui); font-size:15.5px;
+    text-shadow:0 0 3px rgba(0,255,110,.35);
+  }
+  .wrap { position:relative; z-index:1; max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
+  a { color:var(--link); }
+  button,input,select,textarea { font:inherit; }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+
+  /* green scanline divider */
+  hr.rainbow { border:0; height:1px; margin:2px 0; background:var(--ink); box-shadow:0 0 6px rgba(0,255,100,.7); }
+
+  .top { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:12px; }
+  .clock { font-family:var(--font-mono); text-align:right; font-size:15px; line-height:1.5; font-variant-numeric:tabular-nums; color:var(--ink); text-shadow:0 0 6px rgba(0,255,100,.6); }
+  .clock b { color:#aaffc8; }
+
+  /* glowing terminal panel — lifted off the black for readability */
+  .win { background:var(--win); color:var(--ink); padding:0; display:flex; flex-direction:column; min-width:0;
+    border:1px solid #27b35e; border-radius:3px;
+    box-shadow:0 10px 24px rgba(0,0,0,.7), 0 0 0 1px rgba(0,255,120,.12), 0 0 18px rgba(0,255,110,.14); }
+  .bar { background:linear-gradient(90deg,var(--title-a),var(--title-b)); color:var(--title-ink); font-weight:bold; font-size:14px; padding:5px 9px; display:flex; justify-content:space-between; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:.08em; border-bottom:1px solid #27b35e; text-shadow:0 0 6px rgba(0,255,120,.6); }
+  .bar .ts { font-weight:normal; font-family:var(--font-mono); font-size:12px; opacity:.9; }
+  .body { padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .well { background:var(--well); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); padding:8px; min-width:0; overflow-x:auto; }
+  .muted { color:var(--ink-dim); font-size:12.5px; }
+  .err { color:var(--crit); font-size:13px; }
+
+  .cond { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+  .lamp { font-family:var(--font-mono); font-weight:bold; font-size:clamp(22px,5vw,34px); padding:6px 16px; border:3px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); letter-spacing:3px; min-width:9ch; text-align:center; }
+  .lamp.green { background:var(--ok-bg); color:var(--ok); }
+  .lamp.amber { background:var(--warn-bg); color:var(--warn); }
+  .lamp.red { background:var(--crit-bg); color:var(--crit); }
+  .reasons { margin:0; padding-left:18px; flex:1; min-width:220px; }
+  .reasons li { margin:2px 0; }
+
+  .grid { display:flex; flex-direction:column; gap:16px; }
+  .readouts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+  .fc { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+  .fc .d { background:var(--well); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); padding:6px 4px; text-align:center; font-family:var(--font-mono); font-size:13px; font-variant-numeric:tabular-nums; }
+  .fc .d b { font-family:var(--font-ui); display:block; margin-bottom:2px; font-size:12px; }
+  .ro { background:var(--well); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); padding:6px 8px; }
+  .ro .k { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-dim); }
+  .ro .v { font-family:var(--font-mono); font-size:22px; font-weight:bold; font-variant-numeric:tabular-nums; }
+  .ro .v small { font-size:12px; font-weight:normal; }
+
+  .pill { display:inline-block; font-size:11px; font-weight:bold; padding:1px 6px; border:1px solid currentColor; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; }
+  .p-ok { color:var(--ok); background:var(--ok-bg); } .p-warn { color:var(--warn); background:var(--warn-bg); } .p-crit { color:var(--crit); background:var(--crit-bg); }
+
+  table { border-collapse:collapse; width:100%; font-size:14px; }
+  th { text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-dim); padding:2px 6px 4px 0; border-bottom:1px solid var(--lo); }
+  td { padding:4px 6px 4px 0; border-bottom:1px dotted #0c3a1e; vertical-align:top; }
+  td.n { font-family:var(--font-mono); text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  tr.hot td { background:var(--warn-bg); } tr.crit td { background:var(--crit-bg); }
+  .alert { border-left:6px solid var(--warn); padding:4px 8px; background:var(--warn-bg); }
+  .alert.sev { border-left-color:var(--crit); background:var(--crit-bg); }
+  .alert b { display:block; }
+
+  /* retro grouped reference links */
+  .refgroups { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr)); gap:14px 16px; }
+  fieldset.grp { border:1px solid var(--lo); margin:0; padding:10px 12px 12px; background:rgba(0,255,90,.03); min-width:0; }
+  fieldset.grp legend { font-weight:bold; font-size:12px; text-transform:uppercase; letter-spacing:.08em; padding:0 6px; color:var(--title-ink); font-family:var(--font-ui); }
+  fieldset.grp ul { list-style:none; margin:0; padding:0; }
+  fieldset.grp li { display:flex; gap:6px; align-items:baseline; padding:3px 0; border-bottom:1px dotted #0c3a1e; }
+  fieldset.grp li:last-child { border-bottom:0; }
+  fieldset.grp li .mk { font-family:var(--font-mono); color:var(--ink-dim); font-size:12px; }
+  a.reflink { font-size:14px; }
+  a.reflink::after { content:" \2197"; font-size:12px; color:var(--ink-dim); }
+
+  .btn { background:#06220f; color:var(--ink); cursor:pointer; padding:4px 12px; font-family:var(--font-ui);
+    border:1px solid var(--lo); text-shadow:0 0 6px rgba(0,255,100,.5); }
+  .btn:hover { background:#0a3a1a; box-shadow:0 0 10px rgba(0,255,90,.4); }
+  .btn:active { background:#042; box-shadow:inset 0 0 8px rgba(0,255,90,.5); }
+  .btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible { outline:1px dotted var(--ink); outline-offset:2px; }
+
+  .foot { font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); text-align:center; line-height:1.6; text-shadow:0 0 5px rgba(0,255,90,.4); }
+  .foot a { color:var(--link); }
+
+  /* SITREP report */
+  pre.report { margin:0; background:var(--well); color:var(--ink); border:1px solid var(--lo); padding:14px; font-family:var(--font-mono); font-size:14px; line-height:1.45; white-space:pre-wrap; word-break:break-word; }
+  .noteswrap { margin-top:12px; display:flex; flex-direction:column; gap:5px; }
+  .noteswrap label { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--title-ink); }
+  .notesbox { min-height:120px; white-space:pre-wrap; overflow-wrap:break-word; font-family:var(--font-mono); font-size:14px; line-height:1.5; }
+  .notesbox:empty::before { content:attr(data-ph); color:var(--ink-dim); }
+  @media print {
+    body { background:#fff !important; color:#000 !important; padding:0 !important; background-image:none !important; }
+    .wrap > *:not(#reportWin) { display:none !important; }
+    #reportWin { box-shadow:none; border:0; padding:0; }
+    #reportWin .bar, #reportWin .noprint { display:none !important; }
+    pre.report { border:0; padding:0; color:#000; background:#fff; font-size:12px; }
+    .noteswrap label { color:#000; }
+    .notesbox { color:#000 !important; background:#fff !important; border:1px solid #000 !important; min-height:auto; padding:6px; }
+    .notesbox:empty::before { content:""; }
+  }
+
+  /* location bar */
+  .locbar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+  .locgrow { flex:1; min-width:0; }
+  .locnow { font-size:15px; } .locnow b { font-family:var(--font-mono); }
+  .manual { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:10px; }
+  .fld { padding:4px 6px; background:var(--well); color:var(--ink); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); font-family:var(--font-mono); }
+  .manual input { flex:1; min-width:180px; }
+  .locnote { margin-top:10px; font-size:12px; }
+
+  /* tools */
+  .toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+  .toolbar label { font-size:12px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.06em; }
+  .toolbar select { flex:1; min-width:180px; }
+  .toolpane { display:grid; grid-template-columns:1fr 1fr; gap:8px 10px; align-items:end; }
+  .toolpane .full { grid-column:1/-1; }
+  .toolpane label.f { display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--ink-dim); }
+  .toolpane input, .toolpane select, .toolpane textarea { width:100%; }
+  .toolpane textarea { min-height:68px; resize:vertical; }
+  .toolout { grid-column:1/-1; background:var(--well); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); padding:8px; min-height:38px; font-family:var(--font-mono); font-size:14px; white-space:pre-wrap; word-break:break-word; color:var(--ink); }
+  .toolout .big { font-size:20px; font-weight:bold; }
+  .toolrow { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  #qrCanvas { background:#fff; padding:6px; border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); }
+  .pwbar { height:14px; background:var(--well); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); }
+  .pwfill { height:100%; width:0; transition:width .15s; background:var(--ok); }
+  .pwfill.p-crit { background:var(--crit); } .pwfill.p-warn { background:#b58900; } .pwfill.p-ok { background:var(--ok); }
+  @media (max-width:520px){ .toolpane{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="clock" aria-live="off">
+      <div><b id="dtgL">------</b></div>
+      <div id="dtgZ">------</div>
+    </div>
+  </div>
+
+  <hr class="rainbow">
+
+  <!-- Location -->
+  <section class="win" aria-labelledby="t-loc">
+    <div class="bar"><span id="t-loc">Reporting location</span></div>
+    <div class="body">
+      <div class="locbar">
+        <span class="locnow"><span aria-hidden="true">📍</span> <b id="locName">Richmond, CA</b> <span class="muted" id="locKind">(default)</span></span>
+        <span class="locgrow"></span>
+        <button class="btn" id="useGps" type="button">Use my location</button>
+        <button class="btn" id="useHome" type="button" hidden>Reset</button>
+      </div>
+      <form class="manual" id="manualForm" hidden>
+        <label for="placeInput" class="sr">City, ZIP, or place</label>
+        <input id="placeInput" class="fld" type="text" placeholder="City, ZIP, or place — e.g. Nairobi, Kenya" autocomplete="off">
+        <button class="btn" type="submit">Go</button>
+        <span class="muted" id="manualMsg"></span>
+      </form>
+      <div class="muted locnote">Location is used only to re-center the feeds below. It stays in your browser — this page doesn't record or send it anywhere.</div>
+    </div>
+  </section>
+
+  <!-- Overall condition -->
+  <section class="win" aria-labelledby="t-cond">
+    <div class="bar"><span id="t-cond">Current condition</span><span class="ts" id="ts-all">loading…</span></div>
+    <div class="body">
+      <div class="cond">
+        <div class="lamp green" id="lamp">CHECKING</div>
+        <ul class="reasons" id="reasons"><li>Pulling feeds…</li></ul>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="btn" id="refresh" type="button">Refresh now</button>
+          <button class="btn" id="genReport" type="button">Generate SITREP ▸</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SITREP report window -->
+  <section class="win" id="reportWin" aria-labelledby="t-report" hidden>
+    <div class="bar"><span id="t-report">SITREP — situation report</span></div>
+    <div class="body">
+      <div class="toolrow noprint" style="margin-bottom:8px">
+        <button class="btn" id="printReport" type="button">Print / Save as PDF</button>
+        <button class="btn" id="copyReport" type="button">Copy text</button>
+        <button class="btn" id="closeReport" type="button">Close</button>
+        <span class="muted" id="copyMsg"></span>
+      </div>
+      <pre id="reportText" class="report">—</pre>
+      <div class="noteswrap">
+        <label id="notesLabel">Notes / remarks</label>
+        <div id="reportNotes" class="fld notesbox" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="notesLabel" data-ph="Type notes here — they print and copy with the report."></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="win" aria-labelledby="t-events">
+      <div class="bar"><span id="t-events">Active events nearby</span><span class="ts" id="ts-events"></span></div>
+      <div class="body" id="events"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win" aria-labelledby="t-wx">
+      <div class="bar"><span id="t-wx">Weather</span><span class="ts" id="ts-wx"></span></div>
+      <div class="body" id="wx"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win" aria-labelledby="t-aqi">
+      <div class="bar"><span id="t-aqi">Air quality</span><span class="ts" id="ts-aqi"></span></div>
+      <div class="body" id="aqi"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win" aria-labelledby="t-eq">
+      <div class="bar"><span id="t-eq">Earthquakes · 500 km, 7 days</span><span class="ts" id="ts-eq"></span></div>
+      <div class="body" id="eq"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win" aria-labelledby="t-space">
+      <div class="bar"><span id="t-space">Space weather</span><span class="ts" id="ts-space"></span></div>
+      <div class="body" id="space"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win" aria-labelledby="t-sun">
+      <div class="bar"><span id="t-sun">Sun &amp; ISS</span><span class="ts" id="ts-sun"></span></div>
+      <div class="body" id="sun"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win" id="win-nws" aria-labelledby="t-nws" hidden>
+      <div class="bar"><span id="t-nws">US weather alerts (NWS)</span><span class="ts" id="ts-nws"></span></div>
+      <div class="body" id="nws"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win" id="win-fema" aria-labelledby="t-fema" hidden>
+      <div class="bar"><span id="t-fema">FEMA declarations (US)</span><span class="ts" id="ts-fema"></span></div>
+      <div class="body" id="fema"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win" id="win-bart" aria-labelledby="t-bart" hidden>
+      <div class="bar"><span id="t-bart">BART advisories</span><span class="ts" id="ts-bart"></span></div>
+      <div class="body" id="bart"><div class="muted">Loading…</div></div>
+    </section>
+  </div>
+
+  <!-- TOOLS -->
+  <section class="win" aria-labelledby="t-tools">
+    <div class="bar"><span id="t-tools">TOOLS.EXE</span></div>
+    <div class="body">
+      <div class="toolbar">
+        <label for="toolSel">Tool</label>
+        <select id="toolSel" class="fld">
+          <option value="unit">Unit converter</option>
+          <option value="dtg">Time &amp; DTG converter</option>
+          <option value="coord">Coordinate converter</option>
+          <option value="ration">Water &amp; ration planner</option>
+          <option value="dist">Distance &amp; bearing</option>
+          <option value="feels">Heat index / wind chill / Beaufort</option>
+          <option value="enc">Encode / decode</option>
+          <option value="hash">Hash (SHA-256 / SHA-1)</option>
+          <option value="pw">Password strength checker</option>
+          <option value="gen">Password generator</option>
+          <option value="morse">Morse &amp; phonetic</option>
+          <option value="qr">QR code generator</option>
+        </select>
+      </div>
+      <div id="toolHost" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <section class="win" aria-labelledby="t-search">
+    <div class="bar"><span id="t-search">SEARCH &amp; LOOKUP</span></div>
+    <div class="body">
+      <div class="refgroups">
+        <fieldset class="grp"><legend>Search engines &amp; dorking</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.google.com/advanced_search" target="_blank" rel="noopener">Google Advanced Search</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://dorksearch.com/" target="_blank" rel="noopener">DorkSearch</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://yandex.com/" target="_blank" rel="noopener">Yandex</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.dogpile.com/" target="_blank" rel="noopener">Dogpile</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.izito.com/" target="_blank" rel="noopener">Izito metasearch</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://search.carrot2.org/#/search/web" target="_blank" rel="noopener">Carrot2 clustering</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="http://bvsg.org/" target="_blank" rel="noopener">Bing vs Google</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://isearchfrom.com/" target="_blank" rel="noopener">I Search From (geo)</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>People &amp; records</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.familytreenow.com/" target="_blank" rel="noopener">Family Tree Now</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.judyrecords.com/" target="_blank" rel="noopener">Judy Records (courts)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://transparentcalifornia.com/" target="_blank" rel="noopener">Transparent California</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://commonlaw.name/" target="_blank" rel="noopener">Commonlaw (name changes)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://opencorporates.com/" target="_blank" rel="noopener">OpenCorporates</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Usernames &amp; email</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://whatsmyname.app/" target="_blank" rel="noopener">WhatsMyName</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://instantusername.com/" target="_blank" rel="noopener">Instant Username</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.social-searcher.com/" target="_blank" rel="noopener">Social Media Searcher</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://epieos.com/" target="_blank" rel="noopener">Epieos (email/username)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://haveibeenpwned.com/" target="_blank" rel="noopener">Have I Been Pwned</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Images &amp; geolocation</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://tineye.com/" target="_blank" rel="noopener">TinEye reverse image</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://findpiclocation.com/" target="_blank" rel="noopener">Find Pic Location</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://wigle.net/" target="_blank" rel="noopener">WiGLE (Wi-Fi geo)</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Domains, IPs &amp; infra</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.ipaddress.com/" target="_blank" rel="noopener">IP Address lookup</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://mxtoolbox.com/" target="_blank" rel="noopener">MXToolbox (DNS/mail)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.shodan.io/dashboard" target="_blank" rel="noopener">Shodan</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://downforeveryoneorjustme.com/" target="_blank" rel="noopener">Down For Everyone?</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Vehicles &amp; plates</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://vehicleprivacyreport.com/" target="_blank" rel="noopener">Vehicle Privacy Report (VIN)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://dontgetflocked.com/" target="_blank" rel="noopener">FlockHopper (camera map)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://haveibeenflocked.com/" target="_blank" rel="noopener">Flock license lookup</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Licenses &amp; mail</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://search.dca.ca.gov/" target="_blank" rel="noopener">CA DCA license search</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.usps.com/manage/informed-delivery.htm" target="_blank" rel="noopener">USPS Informed Delivery</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Cyber &amp; threat</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.exploit-db.com/" target="_blank" rel="noopener">Exploit Database</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://threatfox.abuse.ch/" target="_blank" rel="noopener">ThreatFox (IOCs)</a></li>
+        </ul></fieldset>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" aria-labelledby="t-ai">
+    <div class="bar"><span id="t-ai">AI ASSISTANTS</span></div>
+    <div class="body">
+      <div class="refgroups">
+        <fieldset class="grp"><legend>Chat &amp; models</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://claude.ai/" target="_blank" rel="noopener">Claude</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://grok.com/" target="_blank" rel="noopener">Grok</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://chat.mistral.ai/chat" target="_blank" rel="noopener">Mistral</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://lumo.proton.me/" target="_blank" rel="noopener">Lumo (Proton)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://app.cline.bot/" target="_blank" rel="noopener">Cline</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>AI resources</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://deepmind.google/blog/" target="_blank" rel="noopener">DeepMind blog</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://blog.google/products/gemini/google-gems-tips/" target="_blank" rel="noopener">Gemini Gems tips</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.promptcowboy.ai/" target="_blank" rel="noopener">PromptCowboy</a></li>
+        </ul></fieldset>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" aria-labelledby="t-toolbox">
+    <div class="bar"><span id="t-toolbox">TOOLBOX</span></div>
+    <div class="body">
+      <div class="refgroups">
+        <fieldset class="grp"><legend>Recon &amp; lookup</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://osintframework.com/" target="_blank" rel="noopener">OSINT Framework</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.forensicosint.com/osint-guide" target="_blank" rel="noopener">Forensic OSINT guide</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.arin.net/" target="_blank" rel="noopener">ARIN (IP)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.whoxy.com/" target="_blank" rel="noopener">Whoxy (WHOIS)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://viewdns.info/" target="_blank" rel="noopener">ViewDNS</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.virustotal.com/gui/home/upload" target="_blank" rel="noopener">VirusTotal</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.nirsoft.net/" target="_blank" rel="noopener">NirSoft utilities</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://sleuthkit.org/autopsy/docs/user-docs/4.22.0/" target="_blank" rel="noopener">Autopsy (docs)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://leadsonline.com/toolbox" target="_blank" rel="noopener">LeadsOnline</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Archives &amp; media</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://web.archive.org/" target="_blank" rel="noopener">Wayback Machine</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://archive.ph/" target="_blank" rel="noopener">Archive.today</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.zeemaps.com/" target="_blank" rel="noopener">ZeeMaps (make maps)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://cleanup.pictures/" target="_blank" rel="noopener">Cleanup.pictures</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://motiondsp.com/" target="_blank" rel="noopener">MotionDSP</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://stellarium.org/" target="_blank" rel="noopener">Stellarium</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://astrometry.net/" target="_blank" rel="noopener">Astrometry.net</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Privacy &amp; OPSEC</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://ipleak.net/" target="_blank" rel="noopener">IPLeak (your IP)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://coveryourtracks.eff.org/" target="_blank" rel="noopener">Cover Your Tracks</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.bleachbit.org/" target="_blank" rel="noopener">BleachBit</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://veracrypt.io/en/Downloads.html" target="_blank" rel="noopener">VeraCrypt</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://simplelogin.io/" target="_blank" rel="noopener">SimpleLogin (aliases)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.privacy.com/" target="_blank" rel="noopener">Privacy.com (virtual cards)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.security.org/how-secure-is-my-password/" target="_blank" rel="noopener">Password strength (security.org)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://phantomplate.com/" target="_blank" rel="noopener">Phantom Plate</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Crypto, hashing &amp; canary</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://gchq.github.io/CyberChef/" target="_blank" rel="noopener">CyberChef</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://hashes.com/en/decrypt/hash" target="_blank" rel="noopener">Hashes.com (decrypt)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://electrum.org/" target="_blank" rel="noopener">Electrum wallet</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://canarytokens.org/nest/" target="_blank" rel="noopener">Canarytokens</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://grabify.org/" target="_blank" rel="noopener">Grabify</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Domains &amp; misc</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.expireddomains.net/login/" target="_blank" rel="noopener">Expired Domains</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://archon-runtime.github.io/" target="_blank" rel="noopener">Archon (Android in Chrome)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://dangerousthings.com/" target="_blank" rel="noopener">Dangerous Things</a></li>
+        </ul></fieldset>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" aria-labelledby="t-training">
+    <div class="bar"><span id="t-training">TRAINING</span></div>
+    <div class="body">
+      <div class="refgroups">
+        <fieldset class="grp"><legend>Counterdrug &amp; investigations</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.nw3c.org/UI/Index.html" target="_blank" rel="noopener">NW3C (white-collar crime)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://nctc.counterdrug.org/" target="_blank" rel="noopener">Northeast Counterdrug</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.wrctc.org/" target="_blank" rel="noopener">Western Regional Counterdrug</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://new.counterdrugtraining.com/" target="_blank" rel="noopener">Midwest Counterdrug</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://mctft.geniussis.com/PublicWelcome.aspx" target="_blank" rel="noopener">MCTFT</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://lahidtatraining.org/" target="_blank" rel="noopener">LA HIDTA Training</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://bluelineacademy.org/" target="_blank" rel="noopener">Blue Line Academy</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.nabihq.org/" target="_blank" rel="noopener">Bunco / NABI</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.ncfta.net/" target="_blank" rel="noopener">NCFTA</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Military &amp; emergency mgmt</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.mors.org/home" target="_blank" rel="noopener">MORS</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://pme.sgaus.org/" target="_blank" rel="noopener">SGAUS PME</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://mttschoolhouse.com/" target="_blank" rel="noopener">National Guard School House</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://professionalgamingsociety.mors.org/" target="_blank" rel="noopener">PGS (MORS gaming)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://battactical.com/" target="_blank" rel="noopener">Bay Area Tactical Group</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://csti-ca.csod.com/catalog/CustomPage.aspx?id=20000479" target="_blank" rel="noopener">Cal OES (CSTI)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://labex.io/linuxjourney" target="_blank" rel="noopener">LabEx (learn Linux)</a></li>
+        </ul></fieldset>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" aria-labelledby="t-intel">
+    <div class="bar"><span id="t-intel">INTEL</span></div>
+    <div class="body">
+      <div class="refgroups">
+        <fieldset class="grp"><legend>Cyber &amp; crime</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.cisa.gov/" target="_blank" rel="noopener">CISA</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.ic3.gov/" target="_blank" rel="noopener">IC3 (crime complaints)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.fcc.gov/scam-glossary" target="_blank" rel="noopener">FCC scam glossary</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Public records &amp; privacy</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.meganslaw.ca.gov/" target="_blank" rel="noopener">Megan's Law (CA)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://privacy.ca.gov/drop/" target="_blank" rel="noopener">CA Privacy DROP (data removal)</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Imagery &amp; defense</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://earthexplorer.usgs.gov/" target="_blank" rel="noopener">USGS EarthExplorer</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.c4isrnet.com/" target="_blank" rel="noopener">C4ISRNET</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Emergency mgmt training</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://training.fema.gov/is/" target="_blank" rel="noopener">FEMA independent study</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://cdp.dhs.gov/" target="_blank" rel="noopener">FEMA Center for Domestic Prep</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.dhs.gov/science-and-technology/frg-training" target="_blank" rel="noopener">DHS S&amp;T FRG training</a></li>
+        </ul></fieldset>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" aria-label="Reference links">
+    <div class="body"><div class="refgroups" id="reflinks"></div></div>
+  </section>
+
+  <hr class="rainbow">
+
+  <div class="foot">
+    Refreshes every 5 minutes · Feeds: Open-Meteo, USGS, NASA EONET, GDACS, NOAA SWPC, OpenFEMA, wheretheiss.at, sunrise-sunset.org<br>
+    Unofficial. In an emergency call your local emergency number and follow official instructions.<br>
+    <a href="/">&lt;&lt; back to inter-q.com</a>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(() => {
+  "use strict";
+  // ================= settings =================
+  const DEFAULT_HOME = { name:"Richmond, CA", lat:37.9358, lon:-122.3477 };
+  const HOME = { ...DEFAULT_HOME, kind:"default" };
+  const REFRESH_MS = 5*60*1000;
+  const EQ_RADIUS_KM = 500;
+  const REPORT = {};
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g,(c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  const titleCase = (s) => String(s||"").toLowerCase().replace(/\b\w/g,(c)=>c.toUpperCase());
+  // Pure-JS hashes so the tool works offline and without a secure context
+  function sha256(bytes){
+    const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+    let h=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+    const l=bytes.length,bl=l*8,withOne=l+1,k=(56-withOne%64+64)%64,total=withOne+k+8;
+    const m=new Uint8Array(total);m.set(bytes);m[l]=0x80;const dv=new DataView(m.buffer);
+    dv.setUint32(total-4,bl>>>0,false);dv.setUint32(total-8,Math.floor(bl/0x100000000),false);
+    const w=new Uint32Array(64),rotr=(x,n)=>(x>>>n)|(x<<(32-n));
+    for(let off=0;off<total;off+=64){
+      for(let i=0;i<16;i++)w[i]=dv.getUint32(off+i*4,false);
+      for(let i=16;i<64;i++){const s0=rotr(w[i-15],7)^rotr(w[i-15],18)^(w[i-15]>>>3),s1=rotr(w[i-2],17)^rotr(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;}
+      let[a,b,c,d,e,f,g,hh]=h;
+      for(let i=0;i<64;i++){const S1=rotr(e,6)^rotr(e,11)^rotr(e,25),ch=(e&f)^(~e&g),t1=(hh+S1+ch+K[i]+w[i])>>>0,S0=rotr(a,2)^rotr(a,13)^rotr(a,22),maj=(a&b)^(a&c)^(b&c),t2=(S0+maj)>>>0;hh=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;}
+      h=[(h[0]+a)>>>0,(h[1]+b)>>>0,(h[2]+c)>>>0,(h[3]+d)>>>0,(h[4]+e)>>>0,(h[5]+f)>>>0,(h[6]+g)>>>0,(h[7]+hh)>>>0];
+    }
+    return h.map(x=>x.toString(16).padStart(8,"0")).join("");
+  }
+  function sha1(bytes){
+    let h0=0x67452301,h1=0xEFCDAB89,h2=0x98BADCFE,h3=0x10325476,h4=0xC3D2E1F0;
+    const l=bytes.length,bl=l*8,withOne=l+1,k=(56-withOne%64+64)%64,total=withOne+k+8;
+    const m=new Uint8Array(total);m.set(bytes);m[l]=0x80;const dv=new DataView(m.buffer);
+    dv.setUint32(total-4,bl>>>0,false);dv.setUint32(total-8,Math.floor(bl/0x100000000),false);
+    const w=new Uint32Array(80),rol=(x,n)=>(x<<n)|(x>>>(32-n));
+    for(let off=0;off<total;off+=64){
+      for(let i=0;i<16;i++)w[i]=dv.getUint32(off+i*4,false);
+      for(let i=16;i<80;i++)w[i]=rol(w[i-3]^w[i-8]^w[i-14]^w[i-16],1);
+      let a=h0,b=h1,c=h2,d=h3,e=h4;
+      for(let i=0;i<80;i++){let f,kk;if(i<20){f=(b&c)|(~b&d);kk=0x5A827999;}else if(i<40){f=b^c^d;kk=0x6ED9EBA1;}else if(i<60){f=(b&c)|(b&d)|(c&d);kk=0x8F1BBCDC;}else{f=b^c^d;kk=0xCA62C1D6;}const t=(rol(a,5)+f+e+kk+w[i])>>>0;e=d;d=c;c=rol(b,30)>>>0;b=a;a=t;}
+      h0=(h0+a)>>>0;h1=(h1+b)>>>0;h2=(h2+c)>>>0;h3=(h3+d)>>>0;h4=(h4+e)>>>0;
+    }
+    return[h0,h1,h2,h3,h4].map(x=>(x>>>0).toString(16).padStart(8,"0")).join("");
+  }
+  const MON = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const pad = (n) => String(n).padStart(2,"0");
+  const tz = () => Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+
+  // ================= clock =================
+  function zoneLetter(offsetMin){
+    const h=Math.round(-offsetMin/60);
+    if(h===0)return "Z";
+    if(h>0&&h<=12)return "NOPQRSTUVWXY"[h-1];
+    if(h<0&&h>=-12)return "ABCDEFGHIKLM"[-h-1];
+    return "J";
+  }
+  function offsetMinFor(d){
+    const d2=new Date(d.toLocaleString("en-US",{timeZone:tz()}));
+    const u=new Date(d.toLocaleString("en-US",{timeZone:"UTC"}));
+    return Math.round((d2-u)/60000);
+  }
+  function tick(){
+    const d=new Date(), off=offsetMinFor(d);
+    const L=new Intl.DateTimeFormat("en-GB",{timeZone:tz(),year:"2-digit",month:"numeric",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
+    $("dtgL").textContent=`${L.day}${L.hour}${L.minute}${zoneLetter(off)} ${MON[+L.month-1]} ${L.year}`;
+    $("dtgZ").textContent=`${pad(d.getUTCDate())}${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}Z ${MON[d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}`;
+  }
+  const hhmm=(d)=>new Intl.DateTimeFormat("en-GB",{timeZone:tz(),hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).format(d);
+  const shortDT=(d)=>new Intl.DateTimeFormat("en-GB",{timeZone:tz(),month:"short",day:"numeric",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).format(d);
+  function ago(t){const m=Math.round((Date.now()-t)/60000);if(m<60)return `${m}m ago`;const h=Math.round(m/60);if(h<48)return `${h}h ago`;return `${Math.round(h/24)}d ago`;}
+
+  // ================= geo helpers =================
+  const R_MI=3958.8, R_KM=6371, r=Math.PI/180;
+  function hav(lat1,lon1,lat2,lon2,R){const dLat=(lat2-lat1)*r,dLon=(lon2-lon1)*r;const a=Math.sin(dLat/2)**2+Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(a));}
+  const miles=(a,b,c,d)=>hav(a,b,c,d,R_MI);
+  const km=(a,b,c,d)=>hav(a,b,c,d,R_KM);
+  function bearing(lat1,lon1,lat2,lon2){const y=Math.sin((lon2-lon1)*r)*Math.cos(lat2*r);const x=Math.cos(lat1*r)*Math.sin(lat2*r)-Math.sin(lat1*r)*Math.cos(lat2*r)*Math.cos((lon2-lon1)*r);return (Math.atan2(y,x)/r+360)%360;}
+  const compass=(deg)=>["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"][Math.round(deg/22.5)%16];
+  const inUS=(lat,lon)=>((lat>=24&&lat<=50&&lon>=-125&&lon<=-66)||(lat>=51&&lat<=72&&lon>=-170&&lon<=-129)||(lat>=18&&lat<=23&&lon>=-161&&lon<=-154));
+  function mgrsOf(lat,lon){
+    if(lat<-80||lat>84)return "(outside UTM/MGRS coverage)";
+    const a=6378137,f=1/298.257223563,k0=.9996,e2=f*(2-f),ep2=e2/(1-e2);
+    const zone=Math.floor((lon+180)/6)+1, lon0=((zone-1)*6-180+3)*r, la=lat*r, lo=lon*r;
+    const N=a/Math.sqrt(1-e2*Math.sin(la)**2),T=Math.tan(la)**2,C=ep2*Math.cos(la)**2,A=Math.cos(la)*(lo-lon0);
+    const M=a*((1-e2/4-3*e2**2/64-5*e2**3/256)*la-(3*e2/8+3*e2**2/32+45*e2**3/1024)*Math.sin(2*la)+(15*e2**2/256+45*e2**3/1024)*Math.sin(4*la)-(35*e2**3/3072)*Math.sin(6*la));
+    let E=k0*N*(A+(1-T+C)*A**3/6+(5-18*T+T*T+72*C-58*ep2)*A**5/120)+500000;
+    let Nn=k0*(M+N*Math.tan(la)*(A*A/2+(5-T+9*C+4*C*C)*A**4/24+(61-58*T+T*T+600*C-330*ep2)*A**6/720));
+    if(lat<0)Nn+=1e7;
+    const band="CDEFGHJKLMNPQRSTUVWX"[Math.max(0,Math.min(19,Math.floor((lat+80)/8)))];
+    const col="ABCDEFGH JKLMNPQR STUVWXYZ".split(" ")[(zone-1)%3][Math.floor(E/100000)-1];
+    const nSet="ABCDEFGHJKLMNPQRSTUV", off=(zone%2)?0:5, row=nSet[(Math.floor(Nn/100000)+off)%20];
+    const p5=(n)=>String(Math.floor(n)).padStart(5,"0");
+    return `${zone}${band} ${col}${row} ${p5(E%100000)} ${p5(Nn%100000)}`;
+  }
+  function dtgParts(d){
+    const off=offsetMinFor(d);
+    const L=new Intl.DateTimeFormat("en-GB",{timeZone:tz(),day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
+    const lMon=+new Intl.DateTimeFormat("en-GB",{timeZone:tz(),month:"numeric"}).format(d);
+    const lYr=new Intl.DateTimeFormat("en-GB",{timeZone:tz(),year:"2-digit"}).format(d);
+    return {
+      local:`${L.day}${L.hour}${L.minute}${zoneLetter(off)} ${MON[lMon-1]} ${lYr}`,
+      zulu:`${pad(d.getUTCDate())}${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}Z ${MON[d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}`
+    };
+  }
+
+  async function getJSON(url,opts){
+    const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(),20000);
+    try{ const res=await fetch(url,{...opts,signal:ctl.signal}); if(!res.ok) throw new Error("HTTP "+res.status); return await res.json(); }
+    finally{ clearTimeout(t); }
+  }
+  function stamp(id){ $("ts-"+id).textContent="updated "+hhmm(new Date()); }
+  function fail(id,what,e){ $(id).innerHTML=`<div class="err">Couldn't load ${esc(what)} (${esc(e.message||e)}). Retries next refresh.</div>`; $("ts-"+id).textContent="offline"; }
+
+  // ================= feeds =================
+  async function events(){
+    // GDACS worldwide + NASA EONET; show nearest, severity drives condition
+    const rows=[];
+    try{
+      const g=await getJSON("https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventtypes=EQ,TC,FL,VO,WF,DR");
+      (g.features||[]).forEach(f=>{
+        const p=f.properties||{}, c=f.geometry?f.geometry.coordinates:[null,null];
+        if(c[1]==null)return;
+        rows.push({ src:"GDACS", type:p.eventtype, name:p.htmldescription||p.name||p.eventname||p.eventtype, level:(p.alertlevel||"Green"), lat:c[1], lon:c[0] });
+      });
+    }catch(e){}
+    try{
+      const ev=await getJSON("https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=200");
+      (ev.events||[]).forEach(e=>{
+        const g=e.geometry&&e.geometry[e.geometry.length-1]; if(!g)return;
+        const c=g.coordinates; if(!Array.isArray(c)||c.length<2)return;
+        rows.push({ src:"EONET", type:(e.categories[0]||{}).title||"Event", name:e.title, level:"Info", lat:c[1], lon:c[0] });
+      });
+    }catch(e){}
+    stamp("events");
+    if(!rows.length){ $("events").innerHTML=`<div class="err">No event feed reachable right now.</div>`; return {level:0,reasons:[]}; }
+    rows.forEach(x=>x.mi=miles(HOME.lat,HOME.lon,x.lat,x.lon));
+    const near=rows.filter(x=>x.mi<=800).sort((a,b)=>a.mi-b.mi);
+    REPORT.events={count:near.length,top:near.slice(0,5).map(x=>({name:String(x.name).replace(/<[^>]+>/g,"").slice(0,50),type:x.type,mi:Math.round(x.mi),level:x.level}))};
+    const rank={Red:3,Orange:2,Green:1,Info:0};
+    let level=0, reasons=[];
+    const redNear=near.find(x=>rank[x.level]>=3&&x.mi<=600);
+    const orgNear=near.find(x=>rank[x.level]>=2&&x.mi<=400);
+    if(redNear){ level=2; reasons.push(`${redNear.type} (red alert) ${Math.round(redNear.mi)} mi away`); }
+    else if(orgNear){ level=1; reasons.push(`${orgNear.type} (orange alert) ${Math.round(orgNear.mi)} mi away`); }
+    const show=near.slice(0,8);
+    if(!show.length){ $("events").innerHTML=`<div><span class="pill p-ok">Clear</span> No active disaster events within 800 mi.</div>`; return {level:0,reasons:[]}; }
+    $("events").innerHTML=`<div class="well"><table>
+      <thead><tr><th>Event</th><th>Type</th><th style="text-align:right">Dist.</th></tr></thead>
+      <tbody>${show.map(x=>`<tr class="${rank[x.level]>=3?"crit":rank[x.level]>=2?"hot":""}">
+        <td>${esc(String(x.name).replace(/<[^>]+>/g,"").slice(0,60))} <span class="muted">${esc(x.src)}</span></td>
+        <td>${esc(x.type)}</td><td class="n">${Math.round(x.mi)} mi</td></tr>`).join("")}</tbody></table></div>
+      <div class="muted">${near.length} active within 800 mi, nearest first. Source: GDACS alerts + NASA EONET.</div>`;
+    return {level,reasons};
+  }
+
+  async function wx(){
+    const u=HOME.lat<=49&&HOME.lat>=24&&HOME.lon>=-125&&HOME.lon<=-66; // °F for US, else °C
+    const unit=u?"fahrenheit":"celsius", wu=u?"mph":"kmh", sym=u?"°F":"°C", wsym=u?"mph":"km/h", pu=u?"inch":"mm";
+    const j=await getJSON(`https://api.open-meteo.com/v1/forecast?latitude=${HOME.lat}&longitude=${HOME.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,uv_index_max&forecast_days=3&temperature_unit=${unit}&wind_speed_unit=${wu}&precipitation_unit=${pu}&timezone=auto`);
+    const c=j.current, dly=j.daily;
+    const uvBand=(v)=>v<3?"Low":v<6?"Moderate":v<8?"High":v<11?"Very high":"Extreme";
+    const dayLbl=(iso,i)=>i===0?"Today":new Intl.DateTimeFormat("en-US",{weekday:"short",timeZone:j.timezone}).format(new Date(iso+"T12:00"));
+    let fc="";
+    if(dly&&dly.time){ fc=`<div class="fc">`+dly.time.map((t,i)=>`<div class="d"><b>${dayLbl(t,i)}</b>${Math.round(dly.temperature_2m_max[i])}°/${Math.round(dly.temperature_2m_min[i])}°<br><span class="muted">UV ${Math.round(dly.uv_index_max[i])} · ${dly.precipitation_sum[i]}${pu==="inch"?'"':'mm'}</span></div>`).join("")+`</div>`; }
+    $("wx").innerHTML=`<div class="readouts">
+      <div class="ro"><div class="k">Temp</div><div class="v">${Math.round(c.temperature_2m)}<small>${sym}</small></div></div>
+      <div class="ro"><div class="k">Feels like</div><div class="v">${Math.round(c.apparent_temperature)}<small>${sym}</small></div></div>
+      <div class="ro"><div class="k">Humidity</div><div class="v">${Math.round(c.relative_humidity_2m)}<small>%</small></div></div>
+      <div class="ro"><div class="k">Wind</div><div class="v">${Math.round(c.wind_speed_10m)}<small> ${wsym} ${compass(c.wind_direction_10m)}</small></div></div>
+    </div>${fc}<div class="muted">Gusts to ${Math.round(c.wind_gusts_10m)} ${wsym}. Today's max UV ${dly?Math.round(dly.uv_index_max[0]):"—"} (${dly?uvBand(dly.uv_index_max[0]):"—"}). TZ ${esc(j.timezone)}.</div>`;
+    REPORT.wx={temp:Math.round(c.temperature_2m),feels:Math.round(c.apparent_temperature),rh:Math.round(c.relative_humidity_2m),wind:Math.round(c.wind_speed_10m),gusts:Math.round(c.wind_gusts_10m),dir:compass(c.wind_direction_10m),tu:sym,wu:wsym,tzn:j.timezone,uv:dly?Math.round(dly.uv_index_max[0]):null};
+    stamp("wx");
+    return {level:0,reasons:[]};
+  }
+
+  const AQI=[[50,"Good","p-ok"],[100,"Moderate","p-ok"],[150,"Unhealthy — sensitive groups","p-warn"],[200,"Unhealthy","p-crit"],[300,"Very unhealthy","p-crit"],[1e9,"Hazardous","p-crit"]];
+  async function aqi(){
+    const j=await getJSON(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${HOME.lat}&longitude=${HOME.lon}&current=us_aqi,european_aqi,pm2_5&timezone=auto`);
+    const c=j.current, v=Math.round(c.us_aqi), band=AQI.find(b=>v<=b[0]);
+    $("aqi").innerHTML=`<div class="readouts">
+      <div class="ro"><div class="k">US AQI</div><div class="v">${v}</div></div>
+      <div class="ro"><div class="k">EU AQI</div><div class="v">${Math.round(c.european_aqi)}</div></div>
+    </div><div><span class="pill ${band[2]}">${band[1]}</span> <span class="muted">PM2.5 ${Math.round(c.pm2_5)} µg/m³. Modeled estimate.</span></div>`;
+    REPORT.aqi={us:v,eu:Math.round(c.european_aqi),band:band[1],pm25:Math.round(c.pm2_5)};
+    stamp("aqi");
+    if(v>150)return {level:2,reasons:[`Air quality ${band[1].toLowerCase()} (AQI ${v})`]};
+    if(v>100)return {level:1,reasons:[`Air quality unhealthy for sensitive groups (AQI ${v})`]};
+    return {level:0,reasons:[]};
+  }
+
+  async function eq(){
+    const start=new Date(Date.now()-7*864e5).toISOString().slice(0,10);
+    const j=await getJSON(`https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=${HOME.lat}&longitude=${HOME.lon}&maxradiuskm=${EQ_RADIUS_KM}&minmagnitude=2.5&orderby=time&limit=50&starttime=${start}`);
+    const qs=(j.features||[]).map(f=>({mag:f.properties.mag,place:f.properties.place,time:f.properties.time,url:f.properties.url,mi:miles(HOME.lat,HOME.lon,f.geometry.coordinates[1],f.geometry.coordinates[0])}));
+    stamp("eq");
+    REPORT.eq={count:qs.length,strongest:null};
+    if(!qs.length){ $("eq").innerHTML=`<div><span class="pill p-ok">Quiet</span> No M2.5+ quakes within ${EQ_RADIUS_KM} km this week.</div>`; return {level:0,reasons:[]}; }
+    const day=Date.now()-864e5, big=qs.filter(q=>q.time>=day).sort((a,b)=>b.mag-a.mag)[0];
+    let level=0,reasons=[];
+    if(big&&big.mag>=5&&big.mi<=200){ level=2; reasons.push(`M${big.mag.toFixed(1)} quake ${Math.round(big.mi)} mi away, ${ago(big.time)}`); }
+    else if(big&&big.mag>=4){ level=1; reasons.push(`M${big.mag.toFixed(1)} quake ${Math.round(big.mi)} mi away, ${ago(big.time)}`); }
+    const strong=[...qs].sort((a,b)=>b.mag-a.mag)[0];
+    REPORT.eq={count:qs.length,strongest:{mag:strong.mag,place:strong.place}};
+    $("eq").innerHTML=`<div class="well"><table>
+      <thead><tr><th style="text-align:right">Mag</th><th>Where</th><th style="text-align:right">When</th></tr></thead>
+      <tbody>${qs.slice(0,7).map(q=>`<tr class="${q.mag>=4?"hot":""}"><td class="n">${q.mag.toFixed(1)}</td><td><a href="${esc(q.url)}" target="_blank" rel="noopener">${esc(q.place)}</a></td><td class="n">${ago(q.time)}</td></tr>`).join("")}</tbody></table></div>
+      <div class="muted">${qs.length} this week. Strongest M${strong.mag.toFixed(1)}.</div>`;
+    return {level,reasons};
+  }
+
+  async function space(){
+    const j=await getJSON("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json");
+    const last=j[j.length-1], kp=parseFloat(last.Kp!=null?last.Kp:last[1]);
+    const G=kp>=9?"G5":kp>=8?"G4":kp>=7?"G3":kp>=6?"G2":kp>=5?"G1":"—";
+    const band=kp>=7?"p-crit":kp>=5?"p-warn":"p-ok";
+    const txt=kp>=5?`Geomagnetic storm ${G}`:"No storm";
+    let flare="—";
+    try{ const x=await getJSON("https://services.swpc.noaa.gov/json/goes/primary/xray-flares-latest.json"); const fx=Array.isArray(x)?x[0]:x; flare=(fx&&(fx.max_class||fx.current_class))||"—"; }catch{}
+    let aur=null;
+    try{ const ov=await getJSON("https://services.swpc.noaa.gov/json/ovation_aurora_latest.json"); const lonR=((Math.round(HOME.lon)%360)+360)%360, latR=Math.max(-90,Math.min(90,Math.round(HOME.lat))); const row=ov.coordinates[lonR*181+(latR+90)]; if(row)aur=row[2]; }catch{}
+    $("space").innerHTML=`<div class="readouts">
+      <div class="ro"><div class="k">Planetary Kp</div><div class="v">${kp.toFixed(2)}</div></div>
+      <div class="ro"><div class="k">Storm level</div><div class="v">${G}</div></div>
+      <div class="ro"><div class="k">X-ray flare</div><div class="v">${esc(flare)}</div></div>
+      <div class="ro"><div class="k">Aurora here</div><div class="v">${aur==null?"—":aur+"<small>%</small>"}</div></div>
+    </div><div><span class="pill ${band}">${txt}</span> <span class="muted">High Kp or M/X-class flares can disrupt GPS, HF radio and power grids. "Aurora here" is the modeled chance of aurora overhead at your location.</span></div>`;
+    REPORT.space={kp:+kp.toFixed(2),G,storm:kp>=5,flare,aurora:aur};
+    stamp("space");
+    let lvl=kp>=7?2:kp>=5?1:0; const reasons=[];
+    if(/^X/i.test(flare)) lvl=Math.max(lvl,2); else if(/^M/i.test(flare)) lvl=Math.max(lvl,1);
+    if(kp>=5) reasons.push(`Geomagnetic storm ${G} (Kp ${kp.toFixed(1)})`);
+    if(/^[MX]/i.test(flare)) reasons.push(`Solar flare ${flare}`);
+    return {level:lvl,reasons};
+  }
+
+  async function sun(){
+    let sunHtml=""; REPORT.sun=null; REPORT.iss=null;
+    try{
+      const s=await getJSON(`https://api.sunrise-sunset.org/json?lat=${HOME.lat}&lng=${HOME.lon}&formatted=0`);
+      const sr=new Date(s.results.sunrise), ss=new Date(s.results.sunset);
+      const dl=s.results.day_length, h=Math.floor(dl/3600), m=Math.round((dl%3600)/60);
+      REPORT.sun={sunrise:hhmm(sr),sunset:hhmm(ss),dl:`${h}h ${m}m`};
+      sunHtml=`<div class="readouts">
+        <div class="ro"><div class="k">Sunrise</div><div class="v">${hhmm(sr)}</div></div>
+        <div class="ro"><div class="k">Sunset</div><div class="v">${hhmm(ss)}</div></div>
+      </div><div class="muted">Day length ${h}h ${m}m.</div>`;
+    }catch(e){ sunHtml=`<div class="muted">Sun times unavailable.</div>`; }
+    let issHtml="";
+    try{
+      const i=await getJSON("https://api.wheretheiss.at/v1/satellites/25544");
+      const d=Math.round(km(HOME.lat,HOME.lon,i.latitude,i.longitude));
+      REPORT.iss={dist:d};
+      const over=d<1500;
+      issHtml=`<div style="margin-top:8px"><span class="pill ${over?"p-warn":"p-ok"}">ISS ${over?"overhead-ish":"distant"}</span> <span class="muted">${d.toLocaleString()} km away, over ${i.latitude.toFixed(1)}, ${i.longitude.toFixed(1)} at ${Math.round(i.altitude)} km altitude.</span></div>`;
+    }catch(e){ issHtml=`<div class="muted" style="margin-top:8px">ISS position unavailable.</div>`; }
+    $("sun").innerHTML=sunHtml+issHtml;
+    stamp("sun");
+    return {level:0,reasons:[]};
+  }
+
+  async function nws(){
+    const win=$("win-nws");
+    if(!inUS(HOME.lat,HOME.lon)){ win.hidden=true; REPORT.nws={applicable:false}; return {level:0,reasons:[]}; }
+    win.hidden=false;
+    const j=await getJSON(`https://api.weather.gov/alerts/active?point=${HOME.lat},${HOME.lon}`,{headers:{Accept:"application/geo+json"}});
+    const al=(j.features||[]).map(f=>f.properties);
+    stamp("nws");
+    REPORT.nws={applicable:true,alerts:al.map(a=>({event:a.event,severity:a.severity,until:a.ends||a.expires}))};
+    if(!al.length){ $("nws").innerHTML=`<div><span class="pill p-ok">Clear</span> No active NWS alerts here.</div>`; return {level:0,reasons:[]}; }
+    let level=1, reasons=[];
+    $("nws").innerHTML=al.map(a=>{
+      const sev=a.severity==="Extreme"||a.severity==="Severe"||/warning/i.test(a.event);
+      if(sev)level=2; reasons.push("NWS: "+a.event);
+      const until=a.ends||a.expires;
+      return `<div class="alert${sev?" sev":""}"><b>${esc(a.event)}</b><span class="muted">${esc(a.severity)} · until ${until?esc(shortDT(new Date(until))):"further notice"}</span></div>`;
+    }).join("");
+    return {level,reasons};
+  }
+
+  async function bart(){
+    const win=$("win-bart");
+    if(miles(DEFAULT_HOME.lat,DEFAULT_HOME.lon,HOME.lat,HOME.lon)>60){ win.hidden=true; return {level:0,reasons:[]}; }
+    win.hidden=false;
+    const j=await getJSON("https://api.bart.gov/api/bsa.aspx?cmd=bsa&key=MW9S-E7SL-26DU-VV8V&json=y");
+    let list=j.root&&j.root.bsa?j.root.bsa:[]; if(!Array.isArray(list))list=[list];
+    list=list.filter(b=>b&&b.description&&(b.description["#cdata-section"]||"").trim()&&!/no delays reported/i.test(b.description["#cdata-section"]));
+    stamp("bart");
+    if(!list.length){ $("bart").innerHTML=`<div><span class="pill p-ok">Normal</span> No delays reported.</div>`; return {level:0,reasons:[]}; }
+    $("bart").innerHTML=list.map(b=>`<div class="alert"><b>${esc(b.type||"Advisory")}</b><div style="font-size:13px">${esc(b.description["#cdata-section"])}</div></div>`).join("");
+    return {level:0,reasons:[]};
+  }
+
+  async function fema(){
+    const win=$("win-fema");
+    if(!inUS(HOME.lat,HOME.lon)){ win.hidden=true; return {level:0,reasons:[]}; }
+    win.hidden=false;
+    const j=await getJSON("https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$top=60&$orderby=declarationDate desc&$format=json&$select=state,disasterNumber,declarationType,incidentType,declarationTitle,declarationDate");
+    stamp("fema");
+    const seen=new Set(), rows=[];
+    (j.DisasterDeclarationsSummaries||[]).forEach(x=>{ if(seen.has(x.disasterNumber))return; seen.add(x.disasterNumber); rows.push(x); });
+    const show=rows.slice(0,6);
+    if(!show.length){ $("fema").innerHTML=`<div class="muted">No recent federal declarations.</div>`; return {level:0,reasons:[]}; }
+    const TY={EM:"Emergency",DR:"Major Disaster",FM:"Fire Mgmt"};
+    $("fema").innerHTML=`<div class="well"><table>
+      <thead><tr><th>St</th><th>Incident</th><th>Type</th><th style="text-align:right">Declared</th></tr></thead>
+      <tbody>${show.map(x=>`<tr><td>${esc(x.state)}</td><td>${esc(titleCase(x.declarationTitle||x.incidentType||""))}</td><td>${esc(TY[x.declarationType]||x.declarationType)}</td><td class="n">${esc((x.declarationDate||"").slice(0,10))}</td></tr>`).join("")}</tbody></table></div>
+      <div class="muted">Most recent US federal declarations (OpenFEMA), newest first.</div>`;
+    return {level:0,reasons:[]};
+  }
+
+  // ================= orchestration =================
+  const PANELS=[["events","events",events],["wx","weather",wx],["aqi","air quality",aqi],["eq","earthquakes",eq],["space","space weather",space],["sun","sun/ISS",sun],["nws","NWS",nws],["fema","FEMA",fema],["bart","BART",bart]];
+  let busy=false;
+  async function refresh(){
+    if(busy)return; busy=true;
+    $("refresh").textContent="Refreshing…";
+    const results=await Promise.all(PANELS.map(async([id,what,fn])=>{ try{return await fn();}catch(e){fail(id,what,e);return {level:0,reasons:[],failed:what};} }));
+    const level=Math.max(...results.map(r=>r.level));
+    const reasons=results.flatMap(r=>r.reasons);
+    const failed=results.filter(r=>r.failed).map(r=>r.failed);
+    const lamp=$("lamp"); lamp.className="lamp "+["green","amber","red"][level]; lamp.textContent=["GREEN","AMBER","RED"][level];
+    const items=reasons.length?reasons:["Nothing on the feeds needs attention right now."];
+    if(failed.length)items.push(`Some feeds didn't load: ${failed.join(", ")}.`);
+    $("reasons").innerHTML=items.map(x=>`<li>${esc(x)}</li>`).join("");
+    $("ts-all").textContent="updated "+hhmm(new Date());
+    REPORT.condition={level,name:["GREEN","AMBER","RED"][level],reasons:items.slice()};
+    REPORT.generated=new Date();
+    document.title=`[${["GREEN","AMBER","RED"][level]}] Inter-Q SITREP`;
+    $("refresh").textContent="Refresh now"; busy=false;
+  }
+
+  // ================= SITREP report =================
+  function buildReport(){
+    const d=REPORT.generated||new Date(), g=dtgParts(d);
+    const cond=REPORT.condition||{name:"UNKNOWN",reasons:[]};
+    const W=(REPORT.wx)||null, A=REPORT.aqi, E=REPORT.eq, S=REPORT.space, SU=REPORT.sun, IS=REPORT.iss, EV=REPORT.events, NW=REPORT.nws;
+    const latH=(HOME.lat>=0?"N":"S"), lonH=(HOME.lon>=0?"E":"W");
+    const L=[];
+    const bar="="+"=".repeat(46);
+    L.push(bar);
+    L.push("        UNCLASSIFIED // OPEN SOURCE (OSINT)");
+    L.push("            SITUATION REPORT  (SITREP)");
+    L.push(bar);
+    L.push(`DTG      : ${g.local}   (${g.zulu})`);
+    L.push(`FROM     : INTER-Q SITREP  (inter-q.com)`);
+    L.push(`AO / LOC : ${HOME.name}`);
+    L.push(`GRID     : ${Math.abs(HOME.lat).toFixed(5)}${latH}  ${Math.abs(HOME.lon).toFixed(5)}${lonH}`);
+    L.push(`           MGRS ${mgrsOf(HOME.lat,HOME.lon)}`);
+    L.push(`CONDITION: ${cond.name}`);
+    L.push("");
+    L.push("1. SITUATION (GENERAL).");
+    (cond.reasons&&cond.reasons.length?cond.reasons:["Routine. No elevated conditions reported."]).forEach(x=>L.push("   - "+x));
+    L.push("");
+    L.push("2. WEATHER (METOC).");
+    if(W){ L.push(`   Temp ${W.temp}${W.tu}, feels ${W.feels}${W.tu}, RH ${W.rh}%. Wind ${W.wind} ${W.wu} ${W.dir}, gusts ${W.gusts} ${W.wu}.`); L.push(`   Max UV today ${W.uv==null?"n/a":W.uv}. Local time zone ${W.tzn}.`); }
+    else L.push("   Data unavailable.");
+    L.push("");
+    L.push("3. HAZARDS / ACTIVE EVENTS (GDACS/EONET).");
+    if(EV&&EV.count){ L.push(`   ${EV.count} active event(s) within 800 mi. Nearest:`); EV.top.forEach(x=>L.push(`   - ${(x.type||"EVENT").toUpperCase()} (${x.level}) ${x.mi} mi — ${x.name}`)); }
+    else if(EV) L.push("   None within 800 mi.");
+    else L.push("   Event feed unavailable.");
+    L.push("");
+    L.push("4. SEISMIC.");
+    if(E&&E.count&&E.strongest) L.push(`   ${E.count} quake(s) M2.5+ within ${EQ_RADIUS_KM} km (7 days). Strongest M${E.strongest.mag.toFixed(1)} — ${E.strongest.place}.`);
+    else if(E) L.push(`   No M2.5+ quakes within ${EQ_RADIUS_KM} km in the last 7 days.`);
+    else L.push("   Data unavailable.");
+    L.push("");
+    L.push("5. AIR QUALITY.");
+    if(A) L.push(`   US AQI ${A.us} (${A.band}). PM2.5 ${A.pm25} ug/m3. EU AQI ${A.eu}.`);
+    else L.push("   Data unavailable.");
+    L.push("");
+    L.push("6. SPACE WEATHER.");
+    if(S){ L.push(`   Planetary Kp ${S.kp}. ${S.storm?("Geomagnetic storm "+S.G+" in progress."):"No geomagnetic storm."}`); L.push(`   X-ray flare ${S.flare||"n/a"}. Aurora chance here ${S.aurora==null?"n/a":S.aurora+"%"}.`); }
+    else L.push("   Data unavailable.");
+    L.push("");
+    L.push("7. ASTRONOMICAL.");
+    if(SU) L.push(`   Sunrise ${SU.sunrise}, sunset ${SU.sunset}, day length ${SU.dl}.`);
+    else L.push("   Sun data unavailable.");
+    if(IS) L.push(`   ISS ${IS.dist.toLocaleString()} km from location.`);
+    L.push("");
+    L.push("8. OFFICIAL ALERTS (NWS).");
+    if(NW&&NW.applicable===false) L.push("   N/A — location outside US coverage.");
+    else if(NW&&NW.alerts&&NW.alerts.length) NW.alerts.forEach(a=>L.push(`   - ${a.event} (${a.severity})${a.until?(" until "+shortDT(new Date(a.until))):""}`));
+    else if(NW) L.push("   None active.");
+    else L.push("   Data unavailable.");
+    L.push("");
+    L.push("9. ASSESSMENT.");
+    const drv=(cond.reasons&&cond.reasons.length)?cond.reasons[0]:"no elevated conditions";
+    L.push(`   Overall condition ${cond.name}, driven by: ${drv}.`);
+    L.push("");
+    L.push(bar);
+    L.push(`GENERATED ${g.local} BY INTER-Q SITREP — UNOFFICIAL,`);
+    L.push("OPEN-SOURCE AGGREGATION. VERIFY AGAINST OFFICIAL SOURCES.");
+    L.push("IN AN EMERGENCY DIAL YOUR LOCAL EMERGENCY NUMBER.");
+    L.push("        UNCLASSIFIED // OPEN SOURCE (OSINT)");
+    L.push(bar);
+    return L.join("\n");
+  }
+  function openReport(){
+    $("reportText").textContent=buildReport();
+    $("reportWin").hidden=false;
+    $("reportWin").scrollIntoView?.({behavior:"smooth",block:"start"});
+    const n=$("reportNotes");
+    if(n){ n.focus();
+      try{ const r=document.createRange(); r.selectNodeContents(n); r.collapse(false); const s=getSelection(); s.removeAllRanges(); s.addRange(r); }catch(e){}
+    }
+  }
+
+  // ================= reference links =================
+  function renderLinks(){
+    const us=inUS(HOME.lat,HOME.lon);
+    const groups=[
+      ["Global watch", [
+        ["GDACS disaster map","https://www.gdacs.org/"],
+        ["Liveuamap (live conflict map)","https://liveuamap.com/"],
+        ["CFR Global Conflict Tracker","https://www.cfr.org/global-conflict-tracker"],
+        ["ReliefWeb (humanitarian)","https://reliefweb.int/disasters"],
+        ["NASA EONET events","https://eonet.gsfc.nasa.gov/"],
+        ["Flightradar24 (air traffic)","https://www.flightradar24.com/"],
+        ["Ransomware.live (cyber)","https://www.ransomware.live/"]
+      ]],
+      ["Sky & space", [
+        ["NOAA space weather","https://www.swpc.noaa.gov/"],
+        ["Aurora 30-min forecast","https://www.swpc.noaa.gov/products/aurora-30-minute-forecast"],
+        ["NESDIS real-time satellite","https://www.nesdis.noaa.gov/imagery/interactive-maps/the-world-real-time"],
+        ["Windy (weather map)","https://www.windy.com/"],
+        ["Spot the ISS","https://spotthestation.nasa.gov/"]
+      ]],
+      ["Live cameras — global", [
+        ["EarthCam (world webcams)","https://www.earthcam.com/"],
+        ["Skyline Webcams","https://www.skylinewebcams.com/"],
+        ["Worldcams.tv","https://worldcams.tv/"],
+        ["WebcamTaxi","https://www.webcamtaxi.com/"],
+        ["Webcams.travel","https://www.webcams.travel/"],
+        ["Windy webcam network","https://www.windy.com/webcams"],
+        ["Camscape live cams","https://www.camscape.com/"]
+      ]],
+      ["Live cameras — nature &amp; hazard", [
+        ["Explore.org (wildlife/nature)","https://explore.org/livecams"],
+        ["ALERTWildfire (western US)","https://www.alertwildfire.org/"],
+        ["Airport webcams","https://www.airportwebcams.net/"],
+        ["Surfline (coastal cams)","https://www.surfline.com/"]
+      ]],
+      ["Unconventional indicators", [
+        ["Waffle House Index","https://wafflehousetracker.com/"],
+        ["Pizza watch","https://www.pizzint.watch/"]
+      ]],
+      ["Tradecraft", [
+        ["AI face generator (personas)","https://thispersondoesnotexist.com/"]
+      ]]
+    ];
+    if(us) groups.unshift(["United States", [
+      ["PG&E power shutoffs (PSPS)","https://www.pge.com/psps"],
+      ["CAL FIRE incidents","https://www.fire.ca.gov/incidents"],
+      ["Watch Duty fire map","https://app.watchduty.org/"],
+      ["AlertCalifornia fire cams","https://alertcalifornia.org/"],
+      ["Caltrans CCTV map","https://cwwp2.dot.ca.gov/vm/iframemap.htm"],
+      ["MyShake quake early warning","https://myshake.berkeley.edu/"],
+      ["AirNow official AQI","https://www.airnow.gov/"]
+    ]]);
+    $("reflinks").innerHTML=groups.map(([title,links])=>`<fieldset class="grp"><legend>${esc(title)}</legend><ul>${
+      links.map(([t,h])=>`<li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="${esc(h)}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join("")
+    }</ul></fieldset>`).join("");
+  }
+
+  // ================= location control =================
+  function applyLocationToUI(){
+    $("locName").textContent=HOME.name;
+    $("locKind").textContent=HOME.kind?`(${HOME.kind})`:"";
+    $("useHome").hidden=HOME.name===DEFAULT_HOME.name;
+    const bs=document.querySelector(".brand small"); if(bs) bs.textContent=`Situational awareness · ${HOME.name}`;
+    renderLinks();
+  }
+  function setLocation(lat,lon,name,kind){ HOME.lat=lat; HOME.lon=lon; HOME.name=name; HOME.kind=kind; applyLocationToUI(); refresh(); }
+  async function reverseName(lat,lon){
+    try{ const j=await getJSON(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat=${lat}&lon=${lon}`,{headers:{Accept:"application/json"}});
+      const a=j.address||{}; const city=a.city||a.town||a.village||a.hamlet||a.county||j.name; const reg=a.state||a.country;
+      return [city,reg].filter(Boolean).join(", ")||`${lat.toFixed(3)}, ${lon.toFixed(3)}`;
+    }catch{ return `${lat.toFixed(3)}, ${lon.toFixed(3)}`; }
+  }
+  $("useGps").addEventListener("click",()=>{
+    if(!navigator.geolocation){ ipFallback("Geolocation isn't available in this browser."); return; }
+    $("useGps").textContent="Locating…"; $("useGps").disabled=true;
+    const done=()=>{ $("useGps").textContent="Use my location"; $("useGps").disabled=false; };
+    navigator.geolocation.getCurrentPosition(
+      async(pos)=>{ const {latitude,longitude}=pos.coords; done(); setLocation(latitude,longitude,await reverseName(latitude,longitude),"your location"); },
+      ()=>{ done(); ipFallback("Couldn't get precise location — using an approximate one from your network."); },
+      {enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+  });
+  async function ipFallback(msg){
+    try{ const j=await getJSON("https://ipapi.co/json/");
+      if(j&&j.latitude!=null){ setLocation(j.latitude,j.longitude,[j.city,j.region_code||j.region].filter(Boolean).join(", ")||"Approx.","approx. from network"); if(msg)$("manualMsg").textContent=msg; return; }
+    }catch{}
+    $("manualForm").hidden=false; $("manualMsg").textContent=(msg?msg+" ":"")+"Enter a place below.";
+  }
+  $("manualForm").addEventListener("submit",async(e)=>{
+    e.preventDefault(); const q=$("placeInput").value.trim();
+    if(!q){ $("manualMsg").textContent="Type a city, ZIP, or place first."; return; }
+    $("manualMsg").textContent="Searching…";
+    try{ const j=await getJSON(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,{headers:{Accept:"application/json"}});
+      if(!j.length){ $("manualMsg").textContent="No match. Try a nearby city or a ZIP/postal code."; return; }
+      const rr=j[0]; $("manualMsg").textContent=""; $("manualForm").hidden=true;
+      setLocation(parseFloat(rr.lat),parseFloat(rr.lon),rr.display_name.split(",").slice(0,2).join(",").trim(),"manual");
+    }catch(err){ $("manualMsg").textContent="Lookup failed. Try again."; }
+  });
+  $("useHome").addEventListener("click",()=>setLocation(DEFAULT_HOME.lat,DEFAULT_HOME.lon,DEFAULT_HOME.name,"default"));
+
+  // ================= TOOLS =================
+  const host=$("toolHost");
+  const el=(h)=>{ const d=document.createElement("div"); d.innerHTML=h; return d; };
+  const num=(v)=>{ const n=parseFloat(v); return isFinite(n)?n:null; };
+  const rnd=(n,p=4)=>{ if(n==null||!isFinite(n))return "—"; const f=Math.abs(n)>=100?2:p; return (+n.toFixed(f)).toLocaleString(undefined,{maximumFractionDigits:f}); };
+
+  // unit converter
+  const UNITS={
+    Length:{base:"m",u:{m:1,km:1000,cm:.01,mm:.001,mi:1609.344,yd:.9144,ft:.3048,in:.0254,nmi:1852}},
+    Mass:{base:"kg",u:{kg:1,g:.001,mg:1e-6,t:1000,lb:.45359237,oz:.028349523,st:6.35029318}},
+    Speed:{base:"m/s",u:{"m/s":1,"km/h":1/3.6,mph:0.44704,kn:0.514444,"ft/s":0.3048}},
+    Pressure:{base:"Pa",u:{Pa:1,hPa:100,kPa:1000,bar:1e5,atm:101325,psi:6894.757,mmHg:133.322,inHg:3386.389}},
+    Volume:{base:"L",u:{L:1,mL:.001,"m³":1000,"gal(US)":3.785411784,"gal(UK)":4.54609,qt:0.946352946,pt:0.473176473,cup:0.2365882365,"fl-oz":0.0295735296}}
+  };
+  const toolDefs={
+    unit(){
+      const cats=Object.keys(UNITS).concat("Temperature");
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f">Category<select id="u_cat" class="fld">${cats.map(c=>`<option>${c}</option>`).join("")}</select></label>
+        <label class="f">Value<input id="u_val" class="fld" type="number" value="1" inputmode="decimal"></label>
+        <label class="f">From<select id="u_from" class="fld"></select></label>
+        <label class="f">To<select id="u_to" class="fld"></select></label>
+        <div class="toolout full" id="u_out">—</div></div>`);
+      host.appendChild(d);
+      const fillUnits=()=>{
+        const cat=$("u_cat").value;
+        const keys=cat==="Temperature"?["°C","°F","K"]:Object.keys(UNITS[cat].u);
+        $("u_from").innerHTML=keys.map(k=>`<option>${k}</option>`).join("");
+        $("u_to").innerHTML=keys.map((k,i)=>`<option${i===1?" selected":""}>${k}</option>`).join("");
+        calc();
+      };
+      const calc=()=>{
+        const cat=$("u_cat").value, v=num($("u_val").value), f=$("u_from").value, t=$("u_to").value;
+        if(v==null){ $("u_out").textContent="Enter a number."; return; }
+        let out;
+        if(cat==="Temperature"){
+          let C = f==="°C"?v : f==="°F"?(v-32)*5/9 : v-273.15;
+          out = t==="°C"?C : t==="°F"?C*9/5+32 : C+273.15;
+        } else { out=v*UNITS[cat].u[f]/UNITS[cat].u[t]; }
+        $("u_out").innerHTML=`<span class="big">${rnd(out,6)}</span> ${esc(t)}`;
+      };
+      d.addEventListener("input",calc); $("u_cat").addEventListener("change",fillUnits); fillUnits();
+    },
+    dtg(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f full">Date &amp; time (your local)<input id="dt_in" class="fld" type="datetime-local" step="60"></label>
+        <div class="toolout full" id="dt_out">—</div>
+        <label class="f">Add a city's time zone<select id="dt_tz" class="fld"></select></label>
+        <div class="toolrow" style="align-self:end"><button class="btn" id="dt_now" type="button">Set to now</button></div>
+        <div class="toolout full" id="dt_world">—</div></div>`);
+      host.appendChild(d);
+      const zones=["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","America/Sao_Paulo","Europe/London","Europe/Paris","Europe/Moscow","Africa/Cairo","Asia/Dubai","Asia/Kolkata","Asia/Bangkok","Asia/Shanghai","Asia/Tokyo","Australia/Sydney","Pacific/Auckland"];
+      $("dt_tz").innerHTML=zones.map(z=>`<option${z==="UTC"?" selected":""}>${z}</option>`).join("");
+      const setNow=()=>{ const n=new Date(); const local=new Date(n.getTime()-n.getTimezoneOffset()*60000); $("dt_in").value=local.toISOString().slice(0,16); calc(); };
+      const calc=()=>{
+        const v=$("dt_in").value; if(!v){ $("dt_out").textContent="Pick a date and time."; return; }
+        const d0=new Date(v); const off=offsetMinFor(d0);
+        const dtg=`${pad(d0.getUTCDate())}${pad(d0.getUTCHours())}${pad(d0.getUTCMinutes())}Z`;
+        const localDtg=`${pad(+new Intl.DateTimeFormat("en-GB",{timeZone:tz(),day:"2-digit"}).format(d0))}${new Intl.DateTimeFormat("en-GB",{timeZone:tz(),hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).format(d0).replace(":","")}${zoneLetter(off)}`;
+        $("dt_out").innerHTML=`<span class="big">${localDtg}</span>  (local DTG)\nZulu / UTC:  ${dtg}  ${d0.toUTCString().replace("GMT","UTC")}\nISO 8601:    ${d0.toISOString()}\nUnix epoch:  ${Math.floor(d0.getTime()/1000)}`;
+        const z=$("dt_tz").value;
+        $("dt_world").textContent=`${z}:  ${new Intl.DateTimeFormat("en-GB",{timeZone:z,dateStyle:"medium",timeStyle:"short",hourCycle:"h23"}).format(d0)}`;
+      };
+      d.addEventListener("input",calc); $("dt_now").addEventListener("click",setNow); setNow();
+    },
+    coord(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f">Latitude (decimal)<input id="c_lat" class="fld" type="number" step="any" placeholder="37.9358"></label>
+        <label class="f">Longitude (decimal)<input id="c_lon" class="fld" type="number" step="any" placeholder="-122.3477"></label>
+        <div class="toolout full" id="c_out">Enter coordinates to convert to DMS, UTM and MGRS.</div></div>`);
+      host.appendChild(d);
+      const dms=(v,pos,neg)=>{ const h=v>=0?pos:neg; v=Math.abs(v); const dd=Math.floor(v),mm=Math.floor((v-dd)*60),ss=((v-dd)*60-mm)*60; return `${dd}°${pad(mm)}'${ss.toFixed(1)}"${h}`; };
+      function utm(lat,lon){
+        const a=6378137,f=1/298.257223563,k0=.9996,e2=f*(2-f),ep2=e2/(1-e2);
+        const zone=Math.floor((lon+180)/6)+1, lon0=((zone-1)*6-180+3)*r, la=lat*r, lo=lon*r;
+        const N=a/Math.sqrt(1-e2*Math.sin(la)**2),T=Math.tan(la)**2,C=ep2*Math.cos(la)**2,A=Math.cos(la)*(lo-lon0);
+        const M=a*((1-e2/4-3*e2**2/64-5*e2**3/256)*la-(3*e2/8+3*e2**2/32+45*e2**3/1024)*Math.sin(2*la)+(15*e2**2/256+45*e2**3/1024)*Math.sin(4*la)-(35*e2**3/3072)*Math.sin(6*la));
+        let E=k0*N*(A+(1-T+C)*A**3/6+(5-18*T+T*T+72*C-58*ep2)*A**5/120)+500000;
+        let Nn=k0*(M+N*Math.tan(la)*(A*A/2+(5-T+9*C+4*C*C)*A**4/24+(61-58*T+T*T+600*C-330*ep2)*A**6/720));
+        if(lat<0)Nn+=1e7;
+        const band="CDEFGHJKLMNPQRSTUVWX"[Math.max(0,Math.min(19,Math.floor((lat+80)/8)))];
+        return {zone,band,E,Nn};
+      }
+      function mgrs(u){
+        const col="ABCDEFGH JKLMNPQR STUVWXYZ".split(" ")[(u.zone-1)%3][Math.floor(u.E/100000)-1];
+        const nSet="ABCDEFGHJKLMNPQRSTUV", off=(u.zone%2)?0:5;
+        const row=nSet[(Math.floor(u.Nn/100000)+off)%20];
+        return `${u.zone}${u.band} ${col}${row} ${pad5(u.E%100000)} ${pad5(u.Nn%100000)}`;
+      }
+      const pad5=(n)=>String(Math.floor(n)).padStart(5,"0");
+      const calc=()=>{
+        const lat=num($("c_lat").value), lon=num($("c_lon").value);
+        if(lat==null||lon==null||lat<-80||lat>84){ $("c_out").textContent="Enter a valid latitude (−80 to 84) and longitude."; return; }
+        const u=utm(lat,lon);
+        $("c_out").innerHTML=`<span class="big">${dms(lat,"N","S")}  ${dms(lon,"E","W")}</span>
+Decimal:  ${lat.toFixed(6)}, ${lon.toFixed(6)}
+UTM:      ${u.zone}${u.band}  ${Math.round(u.E)}E  ${Math.round(u.Nn)}N
+MGRS:     ${mgrs(u)}
+Geo URI:  geo:${lat.toFixed(6)},${lon.toFixed(6)}`;
+      };
+      d.addEventListener("input",calc);
+      window.__coordCalc=()=>{ $("c_lat").value=HOME.lat.toFixed(6); $("c_lon").value=HOME.lon.toFixed(6); calc(); };
+    },
+    ration(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f">People<input id="r_p" class="fld" type="number" min="1" value="4"></label>
+        <label class="f">Days<input id="r_d" class="fld" type="number" min="1" value="3"></label>
+        <label class="f">Water per person/day (L)<input id="r_w" class="fld" type="number" step="0.1" value="3.8"></label>
+        <label class="f">Calories per person/day<input id="r_c" class="fld" type="number" step="100" value="2000"></label>
+        <div class="toolout full" id="r_out">—</div></div>`);
+      host.appendChild(d);
+      const calc=()=>{
+        const p=num($("r_p").value)||0,dd=num($("r_d").value)||0,w=num($("r_w").value)||0,c=num($("r_c").value)||0;
+        const L=p*dd*w, gal=L/3.785411784, cal=p*dd*c;
+        $("r_out").innerHTML=`<span class="big">${rnd(L,1)} L</span> water  (${rnd(gal,1)} US gal)
+Total food energy:  ${rnd(cal,0)} kcal  (~${rnd(cal/2000,1)} person-days at 2000 kcal)
+Rule of thumb:  min. 1 gal / 3.8 L per person per day, more in heat or for exertion.`;
+      };
+      d.addEventListener("input",calc); calc();
+    },
+    dist(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f">From lat<input id="d_la1" class="fld" type="number" step="any"></label>
+        <label class="f">From lon<input id="d_lo1" class="fld" type="number" step="any"></label>
+        <label class="f">To lat<input id="d_la2" class="fld" type="number" step="any"></label>
+        <label class="f">To lon<input id="d_lo2" class="fld" type="number" step="any"></label>
+        <div class="toolout full" id="d_out">Enter two points to get great-circle distance and bearing.</div></div>`);
+      host.appendChild(d);
+      const calc=()=>{
+        const a=num($("d_la1").value),b=num($("d_lo1").value),c=num($("d_la2").value),e=num($("d_lo2").value);
+        if([a,b,c,e].some(x=>x==null)){ $("d_out").textContent="Enter all four coordinates."; return; }
+        const k=km(a,b,c,e), br=bearing(a,b,c,e);
+        $("d_out").innerHTML=`<span class="big">${rnd(k,1)} km</span>  (${rnd(k*0.621371,1)} mi, ${rnd(k/1.852,1)} nmi)
+Initial bearing:  ${Math.round(br)}° ${compass(br)}`;
+      };
+      d.addEventListener("input",calc);
+      window.__distCalc=()=>{ $("d_la1").value=HOME.lat.toFixed(6); $("d_lo1").value=HOME.lon.toFixed(6); calc(); };
+    },
+    feels(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f">Temperature<input id="f_t" class="fld" type="number" step="any" value="90"></label>
+        <label class="f">Units<select id="f_u" class="fld"><option>°F</option><option>°C</option></select></label>
+        <label class="f">Humidity (%)<input id="f_h" class="fld" type="number" min="0" max="100" value="55"></label>
+        <label class="f">Wind speed<input id="f_w" class="fld" type="number" step="any" value="5"></label>
+        <label class="f">Wind units<select id="f_wu" class="fld"><option>mph</option><option>km/h</option><option>kn</option></select></label>
+        <div class="toolout full" id="f_out">—</div></div>`);
+      host.appendChild(d);
+      const beaufort=(ms)=>{const t=[.3,1.6,3.4,5.5,8,10.8,13.9,17.2,20.8,24.5,28.5,32.7];let i=0;while(i<t.length&&ms>=t[i])i++;return i;};
+      const beaufortName=["Calm","Light air","Light breeze","Gentle breeze","Moderate breeze","Fresh breeze","Strong breeze","Near gale","Gale","Strong gale","Storm","Violent storm","Hurricane force"];
+      const calc=()=>{
+        let t=num($("f_t").value), h=num($("f_h").value), w=num($("f_w").value);
+        if(t==null){ $("f_out").textContent="Enter a temperature."; return; }
+        const F = $("f_u").value==="°F"? t : t*9/5+32;
+        const wu=$("f_wu").value, mph = w==null?0 : wu==="mph"?w : wu==="km/h"?w/1.609344 : w*1.150779;
+        const ms = mph*0.44704;
+        let lines=[];
+        if(F>=80&&h!=null&&h>=40){
+          let hi=-42.379+2.04901523*F+10.14333127*h-0.22475541*F*h-0.00683783*F*F-0.05481717*h*h+0.00122874*F*F*h+0.00085282*F*h*h-0.00000199*F*F*h*h;
+          const show = $("f_u").value==="°F"? hi : (hi-32)*5/9;
+          lines.push(`Heat index:  <b>${rnd(show,1)} ${$("f_u").value}</b> — how hot it feels`);
+        }
+        if(F<=50&&mph>3){
+          let wc=35.74+0.6215*F-35.75*Math.pow(mph,0.16)+0.4275*F*Math.pow(mph,0.16);
+          const show=$("f_u").value==="°F"? wc : (wc-32)*5/9;
+          lines.push(`Wind chill:  <b>${rnd(show,1)} ${$("f_u").value}</b> — how cold it feels`);
+        }
+        if(!lines.length) lines.push(`"Feels like" matches actual temp in these conditions (heat index needs ≥80°F &amp; ≥40% RH; wind chill needs ≤50°F &amp; wind >3 mph).`);
+        const bf=beaufort(ms);
+        lines.push(`Wind:  Beaufort ${bf} — ${beaufortName[bf]}  (${rnd(mph,0)} mph / ${rnd(mph*1.609344,0)} km/h)`);
+        $("f_out").innerHTML=lines.join("\n");
+      };
+      d.addEventListener("input",calc); calc();
+    },
+    enc(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f full">Text<textarea id="e_in" class="fld" placeholder="Type or paste text…">INTER-Q</textarea></label>
+        <label class="f">Scheme<select id="e_mode" class="fld"><option>Base64</option><option>URL</option><option>Hex</option></select></label>
+        <div class="toolrow" style="align-self:end"><button class="btn" id="e_enc" type="button">Encode ▶</button><button class="btn" id="e_dec" type="button">◀ Decode</button></div>
+        <div class="toolout full" id="e_out">—</div></div>`);
+      host.appendChild(d);
+      const b64e=(s)=>btoa(unescape(encodeURIComponent(s)));
+      const b64d=(s)=>decodeURIComponent(escape(atob(s.trim())));
+      const hexe=(s)=>Array.from(new TextEncoder().encode(s)).map(b=>b.toString(16).padStart(2,"0")).join("");
+      const hexd=(s)=>{const h=s.replace(/[^0-9a-f]/gi,"");const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return new TextDecoder().decode(a);};
+      const run=(dir)=>{
+        const m=$("e_mode").value, s=$("e_in").value;
+        try{
+          let out = m==="Base64"?(dir?b64e(s):b64d(s)) : m==="URL"?(dir?encodeURIComponent(s):decodeURIComponent(s)) : (dir?hexe(s):hexd(s));
+          $("e_out").textContent=out;
+        }catch(err){ $("e_out").textContent="Can't "+(dir?"encode":"decode")+" that input as "+m+"."; }
+      };
+      $("e_enc").addEventListener("click",()=>run(true)); $("e_dec").addEventListener("click",()=>run(false)); run(true);
+    },
+    async hash(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f full">Text<textarea id="h_in" class="fld" placeholder="Type or paste text…">INTER-Q</textarea></label>
+        <div class="toolout full" id="h_out">—</div></div>`);
+      host.appendChild(d);
+      const calc=()=>{
+        try{
+          const data=new TextEncoder().encode($("h_in").value);
+          $("h_out").innerHTML=`SHA-256:\n${sha256(data)}\n\nSHA-1:\n${sha1(data)}`;
+        }catch(e){ $("h_out").textContent="Couldn't hash that input."; }
+      };
+      $("h_in").addEventListener("input",calc); calc();
+    },
+    morse(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f full">Text<textarea id="m_in" class="fld">SOS INTER-Q</textarea></label>
+        <div class="toolout full" id="m_morse">—</div>
+        <div class="toolout full" id="m_pho">—</div></div>`);
+      host.appendChild(d);
+      const M={A:".-",B:"-...",C:"-.-.",D:"-..",E:".",F:"..-.",G:"--.",H:"....",I:"..",J:".---",K:"-.-",L:".-..",M:"--",N:"-.",O:"---",P:".--.",Q:"--.-",R:".-.",S:"...",T:"-",U:"..-",V:"...-",W:".--",X:"-..-",Y:"-.--",Z:"--..","0":"-----","1":".----","2":"..---","3":"...--","4":"....-","5":".....","6":"-....","7":"--...","8":"---..","9":"----.",".":".-.-.-",",":"--..--","?":"..--..","/":"-..-.","-":"-....-","@":".--.-."};
+      const P={A:"Alpha",B:"Bravo",C:"Charlie",D:"Delta",E:"Echo",F:"Foxtrot",G:"Golf",H:"Hotel",I:"India",J:"Juliett",K:"Kilo",L:"Lima",M:"Mike",N:"November",O:"Oscar",P:"Papa",Q:"Quebec",R:"Romeo",S:"Sierra",T:"Tango",U:"Uniform",V:"Victor",W:"Whiskey",X:"Xray",Y:"Yankee",Z:"Zulu","0":"Zero","1":"One","2":"Two","3":"Three","4":"Four","5":"Five","6":"Six","7":"Seven","8":"Eight","9":"Nine"};
+      const calc=()=>{
+        const s=$("m_in").value.toUpperCase();
+        $("m_morse").textContent="Morse:  "+s.split("").map(ch=>ch===" "?"/":(M[ch]??"·")).join(" ");
+        $("m_pho").textContent="Phonetic:  "+s.split("").map(ch=>ch===" "?"|":(P[ch]??ch)).join(" ");
+      };
+      $("m_in").addEventListener("input",calc); calc();
+    },
+    pw(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f full">Password to test <span class="muted">(stays in your browser — never sent anywhere)</span>
+          <input id="pw_in" class="fld" type="text" autocomplete="off" spellcheck="false" placeholder="Type a password to score it"></label>
+        <div class="full"><div class="pwbar"><div id="pw_fill" class="pwfill"></div></div></div>
+        <div class="toolout full" id="pw_out">Type a password above.</div></div>`);
+      host.appendChild(d);
+      const COMMON=["password","123456","12345678","qwerty","abc123","letmein","admin","welcome","monkey","dragon","111111","iloveyou","000000","password1","qwerty123","sunshine","princess","football","login","passw0rd","starwars","trustno1"];
+      const pool=(p)=>{let s=0;if(/[a-z]/.test(p))s+=26;if(/[A-Z]/.test(p))s+=26;if(/[0-9]/.test(p))s+=10;if(/[^A-Za-z0-9]/.test(p))s+=33;return s||1;};
+      const estimate=(p)=>{
+        if(!p)return null;
+        let bits=p.length*Math.log2(pool(p)); const lower=p.toLowerCase(); const pen=[];
+        if(COMMON.includes(lower)){bits=Math.min(bits,10);pen.push("It's a very common password.");}
+        else if(COMMON.some(w=>lower.includes(w))){bits=Math.min(bits,22);pen.push("Contains a common password word.");}
+        if(/^(.)\1+$/.test(p)){bits=Math.min(bits,12);pen.push("Just one character repeated.");}
+        if(/(012|123|234|345|456|567|678|789|abc|bcd|qwe|wer|asd|zxc)/i.test(p)){bits=Math.min(bits,Math.max(16,bits-20));pen.push("Contains a keyboard or number run.");}
+        if(/^\d+$/.test(p)&&p.length<=10)pen.push("All digits — tried first by crackers.");
+        return {bits:Math.round(bits),pen};
+      };
+      const band=(b)=>b<28?["Very weak","p-crit",15]:b<36?["Weak","p-crit",35]:b<60?["Fair","p-warn",62]:b<128?["Strong","p-ok",85]:["Very strong","p-ok",100];
+      const crack=(bits)=>{const s=Math.pow(2,bits-1)/1e11;if(s<1)return "cracked instantly";const U=[["century",3155760000],["year",31557600],["day",86400],["hour",3600],["minute",60],["second",1]];for(const[n,sec]of U){if(s>=sec){const v=s/sec;if(n==="century"&&v>1e6)return "effectively uncrackable";return Math.round(v).toLocaleString()+" "+n+(Math.round(v)!==1?"s":"");}}return "cracked instantly";};
+      const calc=()=>{
+        const p=$("pw_in").value, r=estimate(p);
+        if(!r){ $("pw_out").textContent="Type a password above."; $("pw_fill").style.width="0%"; return; }
+        const [label,cls,pct]=band(r.bits);
+        $("pw_fill").style.width=pct+"%"; $("pw_fill").className="pwfill "+cls;
+        const tips=r.pen.slice();
+        if(p.length<12)tips.push("Use at least 12–16 characters.");
+        if(!/[A-Z]/.test(p)||!/[a-z]/.test(p))tips.push("Mix upper and lower case.");
+        if(!/[0-9]/.test(p))tips.push("Add numbers.");
+        if(!/[^A-Za-z0-9]/.test(p))tips.push("Add a symbol.");
+        $("pw_out").innerHTML=`<span class="pill ${cls}">${label}</span>  <b>${r.bits} bits</b> of entropy
+Offline crack time (fast attacker, ~100B guesses/sec): ${crack(r.bits)}
+${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a password manager and never reuse it."}`;
+      };
+      $("pw_in").addEventListener("input",calc); calc();
+    },
+    gen(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f">Length: <span id="g_len_v">20</span><input id="g_len" type="range" min="8" max="64" value="20" step="1"></label>
+        <div class="f" style="align-self:end"><button class="btn" id="g_go" type="button">↻ Generate new</button></div>
+        <label class="f" style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="g_low" checked> lowercase (a–z)</label>
+        <label class="f" style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="g_up" checked> UPPERCASE (A–Z)</label>
+        <label class="f" style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="g_num" checked> digits (0–9)</label>
+        <label class="f" style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="g_sym" checked> symbols (!@#$…)</label>
+        <label class="f full" style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="g_amb"> avoid look-alike characters (0 O 1 l I)</label>
+        <div class="toolout full" id="g_out">—</div>
+        <div class="toolrow full"><button class="btn" id="g_copy" type="button">Copy</button><span class="muted" id="g_msg">Generated on your device — nothing is sent anywhere.</span></div></div>`);
+      host.appendChild(d);
+      const SETS={low:"abcdefghijklmnopqrstuvwxyz",up:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",num:"0123456789",sym:"!@#$%^&*()-_=+[]{};:,.?/"};
+      const RNG=(window.crypto&&window.crypto.getRandomValues)?()=>{const u=new Uint32Array(1);window.crypto.getRandomValues(u);return u[0];}:()=>Math.floor(Math.random()*0x100000000);
+      const rint=(n)=>{const max=Math.floor(0x100000000/n)*n;let x;do{x=RNG();}while(x>=max);return x%n;};
+      const strip=(s)=>$("g_amb").checked?s.replace(/[0O1lI]/g,""):s;
+      function make(){
+        const sets=[];
+        if($("g_low").checked)sets.push(strip(SETS.low));
+        if($("g_up").checked)sets.push(strip(SETS.up));
+        if($("g_num").checked)sets.push(strip(SETS.num));
+        if($("g_sym").checked)sets.push(SETS.sym);
+        const pool=sets.join("");
+        if(!pool){ $("g_out").textContent="Select at least one character set."; return; }
+        const len=+$("g_len").value; const chars=[];
+        sets.forEach(s=>{ if(chars.length<len) chars.push(s[rint(s.length)]); }); // guarantee one of each
+        while(chars.length<len) chars.push(pool[rint(pool.length)]);
+        for(let i=chars.length-1;i>0;i--){ const jj=rint(i+1); [chars[i],chars[jj]]=[chars[jj],chars[i]]; }
+        const out=chars.join("");
+        $("g_out").innerHTML=`<span class="big" id="g_pw">${esc(out)}</span>\n<span class="muted">${len} chars · ~${Math.round(len*Math.log2(pool.length))} bits of entropy · pool of ${pool.length}</span>`;
+      }
+      $("g_len").addEventListener("input",()=>{ $("g_len_v").textContent=$("g_len").value; make(); });
+      d.addEventListener("change",make);
+      $("g_go").addEventListener("click",make);
+      $("g_copy").addEventListener("click",async()=>{ const el2=$("g_pw"); if(!el2)return; const pw=el2.textContent;
+        try{ await navigator.clipboard.writeText(pw); $("g_msg").textContent="Copied."; }
+        catch{ const rg=document.createRange(); rg.selectNodeContents(el2); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(rg); $("g_msg").textContent="Selected — press Ctrl/Cmd+C."; }
+        setTimeout(()=>$("g_msg").textContent="Generated on your device — nothing is sent anywhere.",2500); });
+      make();
+    },
+    qr(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <label class="f full">Text or URL<textarea id="q_in" class="fld">https://inter-q.com</textarea></label>
+        <div class="full" style="display:flex;justify-content:center"><div id="qrCanvas"></div></div>
+        <div class="muted full" id="q_msg"></div></div>`);
+      host.appendChild(d);
+      const box=$("qrCanvas");
+      let qr=null;
+      const calc=()=>{
+        if(typeof QRCode==="undefined"){ $("q_msg").textContent="QR library didn't load (offline?). Everything else works."; return; }
+        box.innerHTML=""; qr=new QRCode(box,{text:$("q_in").value||" ",width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
+        $("q_msg").textContent="Right-click or long-press the code to save it.";
+      };
+      $("q_in").addEventListener("input",calc); calc();
+    }
+  };
+  function loadTool(name){
+    const r=toolDefs[name](); // some async; host set synchronously inside
+    if(name==="coord"&&window.__coordCalc){} // noop
+  }
+  $("toolSel").addEventListener("change",()=>loadTool($("toolSel").value));
+  loadTool("unit");
+
+  // ================= init =================
+  $("refresh").addEventListener("click",refresh);
+  $("genReport").addEventListener("click",openReport);
+  $("printReport").addEventListener("click",()=>window.print());
+  $("closeReport").addEventListener("click",()=>{ $("reportWin").hidden=true; });
+  $("copyReport").addEventListener("click",async()=>{
+    const notes=$("reportNotes")?$("reportNotes").innerText.trim():"";
+    const txt=$("reportText").textContent+(notes?"\n\nNOTES / REMARKS:\n"+notes:"");
+    try{ await navigator.clipboard.writeText(txt); $("copyMsg").textContent="Copied."; }
+    catch{ const r=document.createRange(); r.selectNodeContents($("reportText")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); $("copyMsg").textContent="Selected — press Ctrl/Cmd+C."; }
+    setTimeout(()=>$("copyMsg").textContent="",3000);
+  });
+  applyLocationToUI();
+  tick(); setInterval(tick,15000);
+  refresh(); setInterval(refresh,REFRESH_MS);
+})();
+
+</script>
+</body>
+</html>
