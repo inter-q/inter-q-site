@@ -142,6 +142,84 @@
   .pwfill { height:100%; width:0; transition:width .15s; background:var(--ok); }
   .pwfill.p-crit { background:var(--crit); } .pwfill.p-warn { background:#b58900; } .pwfill.p-ok { background:var(--ok); }
   @media (max-width:520px){ .toolpane{ grid-template-columns:1fr; } }
+  /* ===== ADVANCED THREAT ASSESSMENT.EXE ===== */
+  .ta-intro p { margin:0 0 8px; }
+  #taForm { display:flex; flex-direction:column; gap:8px; }
+  .ta-mark { text-align:center; font-weight:bold; letter-spacing:.08em; font-size:13px; padding:4px; color:var(--warn); background:var(--warn-bg); border:1px solid var(--warn); }
+  .ta-banner { padding:8px 10px; font-weight:bold; border:2px solid; line-height:1.4; }
+  .ta-banner.crit { background:var(--crit-bg); color:var(--crit); border-color:var(--crit); }
+  .ta-banner.warn { background:var(--warn-bg); color:var(--warn); border-color:var(--warn); }
+  .ta-banner.ok { background:var(--ok-bg); color:var(--ok); border-color:var(--lo); }
+  .ta-banner small { display:block; font-weight:normal; font-size:13px; margin-top:2px; }
+  .ta-steps { display:flex; flex-wrap:wrap; gap:4px; }
+  .ta-steps .btn { font-size:12px; padding:3px 7px; }
+  .ta-steps .btn.on { background:var(--ok-bg); border-color:var(--hi); color:#aaffc8; }
+  .ta-steps .btn:disabled { opacity:.4; cursor:not-allowed; box-shadow:none; }
+  .ta-h { font-weight:bold; text-transform:uppercase; letter-spacing:.06em; color:var(--title-ink); font-size:14px; margin:6px 0 2px; border-bottom:1px solid var(--lo); padding-bottom:3px; }
+  .ta-sub { font-weight:bold; text-transform:uppercase; letter-spacing:.05em; color:var(--title-ink); font-size:12.5px; margin:12px 0 0; }
+  .ta-q { border-bottom:1px dotted #0c3a1e; padding:8px 0; display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .ta-q:last-child { border-bottom:0; }
+  .ta-q .qt { font-size:15px; }
+  .ta-q .qt b { color:#aaffc8; }
+  .ta-q .qd { font-size:13px; color:var(--ink-dim); }
+  .ta-in { width:100%; }
+  textarea.ta-in { min-height:64px; resize:vertical; }
+  .seg { display:flex; flex-wrap:wrap; gap:4px; }
+  .seg label { display:inline-flex; align-items:center; gap:5px; border:1px solid var(--lo); padding:3px 9px; cursor:pointer; font-size:13px; background:#06220f; }
+  .seg input { accent-color:#4dff88; margin:0; }
+  .seg label:has(input:checked) { background:var(--ok-bg); border-color:var(--hi); color:#aaffc8; }
+  .seg label.hot:has(input:checked) { background:var(--warn-bg); border-color:var(--warn); color:var(--warn); }
+  .seg label.sev:has(input:checked) { background:var(--crit-bg); border-color:var(--crit); color:var(--crit); }
+  .ta-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px 10px; }
+  .ta-grid2 .full { grid-column:1/-1; }
+  .ta-f { display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.05em; min-width:0; }
+  .ta-f .hint { text-transform:none; letter-spacing:0; font-size:12px; }
+  .ta-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .ta-nav { display:flex; justify-content:space-between; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .ta-tally { display:flex; flex-wrap:wrap; gap:6px; }
+  .ta-level { display:flex; flex-direction:column; gap:6px; }
+  .ta-level label { display:grid; grid-template-columns:auto 1fr; gap:2px 8px; border:1px solid var(--lo); padding:6px 9px; cursor:pointer; background:#06220f; }
+  .ta-level label input { grid-row:1/3; margin-top:3px; accent-color:#4dff88; }
+  .ta-level label b.crit { color:var(--crit); } .ta-level label b.warn { color:var(--warn); } .ta-level label b.ok { color:var(--ok); }
+  .ta-level label span { font-size:13px; color:var(--ink-dim); }
+  .ta-level label:has(input:checked) { background:var(--ok-bg); border-color:var(--hi); }
+  .ta-mg { border-bottom:1px dotted #0c3a1e; padding:7px 0; }
+  .ta-mg > label { display:flex; gap:8px; align-items:flex-start; cursor:pointer; }
+  .ta-mg > label input { margin-top:4px; accent-color:#4dff88; }
+  .ta-mg > label span { font-size:13px; color:var(--ink-dim); display:block; }
+  .ta-mg .ta-grid2 { margin:6px 0 0 24px; }
+  .ta-iv { border:1px solid var(--lo); padding:8px; margin-top:8px; }
+  pre.ta-preview { max-height:420px; overflow:auto; }
+  #taPrint { display:none; }
+  @media (max-width:520px){ .ta-grid2 { grid-template-columns:1fr; } .ta-mg .ta-grid2 { margin-left:0; } }
+  @media print {
+    body.print-ta > *:not(#taPrint) { display:none !important; }
+    body.print-ta #taPrint { display:block !important; }
+    html:has(body.print-ta) { color-scheme:light; background:#fff !important; }
+  }
+  #taPrint { page:ta; color:#000; background:#fff; font:10.5pt/1.4 Arial, Helvetica, sans-serif; }
+  #taPrint * { text-shadow:none !important; color:#000 !important; }
+  #taPrint .pmark { text-align:center; font-weight:bold; border:1.5pt solid #000; padding:3pt; letter-spacing:.06em; margin:0 0 10pt; }
+  #taPrint .pmark.end { margin:16pt 0 0; }
+  #taPrint h1 { font-size:16pt; margin:0 0 2pt; }
+  #taPrint .psub { font-size:9.5pt; margin:0 0 8pt; }
+  #taPrint h2 { font-size:11.5pt; text-transform:uppercase; border-bottom:1.5pt solid #000; margin:14pt 0 6pt; padding-bottom:2pt; break-after:avoid; page-break-after:avoid; }
+  #taPrint h3 { font-size:10.5pt; margin:8pt 0 4pt; break-after:avoid; page-break-after:avoid; }
+  #taPrint table { break-before:avoid; }
+  #taPrint table { width:100%; border-collapse:collapse; font-size:9.5pt; margin:2pt 0 6pt; }
+  #taPrint th, #taPrint td { border:0.75pt solid #000 !important; padding:3pt 5pt; text-align:left; vertical-align:top; background:#fff; }
+  #taPrint th { background:#e8e8e8 !important; font-size:8.5pt; text-transform:uppercase; letter-spacing:.03em; }
+  #taPrint td.k { width:30%; font-weight:bold; }
+  #taPrint tr { break-inside:avoid; page-break-inside:avoid; }
+  #taPrint thead { display:table-header-group; }
+  #taPrint .qa { margin:0 0 7pt; break-inside:avoid; page-break-inside:avoid; }
+  #taPrint .qa .q { font-weight:bold; }
+  #taPrint .qa .a { margin-left:12pt; white-space:pre-wrap; }
+  #taPrint .na { font-style:italic; color:#555 !important; }
+  #taPrint .alertbox { border:2pt solid #000; padding:6pt 8pt; font-weight:bold; margin:6pt 0; }
+  #taPrint .sig { display:grid; grid-template-columns:1fr 1fr; gap:10pt 24pt; margin-top:10pt; break-inside:avoid; page-break-inside:avoid; }
+  #taPrint .sig div { border-top:0.75pt solid #000; padding-top:2pt; font-size:9pt; }
+  #taPrint .sig b { display:block; font-size:10.5pt; min-height:14pt; }
 </style>
 </head>
 <body>
@@ -161,7 +239,7 @@
     <div class="bar"><span id="t-loc">Reporting location</span></div>
     <div class="body">
       <div class="locbar">
-        <span class="locnow"><span aria-hidden="true">📍</span> <b id="locName">Richmond, CA</b> <span class="muted" id="locKind">(default)</span></span>
+        <span class="locnow"><b id="locName">Richmond, CA</b> <span class="muted" id="locKind">(default)</span></span>
         <span class="locgrow"></span>
         <button class="btn" id="useGps" type="button">Use my location</button>
         <button class="btn" id="useHome" type="button" hidden>Reset</button>
@@ -255,6 +333,7 @@
       <div class="toolbar">
         <label for="toolSel">Tool</label>
         <select id="toolSel" class="fld">
+          <option value="search">Search operator builder</option>
           <option value="unit">Unit converter</option>
           <option value="dtg">Time &amp; DTG converter</option>
           <option value="coord">Coordinate converter</option>
@@ -273,26 +352,111 @@
     </div>
   </section>
 
+  <!-- ADVANCED THREAT ASSESSMENT -->
+  <section class="win" id="taWin" aria-labelledby="t-ta">
+    <div class="bar"><span id="t-ta">ADVANCED THREAT ASSESSMENT.EXE</span><span class="ts" id="taCaseTs"></span></div>
+    <div class="body">
+      <div class="ta-intro" id="taIntro">
+        <p>Structured behavioral threat assessment worksheet, built on the Advanced Threat Assessment Protocol.</p>
+        <div class="ta-row"><button class="btn" id="taStart" type="button">[ INITIATE ASSESSMENT ]</button></div>
+      </div>
+
+      <form id="taForm" autocomplete="off" hidden>
+        <div class="ta-mark">SENSITIVE &mdash; FOR OFFICIAL USE ONLY</div>
+        <div class="ta-banner crit" id="taImm" hidden>IMMINENT THREAT INDICATED &mdash; CALL 911 / NOTIFY LAW ENFORCEMENT NOW<small>Keep documenting here once the immediate safety step is taken.</small></div>
+        <div class="ta-banner warn" id="taFullBanner" hidden></div>
+        <div class="ta-steps" id="taSteps" role="tablist" aria-label="Assessment steps"></div>
+        <div id="taPanels"></div>
+        <div class="ta-nav">
+          <button class="btn" id="taBack" type="button">&#9664; Back</button>
+          <button class="btn" id="taNext" type="button">Next &#9654;</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
   <section class="win" aria-labelledby="t-search">
     <div class="bar"><span id="t-search">SEARCH &amp; LOOKUP</span></div>
     <div class="body">
       <div class="refgroups">
-        <fieldset class="grp"><legend>Search engines &amp; dorking</legend><ul>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.google.com/advanced_search" target="_blank" rel="noopener">Google Advanced Search</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://dorksearch.com/" target="_blank" rel="noopener">DorkSearch</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://yandex.com/" target="_blank" rel="noopener">Yandex</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.dogpile.com/" target="_blank" rel="noopener">Dogpile</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.izito.com/" target="_blank" rel="noopener">Izito metasearch</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://search.carrot2.org/#/search/web" target="_blank" rel="noopener">Carrot2 clustering</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="http://bvsg.org/" target="_blank" rel="noopener">Bing vs Google</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://isearchfrom.com/" target="_blank" rel="noopener">I Search From (geo)</a></li>
-        </ul></fieldset>
         <fieldset class="grp"><legend>People &amp; records</legend><ul>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.familytreenow.com/" target="_blank" rel="noopener">Family Tree Now</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.judyrecords.com/" target="_blank" rel="noopener">Judy Records (courts)</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://transparentcalifornia.com/" target="_blank" rel="noopener">Transparent California</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://commonlaw.name/" target="_blank" rel="noopener">Commonlaw (name changes)</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://opencorporates.com/" target="_blank" rel="noopener">OpenCorporates</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Most wanted / fugitives</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.fbi.gov/wanted" target="_blank" rel="noopener">FBI Most Wanted</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.usmarshals.gov/what-we-do/fugitive-investigations/15-most-wanted-fugitive" target="_blank" rel="noopener">U.S. Marshals 15 Most Wanted</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.atf.gov/news/reward-notices" target="_blank" rel="noopener">ATF Reward Notices</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.dea.gov/fugitives" target="_blank" rel="noopener">DEA Fugitives</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.ice.gov/most-wanted" target="_blank" rel="noopener">ICE Most Wanted</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.secretservice.gov/investigations/mostwanted" target="_blank" rel="noopener">U.S. Secret Service Most Wanted</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.justice.gov/action-center/identify-our-most-wanted-fugitives" target="_blank" rel="noopener">DOJ Most Wanted</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://rewardsforjustice.net/" target="_blank" rel="noopener">Rewards for Justice (State Dept)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.interpol.int/en/How-we-work/Notices/Red-Notices/View-Red-Notices" target="_blank" rel="noopener">INTERPOL Red Notices</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Offender &amp; inmate lookup</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.nsopw.gov/" target="_blank" rel="noopener">NSOPW (national sex offender)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.meganslaw.ca.gov/" target="_blank" rel="noopener">CA Megan's Law (sex offender)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.bop.gov/inmateloc/" target="_blank" rel="noopener">Federal BOP Inmate Locator</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://inmatelocator.cdcr.ca.gov/" target="_blank" rel="noopener">CA CDCR Inmate Locator</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.vinelink.com/" target="_blank" rel="noopener">VINELink (custody status)</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Court &amp; legal</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.courtlistener.com/" target="_blank" rel="noopener">CourtListener / RECAP</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://pacer.uscourts.gov/" target="_blank" rel="noopener">PACER (federal courts)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.unicourt.com/" target="_blank" rel="noopener">UniCourt (state + federal)</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Property &amp; assets</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://publicrecords.netronline.com/" target="_blank" rel="noopener">NETR Online (assessor/recorder)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://regrid.com/" target="_blank" rel="noopener">Regrid (parcel / owner map)</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Business &amp; securities</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.sec.gov/edgar/search/" target="_blank" rel="noopener">SEC EDGAR (filings)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://bizfileonline.sos.ca.gov/search/business" target="_blank" rel="noopener">CA SOS bizfile (entities)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://brokercheck.finra.org/" target="_blank" rel="noopener">FINRA BrokerCheck</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://projects.propublica.org/nonprofits/" target="_blank" rel="noopener">ProPublica Nonprofits (990s)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://sam.gov/search/" target="_blank" rel="noopener">SAM.gov (contractors/exclusions)</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Professional &amp; special licenses</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://npiregistry.cms.hhs.gov/" target="_blank" rel="noopener">NPI Registry (healthcare)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://amsrvs.registry.faa.gov/airmeninquiry/" target="_blank" rel="noopener">FAA Airmen Inquiry (pilots)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://wireless2.fcc.gov/UlsApp/UlsSearch/searchLicense.jsp" target="_blank" rel="noopener">FCC ULS (radio licenses)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://apps.calbar.ca.gov/attorney/LicenseeSearch/QuickSearch" target="_blank" rel="noopener">CA State Bar (attorneys)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.docinfo.org/" target="_blank" rel="noopener">DocInfo / FSMB (physicians, all states)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.nursys.com/" target="_blank" rel="noopener">Nursys (nurses, all states)</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Political &amp; financial disclosure</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.fec.gov/data/receipts/individual-contributions/" target="_blank" rel="noopener">FEC individual contributions</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.opensecrets.org/" target="_blank" rel="noopener">OpenSecrets</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.usaspending.gov/" target="_blank" rel="noopener">USAspending.gov</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Vital records &amp; genealogy</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.familysearch.org/" target="_blank" rel="noopener">FamilySearch</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.findagrave.com/" target="_blank" rel="noopener">Find a Grave</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.legacy.com/" target="_blank" rel="noopener">Legacy.com (obituaries)</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Patents &amp; IP</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://ppubs.uspto.gov/pubwebapp/" target="_blank" rel="noopener">USPTO Patent Public Search</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://tmsearch.uspto.gov/" target="_blank" rel="noopener">USPTO Trademark Search</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>Military</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://scra.dmdc.osd.mil/scra/" target="_blank" rel="noopener">SCRA active-duty status</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>People search (data brokers)</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.truepeoplesearch.com/" target="_blank" rel="noopener">TruePeopleSearch</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.fastpeoplesearch.com/" target="_blank" rel="noopener">FastPeopleSearch</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://thatsthem.com/" target="_blank" rel="noopener">ThatsThem</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.whitepages.com/" target="_blank" rel="noopener">Whitepages</a></li>
+        </ul></fieldset>
+        <fieldset class="grp"><legend>National record directories</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.brbpublications.com/free-sites" target="_blank" rel="noopener">BRB free public-record directory</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.blackbookonline.info/" target="_blank" rel="noopener">Black Book Online</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.onlinesearches.com/" target="_blank" rel="noopener">OnlineSearches (records directory)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.missingmoney.com/" target="_blank" rel="noopener">MissingMoney (unclaimed property)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.melissa.com/v2/lookups/" target="_blank" rel="noopener">Melissa Lookups (name/address/property)</a></li>
         </ul></fieldset>
         <fieldset class="grp"><legend>Usernames &amp; email</legend><ul>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://whatsmyname.app/" target="_blank" rel="noopener">WhatsMyName</a></li>
@@ -366,6 +530,10 @@
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.nirsoft.net/" target="_blank" rel="noopener">NirSoft utilities</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://sleuthkit.org/autopsy/docs/user-docs/4.22.0/" target="_blank" rel="noopener">Autopsy (docs)</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://leadsonline.com/toolbox" target="_blank" rel="noopener">LeadsOnline</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://isearchfrom.com/" target="_blank" rel="noopener">I Search From (geo)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="http://bvsg.org/" target="_blank" rel="noopener">Bing vs Google</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.izito.com/" target="_blank" rel="noopener">Izito metasearch</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://search.carrot2.org/" target="_blank" rel="noopener">Carrot2 clustering</a></li>
         </ul></fieldset>
         <fieldset class="grp"><legend>Archives &amp; media</legend><ul>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://web.archive.org/" target="_blank" rel="noopener">Wayback Machine</a></li>
@@ -440,7 +608,6 @@
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.fcc.gov/scam-glossary" target="_blank" rel="noopener">FCC scam glossary</a></li>
         </ul></fieldset>
         <fieldset class="grp"><legend>Public records &amp; privacy</legend><ul>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.meganslaw.ca.gov/" target="_blank" rel="noopener">Megan's Law (CA)</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://privacy.ca.gov/drop/" target="_blank" rel="noopener">CA Privacy DROP (data removal)</a></li>
         </ul></fieldset>
         <fieldset class="grp"><legend>Imagery &amp; defense</legend><ul>
@@ -1303,6 +1470,165 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         $("q_msg").textContent="Right-click or long-press the code to save it.";
       };
       $("q_in").addEventListener("input",calc); calc();
+    },
+    search(){
+      host.innerHTML="";
+      const ENGINE_GROUPS=[
+        ["General",[
+          ["Google","https://www.google.com/search?q="],
+          ["Bing","https://www.bing.com/search?q="],
+          ["Yahoo","https://search.yahoo.com/search?p="],
+          ["Ask","https://www.ask.com/web?q="],
+          ["Lycos","https://search.lycos.com/web/?q="],
+          ["You.com","https://you.com/search?q="]
+        ]],
+        ["Privacy-focused",[
+          ["DuckDuckGo","https://duckduckgo.com/?q="],
+          ["DuckDuckGo Lite","https://lite.duckduckgo.com/lite/?q="],
+          ["Startpage","https://www.startpage.com/sp/search?query="],
+          ["Brave","https://search.brave.com/search?q="],
+          ["Mullvad Leta","https://leta.mullvad.net/search?q="],
+          ["Mojeek","https://www.mojeek.com/search?q="],
+          ["Ecosia","https://www.ecosia.org/search?q="],
+          ["Qwant","https://www.qwant.com/?q="],
+          ["Swisscows","https://swisscows.com/web?query="],
+          ["MetaGer","https://metager.org/meta/meta.ger3?eingabe="],
+          ["SearXNG","https://searx.be/search?q="],
+          ["Yep","https://yep.com/web?q="],
+          ["Stract","https://stract.com/search?q="],
+          ["Presearch","https://presearch.com/search?q="],
+          ["Gibiru","https://gibiru.com/results.html?q="],
+          ["Lukol","https://www.lukol.com/s.php?q="]
+        ]],
+        ["Metasearch",[
+          ["Dogpile","https://www.dogpile.com/serp?q="],
+          ["MetaCrawler","https://www.metacrawler.com/serp?q="],
+          ["Million Short","https://millionshort.com/search?keywords="]
+        ]],
+        ["AI answers",[
+          ["Perplexity","https://www.perplexity.ai/search?q="]
+        ]],
+        ["Regional",[
+          ["Yandex","https://yandex.com/search/?text="],
+          ["Baidu","https://www.baidu.com/s?wd="],
+          ["Naver (KR)","https://search.naver.com/search.naver?query="],
+          ["Daum (KR)","https://search.daum.net/search?q="],
+          ["Seznam (CZ)","https://search.seznam.cz/?q="],
+          ["Sogou (CN)","https://www.sogou.com/web?query="]
+        ]],
+        ["Indie / niche",[
+          ["Marginalia","https://search.marginalia.nu/search?query="],
+          ["Wiby (old web)","https://wiby.me/?q="]
+        ]],
+        ["Images / code / news",[
+          ["Google Images","https://www.google.com/search?tbm=isch&q="],
+          ["Yandex Images","https://yandex.com/images/search?text="],
+          ["Google News","https://news.google.com/search?q="],
+          ["GitHub code","https://github.com/search?type=code&q="]
+        ]],
+        ["Academic",[
+          ["Google Scholar","https://scholar.google.com/scholar?q="],
+          ["Semantic Scholar","https://www.semanticscholar.org/search?q="],
+          ["BASE","https://www.base-search.net/Search/Results?lookfor="],
+          ["CORE","https://core.ac.uk/search?q="],
+          ["PubMed","https://pubmed.ncbi.nlm.nih.gov/?term="],
+          ["arXiv","https://arxiv.org/search/?searchtype=all&query="]
+        ]]
+      ];
+      const FILETYPES=["","pdf","doc","docx","xls","xlsx","csv","ppt","pptx","txt","rtf"];
+      const d=el(`<div class="toolpane">
+        <label class="f full">All of these words<input id="s_all" class="fld" placeholder="e.g. annual report budget"></label>
+        <label class="f full">Exact phrase<input id="s_exact" class="fld" placeholder='wrapped in quotes — e.g. John Jones'></label>
+        <label class="f">Any of these (OR)<input id="s_any" class="fld" placeholder="pdf OR report"></label>
+        <label class="f">None of these<input id="s_none" class="fld" placeholder="jobs login"></label>
+        <label class="f">On this site / domain<input id="s_site" class="fld" placeholder="linkedin.com"></label>
+        <label class="f">Not on this site<input id="s_xsite" class="fld" placeholder="pinterest.com"></label>
+        <label class="f">File type<select id="s_ft" class="fld">${FILETYPES.map(f=>`<option value="${f}">${f?f.toUpperCase():"— any —"}</option>`).join("")}</select></label>
+        <label class="f">Words in page title<input id="s_title" class="fld" placeholder="agenda minutes"></label>
+        <label class="f">Words in the URL<input id="s_url" class="fld" placeholder="login admin"></label>
+        <label class="f">Search engine<select id="s_eng" class="fld">${ENGINE_GROUPS.map(([g,list])=>`<optgroup label="${g}">${list.map(([n,u])=>`<option value="${u}">${n}</option>`).join("")}</optgroup>`).join("")}</select></label>
+        <div class="toolout full" id="s_out" style="min-height:52px">—</div>
+        <div class="full" id="s_plain" style="font-size:13px;color:var(--ink-dim)"></div>
+        <div class="toolrow full">
+          <button class="btn" type="button" id="s_open">Open search ▸</button>
+          <button class="btn" type="button" id="s_copy">Copy query</button>
+          <button class="btn" type="button" id="s_clear">Clear</button>
+          <span class="muted" id="s_msg"></span>
+        </div>
+        <details class="full" style="font-size:13px">
+          <summary style="cursor:pointer;color:var(--link)">What do these do? (quick guide)</summary>
+          <ul style="margin:8px 0 0;padding-left:18px;line-height:1.6">
+            <li><b>Exact phrase</b> — <code>"john jones"</code> finds that exact wording, not the words scattered apart.</li>
+            <li><b>Any of these (OR)</b> — <code>pdf OR report</code> matches pages with either word.</li>
+            <li><b>None of these</b> — puts a minus in front, e.g. <code>-jobs</code>, to drop unwanted results.</li>
+            <li><b>Site / domain</b> — <code>site:linkedin.com</code> limits results to one website.</li>
+            <li><b>File type</b> — <code>filetype:pdf</code> finds documents of that kind.</li>
+            <li><b>In title / in URL</b> — <code>intitle:</code> and <code>inurl:</code> match where the words appear on the page.</li>
+          </ul>
+          <div class="muted" style="margin-top:6px">Tip: operators aren't identical on every engine. If one acts up, try Google or Bing, which support all of these.</div>
+        </details>
+        <div class="full" style="margin-top:4px">
+          <span class="muted" style="font-size:12px">Presets: </span>
+          <button class="btn" type="button" data-preset="exposure" style="font-size:12px;padding:2px 8px">Check my own exposure</button>
+          <button class="btn" type="button" data-preset="docs" style="font-size:12px;padding:2px 8px">PDFs on a site</button>
+          <button class="btn" type="button" data-preset="social" style="font-size:12px;padding:2px 8px">Find a profile</button>
+        </div>
+      </div>`);
+      host.appendChild(d);
+      const g=(id)=>$(id).value.trim();
+      const splitWords=(s)=>s.split(/\s+/).filter(Boolean);
+      function build(){
+        const parts=[];
+        if(g("s_all")) parts.push(g("s_all"));
+        if(g("s_exact")) parts.push('"'+g("s_exact").replace(/"/g,"")+'"');
+        if(g("s_any")){
+          const ws=splitWords(g("s_any").replace(/\bor\b/gi," "));
+          if(ws.length>1) parts.push("("+ws.join(" OR ")+")"); else if(ws.length) parts.push(ws[0]);
+        }
+        if(g("s_none")) splitWords(g("s_none")).forEach(w=>parts.push("-"+w));
+        if(g("s_site")) parts.push("site:"+g("s_site").replace(/^https?:\/\//,"").replace(/\/.*$/,""));
+        if(g("s_xsite")) parts.push("-site:"+g("s_xsite").replace(/^https?:\/\//,"").replace(/\/.*$/,""));
+        if($("s_ft").value) parts.push("filetype:"+$("s_ft").value);
+        if(g("s_title")){ const ws=splitWords(g("s_title")); parts.push((ws.length>1?"allintitle:":"intitle:")+ws.join(" ")); }
+        if(g("s_url")){ const ws=splitWords(g("s_url")); parts.push((ws.length>1?"allinurl:":"inurl:")+ws.join(" ")); }
+        const q=parts.join(" ").trim();
+        $("s_out").innerHTML=q?`<span class="big" style="font-size:16px">${esc(q)}</span>`:"— build a query above —";
+        $("s_plain").textContent=q?`Reads as: ${plain(parts)}`:"";
+        return q;
+      }
+      function plain(){
+        const bits=[];
+        if(g("s_all")) bits.push(`pages mentioning ${g("s_all")}`);
+        if(g("s_exact")) bits.push(`the exact phrase “${g("s_exact")}”`);
+        if(g("s_any")) bits.push(`any of: ${g("s_any")}`);
+        if(g("s_none")) bits.push(`but not: ${g("s_none")}`);
+        if(g("s_site")) bits.push(`only on ${g("s_site")}`);
+        if(g("s_xsite")) bits.push(`excluding ${g("s_xsite")}`);
+        if($("s_ft").value) bits.push(`${$("s_ft").value.toUpperCase()} files only`);
+        if(g("s_title")) bits.push(`“${g("s_title")}” in the title`);
+        if(g("s_url")) bits.push(`“${g("s_url")}” in the URL`);
+        return bits.length?bits.join("; ")+".":"";
+      }
+      $("s_open").addEventListener("click",()=>{
+        const q=build(); if(!q){ $("s_msg").textContent="Nothing to search yet."; return; }
+        window.open($("s_eng").value+encodeURIComponent(q),"_blank","noopener");
+      });
+      $("s_copy").addEventListener("click",async()=>{
+        const q=build(); if(!q) return;
+        try{ await navigator.clipboard.writeText(q); $("s_msg").textContent="Copied."; }
+        catch(e){ const t=document.createElement("textarea"); t.value=q; document.body.appendChild(t); t.select(); try{document.execCommand("copy");$("s_msg").textContent="Copied.";}catch(_){$("s_msg").textContent="Copy failed.";} t.remove(); }
+        setTimeout(()=>{$("s_msg").textContent="";},2500);
+      });
+      $("s_clear").addEventListener("click",()=>{ d.querySelectorAll("input").forEach(i=>i.value=""); $("s_ft").value=""; build(); });
+      d.addEventListener("click",(e)=>{
+        const b=e.target.closest("[data-preset]"); if(!b) return;
+        d.querySelectorAll("input").forEach(i=>i.value=""); $("s_ft").value="";
+        if(b.dataset.preset==="exposure"){ $("s_exact").value="Your Name"; $("s_none").value="jobs"; }
+        if(b.dataset.preset==="docs"){ $("s_site").value="example.com"; $("s_ft").value="pdf"; }
+        if(b.dataset.preset==="social"){ $("s_exact").value="Your Name"; $("s_site").value="linkedin.com"; }
+        build();
+      });
+      d.addEventListener("input",build); build();
     }
   };
   function loadTool(name){
@@ -1310,7 +1636,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     if(name==="coord"&&window.__coordCalc){} // noop
   }
   $("toolSel").addEventListener("change",()=>loadTool($("toolSel").value));
-  loadTool("unit");
+  loadTool("search");
 
   // ================= init =================
   $("refresh").addEventListener("click",refresh);
@@ -1329,6 +1655,517 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   refresh(); setInterval(refresh,REFRESH_MS);
 })();
 
+</script>
+<!-- ADVANCED THREAT ASSESSMENT: everything stays in this tab; nothing is stored or sent. -->
+<div id="taPrint" aria-hidden="true"></div>
+<style id="taPageStyle"></style>
+<script>
+(function(){
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g,(c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  const MARK = "SENSITIVE — FOR OFFICIAL USE ONLY";
+  const NA = "Not assessed";
+
+  // ---------- protocol content ----------
+  const YNU = [["Y","Yes"],["N","No"],["U","Unknown"]];
+  const PAU = [["P","Present"],["A","Absent"],["U","Unknown"]];
+  const INIT = [
+    {id:"i1", t:"text", q:"What is the first step the team should take based on information from the initial report?"},
+    {id:"i2", t:"ynu",  q:"Is there an imminent or immediate threat and need to call law enforcement?", sev:true},
+    {id:"i3", t:"ynu",  q:"Is there a need to gather information?"},
+    {id:"i4", t:"text", q:"What sources of information should the team pursue?"}
+  ];
+  const PRE = [
+    {id:"p1", q:"Any mention by subject of suicidal thoughts / plans / attempts?"},
+    {id:"p2", q:"Any mention of thoughts / plans for violence?"},
+    {id:"p3", q:"Behaviors that cause concern for violence or self-harm?"},
+    {id:"p4", q:"Any behaviors that are significantly disruptive to the environment (workplace, school, campus, organization, community)?"},
+    {id:"p5", q:"Any attack-related behaviors?"}
+  ];
+  const AREAS = [
+    {id:"a1", q:"Facts", d:"Surrounding the initial report of the subject's behavior(s) of concern."},
+    {id:"a2", q:"Subject information", d:"General information regarding the subject."},
+    {id:"a3", q:"Attack behaviors", d:"Information regarding attack-related behaviors."},
+    {id:"a4", q:"Motives", d:"Identification of what is driving the behavior."},
+    {id:"a5", q:"Target selection", d:"Identification of potential targets."}
+  ];
+  const SOURCES = [
+    {id:"s1", q:"Law enforcement & military", d:"Criminal history, calls for service at residence, military service records."},
+    {id:"s2", q:"Workplace", d:"Personnel records (attendance, disciplinary, counseling), performance records, supervisor / coworker interviews."},
+    {id:"s3", q:"Medical & mental health", d:"Care provider notes, social services, substance use history, rehab or behavioral treatment."},
+    {id:"s4", q:"Expressions", d:"Correspondence to/from targets, journals or notes, online presence (social media, blogs, research)."},
+    {id:"s5", q:"Life & relationships", d:"Family / social / occupational relationships, living situation, memberships, routines — the behavioral baseline."},
+    {id:"s6", q:"Weapons access", d:"Attempts to access weapons, target practice, shooting clubs, carry permits, ownership registration."}
+  ];
+  const SRC_STATUS = ["","Consulted","Pending","Not available","N/A"];
+  const IV_STATUS = ["","Completed","Scheduled","Declined","Not conducted"];
+  const PS = [
+    {id:"ps1", q:"Does the subject pose a threat of harm, whether to himself/herself, to others, or to both?"},
+    {id:"ps2", q:"If the subject does not pose a threat of harm, does he/she otherwise demonstrate need for intervention, including mental health care?"}
+  ];
+  const ENH = [
+    {id:"e1", q:"Violence history", d:"Past violence and childhood exposure."},
+    {id:"e2", q:"Health / mental health", d:"Substance abuse, personality disturbances (paranoia, narcissism, antisocial tendencies), severe mental illness (psychosis, delusions)."},
+    {id:"e3", q:"History of suicidality", d:"Threatened or attempted suicide in the past."},
+    {id:"e4", q:"Organized behavior", d:"Demonstrated ability to engage in goal-oriented behavior."},
+    {id:"e5", q:"Weaponry", d:"Possession of or experience with firearms or edged weapons."},
+    {id:"e6", q:"Explosives", d:"Fascination or experimentation with explosives."},
+    {id:"e7", q:"Behavioral history", d:"Stalking, harassing, or history of non-compliance with boundaries."},
+    {id:"e8", q:"Social / environmental", d:"Negative family dynamics, isolation, and instability."}
+  ];
+  const WARN = [
+    {id:"w1", q:"Pathway", d:"Research, planning, and “breach” behavior (dry runs, testing security)."},
+    {id:"w2", q:"Fixation", d:"Increasing preoccupation with a person or cause; increasingly negative characterizations."},
+    {id:"w3", q:"Identification", d:"Identifying as a “warrior” or “agent of a cause”; pseudo-commando fantasies."},
+    {id:"w4", q:"Novel aggression", d:"First-time acts of violence (animal cruelty, assault, vandalism) to test ability."},
+    {id:"w5", q:"Energy burst", d:"Increased pace of activities related to a target shortly before an attack."},
+    {id:"w6", q:"Leakage", d:"Communication of intent to harm a target to a third party."},
+    {id:"w7", q:"Direct threat", d:"Explicit or implicit statement of intent to harm made to the target."},
+    {id:"w8", q:"Approach", d:"Attempting to gain proximity to a target."},
+    {id:"w9", q:"End-of-life planning", d:"Making a will, giving away possessions, or getting affairs in order."},
+    {id:"w10", q:"Last resort", d:"Perception that no alternatives to violence exist; increasing desperation."}
+  ];
+  const KEYQ = [
+    "What are the subject’s motives and goals?",
+    "Are there communications suggesting ideas or intent to attack others?",
+    "Is there an inappropriate interest in workplace attacks, mass murder, or weapons?",
+    "Has the subject engaged in attack-related behaviors (surveying sites, dry runs)?",
+    "Does the subject have the capacity (organized thinking and means) to carry out an attack?",
+    "Is the subject experiencing hopelessness, desperation, or despair?",
+    "Does the subject have a trusting relationship with at least one responsible person?",
+    "Has the subject accepted violence as the only way to solve problems?",
+    "Is the subject’s “story” consistent with their actions?",
+    "Are other people concerned about the person’s potential for violence?",
+    "What circumstances might increase or decrease the likelihood of violence?",
+    "Where is the subject on the “pathway to violence”?"
+  ];
+  const LEVELS = [
+    ["EXTREME","Possible imminent threat. Shows energy bursts, end-of-life planning, or withdrawal from life patterns. Needs immediate containment.","crit"],
+    ["HIGH","Finalized planning and preparation. May have rehearsed the attack or attempted to breach security. Has means and ability.","crit"],
+    ["ELEVATED","Begun preparing (weapons acquisition, surveillance). Warning behaviors are evident; stressors and ideation likely present.","warn"],
+    ["MODERATE","Considering violence as an option. May exhibit a cluster of warning behaviors and increased risk factors (substance abuse, instability).","warn"],
+    ["LOW","Grievance is not at a level where violence is justified. Fear of consequences or moral code still acts as a deterrent. Few warning behaviors.","ok"],
+    ["NONE","No threat of targeted violence. File can be documented and closed.","ok"]
+  ];
+  const MGMT = [
+    ["Take no further action","Assessed as minimal to no risk at this time."],
+    ["Watch and wait","Monitoring online and in-person behaviors when information is insufficient for full assessment."],
+    ["Third-party monitoring","Enlisting a trusted individual (family/friend) to discreetly monitor and influence the subject."],
+    ["Third-party intervention","Active assistance from a third party to help the subject access programs or discourage violent thoughts."],
+    ["Direct interview","Meeting with the subject to gather info, redirect them, or serve as a deterrent."],
+    ["Administrative actions","Suspension, termination, or behavioral contracts with specific consequences."],
+    ["Treatment","Assistance in receiving mental health or substance abuse treatment."],
+    ["Civil actions","Trespass warnings, restraining orders (workplace, gun violence, or civil harassment)."],
+    ["Criminal actions","Arrest, prosecution, and incarceration for violations of criminal statutes."],
+    ["Mental health commitment","Involuntary hospitalization if the subject poses a danger to self or others."]
+  ];
+  const SETTINGS = ["","Workplace","School","Campus","Organization","Community","Other"];
+  const STEPS = ["Case","I. Initial","II. Prelim","IV. Info","V. Factors","VI. Key Qs","VII. Level","VIII. Mgmt","Output"];
+  const FULL_STEPS = [3,4,5,6,7];
+
+  // ---------- time ----------
+  const MON = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const p2 = (n) => String(n).padStart(2,"0");
+  function zoneLetter(offMin){
+    if (offMin % 60) return null;
+    const h = offMin/60; if (h === 0) return "Z";
+    if (h > 0 && h <= 12) return "ABCDEFGHIKLM"[h-1];
+    if (h < 0 && h >= -12) return "NOPQRSTUVWXY"[-h-1];
+    return null;
+  }
+  function dtg(d){
+    const z = `${p2(d.getUTCDate())}${p2(d.getUTCHours())}${p2(d.getUTCMinutes())}Z ${MON[d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}`;
+    const L = zoneLetter(-d.getTimezoneOffset());
+    if (!L || L === "Z") return z;
+    return `${p2(d.getDate())}${p2(d.getHours())}${p2(d.getMinutes())}${L} ${MON[d.getMonth()]} ${String(d.getFullYear()).slice(2)} (${z})`;
+  }
+  const caseNo = (d) => `TA-${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}-${p2(d.getHours())}${p2(d.getMinutes())}`;
+  const fmtLocal = (s) => s ? s.replace("T"," ") : "";
+
+  // ---------- state ----------
+  let st;
+  function fresh(){ return { active:false, step:0, full:false, fullDTG:"", fullReason:"", closedNone:false, dirty:false, ivN:0 }; }
+  st = fresh();
+
+  // ---------- builders ----------
+  function seg(name, opts, hotVals, sevVals){
+    return `<div class="seg" role="radiogroup">${opts.map(([v,l]) => {
+      const cls = (sevVals||[]).includes(v) ? "sev" : (hotVals||[]).includes(v) ? "hot" : "";
+      return `<label class="${cls}"><input type="radio" name="${name}" value="${v}"> ${l}</label>`;
+    }).join("")}</div>`;
+  }
+  const ta = (name, ph, rows) => `<textarea class="fld ta-in" name="${name}" rows="${rows||3}" placeholder="${esc(ph||"")}"></textarea>`;
+  const inp = (name, ph, type) => `<input class="fld ta-in" type="${type||"text"}" name="${name}" placeholder="${esc(ph||"")}">`;
+  const sel = (name, opts) => `<select class="fld ta-in" name="${name}">${opts.map(o=>`<option value="${esc(o)}">${o?esc(o):"— select —"}</option>`).join("")}</select>`;
+  const fld = (label, html, cls, hint) => `<label class="ta-f ${cls||""}">${label}${html}${hint?`<span class="hint muted">${hint}</span>`:""}</label>`;
+
+  function qYNU(num, item, hotY){
+    return `<div class="ta-q"><div class="qt"><b>${num}.</b> ${esc(item.q)}</div>${seg(item.id, YNU, hotY?["Y"]:[], item.sev?["Y"]:[])}${inp(item.id+"_n","Notes")}</div>`;
+  }
+  function qText(num, item){
+    return `<div class="ta-q"><div class="qt"><b>${num}.</b> ${esc(item.q)}</div>${ta(item.id,"")}</div>`;
+  }
+  function factor(item){
+    return `<div class="ta-q"><div class="qt"><b>${esc(item.q)}</b></div><div class="qd">${esc(item.d)}</div>${seg(item.id, PAU, ["P"])}${inp(item.id+"_n","Notes / evidence")}</div>`;
+  }
+
+  function buildPanels(){
+    const P = [];
+    P[0] = `<div class="ta-h">Case information</div>
+      <div class="ta-grid2">
+        ${fld("Case number", inp("case"))}
+        ${fld("Opened (DTG)", `<input class="fld ta-in" type="text" name="opened" readonly>`)}
+        ${fld("Assessor name", inp("assessor"))}
+        ${fld("Assessor role / agency", inp("role"))}
+        ${fld("Team members", inp("team","Names / roles"), "full")}
+        ${fld("Setting", sel("setting", SETTINGS))}
+        ${fld("Location / organization", inp("loc"))}
+        ${fld("Reporting party", inp("rp","Optional"))}
+        ${fld("Report received", inp("rcvd","","datetime-local"))}
+        ${fld("Subject identifier", inp("subject","Initials or case code"), "full", "Use initials or a case code, not a full name.")}
+      </div>`;
+    P[1] = `<div class="ta-h">I. Initial report</div>
+      ${fld("Summary of the initial report", ta("narr","What was reported, by whom, when, and how.",4))}
+      ${INIT.map((q,i)=> q.t==="ynu" ? qYNU(i+1,q,true) : qText(i+1,q)).join("")}`;
+    P[2] = `<div class="ta-h">II. Preliminary assessment</div>
+      ${PRE.map((q,i)=>qYNU(i+1,q,true)).join("")}
+      <div class="ta-banner warn" style="margin-top:8px">If the answer to any question above is YES, a full threat assessment is initiated.</div>
+      <div id="taGate" class="muted" style="margin-top:8px"></div>
+      <div class="ta-row" style="margin-top:8px">
+        <button class="btn" type="button" id="taInitFull">Initiate full assessment &#9654;</button>
+        <button class="btn" type="button" id="taCloseNone" hidden>Document &amp; close &mdash; no threat</button>
+      </div>`;
+    P[3] = `<div class="ta-h">IV. Information gathering</div>
+      <div class="ta-sub">Areas of inquiry</div>
+      ${AREAS.map(a=>`<div class="ta-q"><div class="qt"><b>${esc(a.q)}</b></div><div class="qd">${esc(a.d)}</div>${ta(a.id,"")}</div>`).join("")}
+      <div class="ta-sub">Data sources</div>
+      ${SOURCES.map(s=>`<div class="ta-q"><div class="qt"><b>${esc(s.q)}</b></div><div class="qd">${esc(s.d)}</div><div class="ta-grid2">${fld("Status", sel(s.id, SRC_STATUS))}${fld("Notes", inp(s.id+"_n"))}</div></div>`).join("")}
+      <div class="ta-sub">Interviews</div>
+      <div class="ta-iv"><div class="qt"><b>Subject of concern</b></div>
+        <div class="ta-grid2" style="margin-top:6px">${fld("Status", sel("ivs", IV_STATUS))}${fld("Date", inp("ivs_d","","date"))}${fld("Summary", ta("ivs_sum",""), "full")}</div></div>
+      <div id="taIvList"></div>
+      <div class="ta-row" style="margin-top:8px"><button class="btn" type="button" id="taIvAdd">+ Add interview (someone who knows the subject)</button></div>`;
+    P[4] = `<div class="ta-h">V. Level of concern &mdash; factors</div>
+      <div class="ta-sub">Assessment of person / situation</div>
+      ${PS.map((q,i)=>qYNU(i+1,q,true)).join("")}
+      <div class="ta-sub">Threat enhancers (risk factors)</div>
+      ${ENH.map(factor).join("")}
+      <div class="ta-sub">Warning behaviors</div>
+      ${WARN.map(factor).join("")}
+      <div class="ta-tally" id="taTally1" style="margin-top:8px"></div>`;
+    P[5] = `<div class="ta-h">VI. Key assessment questions</div>
+      ${KEYQ.map((q,i)=>qText(i+1,{id:"k"+(i+1),q})).join("")}`;
+    P[6] = `<div class="ta-h">VII. Level of concern</div>
+      <div class="ta-tally" id="taTally2"></div>
+      <p class="muted" style="margin:4px 0 8px">The tally is decision support only. The level is the assessor&rsquo;s professional judgment.</p>
+      <div class="ta-level">${LEVELS.map(([n,d,c])=>`<label><input type="radio" name="level" value="${n}"><b class="${c}">${n}</b><span>${esc(d)}</span></label>`).join("")}</div>
+      ${fld("Rationale", ta("rationale","Why this level — key facts and factors.",4))}`;
+    P[7] = `<div class="ta-h">VIII. Threat management</div>
+      ${MGMT.map(([n,d],i)=>`<div class="ta-mg"><label><input type="checkbox" name="m${i+1}"><div><b>${i+1}. ${esc(n)}</b><span>${esc(d)}</span></div></label>
+        <div class="ta-grid2" id="m${i+1}_x" hidden>${fld("Responsible", inp(`m${i+1}_r`))}${fld("Due", inp(`m${i+1}_d`,"","date"))}</div></div>`).join("")}
+      <div class="ta-grid2" style="margin-top:10px">
+        ${fld("Reassessment date", inp("reassess","","date"))}
+        <span></span>
+        ${fld("Management plan notes", ta("plan","",3), "full")}
+      </div>
+      <div class="ta-sub">Sign-off</div>
+      <div class="ta-grid2">
+        ${fld("Completed by", inp("signer"))}
+        ${fld("Date / time (DTG)", `<div class="ta-row"><input class="fld ta-in" type="text" name="signdtg" style="flex:1;min-width:0"><button class="btn" type="button" id="taStamp">Stamp</button></div>`)}
+      </div>`;
+    P[8] = `<div class="ta-h">Output</div>
+      <div class="ta-row">
+        <button class="btn" type="button" id="taPrintBtn">Print / Save as PDF</button>
+        <button class="btn" type="button" id="taCopyBtn">Copy text</button>
+        <button class="btn" type="button" id="taClearBtn">Clear form</button>
+        <span class="muted" id="taMsg"></span>
+      </div>
+      <p class="muted" style="margin:8px 0">For a clean PDF, choose &ldquo;Save as PDF&rdquo; and turn off the browser&rsquo;s own headers and footers.</p>
+      <pre class="report ta-preview" id="taPreview"></pre>`;
+    $("taPanels").innerHTML = P.map((h,i)=>`<div class="ta-panel" data-step="${i}" ${i?"hidden":""}>${h}</div>`).join("");
+    $("taSteps").innerHTML = STEPS.map((s,i)=>`<button class="btn" type="button" role="tab" data-go="${i}">${s}</button>`).join("");
+  }
+
+  // ---------- form access ----------
+  const F = () => $("taForm");
+  function v(name){
+    const el = F().elements[name];
+    if (!el) return "";
+    if (el instanceof RadioNodeList) return el.value || "";
+    if (el.type === "checkbox") return el.checked ? "1" : "";
+    return (el.value || "").trim();
+  }
+  function setv(name, val){ const el=F().elements[name]; if (el) el.value=val; }
+  const YN = {Y:"YES", N:"NO", U:"UNKNOWN"};
+  const PA = {P:"PRESENT", A:"ABSENT", U:"UNKNOWN"};
+
+  // ---------- navigation ----------
+  const enabled = (i) => !FULL_STEPS.includes(i) || st.full;
+  function go(i){
+    if (!enabled(i)) return;
+    st.step = i;
+    document.querySelectorAll("#taPanels .ta-panel").forEach(p => p.hidden = (+p.dataset.step !== i));
+    paintTabs();
+    if (i === 8) $("taPreview").textContent = buildText();
+    $("taBack").disabled = (i === 0);
+    $("taNext").hidden = (i === 8);
+    $("taWin").scrollIntoView({block:"start", behavior:"smooth"});
+  }
+  function paintTabs(){
+    document.querySelectorAll("#taSteps .btn").forEach(b => {
+      const i = +b.dataset.go;
+      b.disabled = !enabled(i);
+      b.classList.toggle("on", i === st.step);
+      b.setAttribute("aria-selected", i === st.step ? "true" : "false");
+      b.title = b.disabled ? "Unlocks when the full assessment is initiated" : "";
+    });
+  }
+  function next(){ let i = st.step + 1; while (i < 8 && !enabled(i)) i++; go(Math.min(i,8)); }
+  function back(){ let i = st.step - 1; while (i > 0 && !enabled(i)) i--; go(Math.max(i,0)); }
+
+  // ---------- logic ----------
+  function startFull(reason){
+    if (st.full) return;
+    st.full = true; st.closedNone = false;
+    st.fullDTG = dtg(new Date()); st.fullReason = reason;
+    const b = $("taFullBanner"); b.hidden = false;
+    b.innerHTML = `FULL ASSESSMENT INITIATED — ${esc(st.fullDTG)}<small>${esc(reason)}</small>`;
+    paintTabs(); gate();
+  }
+  function gate(){
+    const vals = PRE.map(q => v(q.id));
+    const anyY = vals.includes("Y"), allN = vals.every(x => x === "N");
+    if (anyY && !st.full) startFull("Preliminary assessment: one or more YES answers.");
+    $("taCloseNone").hidden = !(allN && !st.full);
+    $("taInitFull").hidden = st.full;
+    const g = $("taGate");
+    if (st.full) g.innerHTML = `<b>Status:</b> full assessment initiated ${esc(st.fullDTG)}. Continue to IV.`;
+    else if (allN) g.innerHTML = `<b>Status:</b> screen negative on all five questions. You can document and close, or initiate a full assessment anyway.`;
+    else if (vals.includes("U")) g.innerHTML = `<b>Status:</b> one or more answers UNKNOWN. Consider gathering information or initiating a full assessment.`;
+    else g.innerHTML = `<b>Status:</b> answer all five questions.`;
+  }
+  function imminent(){ $("taImm").hidden = v("i2") !== "Y"; }
+  function tally(){
+    const e = ENH.filter(x => v(x.id)==="P").length, w = WARN.filter(x => v(x.id)==="P").length;
+    const eu = ENH.filter(x => v(x.id)==="U").length + WARN.filter(x => v(x.id)==="U").length;
+    const html = `<span class="pill ${e?"p-warn":"p-ok"}">${e} / ${ENH.length} threat enhancers present</span>
+      <span class="pill ${w?"p-crit":"p-ok"}">${w} / ${WARN.length} warning behaviors present</span>
+      <span class="pill">${eu} unknown</span>`;
+    $("taTally1").innerHTML = html; $("taTally2").innerHTML = html;
+    return {e, w, eu};
+  }
+  function mgmtToggle(){ MGMT.forEach((_,i) => { $(`m${i+1}_x`).hidden = !v(`m${i+1}`); }); }
+
+  function addInterview(){
+    const n = ++st.ivN;
+    const d = document.createElement("div");
+    d.className = "ta-iv"; d.dataset.iv = n;
+    d.innerHTML = `<div class="ta-grid2">
+        ${fld("Name / relationship to subject", inp(`iv${n}_who`))}
+        ${fld("Date", inp(`iv${n}_d`,"","date"))}
+        ${fld("Summary", ta(`iv${n}_sum`,""), "full")}
+      </div>
+      <div class="ta-row" style="margin-top:6px"><button class="btn" type="button" data-rm="${n}">Remove</button></div>`;
+    $("taIvList").appendChild(d);
+    d.querySelector("input").focus();
+  }
+  const interviews = () => [...document.querySelectorAll("#taIvList .ta-iv")].map(d => {
+    const n = d.dataset.iv; return { who:v(`iv${n}_who`), d:v(`iv${n}_d`), sum:v(`iv${n}_sum`) };
+  }).filter(r => r.who || r.d || r.sum);
+
+  // ---------- report: plain text ----------
+  function buildText(){
+    const L = [], A = (s) => L.push(s), blank = () => L.push("");
+    const ans = (x) => x || NA;
+    const rec = (x) => x || "Not recorded";
+    const wrapQA = (n, q, a) => { A(`${n}. ${q}`); A(`   ${ans(a).replace(/\n/g,"\n   ")}`); };
+    A(MARK); A("ADVANCED THREAT ASSESSMENT"); A("=".repeat(46));
+    A(`Case number:        ${rec(v("case"))}`);
+    A(`Opened:             ${rec(v("opened"))}`);
+    A(`Assessor:           ${rec(v("assessor"))}${v("role")?` — ${v("role")}`:""}`);
+    A(`Team:               ${rec(v("team"))}`);
+    A(`Setting:            ${rec(v("setting"))}${v("loc")?` — ${v("loc")}`:""}`);
+    A(`Reporting party:    ${rec(v("rp"))}`);
+    A(`Report received:    ${rec(fmtLocal(v("rcvd")))}`);
+    A(`Subject:            ${rec(v("subject"))}`);
+    if (v("i2")==="Y"){ blank(); A("*** IMMINENT THREAT INDICATED — LAW ENFORCEMENT NOTIFICATION REQUIRED ***"); }
+    blank(); A("I. INITIAL REPORT"); A("-".repeat(46));
+    A("Summary:"); A(`   ${ans(v("narr")).replace(/\n/g,"\n   ")}`);
+    INIT.forEach((q,i) => {
+      if (q.t==="ynu") wrapQA(i+1, q.q, (YN[v(q.id)]||"") + (v(q.id+"_n")?` — ${v(q.id+"_n")}`:"") );
+      else wrapQA(i+1, q.q, v(q.id));
+    });
+    blank(); A("II. PRELIMINARY ASSESSMENT"); A("-".repeat(46));
+    PRE.forEach((q,i) => wrapQA(i+1, q.q, (YN[v(q.id)]||"") + (v(q.id+"_n")?` — ${v(q.id+"_n")}`:"")));
+    A(`Result: ${st.full ? `FULL ASSESSMENT INITIATED ${st.fullDTG} (${st.fullReason})` : st.closedNone ? "Screen negative — documented and closed" : "Incomplete"}`);
+    if (!st.full){
+      blank(); A("III. FULL ASSESSMENT: NOT INITIATED");
+      if (st.closedNone){ blank(); A("LEVEL OF CONCERN: NONE — no threat of targeted violence; documented and closed."); A("MANAGEMENT: Take no further action."); }
+    } else {
+      blank(); A("IV. INFORMATION GATHERING"); A("-".repeat(46));
+      A("Areas of inquiry:");
+      AREAS.forEach(a => { A(`  ${a.q}:`); A(`     ${ans(v(a.id)).replace(/\n/g,"\n     ")}`); });
+      A("Data sources:");
+      SOURCES.forEach(s => A(`  - ${s.q}: ${v(s.id)||"Not recorded"}${v(s.id+"_n")?` — ${v(s.id+"_n")}`:""}`));
+      A("Interviews:");
+      A(`  - Subject of concern: ${v("ivs")||"Not recorded"}${v("ivs_d")?` (${v("ivs_d")})`:""}${v("ivs_sum")?` — ${v("ivs_sum")}`:""}`);
+      const iv = interviews();
+      if (iv.length) iv.forEach(r => A(`  - ${r.who||"Unnamed"}${r.d?` (${r.d})`:""}${r.sum?` — ${r.sum}`:""}`));
+      else A("  - Others: none recorded");
+      blank(); A("V. LEVEL OF CONCERN — FACTORS"); A("-".repeat(46));
+      PS.forEach((q,i) => wrapQA(i+1, q.q, (YN[v(q.id)]||"") + (v(q.id+"_n")?` — ${v(q.id+"_n")}`:"")));
+      const t = tally();
+      A(`Threat enhancers (${t.e} of ${ENH.length} present):`);
+      ENH.forEach(f => A(`  [${(PA[v(f.id)]||"NOT ASSESSED").padEnd(12)}] ${f.q}${v(f.id+"_n")?` — ${v(f.id+"_n")}`:""}`));
+      A(`Warning behaviors (${t.w} of ${WARN.length} present):`);
+      WARN.forEach(f => A(`  [${(PA[v(f.id)]||"NOT ASSESSED").padEnd(12)}] ${f.q}${v(f.id+"_n")?` — ${v(f.id+"_n")}`:""}`));
+      blank(); A("VI. KEY ASSESSMENT QUESTIONS"); A("-".repeat(46));
+      KEYQ.forEach((q,i) => wrapQA(i+1, q, v("k"+(i+1))));
+      blank(); A("VII. LEVEL OF CONCERN"); A("-".repeat(46));
+      const lv = LEVELS.find(l => l[0]===v("level"));
+      A(`Level: ${lv ? `${lv[0]} — ${lv[1]}` : "NOT DETERMINED"}`);
+      A("Rationale:"); A(`   ${ans(v("rationale")).replace(/\n/g,"\n   ")}`);
+      blank(); A("VIII. THREAT MANAGEMENT"); A("-".repeat(46));
+      const m = MGMT.map((x,i)=>[x,i+1]).filter(([,i]) => v("m"+i));
+      if (m.length) m.forEach(([[n],i]) => A(`  - ${n}${v(`m${i}_r`)?` — responsible: ${v(`m${i}_r`)}`:""}${v(`m${i}_d`)?` — due: ${v(`m${i}_d`)}`:""}`));
+      else A("  No options selected");
+      A(`Reassessment date: ${ans(v("reassess"))}`);
+      if (v("plan")){ A("Plan notes:"); A(`   ${v("plan").replace(/\n/g,"\n   ")}`); }
+    }
+    blank(); A("SIGN-OFF"); A("-".repeat(46));
+    A(`Completed by: ${rec(v("signer"))}`);
+    A(`Date / time:  ${rec(v("signdtg"))}`);
+    blank(); A(MARK);
+    return L.join("\n");
+  }
+
+  // ---------- report: print HTML ----------
+  function buildPrint(){
+    const H = [], A = (s) => H.push(s);
+    const cell = (x) => x ? esc(x).replace(/\n/g,"<br>") : `<span class="na">${NA}</span>`;
+    const ynn = (id) => [YN[v(id)]||"", v(id+"_n")].filter(Boolean).join(" — ");
+    const qa = (n, q, a) => A(`<div class="qa"><div class="q">${n}. ${esc(q)}</div><div class="a">${cell(a)}</div></div>`);
+    A(`<div class="pmark">${MARK}</div>`);
+    A(`<h1>Advanced Threat Assessment</h1><div class="psub">Case ${esc(v("case"))} &middot; Opened ${esc(v("opened"))}</div>`);
+    A(`<table>${[
+      ["Case number", v("case")], ["Opened", v("opened")],
+      ["Assessor", [v("assessor"), v("role")].filter(Boolean).join(" — ")], ["Team members", v("team")],
+      ["Setting", [v("setting"), v("loc")].filter(Boolean).join(" — ")], ["Reporting party", v("rp")],
+      ["Report received", fmtLocal(v("rcvd"))], ["Subject", v("subject")]
+    ].map(([k,x])=>`<tr><td class="k">${k}</td><td>${x?esc(x):`<span class="na">Not recorded</span>`}</td></tr>`).join("")}</table>`);
+    if (v("i2")==="Y") A(`<div class="alertbox">IMMINENT THREAT INDICATED — LAW ENFORCEMENT NOTIFICATION REQUIRED</div>`);
+    A(`<h2>I. Initial report</h2><h3>Summary</h3><div class="qa"><div class="a" style="margin-left:0">${cell(v("narr"))}</div></div>`);
+    INIT.forEach((q,i) => qa(i+1, q.q, q.t==="ynu" ? ynn(q.id) : v(q.id)));
+    A(`<h2>II. Preliminary assessment</h2>`);
+    A(`<table><thead><tr><th style="width:5%">#</th><th>Question</th><th style="width:14%">Answer</th><th style="width:30%">Notes</th></tr></thead>${PRE.map((q,i)=>`<tr><td>${i+1}</td><td>${esc(q.q)}</td><td>${YN[v(q.id)]||`<span class="na">${NA}</span>`}</td><td>${esc(v(q.id+"_n"))}</td></tr>`).join("")}</table>`);
+    A(`<div class="alertbox">Result: ${st.full ? `FULL ASSESSMENT INITIATED ${esc(st.fullDTG)} — ${esc(st.fullReason)}` : st.closedNone ? "Screen negative — documented and closed." : "Incomplete."}</div>`);
+    if (!st.full){
+      A(`<h2>III. Full assessment</h2><p><b>Not initiated.</b></p>`);
+      if (st.closedNone) A(`<table><tr><td class="k">Level of concern</td><td>NONE — No threat of targeted violence. File documented and closed.</td></tr><tr><td class="k">Management</td><td>Take no further action.</td></tr></table>`);
+    } else {
+      A(`<h2>IV. Information gathering</h2><h3>Areas of inquiry</h3>`);
+      A(`<table>${AREAS.map(a=>`<tr><td class="k">${esc(a.q)}</td><td>${cell(v(a.id))}</td></tr>`).join("")}</table>`);
+      A(`<h3>Data sources</h3><table><thead><tr><th>Source</th><th style="width:18%">Status</th><th>Notes</th></tr></thead>${SOURCES.map(s=>`<tr><td>${esc(s.q)}</td><td>${v(s.id)?esc(v(s.id)):`<span class="na">Not recorded</span>`}</td><td>${esc(v(s.id+"_n"))}</td></tr>`).join("")}</table>`);
+      const iv = interviews();
+      A(`<h3>Interviews</h3><table><thead><tr><th>Who</th><th style="width:14%">Date</th><th>Summary</th></tr></thead>
+        <tr><td>Subject of concern${v("ivs")?` (${esc(v("ivs"))})`:""}</td><td>${esc(v("ivs_d"))}</td><td>${cell(v("ivs_sum"))}</td></tr>
+        ${iv.map(r=>`<tr><td>${esc(r.who||"Unnamed")}</td><td>${esc(r.d)}</td><td>${cell(r.sum)}</td></tr>`).join("")}</table>`);
+      const t = tally();
+      A(`<h2>V. Level of concern — factors</h2>`);
+      PS.forEach((q,i) => qa(i+1, q.q, ynn(q.id)));
+      const ftab = (title, list, n) => A(`<h3>${title} (${n} of ${list.length} present)</h3><table><thead><tr><th>Factor</th><th style="width:15%">Finding</th><th>Notes / evidence</th></tr></thead>${list.map(f=>`<tr><td><b>${esc(f.q)}</b><br><span style="font-size:8.5pt">${esc(f.d)}</span></td><td>${PA[v(f.id)]||`<span class="na">${NA}</span>`}</td><td>${esc(v(f.id+"_n"))}</td></tr>`).join("")}</table>`);
+      ftab("Threat enhancers", ENH, t.e);
+      ftab("Warning behaviors", WARN, t.w);
+      A(`<h2>VI. Key assessment questions</h2>`);
+      KEYQ.forEach((q,i) => qa(i+1, q, v("k"+(i+1))));
+      const lv = LEVELS.find(l => l[0]===v("level"));
+      A(`<h2>VII. Level of concern</h2><div class="alertbox">LEVEL: ${lv ? `${lv[0]}</div><p>${esc(lv[1])}</p>` : "NOT DETERMINED</div>"}`);
+      A(`<h3>Rationale</h3><div class="qa"><div class="a" style="margin-left:0">${cell(v("rationale"))}</div></div>`);
+      const m = MGMT.map((x,i)=>[x,i+1]).filter(([,i]) => v("m"+i));
+      A(`<h2>VIII. Threat management</h2><table><thead><tr><th>Option</th><th style="width:28%">Responsible</th><th style="width:16%">Due</th></tr></thead>${m.length ? m.map(([[n,d],i])=>`<tr><td><b>${esc(n)}</b><br><span style="font-size:8.5pt">${esc(d)}</span></td><td>${esc(v(`m${i}_r`))}</td><td>${esc(v(`m${i}_d`))}</td></tr>`).join("") : `<tr><td colspan="3"><span class="na">No options selected</span></td></tr>`}</table>`);
+      A(`<table><tr><td class="k">Reassessment date</td><td>${cell(v("reassess"))}</td></tr>${v("plan")?`<tr><td class="k">Plan notes</td><td>${cell(v("plan"))}</td></tr>`:""}</table>`);
+    }
+    A(`<h2>Sign-off</h2><div class="sig"><div><b>${esc(v("signer"))}</b>Completed by</div><div><b>${esc(v("signdtg"))}</b>Date / time (DTG)</div><div><b>&nbsp;</b>Reviewed by</div><div><b>&nbsp;</b>Date / time (DTG)</div></div>`);
+    A(`<div class="pmark end">${MARK}</div>`);
+    return H.join("");
+  }
+
+  function doPrint(){
+    const cn = (v("case") || "TA").replace(/[^A-Za-z0-9 _.-]/g,"");
+    $("taPageStyle").textContent = `@page ta { size: letter; margin: 0.7in 0.6in 0.75in;
+      @top-center { content: "${MARK}"; font: bold 9pt Arial, sans-serif; }
+      @bottom-left { content: "Case ${cn}"; font: 8pt Arial, sans-serif; }
+      @bottom-center { content: "${MARK}"; font: bold 8pt Arial, sans-serif; }
+      @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 8pt Arial, sans-serif; } }`;
+    $("taPrint").innerHTML = buildPrint();
+    document.body.classList.add("print-ta");
+    const done = () => { document.body.classList.remove("print-ta"); window.removeEventListener("afterprint", done); };
+    window.addEventListener("afterprint", done);
+    const t0 = document.title; document.title = cn;
+    window.print();
+    document.title = t0;
+    setTimeout(done, 1500);
+  }
+
+  async function doCopy(){
+    const txt = buildText(), msg = $("taMsg");
+    try { await navigator.clipboard.writeText(txt); msg.textContent = "Copied."; }
+    catch(e){
+      const t = document.createElement("textarea"); t.value = txt; t.style.position="fixed"; t.style.opacity="0";
+      document.body.appendChild(t); t.select();
+      try { document.execCommand("copy"); msg.textContent = "Copied."; } catch(_){ msg.textContent = "Copy failed — select the text below and copy it."; }
+      t.remove();
+    }
+    setTimeout(() => { msg.textContent = ""; }, 3000);
+  }
+
+  function clearAll(force){
+    if (!force && !confirm("Clear this assessment? Everything entered will be erased.")) return;
+    F().reset(); $("taIvList").innerHTML = "";
+    st = fresh();
+    $("taImm").hidden = true; $("taFullBanner").hidden = true; $("taCaseTs").textContent = "";
+    F().hidden = true; $("taIntro").hidden = false;
+    $("taPrint").innerHTML = "";
+    mgmtToggle(); tally(); gate();
+  }
+
+  function start(){
+    const now = new Date();
+    st = fresh(); st.active = true;
+    setv("case", caseNo(now)); setv("opened", dtg(now));
+    $("taCaseTs").textContent = caseNo(now);
+    $("taIntro").hidden = true; F().hidden = false;
+    gate(); tally(); go(0);
+    F().elements.assessor.focus({preventScroll:true});
+  }
+
+  // ---------- wire up ----------
+  buildPanels();
+  $("taStart").addEventListener("click", start);
+  $("taNext").addEventListener("click", next);
+  $("taBack").addEventListener("click", back);
+  $("taSteps").addEventListener("click", (e) => { const b = e.target.closest("[data-go]"); if (b && !b.disabled) go(+b.dataset.go); });
+  $("taInitFull").addEventListener("click", () => { startFull("Initiated manually by assessor."); go(3); });
+  $("taCloseNone").addEventListener("click", () => { st.closedNone = true; go(8); });
+  $("taIvAdd").addEventListener("click", addInterview);
+  $("taIvList").addEventListener("click", (e) => { const b = e.target.closest("[data-rm]"); if (b) b.closest(".ta-iv").remove(); });
+  $("taStamp").addEventListener("click", () => { setv("signdtg", dtg(new Date())); st.dirty = true; });
+  $("taPrintBtn").addEventListener("click", doPrint);
+  $("taCopyBtn").addEventListener("click", doCopy);
+  $("taClearBtn").addEventListener("click", () => clearAll(false));
+  F().addEventListener("submit", (e) => e.preventDefault());
+  F().addEventListener("input", () => { st.dirty = true; });
+  F().addEventListener("change", (e) => {
+    st.dirty = true;
+    const n = e.target.name || "";
+    if (/^p[1-5]$/.test(n)) gate();
+    if (n === "i2") imminent();
+    if (/^[ew]\d+$/.test(n)) tally();
+    if (/^m\d+$/.test(n)) mgmtToggle();
+  });
+  window.addEventListener("beforeunload", (e) => { if (st.active && st.dirty) { e.preventDefault(); e.returnValue = ""; } });
+})();
 </script>
 </body>
 </html>
