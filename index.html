@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>~*~ Y2K38 ~*~</title>
+<title>Y2K38</title>
 <style>
   /* ===== 1997 called. It wants its homepage back. ===== */
   body {
@@ -26,13 +26,14 @@
 
   h1 {
     font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive;
-    font-size: clamp(28px, 7vw, 48px);
+    font-size: clamp(56px, 16vw, 112px);
     margin: 8px 0;
-    background: linear-gradient(90deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+    background: linear-gradient(90deg, #f00, #f60, #ff0, #fff, #ff0, #f60, #f00);
     background-size: 200% auto;
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     animation: rainbow 3s linear infinite;
+    filter: drop-shadow(0 0 6px #f30);
   }
   @keyframes rainbow { to { background-position: 200% center; } }
 
@@ -43,7 +44,7 @@
     display: block;
     background: #000080; color: #ffff00;
     border: 2px outset #c0c0c0;
-    padding: 4px; font-weight: bold; font-family: "Courier New", monospace;
+    padding: 6px; font-size: 20px; font-weight: bold; font-family: "Courier New", monospace;
   }
 
   hr.rainbow {
@@ -55,82 +56,56 @@
     background: #c0c0c0; color: #000;
     border: 3px outset #fff;
     padding: 12px; margin: 16px auto;
+    font-size: 18px;
     font-family: "MS Sans Serif", Tahoma, Verdana, sans-serif;
   }
   .titlebar {
     background: linear-gradient(90deg, #000080, #1084d0);
     color: #fff; font-weight: bold; text-align: left;
-    padding: 3px 6px; margin: -12px -12px 12px;
-    font-size: 14px;
+    padding: 4px 8px; margin: -12px -12px 12px;
+    font-size: 18px;
   }
 
   /* doomsday clock */
   .doom {
     font-family: "Courier New", monospace;
-    font-size: clamp(22px, 6vw, 40px);
+    font-size: clamp(28px, 8vw, 52px);
     color: #ff0000; background: #000;
     border: 3px inset #808080;
     padding: 10px; letter-spacing: 2px;
     text-shadow: 0 0 6px #f00;
   }
   .doom small { font-size: 0.4em; color: #ff6666; letter-spacing: 0; }
-  .doomlabel { font-size: 13px; margin-top: 8px; }
+  .doomlabel { font-size: 17px; margin-top: 10px; }
   .why {
     margin-top: 10px; padding: 8px; text-align: left;
     background: #ffffe1; border: 1px solid #000;
-    font: 13px/1.45 Verdana, Tahoma, sans-serif;
+    font: 17px/1.5 Verdana, Tahoma, sans-serif;
   }
-
-  /* login button — chunky Win95 style */
-  .login-btn {
-    display: inline-block; margin: 8px 0 4px;
-    padding: 8px 28px;
-    background: #c0c0c0; color: #000 !important;
-    border: 3px outset #fff; text-decoration: none;
-    font: bold 16px "MS Sans Serif", Tahoma, Verdana, sans-serif;
-  }
-  .login-btn:hover { background: #d4d0c8 !important; color: #000 !important; }
-  .login-btn:active { border-style: inset; }
-  .restricted { font: 11px Verdana, sans-serif; color: #800000; }
 
   /* odometer-style hit counter */
   .counter { display: inline-flex; gap: 2px; margin: 6px 0; }
   .digit {
-    display: inline-block; width: 22px; height: 32px; line-height: 32px;
+    display: inline-block; width: 30px; height: 42px; line-height: 42px;
     background: linear-gradient(#222, #000 50%, #222);
-    color: #0f0; font: bold 22px "Courier New", monospace;
+    color: #0f0; font: bold 30px "Courier New", monospace;
     border: 1px solid #555;
-  }
-
-  .construction {
-    height: 18px; margin: 16px 0;
-    background: repeating-linear-gradient(45deg, #ff0 0 14px, #000 14px 28px);
-    border: 2px solid #000;
   }
 
   a { color: #00ffff; font-weight: bold; }
   a:visited { color: #ff00ff; }
   a:hover { color: #ffff00; background: #ff0000; }
 
-  ul.links { list-style: none; padding: 0; text-align: left; display: inline-block; }
-  ul.links li { margin: 6px 0; }
-  ul.links li::before { content: "★ "; color: #ff0; }
-
-  .footer { font-size: 12px; color: #aaa; margin-top: 24px; }
-  .badge {
-    display: inline-block; margin: 4px; padding: 3px 6px;
-    border: 2px outset #c0c0c0; background: #808080; color: #fff;
-    font: bold 10px Verdana, sans-serif;
-  }
+  .footer { font-size: 15px; color: #aaa; margin-top: 24px; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <marquee scrollamount="6">*** WELCOME TO INTER-Q.COM *** THANK YOU FOR VISITING *** PLEASE SIGN OUR GUESTBOOK (COMING SOON) *** THE END IS NEAR ***</marquee>
+  <marquee scrollamount="6">*** 19 JANUARY 2038 *** 03:14:07 UTC *** THE CLOCKS RUN OUT *** 2,147,483,647 SECONDS AND COUNTING *** ARE YOU PREPARED? ***</marquee>
 
-  <h1>~*~ Y2K38 ~*~</h1>
-  <p class="blink" style="color:#ff0;font-weight:bold;">!!! NEW !!! NEW !!! NEW !!!</p>
+  <h1>Y2K38</h1>
+  <p class="blink" style="color:#ff0;font-weight:bold;font-size:26px;margin:4px 0;">ALERT</p>
 
   <hr class="rainbow">
 
@@ -145,9 +120,9 @@
     <div class="why">
       <b>WHY 19 JAN 2038 03:14:07 UTC?</b><br>
       Many computers count time as seconds since 1 Jan 1970, stored in a 32-bit number.
-      That number maxes out at 2,147,483,647 &mdash; which is this exact second.
+      That number maxes out at 2,147,483,647.
       One tick later it wraps around, and old systems will think it's
-      <b>13 December 1901</b>. Y2K's sequel. Patch your stuff.
+      <b>13 December 1901</b>.
     </div>
   </div>
 
@@ -159,33 +134,9 @@
     <small>since the beginning of time</small>
   </div>
 
-  <div class="construction"></div>
-  <p><b style="color:#ff0">🚧 THIS SITE IS UNDER CONSTRUCTION 🚧</b></p>
-
-  <!-- ===== MEMBER LOGIN ===== -->
-  <div class="box">
-    <div class="titlebar">🔒 MEMBERS ONLY</div>
-    <!-- This button only links to the protected area. The actual sign-in is
-         handled by Cloudflare Access on ops.inter-q.com, not by this page. -->
-    <a class="login-btn" href="https://ops.inter-q.com">LOGIN &gt;&gt;</a><br>
-    <span class="restricted">AUTHORIZED USERS ONLY</span>
-  </div>
-
-  <!-- ===== PROJECTS ===== -->
-  <div class="box" style="text-align:center;">
-    <div class="titlebar">📁 PUBLIC PROJECTS</div>
-    <ul class="links" style="color:#000;">
-      <!-- Copy one <li> line per public project -->
-      <li><a href="https://docs.inter-q.com" style="color:#000080">Docs</a> &ndash; coming soon</li>
-    </ul>
-  </div>
-
   <hr class="rainbow">
 
   <div class="footer">
-    <span class="badge">BEST VIEWED IN 800x600</span>
-    <span class="badge">MADE WITH NOTEPAD</span>
-    <span class="badge">Y2K COMPLIANT</span>
     <p>&copy; 1999&ndash;<span id="yr"></span> inter-q.com &middot; This page was last updated <span class="blink">recently</span></p>
   </div>
 
