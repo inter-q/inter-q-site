@@ -258,6 +258,9 @@
   #icsPrint .pmark { text-align:center; font-weight:bold; border:1.5pt solid #000; padding:3pt; letter-spacing:.06em; margin:0 0 8pt; }
   #icsPrint .pmark.end { margin:10pt 0 0; }
   #icsPrint table.f { width:100%; border-collapse:collapse; table-layout:fixed; }
+  #icsPrint h3.os-sec { font-size:10.5pt; margin:8pt 0 4pt; break-after:avoid; page-break-after:avoid; }
+  #icsPrint table.os-ft a { color:#0563C1 !important; text-decoration:underline; }
+  #icsPrint table.os-ft tr { break-inside:avoid; page-break-inside:avoid; }
   #icsPrint table.f td, #icsPrint table.f th { border:1pt solid #000; padding:3pt 5pt; vertical-align:top; text-align:left; background:#fff; }
   #icsPrint .ttl { font-size:13pt; font-weight:bold; text-align:center; padding:5pt; }
   #icsPrint .lb { display:block; font-size:7.5pt; font-weight:bold; margin-bottom:2pt; }
@@ -3495,6 +3498,55 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     return T;
   }
 
+  // Report sections for findings, matching the leadership report layout (grouped tables, clickable links, plain dates).
+  const OS_CATS=[["","Auto"],["video","Videos & media appearances"],["social","Social media"],["web","Websites & news"],["photo","Photos & background"],["other","Other"]];
+  const OS_CAT_NAME=Object.fromEntries(OS_CATS.filter(c=>c[0]));
+  const OS_SOC=[[/(^|\.)facebook\.com$|(^|\.)fb\.com$/,"FB","Facebook"],[/(^|\.)instagram\.com$/,"IG","Instagram"],[/(^|\.)(x|twitter)\.com$/,"X","X / Twitter"],[/(^|\.)tiktok\.com$/,"TT","TikTok"],[/(^|\.)linkedin\.com$/,"LI","LinkedIn"],[/(^|\.)reddit\.com$/,"RD","Reddit"],[/(^|\.)threads\.(net|com)$/,"TH","Threads"],[/(^|\.)bsky\.app$/,"BS","Bluesky"],[/(^|\.)truthsocial\.com$/,"TS","Truth Social"]];
+  const osHost=(u)=>{ try{ return new URL(u).hostname.toLowerCase(); }catch{ return ""; } };
+  const osSoc=(f)=>{ const h=osHost(f.url); return OS_SOC.find(x=>x[0].test(h))||(f.cat==="social"?[null,"SM","Social media"]:null); };
+  function osCat(f){
+    if(f.cat&&OS_CAT_NAME[f.cat]) return f.cat;
+    const h=osHost(f.url), s=(f.source||"")+" "+(f.text||"");
+    if(/(^|\.)(youtube\.com|youtu\.be|vimeo\.com|rumble\.com|dailymotion\.com)$/.test(h)||/\b(video|interview|youtube)\b/i.test(f.source||"")) return "video";
+    if(OS_SOC.some(x=>x[0].test(h))) return "social";
+    if(/(^|\.)(alamy|gettyimages|flickr|shutterstock|imgur)\.com$/.test(h)||/picture-gallery|\/gallery/i.test(f.url||"")||/^\s*photo\b/i.test(f.text||"")) return "photo";
+    if(h||/\b(news|article|web)\b/i.test(s)) return "web";
+    return "other";
+  }
+  // Account handle from a profile link, e.g. facebook.com/steve.cho.9693 -> steve.cho.9693
+  function osAcct(f){
+    if(f.acct) return f.acct; if(!osSoc({url:f.url||""})) return "";
+    try{ const u=new URL(f.url); const id=u.searchParams.get("id"); if(id) return id; const seg=u.pathname.split("/").filter(Boolean).filter(x=>!/^(profile\.php|people|user|users|in|@)$/i.test(x)); return (seg[0]||"").replace(/^@/,""); }catch{ return ""; }
+  }
+  // Plain capture time: "4 Oct 2026, 2132 PDT". Older saves stored a DTG ("042132T OCT 26"); show those plainly too.
+  function osStamp(d){
+    const P=new Intl.DateTimeFormat("en-US",{timeZone:tz(),day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hourCycle:"h23",timeZoneName:"short"}).formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
+    return `${P.day} ${P.month} ${P.year}, ${P.hour}${P.minute} ${P.timeZoneName||""}`.trim();
+  }
+  function osPlainWhen(w){
+    const m=String(w||"").trim().match(/^(\d{2})(\d{2})(\d{2})([A-Z])\s+([A-Z]{3})\s+(\d{2})$/); if(!m) return String(w||"").trim();
+    const L=m[4], off=L==="Z"?0:L>="N"?-(L.charCodeAt(0)-77):(L.charCodeAt(0)-64-(L>"J"?1:0));
+    const mon=m[5][0]+m[5].slice(1).toLowerCase();
+    let zn=off?"(UTC"+(off>0?"+":"−")+Math.abs(off)+")":"UTC";
+    try{ const dt=new Date(Date.UTC(2000+ +m[6],MON.indexOf(m[5]),+m[1],+m[2]-off,+m[3])); if(offsetMinFor(dt)===off*60) zn=osStamp(dt).split(" ").pop(); }catch{}
+    return `${+m[1]} ${mon} 20${m[6]}, ${m[2]}${m[3]} ${zn}`;
+  }
+  const osLink=(u)=>/^https?:\/\/\S+$/i.test(u||"");
+  // Groups findings into report sections with item numbers (V1, FB1, S1, P1…), in OS_CATS order.
+  function osGroups(finds){
+    const groups=[], cnt={};
+    OS_CATS.filter(c=>c[0]).forEach(([k,name])=>{
+      const items=finds.filter(f=>osCat(f)===k).map(f=>{ const pre=k==="video"?"V":k==="social"?(osSoc(f)||[0,"SM"])[1]:k==="web"?"S":k==="photo"?"P":"O"; cnt[pre]=(cnt[pre]||0)+1; return {f,item:pre+cnt[pre]}; });
+      if(items.length) groups.push({k,name,items});
+    });
+    return groups;
+  }
+  // Description lines for one finding, in order: what it shows, link, posted (social), capture time, rating.
+  function osDesc(f,k){
+    const r=[(f.src||"")+(f.cred||""), f.corr==="yes"?"corroborated":f.corr==="no"?"single source":""].filter(Boolean).join(", ");
+    return {text:(f.text||"").trim(), url:(f.url||"").trim(), posted:k==="social"&&f.posted?`Posted ${f.posted}.`:"", captured:f.when?`Captured ${osPlainWhen(f.when)}.`:"", rating:r?`Rating ${r}.`:""};
+  }
+
   function buildOsint(){
     let uid=0; const nid=(p)=>p+(++uid)+Math.random().toString(36).slice(2,5);
     const fresh=()=>({step:0,mark:"SENSITIVE — FOR OFFICIAL USE ONLY",f:{purpose:"",caseNo:"",requester:"",analyst:"",usp:"",eng:OS_ENG[0][1],assess:"",likely:"",conf:"",gaps:"",next:""},sel:[],tasks:{},finds:[]});
@@ -3557,9 +3609,12 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           <div class="ta-grid2">
             <label class="ta-f full">Finding<textarea class="fld ta-in" rows="2" data-ofd="text" data-i="${i}" placeholder="What you found — facts only">${esc(f.text)}</textarea></label>
             <label class="ta-f">Identifier${sel("",[["","—"],...S.sel.map(s=>[s.id,selLabel(s)])],f.sel,`data-ofd="sel" data-i="${i}"`)}</label>
-            <label class="ta-f">Source<input class="fld ta-in" data-ofd="source" data-i="${i}" value="${esc(f.source)}"></label>
+            <label class="ta-f">Report section${sel("",OS_CATS.map(c=>[c[0],c[0]?c[1]:"Auto — "+OS_CAT_NAME[osCat(f)]]),f.cat||"",`data-ofd="cat" data-i="${i}"`)}</label>
+            <label class="ta-f">Platform / outlet<input class="fld ta-in" data-ofd="source" data-i="${i}" value="${esc(f.source)}" placeholder="e.g. YouTube — Democast"></label>
+            <label class="ta-f">Account / handle<input class="fld ta-in" data-ofd="acct" data-i="${i}" value="${esc(f.acct||"")}" placeholder="${esc(osAcct({url:f.url})||"Social media only")}"></label>
+            <label class="ta-f">Date posted<input class="fld ta-in" data-ofd="posted" data-i="${i}" value="${esc(f.posted||"")}" placeholder="e.g. 2 JUN 2023"></label>
             <label class="ta-f full">Link / where to find it again<input class="fld ta-in" data-ofd="url" data-i="${i}" value="${esc(f.url)}" placeholder="https://… (save an archived copy if it might disappear)"></label>
-            <label class="ta-f">Captured (DTG)<span class="sal-row"><input class="fld" data-ofd="when" data-i="${i}" value="${esc(f.when)}"><button class="btn" type="button" data-oa="nowFind" data-i="${i}">Now</button></span></label>
+            <label class="ta-f">Captured<span class="sal-row"><input class="fld" data-ofd="when" data-i="${i}" value="${esc(f.when)}"><button class="btn" type="button" data-oa="nowFind" data-i="${i}">Now</button></span></label>
             <label class="ta-f">Corroborated?${sel("",[["","—"],["yes","Yes — independent second source"],["no","No — single source"]],f.corr,`data-ofd="corr" data-i="${i}"`)}</label>
             <label class="ta-f">Source reliability${sel("",CP_SRC,f.src,`data-ofd="src" data-i="${i}"`)}</label>
             <label class="ta-f">Information credibility${sel("",CP_CRED,f.cred,`data-ofd="cred" data-i="${i}"`)}</label>
@@ -3623,7 +3678,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       if(k){ if(k==="mark") S.mark=t.value; else S.f[k]=t.value; paint(); return; }
       if(t.id==="osCur"){ S.cur=t.value; go(2); return; }
       if(t.dataset.ot){ const s=selById(S.cur); const key=s.id+":"+t.dataset.t; const o=S.tasks[key]||(S.tasks[key]={}); o[t.dataset.ot]=t.value; if(t.dataset.ot==="st") updProg(s); return; }
-      if(t.dataset.ofd){ S.finds[+t.dataset.i][t.dataset.ofd]=t.value; }
+      if(t.dataset.ofd){ S.finds[+t.dataset.i][t.dataset.ofd]=t.value; if(t.dataset.ofd==="url"||t.dataset.ofd==="cat") go(3); }
     });
     d.addEventListener("input",(e)=>{
       const t=e.target;
@@ -3643,11 +3698,11 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         window.open(t.url||t.home,"_blank","noopener"); const ok=await copy(text2);
         flash(t.url?(ok?"Opened — identifier also copied.":"Opened."):(ok?"Opened — identifier copied; paste it into the site's search box.":"Opened — type the identifier into the site's search box.")); return; }
       if(a==="addFind"){ const s=selById(S.cur); const t=b.dataset.t&&s?tasksFor(s).find(x=>x.id===b.dataset.t):null;
-        S.finds.push({text:"",sel:s&&S.step===2?s.id:"",source:t?t.label:"",url:"",when:dtgParts(new Date()).local,corr:"",src:"",cred:""});
+        S.finds.push({text:"",sel:s&&S.step===2?s.id:"",source:t?t.label:"",url:"",when:osStamp(new Date()),corr:"",src:"",cred:"",cat:"",posted:"",acct:""});
         if(t){ const key=s.id+":"+t.id; const o=S.tasks[key]||(S.tasks[key]={}); if(!o.st) o.st="found"; }
         go(3); const last=d.querySelectorAll('[data-ofd="text"]'); last.length&&last[last.length-1].focus(); return; }
       if(a==="delFind"){ if(S.finds[+b.dataset.i].text&&!confirm("Remove this finding?")) return; S.finds.splice(+b.dataset.i,1); go(3); return; }
-      if(a==="nowFind"){ S.finds[+b.dataset.i].when=dtgParts(new Date()).local; go(3); return; }
+      if(a==="nowFind"){ S.finds[+b.dataset.i].when=osStamp(new Date()); go(3); return; }
       if(a==="print"){ icsPrint(printHtml(),"OSINT report "+(S.f.caseNo||icsDate("dtg"))); return; }
       if(a==="copy"){ icsCopy(text(),q("#osMsg")); return; }
       if(a==="clear"){ if(!confirm("Clear this research? Identifiers, checklist and findings will be erased.")) return; S=fresh(); go(0); return; }
@@ -3673,7 +3728,17 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       S.sel.length?S.sel.forEach((s,i)=>{ const p=prog(s); L.push(`   ${letter(i)}. ${selLabel(s)} — ${p.done} of ${p.total} checks${s.from?`; found via ${s.from}`:""}`); }):L.push("   None.");
       L.push("");
       L.push("3. KEY FINDINGS.");
-      S.finds.length?S.finds.forEach((f,i)=>{ L.push(`   F${i+1}. ${ind(f.text||"—",7)}`); L.push("       "+[`Source: ${f.source||"—"}${f.url?` <${f.url}>`:""}.`,`Captured ${f.when||"—"}.`,`Rating ${(f.src||"-")+(f.cred||"-")}.`,f.corr==="yes"?"Corroborated.":f.corr==="no"?"Single source.":"",f.sel&&selById(f.sel)?`Re: ${selLabel(selById(f.sel))}.`:""].filter(Boolean).join(" ")); }):L.push("   None.");
+      if(!S.finds.length) L.push("   None.");
+      osGroups(S.finds).forEach((g,gi)=>{
+        L.push(`   ${letter(gi)}. ${g.name}.`);
+        g.items.forEach(({f,item})=>{
+          const D=osDesc(f,g.k), head=g.k==="social"?[f.source||(osSoc(f)||[])[2],osAcct(f)]:[f.source,f.posted?"Posted "+f.posted:""];
+          L.push(`      ${item}. ${head.filter(Boolean).join(" | ")||"—"}`);
+          [D.text,D.url,D.posted,D.captured,D.rating].filter(Boolean).forEach(x=>L.push("          "+ind(x,10)));
+        });
+        L.push("");
+      });
+      if(S.finds.length) L.pop();
       L.push("");
       L.push("4. ASSESSMENT."); L.push("   "+ind(S.f.assess||"—",3)); if(S.f.likely||S.f.conf) L.push(`   Likelihood: ${S.f.likely||"—"}. Confidence: ${S.f.conf||"—"}.`); L.push("");
       L.push("5. INFORMATION GAPS."); L.push("   "+ind(S.f.gaps||"—",3)); L.push("");
@@ -3696,7 +3761,13 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           <tr><td colspan="2"><span class="lb">Subject a U.S. person:</span><div class="vl">${esc(USP[S.f.usp]||"Not stated")}</div></td><td><span class="lb">Requested by:</span><div class="vl">${x_(S.f.requester)}</div></td></tr></table>
         <h2 class="ops-h2">1. Purpose</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(purp())}</div>
         <h2 class="ops-h2">2. Identifiers researched</h2><table class="f"><colgroup><col style="width:16%"><col><col style="width:16%"><col style="width:26%"></colgroup><thead><tr><th>Type</th><th>Identifier</th><th>Checks</th><th>Found via</th></tr></thead><tbody>${S.sel.map(s=>{ const p=prog(s); return `<tr><td>${esc(OS_TNAME[s.type])}</td><td>${esc(s.value)}${s.extra?` (${esc(s.extra)})`:""}</td><td>${p.done} of ${p.total}</td><td>${x_(s.from)}</td></tr>`; }).join("")||`<tr><td colspan="4">None.</td></tr>`}</tbody></table>
-        <h2 class="ops-h2">3. Key findings</h2><table class="f"><colgroup><col style="width:6%"><col style="width:40%"><col style="width:28%"><col style="width:12%"><col></colgroup><thead><tr><th>#</th><th>Finding</th><th>Source</th><th>Captured</th><th>Rating</th></tr></thead><tbody>${S.finds.map((f,i)=>`<tr><td>F${i+1}</td><td style="white-space:pre-wrap">${x_(f.text)}${f.sel&&selById(f.sel)?`<br><i>Re: ${esc(selLabel(selById(f.sel)))}</i>`:""}</td><td>${x_(f.source)}${f.url?`<br>${esc(f.url)}`:""}</td><td>${x_(f.when)}</td><td>${esc((f.src||"–")+(f.cred||"–"))}${f.corr==="yes"?"<br>Corroborated":f.corr==="no"?"<br>Single source":""}</td></tr>`).join("")||`<tr><td colspan="5">None.</td></tr>`}</tbody></table>
+        <h2 class="ops-h2">3. Key findings</h2>${S.finds.length?osGroups(S.finds).map((g,gi)=>{
+          const lnk=(u)=>osLink(u)?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u)}</a>`:esc(u);
+          const desc=(f)=>{ const D=osDesc(f,g.k); return [D.text?`<div style="white-space:pre-wrap">${esc(D.text)}</div>`:"",D.url?`<div>${lnk(D.url)}</div>`:"",D.posted?`<div>${esc(D.posted)}</div>`:"",D.captured?`<div>${esc(D.captured)}</div>`:"",D.rating?`<div>${esc(D.rating)}</div>`:""].join(""); };
+          const h=g.k==="social"?["Item","Platform","Account","Description"]:g.k==="web"||g.k==="other"?["Item","Source","Date","Description"]:["Item","Platform / Outlet","Date Posted","Description"];
+          const c2=(f)=>g.k==="social"?esc(f.source||(osSoc(f)||[])[2]||""):esc(f.source||""), c3=(f)=>g.k==="social"?esc(osAcct(f)):esc(f.posted||"");
+          return `<h3 class="os-sec">${letter(gi)}. ${esc(g.name)}.</h3><table class="f os-ft"><colgroup><col style="width:9%"><col style="width:20%"><col style="width:16%"><col></colgroup><thead><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${g.items.map(({f,item})=>`<tr><td>${item}</td><td>${c2(f)||"&nbsp;"}</td><td style="word-break:break-word">${c3(f)||"&nbsp;"}</td><td style="word-break:break-word">${desc(f)||"&nbsp;"}</td></tr>`).join("")}</tbody></table>`;
+        }).join(""):`<div class="sd-pi">None.</div>`}
         <h2 class="ops-h2">4. Assessment</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(S.f.assess)}</div>${(S.f.likely||S.f.conf)?`<div class="sd-pi"><b>Likelihood:</b> ${x_(S.f.likely)}. &nbsp; <b>Confidence:</b> ${x_(S.f.conf)}.</div>`:""}
         <h2 class="ops-h2">5. Information gaps</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(S.f.gaps)}</div>
         <h2 class="ops-h2">6. Recommended next steps</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(S.f.next)}</div>
@@ -3711,7 +3782,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       const sel=(Array.isArray(s.sel)?s.sel:[]).filter(x=>x&&types.includes(x.type)&&typeof x.value==="string"&&OS_SAFE_ID.test(String(x.id||""))).map(x=>({id:x.id,type:x.type,value:x.value,extra:str(x.extra),from:str(x.from)}));
       const ids=new Set(sel.map(x=>x.id));
       const tasks={}; Object.entries(s.tasks&&typeof s.tasks==="object"?s.tasks:{}).forEach(([k,o])=>{ if(ids.has(k.split(":")[0])&&o&&typeof o==="object") tasks[k]={st:OS_ST.some(z=>z[0]===o.st)?o.st:"",note:str(o.note)}; });
-      const finds=(Array.isArray(s.finds)?s.finds:[]).filter(f=>f&&typeof f==="object").map(f=>({text:str(f.text),sel:ids.has(f.sel)?f.sel:"",source:str(f.source),url:str(f.url),when:str(f.when),corr:["","yes","no"].includes(f.corr)?f.corr:"",src:CP_SRC.some(z=>z[0]===f.src)?f.src:"",cred:CP_CRED.some(z=>z[0]===f.cred)?f.cred:""}));
+      const finds=(Array.isArray(s.finds)?s.finds:[]).filter(f=>f&&typeof f==="object").map(f=>({text:str(f.text),sel:ids.has(f.sel)?f.sel:"",source:str(f.source),url:str(f.url),when:str(f.when),cat:OS_CAT_NAME[f.cat]?f.cat:"",posted:str(f.posted),acct:str(f.acct),corr:["","yes","no"].includes(f.corr)?f.corr:"",src:CP_SRC.some(z=>z[0]===f.src)?f.src:"",cred:CP_CRED.some(z=>z[0]===f.cred)?f.cred:""}));
       const F=fresh().f, f={}; Object.keys(F).forEach(k=>{ const v=(s.f||{})[k]; f[k]=typeof v==="string"?v:F[k]; });
       if(s.f&&/^Other/.test(f.purpose)) f.purpose=str(s.f.purposeOther); // files saved before Purpose became free text
       if(s.f&&typeof s.f.question==="string"&&s.f.question.trim()) f.purpose=[f.purpose,s.f.question.trim()].filter(Boolean).join(" — "); // older files had a separate question
