@@ -3725,7 +3725,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       L.push(`SUBJECT A U.S. PERSON: ${USP[S.f.usp]||"Not stated"}`); L.push("");
       L.push("1. PURPOSE."); L.push("   "+ind(purp()||"—",3)); L.push("");
       L.push("2. IDENTIFIERS RESEARCHED.");
-      S.sel.length?S.sel.forEach((s,i)=>{ const p=prog(s); L.push(`   ${letter(i)}. ${selLabel(s)} — ${p.done} of ${p.total} checks${s.from?`; found via ${s.from}`:""}`); }):L.push("   None.");
+      S.sel.length?S.sel.forEach((s,i)=>{ L.push(`   ${letter(i)}. ${selLabel(s)}${s.from?` — found via ${s.from}`:""}`); }):L.push("   None.");
       L.push("");
       L.push("3. KEY FINDINGS.");
       if(!S.finds.length) L.push("   None.");
@@ -3760,7 +3760,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         <table class="f"><tr><td><span class="lb">DTG:</span><div class="vl">${esc(g.local)} (${esc(g.zulu)})</div></td><td><span class="lb">From:</span><div class="vl">${x_(S.f.analyst)}</div></td><td><span class="lb">Case / ref:</span><div class="vl">${x_(S.f.caseNo)}</div></td></tr>
           <tr><td colspan="2"><span class="lb">Subject a U.S. person:</span><div class="vl">${esc(USP[S.f.usp]||"Not stated")}</div></td><td><span class="lb">Requested by:</span><div class="vl">${x_(S.f.requester)}</div></td></tr></table>
         <h2 class="ops-h2">1. Purpose</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(purp())}</div>
-        <h2 class="ops-h2">2. Identifiers researched</h2><table class="f"><colgroup><col style="width:16%"><col><col style="width:16%"><col style="width:26%"></colgroup><thead><tr><th>Type</th><th>Identifier</th><th>Checks</th><th>Found via</th></tr></thead><tbody>${S.sel.map(s=>{ const p=prog(s); return `<tr><td>${esc(OS_TNAME[s.type])}</td><td>${esc(s.value)}${s.extra?` (${esc(s.extra)})`:""}</td><td>${p.done} of ${p.total}</td><td>${x_(s.from)}</td></tr>`; }).join("")||`<tr><td colspan="4">None.</td></tr>`}</tbody></table>
+        <h2 class="ops-h2">2. Identifiers researched</h2><table class="f"><colgroup><col style="width:18%"><col><col style="width:32%"></colgroup><thead><tr><th>Type</th><th>Identifier</th><th>Found via</th></tr></thead><tbody>${S.sel.map(s=>`<tr><td>${esc(OS_TNAME[s.type])}</td><td>${esc(s.value)}${s.extra?` (${esc(s.extra)})`:""}</td><td>${x_(s.from)}</td></tr>`).join("")||`<tr><td colspan="3">None.</td></tr>`}</tbody></table>
         <h2 class="ops-h2">3. Key findings</h2>${S.finds.length?osGroups(S.finds).map((g,gi)=>{
           const lnk=(u)=>osLink(u)?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u)}</a>`:esc(u);
           const desc=(f)=>{ const D=osDesc(f,g.k); return [D.text?`<div style="white-space:pre-wrap">${esc(D.text)}</div>`:"",D.url?`<div>${lnk(D.url)}</div>`:"",D.posted?`<div>${esc(D.posted)}</div>`:"",D.captured?`<div>${esc(D.captured)}</div>`:"",D.rating?`<div>${esc(D.rating)}</div>`:""].join(""); };
