@@ -313,7 +313,6 @@
   .dir-ctl { display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); letter-spacing:.08em; }
   .dir-ctl span { margin-right:4px; } .dir-ctl .btn { font-size:12px; padding:2px 9px; }
   @media print { .dir:not(.open) > .body { display:block; } }
-  .iq-install { font-size:13px; padding:4px 10px; flex:none; }
   .ta-steps .btn.on { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); }
   .ta-steps .btn:disabled { opacity:.4; cursor:not-allowed; box-shadow:none; }
   .ta-h { font-weight:bold; text-transform:uppercase; letter-spacing:.06em; color:var(--title-ink); font-size:14px; margin:6px 0 2px; border-bottom:1px solid var(--lo); padding-bottom:3px; }
@@ -565,7 +564,6 @@
       <input class="fld" id="finderIn" type="search" placeholder="Find a site (court, whois…)" autocomplete="off" spellcheck="false" aria-controls="finderRes" aria-expanded="false">
       <div class="finder-res" id="finderRes" role="listbox" hidden></div>
     </div>
-    <button class="btn iq-install" type="button" id="iqInstall" hidden title="Install IQ Kit as an app on this device">⬇ Install app</button>
     <div class="theme-sw" role="group" aria-label="Display color">
       <button type="button" data-theme-set="green" aria-pressed="true" title="Green — soft phosphor, easy on the eyes (default)"><span class="sw" style="background:#5fe08c"></span>Green</button>
       <button type="button" data-theme-set="blue" aria-pressed="false" title="Blue — Windows 95 classic: teal desktop, gray windows"><span class="sw" style="background:linear-gradient(135deg,#008080 50%,#c0c0c0 50%)"></span>Blue</button>
@@ -577,6 +575,39 @@
       <div id="dtgZ">&nbsp;</div>
     </div>
   </div>
+
+  <section class="win" id="iqHowto" hidden aria-labelledby="iqHowtoT">
+    <div class="bar"><span id="iqHowtoT">Install IQ Kit</span><button class="btn" type="button" id="iqHowtoX" aria-label="Close" style="font-size:12px;padding:1px 8px">✕</button></div>
+    <div class="body">
+      <div id="iqHowGo" hidden>
+        <p style="margin:0 0 8px">Install IQ Kit on this device — it gets its own icon and opens full-screen like any app.</p>
+        <button class="btn" type="button" id="iqInstall" style="font-size:16px;padding:6px 16px">⬇ Install IQ Kit</button>
+      </div>
+      <div id="iqHowWait" hidden>
+        <b>Chrome / Edge / Android</b>
+        <p style="margin:6px 0 0">If no install button appears after a few seconds, open the browser menu (<b>⋮</b> or <b>⋯</b>) and choose <b>Install IQ Kit</b>, <b>Install app</b> or <b>Add to Home screen</b>.</p>
+      </div>
+      <div id="iqHowDone" hidden><b>IQ Kit is already installed</b> — you're using the app right now.</div>
+      <div id="iqHowOther" hidden>This browser can't install web apps. Open <b>inter-q.com/install</b> in Chrome, Edge or Safari instead.</div>
+      <div id="iqHowIOS">
+        <b>iPhone / iPad</b>
+        <ol style="margin:6px 0 0;padding-left:22px;line-height:1.6">
+          <li>Open this page in <b>Safari</b> (Chrome and Edge work too on iOS 16.4 and later).</li>
+          <li>Tap the <b>Share</b> button — the square with an arrow pointing up (bottom of the screen in Safari; top right in Chrome). If you don't see it, tap <b>⋯</b> first.</li>
+          <li>Scroll down and tap <b>Add to Home Screen</b>.</li>
+          <li>Leave the name as <b>IQ Kit</b> and tap <b>Add</b>.</li>
+        </ol>
+      </div>
+      <div id="iqHowMac">
+        <b>Mac (Safari)</b>
+        <ol style="margin:6px 0 0;padding-left:22px;line-height:1.6">
+          <li>In the menu bar choose <b>File → Add to Dock…</b> (or tap Share → Add to Dock).</li>
+          <li>Click <b>Add</b>. IQ Kit opens from the Dock and Launchpad like any app.</li>
+        </ol>
+      </div>
+      <p class="muted" style="margin:4px 0 0">The app opens full-screen, works offline with the last version it saved, and picks up updates each time you open it online.</p>
+    </div>
+  </section>
 
   <hr class="rainbow">
 
@@ -6952,16 +6983,29 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
 })();
 </script>
 <script>
-// IQ Kit app: offline copy (service worker) and an "Install app" button where the browser supports it.
+// IQ Kit app: offline copy (service worker), and the install panel opened by inter-q.com/install.
 (function(){
   if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1")){
     window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); });
   }
-  const btn=document.getElementById("iqInstall"); let ev=null;
+  // Install panel: opened by inter-q.com/install (which forwards here as ?install). No button on the normal page.
+  const $=(id)=>document.getElementById(id), how=$("iqHowto"), btn=$("iqInstall"); let ev=null;
   const standalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
-  window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); ev=e; if(btn&&!standalone()) btn.hidden=false; });
-  window.addEventListener("appinstalled",()=>{ ev=null; if(btn) btn.hidden=true; });
-  if(btn) btn.addEventListener("click",async()=>{ if(!ev) return; ev.prompt(); try{ await ev.userChoice; }catch(_){} ev=null; btn.hidden=true; });
+  const ua=navigator.userAgent, ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const macSafari=!ios&&/Macintosh/.test(ua)&&/Safari\//.test(ua)&&!/Chrome|Chromium|Edg|OPR|Firefox/.test(ua);
+  const chromium=!ios&&/Chrome|Chromium|Edg|SamsungBrowser/.test(ua);
+  const show=(id)=>["iqHowGo","iqHowWait","iqHowDone","iqHowOther","iqHowIOS","iqHowMac"].forEach(k=>{ const e=$(k); if(e) e.hidden=k!==id; });
+  const wanted=/[?&]install\b/.test(location.search)||location.hash==="#install";
+  if(wanted&&how){
+    // Clean the address so a home-screen install opens the plain tools page.
+    try{ history.replaceState(null,"",location.pathname); }catch(_){}
+    show(standalone()?"iqHowDone":ios?"iqHowIOS":macSafari?"iqHowMac":ev?"iqHowGo":chromium?"iqHowWait":"iqHowOther");
+    how.hidden=false; setTimeout(()=>how.scrollIntoView({block:"start"}),50);
+  }
+  if($("iqHowtoX")) $("iqHowtoX").addEventListener("click",()=>{ how.hidden=true; });
+  window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); ev=e; if(how&&!how.hidden&&!standalone()) show("iqHowGo"); });
+  window.addEventListener("appinstalled",()=>{ ev=null; if(how&&!how.hidden) show("iqHowDone"); });
+  if(btn) btn.addEventListener("click",async()=>{ if(!ev) return; ev.prompt(); let ok=false; try{ ok=(await ev.userChoice).outcome==="accepted"; }catch(_){} ev=null; show(ok?"iqHowDone":"iqHowWait"); });
 })();
 </script>
 </body>
