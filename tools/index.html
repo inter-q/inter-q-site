@@ -189,6 +189,27 @@
   .ta-banner small { display:block; font-weight:normal; font-size:13px; margin-top:2px; }
   .ta-steps { display:flex; flex-wrap:wrap; gap:4px; }
   .ta-steps .btn { font-size:12px; padding:3px 7px; }
+  .ops-mode { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:6px; }
+  .ops-mode label { display:flex; gap:8px; align-items:flex-start; border:1px solid var(--lo); padding:8px 10px; cursor:pointer; background:var(--btn); text-transform:none; letter-spacing:0; }
+  .ops-mode label:has(input:checked) { background:var(--ok-bg); border-color:var(--hi); }
+  .ops-mode input { margin-top:3px; accent-color:var(--ink); } .ops-mode b { display:block; color:var(--bright); } .ops-mode small { display:block; font-size:12px; color:var(--ink-dim); margin-top:2px; }
+  @media (max-width:600px){ .ops-mode { grid-template-columns:1fr; } }
+  .sb .ta-sub { grid-column:1/-1; }
+  .sb-quick { display:flex; flex-wrap:wrap; gap:4px; align-items:center; margin:2px 0 6px; } .sb-qbtns { display:contents; }
+  .sb-qb { font-size:12px; padding:2px 8px; } .sb-qb.on { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); }
+  .sb-pdesc { margin:4px 0; } .sb-tip { color:var(--ink); } .sb-pin .ta-grid2 { margin-top:4px; }
+  .sb-pre { border:1px dashed rgba(var(--glow),.35); padding:8px 10px; }
+  .sb-dates { display:flex; flex-wrap:wrap; gap:6px 10px; align-items:flex-end; margin-top:3px; } .sb-dates label { display:flex; flex-direction:column; gap:2px; font-size:12px; color:var(--ink-dim); } .sb-dates input { width:auto; }
+  .sb-dq { display:flex; flex-wrap:wrap; gap:4px; } .sb-dq .btn { font-size:12px; padding:2px 7px; }
+  .sb-more summary, .sb-ref summary { cursor:pointer; color:var(--link); font-size:13px; }
+  .sb-near { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:6px 0 4px; font-size:13px; } .sb-near .fld { width:auto; flex:1 1 120px; min-width:0; } .sb-near input[type=number] { flex:0 0 64px; }
+  .sb-plain { font-size:13px; color:var(--ink-dim); }
+  .sb-warn { font-size:13px; color:var(--warn); border:1px solid var(--warn); background:var(--warn-bg); padding:5px 8px; }
+  .sb-also { display:flex; flex-wrap:wrap; gap:4px; align-items:center; } .sb-al { font-size:12px; padding:2px 8px; text-decoration:none; }
+  .sb-ll { margin:4px 0 6px 18px; padding:0; font-size:12px; } .sb-ll li { margin:3px 0; overflow-wrap:anywhere; } .sb-ll code { color:var(--ink); }
+  .sb-tw { overflow-x:auto; margin-top:6px; } .sb-t { border-collapse:collapse; font-size:12px; min-width:520px; width:100%; } .sb-t th, .sb-t td { border:1px solid rgba(var(--glow),.35); padding:3px 6px; text-align:left; vertical-align:top; }
+  .c-matches { display:flex; flex-wrap:wrap; gap:4px; align-items:center; } .c-m { font-size:12px; padding:2px 8px; text-align:left; text-transform:none; letter-spacing:0; max-width:100%; overflow-wrap:anywhere; } .c-m.on { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); }
+  #c_acts a.btn { text-decoration:none; }
   .ta-steps .btn.on { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); }
   .ta-steps .btn:disabled { opacity:.4; cursor:not-allowed; box-shadow:none; }
   .ta-h { font-weight:bold; text-transform:uppercase; letter-spacing:.06em; color:var(--title-ink); font-size:14px; margin:6px 0 2px; border-bottom:1px solid var(--lo); padding-bottom:3px; }
@@ -210,6 +231,9 @@
   .ta-grid2 .full { grid-column:1/-1; }
   .ta-f { display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.05em; min-width:0; }
   .ta-f .hint { text-transform:none; letter-spacing:0; font-size:12px; }
+  label.f .hint { display:block; text-transform:none; letter-spacing:0; font-size:12px; color:var(--ink-dim); margin:2px 0 3px; font-weight:normal; }
+  .cp-ex { border-left:2px solid var(--lo); padding:4px 8px; margin:6px 0; } .cp-how p { margin:4px 0; }
+  .i3-steps { margin:4px 0 6px 18px; padding:0; } .i3-steps li { margin:2px 0; } .i3-how p { margin:4px 0; }
   .ta-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
   .ta-nav { display:flex; justify-content:space-between; gap:8px; margin-top:10px; flex-wrap:wrap; }
   .ta-tally { display:flex; flex-wrap:wrap; gap:6px; }
@@ -273,6 +297,8 @@
   select.fld optgroup { color:var(--ink-dim); font-style:normal; font-weight:bold; }
   select.fld option:checked { background-color:var(--ok-bg); color:var(--bright); }
   select.fld option:disabled { color:var(--lo); }
+  .dsc-item { display:flex; gap:8px; align-items:flex-start; margin-top:6px; } .dsc-it { flex:1; min-width:0; margin:0; white-space:pre-wrap; overflow-wrap:anywhere; font-size:12px; }
+  #icsPrint .dsc-p { white-space:pre-wrap; margin:8pt 0; break-inside:avoid; page-break-inside:avoid; }
   .dsc-ov { position:fixed; inset:0; background:rgba(0,0,0,.72); z-index:1000; display:flex; justify-content:center; align-items:flex-start; padding:16px; overflow-y:auto; }
   .dsc-box { background:var(--win); border:2px solid var(--hi); width:min(760px,100%); padding:12px 14px; box-shadow:0 0 24px rgba(var(--glow),.25); }
   .dsc-how { border:1px dashed rgba(var(--glow),.35); padding:6px 10px; margin-bottom:8px; } .dsc-how summary { cursor:pointer; }
@@ -309,9 +335,14 @@
   .sd-opt { font-size:11px; color:var(--ink-dim); text-transform:none; letter-spacing:0; font-weight:normal; }
   .sd-rows { display:flex; flex-direction:column; gap:6px; margin-top:4px; }
   .sd-row { display:grid; gap:6px; align-items:start; }
+  .sd-cell { min-width:0; } .sal-row.sd-cell { flex-wrap:nowrap; } .sal-row.sd-cell .fld { flex:1; } .sd-now { padding:2px 7px; font-size:12px; }
+  .sd-img { display:flex; flex-direction:column; gap:4px; align-items:flex-start; } .sd-img img { max-width:100%; max-height:90px; border:1px solid var(--lo); }
+  .sd-imgx { padding:1px 6px; font-size:11px; } .sd-imgadd { font-size:12px; padding:4px 8px; text-align:center; }
+  #icsPrint img.sd-pimg { max-width:100%; max-height:1.4in; }
+  #icsPrint .sd-photo { break-inside:avoid; page-break-inside:avoid; margin:8pt 0; } #icsPrint .sd-photo img { max-width:100%; max-height:4.2in; display:block; border:1pt solid #000; }
   .sd-row .fld { width:100%; min-width:0; font-size:12px; text-transform:none; letter-spacing:0; }
   .sd-row textarea { min-height:38px; resize:vertical; }
-  @media (max-width:520px){ .sd-row { grid-template-columns:1fr auto !important; } .sd-row > .fld { grid-column:1; } .sd-row > .btn { grid-column:2; grid-row:1; } }
+  @media (max-width:520px){ .sd-row { grid-template-columns:1fr auto !important; } .sd-row > .fld, .sd-row > .sd-cell { grid-column:1; } .sd-row > .btn { grid-column:2; grid-row:1; } }
   #icsPrint .sd-pi { margin:3pt 0 5pt 12pt; }
   #icsPrint .sd-pl { font-weight:bold; }
   #icsPrint .sd-right { text-align:right; font-size:10pt; margin-bottom:6pt; }
@@ -588,7 +619,7 @@
       <div class="toolbar">
         <label for="toolSel">Tool</label>
         <select id="toolSel" class="fld">
-          <option value="search">Search operator builder</option>
+          <option value="search">Search builder (presets &amp; operators)</option>
           <option value="stamp">LOGSTAT fuel receipt stamper</option>
           <option value="describe">Description builder (person / vehicle / object)</option>
           <option value="unit">Unit converter</option>
@@ -1095,6 +1126,21 @@
     const p5=(n)=>String(Math.floor(n)).padStart(5,"0");
     return `${zone}${band} ${col}${row} ${p5(E%100000)} ${p5(Nn%100000)}`;
   }
+  // Plain dates and times used by every report, readable by anyone: "Mon, Oct 5, 2026, 8:53 PM PDT".
+  const plainDT=(d)=>new Intl.DateTimeFormat("en-US",{timeZone:tz(),weekday:"short",month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(d);
+  // "Oct 5, 2026" from a yyyy-mm-dd date.
+  const plainDay=(iso)=>{ if(!/^\d{4}-\d{2}-\d{2}$/.test(iso||"")) return iso||""; const [y,m,dd]=iso.split("-").map(Number); return new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric",year:"numeric",timeZone:"UTC"}).format(new Date(Date.UTC(y,m-1,dd))); };
+  // Phone GPS → nearest street address (OpenStreetMap), with coordinates in brackets for responders.
+  function hereAddress(){
+    return new Promise((res,rej)=>{
+      if(!navigator.geolocation) return rej(new Error("This browser can't share your location. Type the address."));
+      navigator.geolocation.getCurrentPosition(async(pos)=>{
+        const lat=pos.coords.latitude, lon=pos.coords.longitude, gps=`(GPS ${lat.toFixed(5)}, ${lon.toFixed(5)} · MGRS ${mgrsOf(lat,lon)})`;
+        let addr=""; try{ addr=sdFmtAddr(await getJSON(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=18&addressdetails=1&lat=${lat}&lon=${lon}`,{headers:{Accept:"application/json"}})); }catch{}
+        res({text:addr?`${addr} ${gps}`:gps, note:addr?`Nearest address — check it's right. GPS accuracy about ${Math.max(5,Math.round(pos.coords.accuracy*3.28084/5)*5)} ft.`:"Couldn't look up the street address — coordinates filled in. Add the address if you can."});
+      },()=>rej(new Error("Couldn't get your location (permission denied or no signal). Type the address.")),{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+    });
+  }
   function dtgParts(d){
     const off=offsetMinFor(d);
     const L=new Intl.DateTimeFormat("en-GB",{timeZone:tz(),day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
@@ -1336,11 +1382,10 @@
     L.push("        UNCLASSIFIED // OPEN SOURCE (OSINT)");
     L.push("            SITUATION REPORT  (SITREP)");
     L.push(bar);
-    L.push(`DTG      : ${g.local}   (${g.zulu})`);
-    L.push(`FROM     : INTER-Q SITREP  (inter-q.com)`);
-    L.push(`AO / LOC : ${HOME.name}`);
-    L.push(`GRID     : ${Math.abs(HOME.lat).toFixed(5)}${latH}  ${Math.abs(HOME.lon).toFixed(5)}${lonH}`);
-    L.push(`           MGRS ${mgrsOf(HOME.lat,HOME.lon)}`);
+    L.push(`DATE/TIME: ${plainDT(d)}`);
+    L.push(`LOCATION : ${HOME.name}`);
+    L.push(`GPS      : ${HOME.lat.toFixed(5)}, ${HOME.lon.toFixed(5)}`);
+    L.push(`MGRS     : ${mgrsOf(HOME.lat,HOME.lon)}`);
     L.push(`CONDITION: ${cond.name}`);
     L.push("");
     L.push("1. SITUATION (GENERAL).");
@@ -1370,7 +1415,7 @@
     L.push("");
     L.push("7. OFFICIAL ALERTS (NWS).");
     if(NW&&NW.applicable===false) L.push("   N/A — location outside US coverage.");
-    else if(NW&&NW.alerts&&NW.alerts.length) NW.alerts.forEach(a=>L.push(`   - ${a.event} (${a.severity})${a.until?(" until "+shortDT(new Date(a.until))):""}`));
+    else if(NW&&NW.alerts&&NW.alerts.length) NW.alerts.forEach(a=>L.push(`   - ${a.event} (${a.severity})${a.until?(" until "+plainDT(new Date(a.until))):""}`));
     else if(NW) L.push("   None active.");
     else L.push("   Data unavailable.");
     L.push("");
@@ -1382,7 +1427,7 @@
     else L.push(`   Overall condition ${cond.name}. No elevated conditions on the feeds${(cond.failed||[]).length?` that loaded (unavailable: ${cond.failed.join(", ")})`:""}.`);
     L.push("");
     L.push(bar);
-    L.push(`GENERATED ${g.local} BY INTER-Q SITREP — UNOFFICIAL,`);
+    L.push(`GENERATED ${plainDT(d)} — UNOFFICIAL,`);
     L.push("OPEN-SOURCE AGGREGATION. VERIFY AGAINST OFFICIAL SOURCES.");
     L.push("IN AN EMERGENCY DIAL YOUR LOCAL EMERGENCY NUMBER.");
     L.push("        UNCLASSIFIED // OPEN SOURCE (OSINT)");
@@ -1580,7 +1625,16 @@
   const RS_KINDS=[["tac","Tactical"],["ntv","Non-tactical / GSA"],["rent","Rental"],["nstd","Non-standard"]];
   const RS_CARDS=["WEX","Voyager","Personal funds","Other"];
   const RS_TYPES=["FUEL","TOLL","OTHER"];
-  function rsLoad(){ try{ const s=JSON.parse(localStorage.getItem(RS_KEY)||"null"); if(s&&s.v===1) return s; }catch(e){} return null; }
+  // Saved settings are repaired field by field, so an older or damaged copy can't stop the stamper from opening.
+  function rsLoad(){
+    try{
+      const s=JSON.parse(localStorage.getItem(RS_KEY)||"null"); if(!s||s.v!==1) return null;
+      const str=(v)=>typeof v==="string"?v:(typeof v==="number"?String(v):"");
+      const veh=(Array.isArray(s.veh)?s.veh:[]).filter(x=>x&&typeof x==="object"&&str(x.sn)).map(x=>({id:str(x.id)||"v"+Math.random().toString(36).slice(2,9),label:str(x.label),sn:str(x.sn),kind:RS_KINDS.some(k=>k[0]===x.kind)?x.kind:"tac",unit:x.unit==="hrs"?"hrs":"mi",odo:str(x.odo),odoDate:str(x.odoDate)}));
+      const log=(Array.isArray(s.log)?s.log:[]).filter(x=>x&&typeof x==="object").map(x=>({d:str(x.d),f:str(x.f),veh:str(x.veh),gal:str(x.gal),amt:str(x.amt),odo:str(x.odo),card:str(x.card),t:str(x.t)})).slice(0,80);
+      return {v:1,mrt:str(s.mrt),to:str(s.to),opr:str(s.opr),digits:s.digits===6?6:8,veh,cur:veh.some(v=>v.id===s.cur)?s.cur:"",log};
+    }catch(e){ return null; }
+  }
   function rsFresh(){ return {v:1,mrt:"",to:"",opr:"",digits:8,veh:[],cur:"",log:[]}; }
   function rsSave(S){ try{ localStorage.setItem(RS_KEY,JSON.stringify(S)); return true; }catch(e){ return false; } }
   const rsSN=(s)=>String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
@@ -1809,7 +1863,7 @@
         ["head","Headwear","e.g. black ball cap, red logo"],["upper","Upper clothing","e.g. gray hooded sweatshirt"],
         ["lower","Lower clothing","e.g. blue jeans, torn left knee"],["feet","Footwear","e.g. white high-top sneakers"],
         ["jewel","Jewelry, makeup, accessories","e.g. gold chain, sunglasses"],["carry","Carrying","e.g. black backpack, phone in right hand"]]},
-      {t:"Context",f:[["name","Name / alias, if known",""],["where","Where seen and direction of travel","e.g. walking north on Macdonald Ave"],["when","Time last seen","DTG"]]}]},
+      {t:"Context",f:[["name","Name / alias, if known",""],["where","Where seen and direction of travel","e.g. walking north on Macdonald Ave"],["when","Time last seen","e.g. Oct 5, 8:55 PM"]]}]},
     vehicle:{label:"Vehicle",groups:[
       {t:"General",n:"Color, type, make and model — in that order — is how dispatchers broadcast a vehicle.",f:[
         ["color","Color","e.g. silver; two-tone: white over blue"],["type","Type",["","Sedan","Coupe","SUV","Pickup truck","Van / minivan","Box truck","Motorcycle","Bus","Commercial / work truck","Other"]],
@@ -1818,7 +1872,7 @@
         ["plate","License plate","e.g. 8ABC123, or partial: 8AB_ _ _"],["pstate","Plate state","e.g. CA"],
         ["damage","Damage — where and how much","e.g. dent rear passenger door, cracked windshield"],
         ["marks","Distinguishing features","stickers, rims, tint, roof rack, company logos, missing hubcap"]]},
-      {t:"Context",f:[["occ","Occupants","e.g. 2 — driver male, passenger unknown"],["where","Where observed and direction of travel","e.g. parked on 23rd St, left eastbound"],["when","Time observed","DTG"]]}]},
+      {t:"Context",f:[["occ","Occupants","e.g. 2 — driver male, passenger unknown"],["where","Where observed and direction of travel","e.g. parked on 23rd St, left eastbound"],["when","Time observed","e.g. Oct 5, 8:55 PMG"]]}]},
     object:{label:"Object",groups:[
       {t:"Describe it",n:"Start with what it is, then narrow down: type, size and color, then what makes this one unique (FM 3-19.13 para 3-21).",f:[
         ["noun","What it is","e.g. backpack, drone, package"],["type","Type / brand","e.g. DJI quadcopter"],
@@ -1857,7 +1911,7 @@
   }
   // opts: {insertLabel, onInsert(text,type), count(type)} — without onInsert it is a copy-only tool.
   function buildDescriber(opts={}){
-    let type="person", v={}; const n={person:0,vehicle:0,object:0};
+    let type="person", v={}; const n={person:0,vehicle:0,object:0}, list=[], solo=!opts.onInsert; let mark=solo?MARKS[0]:"";
     const d=el(`<div class="dsc">
       <details class="dsc-how" open><summary><b>How to use the description builder</b></summary>
         <ol class="sal-hint" style="margin:6px 0 0 18px;padding:0">
@@ -1865,35 +1919,50 @@
           <li>Work <b>top to bottom</b> — the order follows FM 3-19.13 chapter 3: general features first, then specific (head to foot), then changeable items like clothing.</li>
           <li>Fill in only what you actually saw. Leave the rest blank — <b>don't guess</b>. Use ranges for height, weight and age.</li>
           <li>Write it down as soon as you can — memory fades fast and fills gaps with assumptions. Stress, lighting, distance and how long you saw it all affect accuracy.</li>
-          <li>${opts.onInsert?`Press <b>${esc(opts.insertLabel||"Insert")}</b> to add it to the report. Build another for each person, vehicle or object.`:"Press <b>Copy</b> and paste it into any report, message or text."}</li>
+          <li>${opts.onInsert?`Press <b>${esc(opts.insertLabel||"Insert")}</b> to add it to the report. Build another for each person, vehicle or object.`:"Press <b>Add to list</b> to keep it and start the next one. <b>Copy</b> puts everything in the list (plus the one on screen) on the clipboard to paste into a report, message or text; <b>Print</b> prints it or saves it as a PDF."}</li>
         </ol></details>
       <div class="ta-steps dsc-tabs" role="tablist">${Object.entries(DS_SPEC).map(([k,s])=>`<button class="btn" type="button" data-dt="${k}">${s.label}</button>`).join("")}</div>
       <div class="dsc-form"></div>
       <div class="sal-hint" style="margin-top:8px"><b>Preview</b></div>
       <pre class="toolout report dsc-out"></pre>
-      <div class="toolrow">${opts.onInsert?`<button class="btn" type="button" data-da="insert">${esc(opts.insertLabel||"Insert")}</button>`:""}<button class="btn" type="button" data-da="copy">Copy</button><button class="btn" type="button" data-da="clear">Clear</button>${opts.onClose?`<button class="btn" type="button" data-da="close">Close</button>`:""}<span class="muted dsc-msg"></span></div>
+      ${solo?`<div class="dsc-list"></div><label class="ta-f" style="max-width:340px;margin-top:6px">Marking (for print)<select class="fld" data-dm>${MARKS.map(m=>`<option value="${m}">${m||"(none)"}</option>`).join("")}</select></label>`:""}
+      <div class="toolrow">${opts.onInsert?`<button class="btn" type="button" data-da="insert">${esc(opts.insertLabel||"Insert")}</button>`:`<button class="btn" type="button" data-da="add">Add to list</button>`}<button class="btn" type="button" data-da="copy">Copy</button>${solo?`<button class="btn" type="button" data-da="print">Print / Save as PDF</button>`:""}<button class="btn" type="button" data-da="clear">Clear</button>${opts.onClose?`<button class="btn" type="button" data-da="close">Close</button>`:""}<span class="muted dsc-msg"></span></div>
     </div>`).firstElementChild;
     const q=(s)=>d.querySelector(s), msg=(t)=>{ const m=q(".dsc-msg"); m.textContent=t; setTimeout(()=>{ if(m.textContent===t) m.textContent=""; },3500); };
     const label=()=>`${DS_SPEC[type].label.toUpperCase()} ${(opts.count?opts.count(type):n[type])+1}`;
-    const out=()=>{ q(".dsc-out").textContent=dsText(type,v,label()); };
+    const out=()=>{ q(".dsc-out").textContent=dsText(type,v,label()); paintList(); };
+    const filled=()=>Object.values(v).some(x=>String(x).trim());
+    const all=()=>solo?[...list,...(filled()?[dsText(type,v,label())]:[])]:[dsText(type,v,label())];
+    function paintList(){
+      const L=q(".dsc-list"); if(!L) return;
+      L.innerHTML=list.length?`<div class="sal-hint" style="margin-top:8px"><b>List (${list.length})</b> — included in Copy and Print</div>${list.map((t,i)=>`<div class="ta-iv dsc-item"><pre class="dsc-it">${esc(t)}</pre><button class="btn ics-x" type="button" data-da="del" data-i="${i}" aria-label="Remove from list">✕</button></div>`).join("")}`:"";
+    }
+    function printAll(){
+      const T=all(); if(!T.length){ msg("Fill in at least one detail first."); return; }
+      icsPrint(`${mark?`<div class="pmark">${esc(mark)}</div>`:""}<h1 class="ops-h1">DESCRIPTIONS</h1><div class="sd-pi">Prepared ${esc(plainDT(new Date()))}</div>${T.map(t=>`<div class="sd-pi dsc-p">${esc(t)}</div>`).join("")}${mark?`<div class="pmark end">${esc(mark)}</div>`:""}`,"Descriptions "+plainDT(new Date()));
+    }
     function render(){
       d.querySelectorAll("[data-dt]").forEach(b=>b.classList.toggle("on",b.dataset.dt===type));
       q(".dsc-form").innerHTML=DS_SPEC[type].groups.map(gr=>`<div class="ta-sub">${esc(gr.t)}</div>${gr.n?`<div class="sal-hint">${esc(gr.n)}</div>`:""}<div class="ta-grid2">${gr.f.map(([k,l,o,h])=>{
         const val=v[k]||"";
         if(Array.isArray(o)) return `<label class="ta-f">${esc(l)}<select class="fld" data-dk="${k}">${o.map(x=>`<option value="${esc(x)}" ${val===x?"selected":""}>${esc(x||"— select —")}</option>`).join("")}</select>${h?`<span class="hint">${esc(h)}</span>`:""}</label>`;
-        if(k==="when") return `<label class="ta-f">${esc(l)}<span class="sal-row"><input class="fld" data-dk="${k}" value="${esc(val)}" placeholder="DTG" autocomplete="off"><button class="btn" type="button" data-da="now">Now</button></span></label>`;
+        if(k==="when") return `<label class="ta-f">${esc(l)}<span class="sal-row"><input class="fld" data-dk="${k}" value="${esc(val)}" placeholder="e.g. Oct 5, 8:55 PM" autocomplete="off"><button class="btn" type="button" data-da="now">Now</button></span></label>`;
         return `<label class="ta-f">${esc(l)}<input class="fld" data-dk="${k}" value="${esc(val)}" placeholder="${esc(o||"")}" autocomplete="off">${h?`<span class="hint">${esc(h)}</span>`:""}</label>`;
       }).join("")}</div>`).join("");
       out();
     }
     d.addEventListener("input",(e)=>{ const k=e.target.dataset.dk; if(k){ v[k]=e.target.value; out(); } });
+    d.addEventListener("change",(e)=>{ if(e.target.hasAttribute("data-dm")) mark=e.target.value; });
     d.addEventListener("click",(e)=>{
       const b=e.target.closest("button"); if(!b) return;
       if(b.dataset.dt){ if(b.dataset.dt!==type){ type=b.dataset.dt; v={}; render(); } return; }
       const a=b.dataset.da;
-      if(a==="now"){ v.when=dtgParts(new Date()).local; render(); return; }
-      if(a==="copy"){ icsCopy(dsText(type,v,label()),q(".dsc-msg")); return; }
-      if(a==="clear"){ v={}; render(); return; }
+      if(a==="now"){ v.when=plainDT(new Date()); render(); return; }
+      if(a==="copy"){ const T=all(); if(!T.length){ msg("Fill in at least one detail first."); return; } icsCopy(T.join("\n\n"),q(".dsc-msg")); return; }
+      if(a==="print"){ printAll(); return; }
+      if(a==="add"){ if(!filled()){ msg("Fill in at least one detail first."); return; } list.push(dsText(type,v,label())); n[type]++; v={}; render(); msg("Added to the list. Build the next one."); return; }
+      if(a==="del"){ list.splice(+b.dataset.i,1); paintList(); return; }
+      if(a==="clear"){ if(solo&&list.length&&!confirm("Clear the form and the whole list?")) return; if(solo){ list.length=0; n.person=n.vehicle=n.object=0; } v={}; render(); return; }
       if(a==="close"){ opts.onClose(); return; }
       if(a==="insert"){ if(!Object.values(v).some(x=>String(x).trim())){ msg("Fill in at least one detail first."); return; } opts.onInsert(dsText(type,v,label()),type); n[type]++; v={}; render(); msg("Added. Build the next one, or close."); }
     });
@@ -1962,7 +2031,7 @@
       $("dt_tz").innerHTML=zones.map(z=>`<option${z==="UTC"?" selected":""}>${z}</option>`).join("");
       const setNow=()=>{ const n=new Date(); const local=new Date(n.getTime()-n.getTimezoneOffset()*60000); $("dt_in").value=local.toISOString().slice(0,16); calc(); };
       const calc=()=>{
-        const v=$("dt_in").value; if(!v){ $("dt_out").textContent="Pick a date and time."; return; }
+        const v=$("dt_in").value; if(!v){ $("dt_out").textContent="Pick a date and time."; $("dt_world").textContent=""; return; }
         const d0=new Date(v); const off=offsetMinFor(d0);
         const dp=dtgParts(d0), dtg=dp.zulu, localDtg=dp.local;
         $("dt_out").innerHTML=`<span class="big">${localDtg}</span>  (local DTG)\nZulu / UTC:  ${dtg}  ${d0.toUTCString().replace("GMT","UTC")}\nISO 8601:    ${d0.toISOString()}\nUnix epoch:  ${Math.floor(d0.getTime()/1000)}`;
@@ -1974,9 +2043,14 @@
     coord(){
       host.innerHTML="";
       const d=el(`<div class="toolpane">
+        <div class="full sal-hint">Turn an <b>address</b> into coordinates, or type <b>coordinates</b> to convert them. You get degrees-minutes-seconds, decimal, UTM and MGRS grid, plus map links.</div>
+        <label class="f full">Address or place<span class="hint">A street address, landmark, intersection or ZIP code. Add the city and state for the best match.</span><span class="sal-row sd-cell"><input id="c_addr" class="fld" type="search" placeholder="e.g. 1300 Macdonald Ave, Richmond, CA" autocomplete="off"><button class="btn" type="button" id="c_find">Find</button></span></label>
+        <div class="full toolrow" style="margin-top:-2px"><button class="btn" type="button" id="c_gps">Use my location</button><span class="muted" id="c_msg" role="status"></span></div>
+        <div class="full c-matches" id="c_matches"></div>
         <label class="f">Latitude (decimal)<input id="c_lat" class="fld" type="number" step="any" placeholder="37.9358"></label>
         <label class="f">Longitude (decimal)<input id="c_lon" class="fld" type="number" step="any" placeholder="-122.3477"></label>
-        <div class="toolout full" id="c_out">Enter coordinates to convert to DMS, UTM and MGRS.</div></div>`);
+        <div class="toolout full" id="c_out">Enter an address or coordinates to convert.</div>
+        <div class="full toolrow" id="c_acts" hidden><button class="btn" type="button" id="c_copy">Copy</button><a class="btn" id="c_gmap" target="_blank" rel="noopener">Google Maps ▸</a><a class="btn" id="c_osm" target="_blank" rel="noopener">OpenStreetMap ▸</a></div></div>`);
       host.appendChild(d);
       const dms=(v,pos,neg)=>{ const h=v>=0?pos:neg; let t=Math.round(Math.abs(v)*36000); const dd=Math.floor(t/36000); t-=dd*36000; const mm=Math.floor(t/600); const ss=(t-mm*600)/10; return `${dd}°${pad(mm)}'${ss.toFixed(1)}"${h}`; };
       function utm(lat,lon){
@@ -1999,15 +2073,48 @@
       const pad5=(n)=>String(Math.floor(n)).padStart(5,"0");
       const calc=()=>{
         const lat=num($("c_lat").value), lon=num($("c_lon").value);
-        if(lat==null||lon==null||lat<-80||lat>84||lon<-180||lon>180){ $("c_out").textContent="Enter a valid latitude (−80 to 84) and longitude (−180 to 180)."; return; }
+        if(lat==null||lon==null||lat<-80||lat>84||lon<-180||lon>180){ $("c_acts").hidden=true; $("c_out").textContent=($("c_lat").value||$("c_lon").value)?"Enter a valid latitude (−80 to 84) and longitude (−180 to 180).":"Enter an address or coordinates to convert."; return; }
         const u=utm(lat,lon);
-        $("c_out").innerHTML=`<span class="big">${dms(lat,"N","S")}  ${dms(lon,"E","W")}</span>
+        $("c_acts").hidden=false; $("c_gmap").href=`https://www.google.com/maps/search/?api=1&query=${lat.toFixed(6)},${lon.toFixed(6)}`; $("c_osm").href=`https://www.openstreetmap.org/?mlat=${lat.toFixed(6)}&mlon=${lon.toFixed(6)}#map=17/${lat.toFixed(6)}/${lon.toFixed(6)}`;
+        $("c_out").innerHTML=`${place?`Address:  ${esc(place)}\n`:""}<span class="big">${dms(lat,"N","S")}  ${dms(lon,"E","W")}</span>
 Decimal:  ${lat.toFixed(6)}, ${lon.toFixed(6)}
 UTM:      ${u.zone}${u.band}  ${Math.round(u.E)}E  ${Math.round(u.Nn)}N
 MGRS:     ${mgrs(u)}
 Geo URI:  geo:${lat.toFixed(6)},${lon.toFixed(6)}`;
       };
-      d.addEventListener("input",calc);
+      let place="";
+      const say=(m)=>{ $("c_msg").textContent=m; };
+      const setLL=(lat,lon,label)=>{ $("c_lat").value=(+lat).toFixed(6); $("c_lon").value=(+lon).toFixed(6); place=label||""; calc(); };
+      async function find(){
+        const qy=$("c_addr").value.trim(); if(!qy){ say("Type an address first."); return; }
+        say("Searching…"); $("c_matches").innerHTML=""; $("c_find").disabled=true;
+        try{
+          const J=await getJSON(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(qy)}`,{headers:{Accept:"application/json"}});
+          if(!Array.isArray(J)||!J.length){ say("No match. Check the spelling, or add the city and state."); }
+          else{
+            const L=J.map(j=>({lat:+j.lat,lon:+j.lon,label:sdFmtAddr(j)||j.display_name||""})).filter(x=>isFinite(x.lat)&&isFinite(x.lon));
+            setLL(L[0].lat,L[0].lon,L[0].label);
+            say(L.length>1?"Best match shown — check it's the right place.":"Found — check it's the right place.");
+            if(L.length>1) $("c_matches").innerHTML=`<span class="sal-hint">Matches — tap to pick:</span> ${L.map((x,i)=>`<button class="btn c-m${i?"":" on"}" type="button" data-ci="${i}">${esc(x.label)}</button>`).join("")}`;
+            $("c_matches").__L=L;
+          }
+        }catch(e){ say("Couldn't reach the address lookup. Check your connection and try again."); }
+        $("c_find").disabled=false;
+      }
+      $("c_find").addEventListener("click",find);
+      $("c_addr").addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); find(); } });
+      $("c_matches").addEventListener("click",(e)=>{ const b=e.target.closest("[data-ci]"); if(!b) return; const x=$("c_matches").__L[+b.dataset.ci]; d.querySelectorAll(".c-m").forEach(m=>m.classList.toggle("on",m===b)); setLL(x.lat,x.lon,x.label); });
+      $("c_gps").addEventListener("click",()=>{
+        if(!navigator.geolocation){ say("This browser can't share your location."); return; }
+        say("Locating…"); $("c_gps").disabled=true; $("c_matches").innerHTML="";
+        navigator.geolocation.getCurrentPosition(async(pos)=>{
+          const lat=pos.coords.latitude, lon=pos.coords.longitude; let label="";
+          try{ label=sdFmtAddr(await getJSON(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=18&addressdetails=1&lat=${lat}&lon=${lon}`,{headers:{Accept:"application/json"}})); }catch{}
+          setLL(lat,lon,label?label+" (nearest address)":""); say(`GPS accuracy about ${Math.max(5,Math.round(pos.coords.accuracy*3.28084/5)*5)} ft.`); $("c_gps").disabled=false;
+        },()=>{ say("Couldn't get your location (permission denied or no signal)."); $("c_gps").disabled=false; },{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+      });
+      $("c_copy").addEventListener("click",()=>icsCopy($("c_out").innerText,$("c_msg")));
+      d.addEventListener("input",(e)=>{ if(e.target.id==="c_lat"||e.target.id==="c_lon"){ place=""; $("c_matches").innerHTML=""; calc(); } });
       window.__coordCalc=()=>{ $("c_lat").value=HOME.lat.toFixed(6); $("c_lon").value=HOME.lon.toFixed(6); calc(); };
     },
     ration(){
@@ -2246,101 +2353,383 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     },
     search(){
       host.innerHTML="";
-      // ENGINE_GROUPS is defined once above toolDefs (shared with the collection plan)
-      const FILETYPES=["","pdf","doc","docx","xls","xlsx","csv","ppt","pptx","txt","rtf"];
-      const d=el(`<div class="toolpane">
-        <label class="f full">All of these words<input id="s_all" class="fld" placeholder="e.g. annual report budget"></label>
-        <label class="f full">Exact phrase<input id="s_exact" class="fld" placeholder='wrapped in quotes — e.g. John Jones'></label>
-        <label class="f">Any of these (OR)<input id="s_any" class="fld" placeholder="pdf OR report"></label>
-        <label class="f">None of these<input id="s_none" class="fld" placeholder="jobs login"></label>
-        <label class="f">On this site / domain<input id="s_site" class="fld" placeholder="linkedin.com"></label>
-        <label class="f">Not on this site<input id="s_xsite" class="fld" placeholder="pinterest.com"></label>
-        <label class="f">File type<select id="s_ft" class="fld">${FILETYPES.map(f=>`<option value="${f}">${f?f.toUpperCase():"— any —"}</option>`).join("")}</select></label>
-        <label class="f">Words in page title<input id="s_title" class="fld" placeholder="agenda minutes"></label>
-        <label class="f">Words in the URL<input id="s_url" class="fld" placeholder="login admin"></label>
-        <label class="f">Search engine<select id="s_eng" class="fld">${ENGINE_GROUPS.map(([g,list])=>`<optgroup label="${g}">${list.map(([n,u])=>`<option value="${u}">${n}</option>`).join("")}</optgroup>`).join("")}</select></label>
+      // ENGINE_GROUPS is defined once above toolDefs (shared with the collection plan).
+      const FT=[["","— any —"],["pdf","PDF"],["doc,docx","Word (DOC, DOCX)"],["xls,xlsx,csv","Spreadsheets (XLS, XLSX, CSV)"],["ppt,pptx","Presentations (PPT, PPTX)"],["pdf,doc,docx,rtf,txt","Any document (PDF, Word, RTF, TXT)"],["txt","Plain text (TXT)"],["rtf","RTF"],["kml,kmz","Map files (KML, KMZ)"]];
+      const QUICK=["exposure","name_social","username","phone","event_protest","incident_local","org_docs","gov_docs"];
+      const d=el(`<div class="toolpane sb">
+        <details class="full dsc-how sb-how" open><summary><b>How to use the search builder</b></summary>
+          <ol class="sal-hint i3-steps">
+            <li><b>Pick a preset</b> (or a quick pick) for what you're trying to find, and fill in its blanks — a name, a city, a website. It builds the search for you. Or skip presets and fill in the fields yourself.</li>
+            <li><b>Adjust</b> the fields below if you need to — add a site, rule out words, limit the dates. “Reads as” tells you in plain English what the search will do.</li>
+            <li><b>Open it</b> in your chosen engine, or use the <b>Open in</b> links to run the same search on several engines. Different engines find different things — check at least two.</li>
+            <li>Each search you open goes in the <b>search log</b> with the time and engine. Copy the log into your report or collection plan so others can repeat your work.</li>
+          </ol>
+          <p class="sal-hint"><b>Tips for better results:</b> start broad, then narrow. Put names in quotes and try variations (presets do this for you). If you get too few results, remove a field; too many, add a site or a word to rule out. Operators need no space after the colon (<code>site:x.com</code>, not <code>site: x.com</code>), and <code>OR</code> must be in capitals. Results differ by engine, location and day — note when you searched. A page may have changed since it was indexed; open it to confirm, and save a screenshot or archived copy of anything important.</p>
+          
+        </details>
+        <div class="full sb-pre">
+          <div class="ta-sub" style="margin-top:0">Start from a preset</div>
+          <div class="sb-quick"><span class="muted" style="font-size:12px">Quick picks:</span> <span class="sb-qbtns"></span></div>
+          <label class="f full">All presets<select id="s_pre" class="fld"></select></label>
+          <div class="sb-pdesc sal-hint" id="s_pdesc"></div>
+          <div class="sb-pin" id="s_pin"></div>
+        </div>
+        <div class="ta-sub full">Build or adjust the search</div>
+        <label class="f full">All of these words<span class="hint">Every word must appear. Example: annual report budget</span><input id="s_all" class="fld" placeholder="e.g. annual report budget" autocomplete="off"></label>
+        <label class="f full">Exact phrase<span class="hint">These words together, in this order — use it for names. Example: John Q Jones</span><input id="s_exact" class="fld" placeholder="e.g. John Q Jones" autocomplete="off"></label>
+        <label class="f">Any of these<span class="hint">At least one must appear. Separate with spaces; put phrases in quotes.</span><input id="s_any" class="fld" placeholder='e.g. protest rally "day of action"' autocomplete="off"></label>
+        <label class="f">None of these<span class="hint">Results with these words are dropped.</span><input id="s_none" class="fld" placeholder="e.g. jobs hiring" autocomplete="off"></label>
+        <label class="f">Only on these sites<span class="hint">One or more, separated by spaces. A whole type works too: .gov, .edu, ca.gov</span><input id="s_site" class="fld" placeholder="e.g. x.com reddit.com" autocomplete="off"></label>
+        <label class="f">Not on these sites<span class="hint">Leave out sites that crowd the results.</span><input id="s_xsite" class="fld" placeholder="e.g. pinterest.com" autocomplete="off"></label>
+        <label class="f">File type<span class="hint">Find documents instead of web pages.</span><select id="s_ft" class="fld">${FT.map(([v,n])=>`<option value="${v}">${n}</option>`).join("")}</select></label>
+        <label class="f">Words in the page title<span class="hint">Pages about the subject, not just mentioning it.</span><input id="s_title" class="fld" placeholder="e.g. agenda minutes" autocomplete="off"></label>
+        <label class="f">Words in the web address<span class="hint">Example: events, staff, directory</span><input id="s_url" class="fld" placeholder="e.g. staff" autocomplete="off"></label>
+        <label class="f">Words in the page text<span class="hint">Must appear in the body of the page.</span><input id="s_text" class="fld" placeholder="e.g. roster" autocomplete="off"></label>
+        <div class="f full"><span style="font-size:12px;color:var(--ink-dim)">Date range <span class="hint" style="display:inline">— Google and Yandex only. Other engines: use their own date filter.</span></span>
+          <div class="sb-dates"><label>After<input id="s_after" class="fld" type="date"></label><label>Before<input id="s_before" class="fld" type="date"></label>
+          <span class="sb-dq"><button class="btn" type="button" data-days="1">Past day</button><button class="btn" type="button" data-days="7">7 days</button><button class="btn" type="button" data-days="30">30 days</button><button class="btn" type="button" data-days="90">90 days</button><button class="btn" type="button" data-days="0">Any time</button></span></div></div>
+        <details class="full sb-more"><summary>More: words near each other</summary>
+          <div class="sb-near"><input id="s_n1" class="fld" placeholder="first word" autocomplete="off"><span>within</span><input id="s_nn" class="fld" type="number" min="1" max="50" value="5" aria-label="words apart"><span>words of</span><input id="s_n2" class="fld" placeholder="second word" autocomplete="off"></div>
+          <div class="sal-hint">Finds the two words close together — e.g. a name within 5 words of a unit or employer. Google and Bing only.</div>
+        </details>
+        <label class="f full">Search engine<select id="s_eng" class="fld">${ENGINE_GROUPS.map(([g,list])=>`<optgroup label="${g}">${list.map(([n,u])=>`<option value="${u}">${n}</option>`).join("")}</optgroup>`).join("")}</select></label>
         <div class="toolout full" id="s_out" style="min-height:52px">—</div>
-        <div class="full" id="s_plain" style="font-size:13px;color:var(--ink-dim)"></div>
+        <div class="full sb-plain" id="s_plain"></div>
+        <div class="full sb-warn" id="s_warn" hidden></div>
         <div class="toolrow full">
           <button class="btn" type="button" id="s_open">Open search ▸</button>
-          <button class="btn" type="button" id="s_copy">Copy query</button>
+          <button class="btn" type="button" id="s_copy">Copy search</button>
           <button class="btn" type="button" id="s_clear">Clear</button>
           <span class="muted" id="s_msg"></span>
         </div>
-        <details class="full" style="font-size:13px">
-          <summary style="cursor:pointer;color:var(--link)">What do these do? (quick guide)</summary>
-          <ul style="margin:8px 0 0;padding-left:18px;line-height:1.6">
-            <li><b>Exact phrase</b> — <code>"john jones"</code> finds that exact wording, not the words scattered apart.</li>
-            <li><b>Any of these (OR)</b> — <code>pdf OR report</code> matches pages with either word.</li>
-            <li><b>None of these</b> — puts a minus in front, e.g. <code>-jobs</code>, to drop unwanted results.</li>
-            <li><b>Site / domain</b> — <code>site:linkedin.com</code> limits results to one website.</li>
-            <li><b>File type</b> — <code>filetype:pdf</code> finds documents of that kind.</li>
-            <li><b>In title / in URL</b> — <code>intitle:</code> and <code>inurl:</code> match where the words appear on the page.</li>
-          </ul>
-          <div class="muted" style="margin-top:6px">Tip: operators aren't identical on every engine. If one acts up, try Google or Bing, which support all of these.</div>
+        <div class="full sb-also" id="s_also"></div>
+        <div class="full sb-log" id="s_log"></div>
+        <details class="full sb-ref"><summary><b>Operator reference</b> — what each one does and where it works</summary>
+          <div class="sb-tw"><table class="sb-t"><thead><tr><th>Operator</th><th>What it does</th><th>Example</th><th>Works on</th></tr></thead><tbody>
+            <tr><td><code>"…"</code></td><td>Exact phrase</td><td><code>"jane doe"</code></td><td>All</td></tr>
+            <tr><td><code>OR</code></td><td>Either word (capitals)</td><td><code>rally OR protest</code></td><td>All (Yandex uses <code>|</code> — converted for you)</td></tr>
+            <tr><td><code>-</code></td><td>Leave out a word or site</td><td><code>-jobs</code> <code>-site:pinterest.com</code></td><td>All</td></tr>
+            <tr><td><code>( )</code></td><td>Group words</td><td><code>(rally OR march) oakland</code></td><td>Google, Bing, DuckDuckGo, Brave</td></tr>
+            <tr><td><code>site:</code></td><td>Only one site or type of site</td><td><code>site:ca.gov</code> <code>site:.edu</code></td><td>All</td></tr>
+            <tr><td><code>filetype:</code></td><td>Only one kind of file</td><td><code>filetype:pdf</code></td><td>All (Yandex: <code>mime:</code> — converted)</td></tr>
+            <tr><td><code>intitle:</code></td><td>Word in the page title</td><td><code>intitle:roster</code></td><td>All (Yandex: <code>title:</code> — converted)</td></tr>
+            <tr><td><code>inurl:</code></td><td>Word in the web address</td><td><code>inurl:events</code></td><td>Google, Bing, DuckDuckGo, Yandex</td></tr>
+            <tr><td><code>intext:</code></td><td>Word in the page body</td><td><code>intext:roster</code></td><td>Google (Bing and Brave: <code>inbody:</code> — converted)</td></tr>
+            <tr><td><code>after:</code> <code>before:</code></td><td>Date range</td><td><code>after:2026-09-01</code></td><td>Google (Yandex: <code>date:</code> — converted)</td></tr>
+            <tr><td><code>AROUND(n)</code></td><td>Words near each other</td><td><code>doe AROUND(5) guard</code></td><td>Google (Bing: <code>NEAR:n</code> — converted)</td></tr>
+            <tr><td><code>*</code></td><td>Any word fills the gap</td><td><code>"jane * doe"</code></td><td>Google, Bing</td></tr>
+          </tbody></table></div>
+          <div class="sal-hint">Type <code>*</code> straight into the exact-phrase field to catch middle names: <code>jane * doe</code>. Engines that don't support an operator usually ignore it or treat it as a plain word — the builder warns you when that happens.</div>
         </details>
-        <div class="full" style="margin-top:4px">
-          <span class="muted" style="font-size:12px">Presets: </span>
-          <button class="btn" type="button" data-preset="exposure" style="font-size:12px;padding:2px 8px">Check my own exposure</button>
-          <button class="btn" type="button" data-preset="docs" style="font-size:12px;padding:2px 8px">PDFs on a site</button>
-          <button class="btn" type="button" data-preset="social" style="font-size:12px;padding:2px 8px">Find a profile</button>
-        </div>
       </div>`);
       host.appendChild(d);
-      const g=(id)=>$(id).value.trim();
-      const splitWords=(s)=>s.split(/\s+/).filter(Boolean);
-      function build(){
-        const parts=[];
-        if(g("s_all")) parts.push(g("s_all"));
-        const ex=g("s_exact").replace(/"/g,"").trim(); if(ex) parts.push('"'+ex+'"');
-        if(g("s_any")){
-          const ws=splitWords(g("s_any").replace(/\bor\b/gi," "));
-          if(ws.length>1) parts.push("("+ws.join(" OR ")+")"); else if(ws.length) parts.push(ws[0]);
-        }
-        if(g("s_none")) splitWords(g("s_none")).forEach(w=>parts.push("-"+w));
-        if(g("s_site")) parts.push("site:"+g("s_site").replace(/^https?:\/\//,"").replace(/\/.*$/,""));
-        if(g("s_xsite")) parts.push("-site:"+g("s_xsite").replace(/^https?:\/\//,"").replace(/\/.*$/,""));
-        if($("s_ft").value) parts.push("filetype:"+$("s_ft").value);
-        if(g("s_title")){ const ws=splitWords(g("s_title")); parts.push((ws.length>1?"allintitle:":"intitle:")+ws.join(" ")); }
-        if(g("s_url")){ const ws=splitWords(g("s_url")); parts.push((ws.length>1?"allinurl:":"inurl:")+ws.join(" ")); }
-        const q=parts.join(" ").trim();
-        $("s_out").innerHTML=q?`<span class="big" style="font-size:16px">${esc(q)}</span>`:"— build a query above —";
-        $("s_plain").textContent=q?`Reads as: ${plain(parts)}`:"";
-        return q;
+      const q=(s)=>d.querySelector(s), g=(id)=>(q("#"+id)?q("#"+id).value:"").trim();
+      const tok=(s)=>(String(s).match(/"[^"]*"|\S+/g)||[]).map(x=>x.trim()).filter(x=>x&&x!=='""'&&!/^or$/i.test(x));
+      const siteTok=(s,keepWww)=>String(s).split(/[\s,]+/).map(x=>{ x=x.trim().replace(/^https?:\/\//i,"").replace(/\/.*$/,""); return keepWww?x:x.replace(/^www\./i,""); }).filter(Boolean);
+      const isoDaysAgo=(n)=>{ const t=new Date(Date.now()-n*864e5); return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`; };
+      const quoteIf=(w)=>/^".*"$/.test(w)?w:(/\s/.test(w)?`"${w}"`:w);
+      // Name variations: "Jane Q Doe" → "Jane Q Doe", "Jane Doe", "Doe, Jane" (engines ignore the comma but keep the order).
+      function nameVars(n){
+        const p=String(n).replace(/"/g,"").trim().split(/\s+/).filter(Boolean); if(!p.length) return [];
+        if(p.length===1) return [`"${p[0]}"`];
+        const f=p[0], l=p[p.length-1], out=new Set([`"${p.join(" ")}"`,`"${f} ${l}"`,`"${l} ${f}"`]);
+        return [...out];
       }
-      function plain(){
-        const bits=[];
-        if(g("s_all")) bits.push(`pages mentioning ${g("s_all")}`);
-        if(g("s_exact")) bits.push(`the exact phrase “${g("s_exact")}”`);
-        if(g("s_any")) bits.push(`any of: ${g("s_any")}`);
-        if(g("s_none")) bits.push(`but not: ${g("s_none")}`);
-        if(g("s_site")) bits.push(`only on ${g("s_site")}`);
-        if(g("s_xsite")) bits.push(`excluding ${g("s_xsite")}`);
-        if($("s_ft").value) bits.push(`${$("s_ft").value.toUpperCase()} files only`);
-        if(g("s_title")) bits.push(`“${g("s_title")}” in the title`);
-        if(g("s_url")) bits.push(`“${g("s_url")}” in the URL`);
-        return bits.length?bits.join("; ")+".":"";
+      const phoneVars=(v)=>{ const P=osPhone(v); return P.us?P.formats.slice(0,4).map(x=>`"${x}"`):[`"${String(v).trim()}"`]; };
+      const SOC="facebook.com instagram.com x.com twitter.com tiktok.com linkedin.com reddit.com youtube.com threads.net";
+      const PPL="whitepages.com spokeo.com beenverified.com fastpeoplesearch.com truepeoplesearch.com radaris.com mylife.com peoplefinders.com thatsthem.com intelius.com nuwber.com clustrmaps.com";
+      // Presets: blanks (k,label,placeholder,optional) → fields. Every preset sets the whole builder.
+      const PRESETS=[
+        ["People & usernames",[
+          {id:"name_all",n:"A person — everywhere",d:"Every page that mentions the name, with common variations. Add a city or employer to narrow it.",in:[["name","Full name","e.g. Jane Q Doe"],["ctx","City, employer or school (optional)","e.g. Richmond",1]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:x.ctx?quoteIf(x.ctx):""}),tip:"Too many results? Add the city, or rule out a famous namesake in “None of these”."},
+          {id:"name_social",n:"A person — social media profiles",d:"The name on the main social networks at once.",in:[["name","Full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),site:SOC}),tip:"Profiles often use nicknames or initials. Found a username? Run the “Username across sites” preset next."},
+          {id:"name_li",n:"A person — work history (LinkedIn)",d:"Job titles and employers from public LinkedIn profiles.",in:[["name","Full name","e.g. Jane Q Doe"],["org","Employer (optional)","e.g. State of California",1]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:x.org?quoteIf(x.org):"",site:"linkedin.com"})},
+          {id:"name_docs",n:"A person — in documents",d:"Rosters, meeting minutes, resumes, newsletters and filings that mention the name.",in:[["name","Full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),ft:"pdf,doc,docx,rtf,txt"}),tip:"Also try Spreadsheets in File type — sign-in sheets and rosters are often XLSX."},
+          {id:"name_resume",n:"A person — resume or CV",d:"Posted resumes list past jobs, schools and skills.",in:[["name","Full name","e.g. Jane Q Doe"]],
+            f:(x)=>({exact:x.name.replace(/"/g,""),any:'resume CV "curriculum vitae"',none:"template example"})},
+          {id:"name_news",n:"A person — in the news",d:"News coverage mentioning the name. Pick Google News as the engine for news only.",in:[["name","Full name","e.g. Jane Q Doe"],["ctx","City or topic (optional)","e.g. Richmond",1]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:x.ctx?quoteIf(x.ctx):"",eng:"news.google.com"})},
+          {id:"name_court",n:"A person — court and legal records",d:"Case listings and opinions on public court-record sites.",in:[["name","Full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),site:"courtlistener.com justia.com judyrecords.com unicourt.com casetext.com"}),tip:"Many county courts aren't indexed by search engines — check the county court's own case search too."},
+          {id:"name_obit",n:"A person — obituaries and family",d:"Obituaries list relatives, hometowns and dates — useful for confirming identity.",in:[["name","Full name","e.g. Jane Q Doe"],["ctx","City (optional)","e.g. Oakland",1]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:x.ctx?quoteIf(x.ctx):"",title:"obituary",site:"legacy.com tributearchive.com dignitymemorial.com"})},
+          {id:"username",n:"Username across sites",d:"Where else the same username or handle appears.",in:[["u","Username or handle","e.g. jdoe_42"]],
+            f:(x)=>{ const u=x.u.replace(/^@/,""); return {any:`"${u}" "@${u}"`,none:""}; },tip:"Usernames are often reused for years — older accounts may show a real name or photo."},
+          {id:"email",n:"Email address mentions",d:"Pages, posts and documents containing the email address.",in:[["e","Email address","e.g. jdoe@example.com"]],
+            f:(x)=>({exact:x.e.toLowerCase()}),tip:"Also search just the part before the @ — it's often reused as a username."},
+          {id:"phone",n:"Phone number — every format",d:"Pages listing the number, in every common format at once.",in:[["p","Phone number","e.g. (510) 555-0142"]],
+            f:(x)=>({any:phoneVars(x.p).join(" ")})}
+        ]],
+        ["Check your own exposure",[
+          {id:"exposure",n:"My name — everywhere",d:"See what a stranger finds about you. Add your city to separate yourself from others with the same name.",in:[["name","Your full name","e.g. Jane Q Doe"],["ctx","Your city (optional)","e.g. Richmond",1]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:x.ctx?quoteIf(x.ctx):"",none:"jobs hiring"}),tip:"Found a people-search listing? Track removal in Reports ▸ Data removal tracker."},
+          {id:"me_ppl",n:"My name on people-search sites",d:"Data-broker listings that show your address, relatives and phone numbers.",in:[["name","Your full name","e.g. Jane Q Doe"],["ctx","Your city or state (optional)","e.g. California",1]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:x.ctx?quoteIf(x.ctx):"",site:PPL})},
+          {id:"me_addr",n:"My home address online",d:"Pages that show your street address — with or without your name.",in:[["street","Street address","e.g. 123 Main St"],["city","City","e.g. Richmond"]],
+            f:(x)=>({exact:x.street.replace(/"/g,""),all:quoteIf(x.city)}),tip:"Also search just the house number and street name — listings abbreviate (St / Street)."},
+          {id:"me_phone",n:"My phone number online",d:"Your number in every common format.",in:[["p","Your phone number","e.g. (510) 555-0142"]],
+            f:(x)=>({any:phoneVars(x.p).join(" ")})},
+          {id:"me_paste",n:"My email on paste and dump sites",d:"Your email address posted on paste sites, where leaked data often appears. Also check haveibeenpwned.com.",in:[["e","Your email address","e.g. jdoe@example.com"]],
+            f:(x)=>({exact:x.e.toLowerCase(),site:"pastebin.com rentry.co controlc.com justpaste.it ghostbin.site"})},
+          {id:"me_role",n:"My name with my unit or job",d:"Pages that tie your name to your military unit or job — a common OPSEC giveaway.",in:[["name","Your full name","e.g. Jane Q Doe"],["unit","Unit, agency or employer","e.g. State Guard"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:quoteIf(x.unit)})},
+          {id:"me_photos",n:"Photos of me",d:"Image results for your name. Pick Google Images or Yandex Images as the engine.",in:[["name","Your full name","e.g. Jane Q Doe"]],
+            f:(x)=>({exact:x.name.replace(/"/g,""),eng:"tbm=isch"}),tip:"For a photo you have, use reverse image search (Google Lens, Yandex, TinEye) from the link directory below."}
+        ]],
+        ["Organizations & websites",[
+          {id:"org_staff",n:"An organization — staff and roles",d:"People who list the organization on public profiles.",in:[["org","Organization name","e.g. Acme Builders"]],
+            f:(x)=>({exact:x.org.replace(/"/g,""),any:"manager director supervisor coordinator officer",site:"linkedin.com"})},
+          {id:"org_docs",n:"Documents on a website",d:"PDFs and Office files posted on one site — reports, policies, forms, rosters.",in:[["dom","Website","e.g. example.com"],["topic","Topic (optional)","e.g. budget",1]],
+            f:(x)=>({site:x.dom,ft:"pdf,doc,docx,rtf,txt",all:x.topic?quoteIf(x.topic):""}),tip:"Checking your own organization? Switch File type to Spreadsheets — exposed rosters are a common leak."},
+          {id:"org_offsite",n:"An organization — what others say",d:"Mentions of the organization on sites other than its own.",in:[["org","Organization name","e.g. Acme Builders"],["dom","Its website (optional)","e.g. acmebuilders.com",1]],
+            f:(x)=>({exact:x.org.replace(/"/g,""),xsite:x.dom||""})},
+          {id:"org_contract",n:"Contracts, bids and awards",d:"Government contracts, grants and bids naming the organization.",in:[["org","Organization name","e.g. Acme Builders"]],
+            f:(x)=>({exact:x.org.replace(/"/g,""),any:'contract award bid RFP grant "purchase order"',site:".gov"})},
+          {id:"org_pages",n:"Pages within a site",d:"Specific sections of a site — staff directories, events, contact pages.",in:[["dom","Website","e.g. example.com"],["w","Section word","e.g. staff"]],
+            f:(x)=>({site:x.dom,url:x.w})}
+        ]],
+        ["Events & situational awareness",[
+          {id:"event_protest",n:"Planned protest, rally or march",d:"Public announcements and chatter about a planned demonstration — past 30 days.",in:[["what","Event, place or cause","e.g. city hall"],["city","City","e.g. Oakland"]],
+            f:(x)=>({all:`${quoteIf(x.what)} ${quoteIf(x.city)}`,any:'protest rally march "day of action" walkout vigil',site:"x.com reddit.com instagram.com facebook.com eventbrite.com",after:isoDaysAgo(30)}),tip:"Protest is lawful. Look for safety-relevant facts — date, time, route, size — not who's attending or why."},
+          {id:"event_pages",n:"Event pages and flyers",d:"Event listings, ticket pages and flyers for an event or venue.",in:[["what","Event name or venue","e.g. Fleet Week"],["city","City (optional)","e.g. San Francisco",1]],
+            f:(x)=>({exact:x.what.replace(/"/g,""),all:x.city?quoteIf(x.city):"",site:"eventbrite.com meetup.com facebook.com allevents.in"})},
+          {id:"incident_local",n:"Local incident — live chatter",d:"Posts about something happening now — a fire, crash, shooting or closure. Past day.",in:[["what","What happened","e.g. fire"],["place","Place","e.g. Richmond"]],
+            f:(x)=>({all:`${quoteIf(x.what)} ${quoteIf(x.place)}`,site:"x.com reddit.com nextdoor.com citizen.com",after:isoDaysAgo(1)}),tip:"Early posts are often wrong. Confirm with official sources before acting or reporting."},
+          {id:"incident_official",n:"Official emergency information",d:"Government pages about evacuations, closures, shelters and outages.",in:[["place","City or county","e.g. Contra Costa County"]],
+            f:(x)=>({all:quoteIf(x.place),any:'evacuation "road closure" shelter outage "boil water" advisory',site:".gov",after:isoDaysAgo(7)})},
+          {id:"wildfire",n:"Wildfire updates",d:"Official and news updates for a named fire.",in:[["fire","Fire name","e.g. Oak Fire"]],
+            f:(x)=>({exact:x.fire.replace(/"/g,""),any:"containment evacuation acres update",site:"fire.ca.gov inciweb.wildfire.gov x.com",after:isoDaysAgo(7)})},
+          {id:"roads",n:"Road and highway conditions",d:"Closures and conditions from Caltrans and local news.",in:[["route","Highway or road","e.g. I-80"],["place","Area","e.g. Vallejo"]],
+            f:(x)=>({all:`${quoteIf(x.route)} ${quoteIf(x.place)}`,any:'closure closed crash "lanes blocked" chain control',after:isoDaysAgo(1)})}
+        ]],
+        ["Government & documents",[
+          {id:"gov_docs",n:"Government documents on a topic",d:"Official PDFs and reports from .gov sites.",in:[["topic","Topic","e.g. evacuation plan"],["ctx","Place or agency (optional)","e.g. Contra Costa",1]],
+            f:(x)=>({all:`${quoteIf(x.topic)}${x.ctx?" "+quoteIf(x.ctx):""}`,site:".gov",ft:"pdf"})},
+          {id:"minutes",n:"Meeting agendas and minutes",d:"City council, board and commission records that mention a topic or name.",in:[["body","City, board or agency","e.g. Richmond City Council"],["topic","Topic or name","e.g. police budget"]],
+            f:(x)=>({all:`${quoteIf(x.body)} ${quoteIf(x.topic)}`,any:"agenda minutes",ft:"pdf"})},
+          {id:"ca_gov",n:"California state sources",d:"California state agency pages only.",in:[["topic","Topic","e.g. State Guard"]],
+            f:(x)=>({all:quoteIf(x.topic),site:"ca.gov"})},
+          {id:"plans",n:"Plans and procedures",d:"Emergency plans, SOPs and after-action reports on a topic.",in:[["topic","Topic","e.g. wildfire"],["ctx","Place or agency (optional)","e.g. Sonoma County",1]],
+            f:(x)=>({all:`${quoteIf(x.topic)}${x.ctx?" "+quoteIf(x.ctx):""}`,any:'plan SOP "after action" "lessons learned" annex',ft:"pdf"})}
+        ]],
+        ["Images & video",[
+          {id:"video",n:"Videos",d:"Video of a person, place or event on the main video sites.",in:[["what","Person, place or event","e.g. Oakland march"]],
+            f:(x)=>({all:quoteIf(x.what),site:"youtube.com tiktok.com vimeo.com rumble.com instagram.com"})},
+          {id:"images",n:"Photos",d:"Image results. Engine switches to Google Images.",in:[["what","Person, place or thing","e.g. Port of Oakland gate"]],
+            f:(x)=>({all:x.what,eng:"tbm=isch"})},
+          {id:"maps",n:"Map files (KML / KMZ)",d:"Shared map files — routes, boundaries, points of interest.",in:[["what","Place or topic","e.g. evacuation zones Marin"]],
+            f:(x)=>({all:x.what,ft:"kml,kmz"})}
+        ]]
+      ];
+      // Additional presets, merged into the groups above (new groups are added at the end).
+      const MORE=[
+        ["People & usernames",[
+          {id:"name_license",n:"A person — licenses and certifications",d:"Professional licenses, certifications and disciplinary notices on government sites.",in:[["name","Full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:"(license OR licensed OR certification OR certified)",site:".gov"}),tip:"License boards' own search pages are often not indexed — check the board directly (CA: search.dca.ca.gov)."},
+          {id:"name_business",n:"A person — businesses they own or run",d:"Company filings that list the person as an owner, officer or registered agent.",in:[["name","Full name","e.g. Jane Q Doe"],["st","State (optional)","e.g. California",1]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:x.st?quoteIf(x.st):"",site:"opencorporates.com bizapedia.com corporationwiki.com opengovus.com"})},
+          {id:"name_school",n:"A person — school and alumni",d:"Graduation lists, alumni pages, yearbooks and team rosters.",in:[["name","Full name","e.g. Jane Q Doe"],["school","School (optional)","e.g. Laney College",1]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:x.school?quoteIf(x.school):"(alumni OR \"class of\" OR graduate OR yearbook OR roster)"})},
+          {id:"name_race",n:"A person — race and event results",d:"Running, cycling and competition results — they show age, hometown and where someone trains.",in:[["name","Full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),site:"athlinks.com runsignup.com raceroster.com strava.com ultrasignup.com"})},
+          {id:"name_media",n:"A person — videos and podcasts",d:"Interviews, talks and podcast episodes that mention the person.",in:[["name","Full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),site:"youtube.com vimeo.com podcasts.apple.com open.spotify.com"})},
+          {id:"name_missing",n:"Missing person posts",d:"Missing-person flyers and shares on social media and news — past 30 days.",in:[["name","Name or description","e.g. Jane Doe"],["place","Place (optional)","e.g. Richmond",1]],
+            f:(x)=>({exact:x.name.replace(/"/g,""),all:`(missing OR "last seen")${x.place?" "+quoteIf(x.place):""}`,after:isoDaysAgo(30)})},
+          {id:"user_reddit",n:"Username — Reddit posts",d:"A Reddit user's profile and posts that mention them.",in:[["u","Reddit username","e.g. jdoe_42"]],
+            f:(x)=>{ const u=x.u.replace(/^\/?u\//i,"").replace(/^@/,""); return {any:`"u/${u}" "user/${u}"`,site:"reddit.com"}; }},
+          {id:"user_code",n:"Username — code and tech sites",d:"Accounts on GitHub, GitLab, Stack Overflow and similar — often with a real name or email.",in:[["u","Username","e.g. jdoe_42"]],
+            f:(x)=>({exact:x.u.replace(/^@/,""),site:"github.com gitlab.com stackoverflow.com hackerone.com keybase.io"})},
+          {id:"user_gaming",n:"Username — gaming and streaming",d:"The handle on gaming, streaming and chat platforms.",in:[["u","Username","e.g. jdoe_42"]],
+            f:(x)=>({exact:x.u.replace(/^@/,""),site:"twitch.tv steamcommunity.com kick.com discord.com chess.com"})}
+        ]],
+        ["Check your own exposure",[
+          {id:"me_fitness",n:"My fitness and race activity",d:"Public workouts, routes and race results — they can show where you live, work and train.",in:[["name","Your full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),site:"strava.com athlinks.com runsignup.com mapmyrun.com garmin.com"}),tip:"Set fitness apps to hide the start and end of routes near your home."},
+          {id:"me_service",n:"My military service online",d:"Pages that connect your name to military service, deployments or activations.",in:[["name","Your full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:'(army OR "national guard" OR "state guard" OR deployed OR deployment OR soldier OR veteran OR promoted)'})},
+          {id:"me_docs",n:"My documents with personal details",d:"PDFs and Word files with your name and contact details — resumes, forms, sign-up sheets.",in:[["name","Your full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),all:"(phone OR address OR email OR cell)",ft:"pdf,doc,docx,rtf,txt"})},
+          {id:"me_username",n:"My usernames",d:"Where your usernames appear — old accounts you may have forgotten.",in:[["u","Your username","e.g. jdoe_42"]],
+            f:(x)=>{ const u=x.u.replace(/^@/,""); return {any:`"${u}" "@${u}"`}; },tip:"Delete or lock old accounts you no longer use."},
+          {id:"me_family",n:"My family tagging me",d:"Posts where relatives mention you by name — often with photos, schools or locations.",in:[["name","Your full name","e.g. Jane Q Doe"],["rel","A relative's name","e.g. John Doe"]],
+            f:(x)=>({all:`${quoteIf(x.name)} ${quoteIf(x.rel)}`,site:SOC})},
+          {id:"me_reviews",n:"My reviews and comments",d:"Reviews and comments posted under your name — they show places you go.",in:[["name","Your full name","e.g. Jane Q Doe"]],
+            f:(x)=>({any:nameVars(x.name).join(" "),site:"yelp.com tripadvisor.com google.com/maps nextdoor.com"})}
+        ]],
+        ["Organizations & websites",[
+          {id:"org_emails",n:"Email addresses at an organization",d:"Addresses using the organization's email domain — shows the naming format and who's listed publicly.",in:[["dom","Email domain","e.g. example.com"]],
+            f:(x)=>({exact:"@"+x.dom.replace(/^@/,"")}),tip:"Seeing the format (first.last@) lets you predict other addresses. Checking your own org? These are phishing targets."},
+          {id:"org_social",n:"An organization's social media accounts",d:"Official and unofficial accounts and pages for the organization.",in:[["org","Organization name","e.g. Acme Builders"]],
+            f:(x)=>({exact:x.org.replace(/"/g,""),site:SOC})},
+          {id:"org_reviews",n:"Reviews and complaints",d:"Customer and employee reviews, complaints and scam reports.",in:[["org","Organization name","e.g. Acme Builders"]],
+            f:(x)=>({exact:x.org.replace(/"/g,""),site:"yelp.com bbb.org glassdoor.com indeed.com reddit.com trustpilot.com"})},
+          {id:"org_jobs",n:"Job postings",d:"Job ads describe internal systems, software, locations and security tools — check what your own organization reveals.",in:[["org","Organization name","e.g. Acme Builders"]],
+            f:(x)=>({exact:x.org.replace(/"/g,""),any:"job careers hiring position opening",site:"indeed.com linkedin.com glassdoor.com ziprecruiter.com governmentjobs.com calcareers.ca.gov"})},
+          {id:"org_sub",n:"Other parts of a website (subdomains)",d:"Pages on other subdomains — portals, test sites, old systems.",in:[["dom","Website","e.g. example.com"]],
+            f:(x)=>({site:"*."+x.dom.replace(/^www\./,""),xsite:"www."+x.dom.replace(/^www\./,"")}),tip:"Google only. Found a login page or test site for your own organization? Report it to IT."},
+          {id:"org_exposed",n:"My organization's exposed files",d:"Spreadsheets and documents on your own organization's site that may list people or contacts.",in:[["dom","Your organization's website","e.g. example.org"]],
+            f:(x)=>({site:x.dom,ft:"xls,xlsx,csv",any:"roster contact phone personnel list"}),tip:"Found something that shouldn't be public? Tell the site owner — don't download or share it."},
+          {id:"org_press",n:"Press releases",d:"Official announcements from the organization or about it on newswire sites.",in:[["org","Organization name","e.g. Acme Builders"]],
+            f:(x)=>({exact:x.org.replace(/"/g,""),site:"prnewswire.com businesswire.com globenewswire.com accesswire.com"})},
+          {id:"dom_paste",n:"A domain on paste and dump sites",d:"The domain name posted on paste sites, where leaked credentials and data often appear.",in:[["dom","Domain","e.g. example.com"]],
+            f:(x)=>({exact:x.dom,site:"pastebin.com rentry.co controlc.com justpaste.it ghostbin.site"})}
+        ]],
+        ["Events & situational awareness",[
+          {id:"threat_place",n:"Threat language about a place or event",d:"Posts mentioning a venue or event alongside violent or threatening words — past 7 days.",in:[["place","Venue, school or event","e.g. Richmond High School"]],
+            f:(x)=>({exact:x.place.replace(/"/g,""),any:'threat shoot bomb kill attack "shoot up" "blow up"',site:"x.com reddit.com instagram.com tiktok.com facebook.com",after:isoDaysAgo(7)}),tip:"Most hits are news or jokes. Anything credible: report it to law enforcement or your fusion center right away — don't engage."},
+          {id:"outage",n:"Power and utility outages",d:"Outage reports from utilities and residents — past day.",in:[["place","City or area","e.g. Richmond"]],
+            f:(x)=>({all:quoteIf(x.place),any:'outage "power out" "without power" PSPS',site:"pge.com x.com reddit.com nextdoor.com",after:isoDaysAgo(1)})},
+          {id:"weather_alert",n:"Weather alerts and warnings",d:"National Weather Service alerts and forecasts for an area.",in:[["place","City or county","e.g. Contra Costa"]],
+            f:(x)=>({all:quoteIf(x.place),any:'warning watch advisory "red flag" "heat advisory" "flood"',site:"weather.gov"})},
+          {id:"quake",n:"Earthquake reports",d:"USGS reports and local posts after a quake — past day.",in:[["place","Area","e.g. Hayward"]],
+            f:(x)=>({all:quoteIf(x.place),any:'earthquake quake shaking aftershock',site:"usgs.gov x.com reddit.com",after:isoDaysAgo(1)})},
+          {id:"tfr",n:"Flight restrictions (TFR / drones)",d:"FAA temporary flight restrictions — over fires, events and VIP visits.",in:[["place","Area or event","e.g. Oakland"]],
+            f:(x)=>({all:quoteIf(x.place),any:"TFR \"temporary flight restriction\" drone",site:"faa.gov"}),tip:"For the live map, open tfr.faa.gov directly."},
+          {id:"gathering",n:"Large gatherings — concerts, games, festivals",d:"Scheduled crowds that affect traffic, staffing and response.",in:[["place","City or venue","e.g. Oakland Arena"]],
+            f:(x)=>({all:quoteIf(x.place),any:"concert festival game parade tickets",site:"ticketmaster.com eventbrite.com livenation.com axs.com seatgeek.com"})},
+          {id:"scam_disaster",n:"Disaster scams",d:"Scams aimed at people affected by a disaster — fake aid, contractors and fundraisers.",in:[["what","Disaster or place","e.g. Eaton Fire"]],
+            f:(x)=>({all:quoteIf(x.what),any:'scam fraud fake "price gouging" impersonating',after:isoDaysAgo(30)}),tip:"Report disaster fraud to the National Center for Disaster Fraud: 866-720-5721."},
+          {id:"live",n:"Live streams of an event",d:"Live and recent video from people at the scene.",in:[["what","Event or place","e.g. Oakland march"]],
+            f:(x)=>({all:quoteIf(x.what),any:"live livestream streaming",site:"youtube.com twitch.tv tiktok.com x.com kick.com",after:isoDaysAgo(1)})}
+        ]],
+        ["Government & documents",[
+          {id:"laws",n:"Laws and regulations",d:"California and federal statutes and regulations on a topic.",in:[["topic","Topic","e.g. state active duty"]],
+            f:(x)=>({all:quoteIf(x.topic),site:"leginfo.legislature.ca.gov law.cornell.edu ecfr.gov govinfo.gov"})},
+          {id:"mil_pubs",n:"Military manuals and publications",d:"Field manuals, regulations and doctrine on a topic.",in:[["topic","Topic","e.g. route reconnaissance"]],
+            f:(x)=>({all:quoteIf(x.topic),any:'FM ATP AR "field manual" doctrine',site:"armypubs.army.mil .mil",ft:"pdf"})},
+          {id:"budget",n:"Budgets and spending",d:"Budget documents and spending spreadsheets on a topic or agency.",in:[["topic","Agency or topic","e.g. Richmond fire department"]],
+            f:(x)=>({all:quoteIf(x.topic),any:'budget expenditures "fiscal year" appropriation',ft:"pdf,doc,docx,rtf,txt",site:".gov"})},
+          {id:"press_gov",n:"Agency press releases",d:"Official announcements from government agencies on a topic.",in:[["topic","Topic","e.g. evacuation"],["ctx","Agency or place (optional)","e.g. Cal Fire",1]],
+            f:(x)=>({all:`${quoteIf(x.topic)}${x.ctx?" "+quoteIf(x.ctx):""}`,any:'"press release" "news release" announcement',site:".gov"})},
+          {id:"research",n:"Research and studies",d:"Academic papers and studies. Engine switches to Google Scholar.",in:[["topic","Topic","e.g. wildfire evacuation behavior"]],
+            f:(x)=>({all:x.topic,eng:"scholar.google.com"})}
+        ]],
+        ["Images & video",[
+          {id:"place_photos",n:"Photos of a place",d:"Photos people have posted of a building, site or area.",in:[["place","Place","e.g. Port of Oakland"]],
+            f:(x)=>({exact:x.place.replace(/"/g,""),site:"flickr.com instagram.com tripadvisor.com wikimedia.org"})},
+          {id:"podcast",n:"Podcasts and audio",d:"Podcast episodes and audio about a topic or person.",in:[["what","Topic or person","e.g. State Guard"]],
+            f:(x)=>({all:quoteIf(x.what),site:"podcasts.apple.com open.spotify.com soundcloud.com podbean.com"})}
+        ]],
+        ["Vehicles & transport",[
+          {id:"vin",n:"Vehicle — VIN",d:"Listings, auctions and history pages that show a 17-character VIN.",in:[["vin","VIN","e.g. 1HGCM82633A004352"]],
+            f:(x)=>({exact:x.vin.toUpperCase().replace(/\s/g,"")}),tip:"Free recall and theft checks: nhtsa.gov/recalls and nicb.org/vincheck."},
+          {id:"plate",n:"Vehicle — license plate",d:"Posts and photos mentioning a plate — e.g. reports of a vehicle seen at a location.",in:[["plate","Plate","e.g. 8ABC123"],["st","State (optional)","e.g. CA",1]],
+            f:(x)=>({exact:x.plate.toUpperCase(),all:x.st?quoteIf(x.st):""}),tip:"Plates are rarely indexed — no result doesn't mean much."},
+          {id:"aircraft",n:"Aircraft — tail number",d:"Flight tracking, registry and photo pages for an aircraft.",in:[["n","Tail number","e.g. N12345"]],
+            f:(x)=>({exact:x.n.toUpperCase(),site:"flightaware.com flightradar24.com registry.faa.gov jetphotos.com adsbexchange.com"})},
+          {id:"vessel",n:"Vessel — name or IMO number",d:"Ship tracking and registry pages for a vessel.",in:[["v","Vessel name or IMO","e.g. Ever Given"]],
+            f:(x)=>({exact:x.v,site:"marinetraffic.com vesselfinder.com myshiptracking.com shipspotting.com"})},
+          {id:"transit",n:"Transit disruptions",d:"BART, Muni, AC Transit, ferry and rail service alerts — past day.",in:[["line","System or line","e.g. BART"]],
+            f:(x)=>({all:quoteIf(x.line),any:'delay delays "service alert" disruption closed suspended',site:"x.com bart.gov 511.org reddit.com",after:isoDaysAgo(1)})}
+        ]]
+      ];
+      MORE.forEach(([c,L])=>{ const grp=PRESETS.find(x=>x[0]===c); if(grp) grp[1].push(...L); else PRESETS.push([c,L]); });
+      const PMAP={}; PRESETS.forEach(([,L])=>L.forEach(p=>PMAP[p.id]=p));
+      q("#s_pre").innerHTML=`<option value="">— choose a preset —</option>`+PRESETS.map(([c,L])=>`<optgroup label="${esc(c)}">${L.map(p=>`<option value="${p.id}">${esc(p.n)}</option>`).join("")}</optgroup>`).join("");
+      q(".sb-qbtns").innerHTML=QUICK.map(id=>`<button class="btn sb-qb" type="button" data-preset="${id}">${esc(PMAP[id].n.replace(/ — every format| — live chatter| — everywhere/,""))}</button>`).join("");
+      let cur=null, pv={};
+      function showPreset(id){
+        cur=PMAP[id]||null; pv={}; q("#s_pre").value=cur?cur.id:"";
+        q("#s_pdesc").innerHTML=cur?`<b>${esc(cur.n)}.</b> ${esc(cur.d)}${cur.tip?`<br><span class="sb-tip">Tip: ${esc(cur.tip)}</span>`:""}`:"";
+        q("#s_pin").innerHTML=cur?`<div class="ta-grid2">${cur.in.map(([k,l,ph])=>`<label class="ta-f">${esc(l)}<input class="fld" data-pk="${k}" placeholder="${esc(ph)}" autocomplete="off"></label>`).join("")}</div>`:"";
+        d.querySelectorAll(".sb-qb").forEach(b=>b.classList.toggle("on",cur&&b.dataset.preset===cur.id));
+        if(cur){ applyPreset(); const f=q("#s_pin input"); f&&f.focus({preventScroll:true}); }
       }
-      $("s_open").addEventListener("click",()=>{
-        const q=build(); if(!q){ $("s_msg").textContent="Nothing to search yet."; return; }
-        window.open($("s_eng").value+encodeURIComponent(q),"_blank","noopener");
-      });
-      $("s_copy").addEventListener("click",async()=>{
-        const q=build(); if(!q) return;
-        try{ await navigator.clipboard.writeText(q); $("s_msg").textContent="Copied."; }
-        catch(e){ const t=document.createElement("textarea"); t.value=q; document.body.appendChild(t); t.select(); try{document.execCommand("copy");$("s_msg").textContent="Copied.";}catch(_){$("s_msg").textContent="Copy failed.";} t.remove(); }
-        setTimeout(()=>{ const m=$("s_msg"); if(m) m.textContent=""; },2500);
-      });
-      $("s_clear").addEventListener("click",()=>{ d.querySelectorAll("input").forEach(i=>i.value=""); $("s_ft").value=""; build(); });
-      d.addEventListener("click",(e)=>{
-        const b=e.target.closest("[data-preset]"); if(!b) return;
-        d.querySelectorAll("input").forEach(i=>i.value=""); $("s_ft").value="";
-        if(b.dataset.preset==="exposure"){ $("s_exact").value="Your Name"; $("s_none").value="jobs"; }
-        if(b.dataset.preset==="docs"){ $("s_site").value="example.com"; $("s_ft").value="pdf"; }
-        if(b.dataset.preset==="social"){ $("s_exact").value="Your Name"; $("s_site").value="linkedin.com"; }
+      const FIELDS={all:"s_all",exact:"s_exact",any:"s_any",none:"s_none",site:"s_site",xsite:"s_xsite",title:"s_title",url:"s_url",text:"s_text",after:"s_after",before:"s_before"};
+      function applyPreset(){
+        if(!cur) return;
+        const need=cur.in.filter(i=>!i[3]); const ready=need.every(([k])=>String(pv[k]||"").trim());
+        const x=Object.fromEntries(cur.in.map(([k])=>[k,String(pv[k]||"").trim()]));
+        const r=ready?cur.f(x):{};
+        Object.entries(FIELDS).forEach(([k,id])=>{ q("#"+id).value=r[k]||""; });
+        q("#s_ft").value=r.ft||""; ["s_n1","s_n2"].forEach(i=>q("#"+i).value=""); q("#s_nn").value="5";
+        if(ready&&r.eng){ const o=[...q("#s_eng").options].find(o=>o.value.includes(r.eng)); if(o) q("#s_eng").value=o.value; }
         build();
+      }
+      // ---- query model → engine dialect ----
+      const ENG=(u)=>/google\.com\/search\?tbm=isch/.test(u)?"google":/google\./.test(u)?"google":/bing\.com/.test(u)?"bing":/duckduckgo\.com/.test(u)?"ddg":/search\.brave\.com/.test(u)?"brave":/yandex\./.test(u)?"yandex":"other";
+      function model(){
+        return {all:g("s_all")?[g("s_all").replace(/\s+/g," ")]:[],exact:g("s_exact").replace(/"/g,"").trim(),any:tok(g("s_any")),none:tok(g("s_none")),sites:siteTok(g("s_site")),xsites:siteTok(g("s_xsite"),true),
+          fts:(q("#s_ft").value||"").split(",").filter(Boolean),title:tok(g("s_title")),url:tok(g("s_url")),text:tok(g("s_text")),after:g("s_after"),before:g("s_before"),
+          near:g("s_n1")&&g("s_n2")?{a:g("s_n1"),b:g("s_n2"),n:Math.max(1,Math.min(50,parseInt(g("s_nn"))||5))}:null};
+      }
+      function render(M,e){
+        const P=[], lost=[], orJ=e==="yandex"?" | ":" OR ";
+        const grp=(arr)=>arr.length>1?"("+arr.join(orJ)+")":arr[0];
+        if(M.all.length) P.push(e==="yandex"?M.all.join(" ").replace(/\bOR\b/g,"|"):M.all.join(" "));
+        if(M.exact) P.push(`"${M.exact}"`);
+        if(M.any.length) P.push(grp(M.any));
+        if(M.near){ if(e==="google") P.push(`${quoteIf(M.near.a)} AROUND(${M.near.n}) ${quoteIf(M.near.b)}`); else if(e==="bing") P.push(`${quoteIf(M.near.a)} NEAR:${M.near.n} ${quoteIf(M.near.b)}`); else { P.push(`${quoteIf(M.near.a)} ${quoteIf(M.near.b)}`); lost.push("“near each other” (searched as plain words)"); } }
+        M.none.forEach(w=>P.push("-"+w));
+        if(M.sites.length) P.push(grp(M.sites.map(s=>"site:"+s)));
+        M.xsites.forEach(s=>P.push("-site:"+s));
+        if(M.fts.length) P.push(grp(M.fts.map(f=>(e==="yandex"?"mime:":"filetype:")+f)));
+        M.title.forEach(w=>P.push((e==="yandex"?"title:":"intitle:")+w));
+        if(M.url.length){ if(e==="brave"){ P.push(M.url.join(" ")); lost.push("“in the web address” (searched as plain words)"); } else M.url.forEach(w=>P.push("inurl:"+w)); }
+        if(M.text.length){ if(e==="google"||e==="other") M.text.forEach(w=>P.push("intext:"+w)); else if(e==="bing"||e==="brave") M.text.forEach(w=>P.push("inbody:"+w)); else { P.push(M.text.join(" ")); lost.push("“in the page text” (searched as plain words)"); } }
+        if(M.after||M.before){
+          if(e==="google"||e==="other"){ if(M.after) P.push("after:"+M.after); if(M.before) P.push("before:"+M.before); }
+          else if(e==="yandex"){ const y=(s)=>s.replace(/-/g,""); if(M.after&&M.before) P.push(`date:${y(M.after)}..${y(M.before)}`); else if(M.after) P.push("date:>"+y(M.after)); else P.push("date:<"+y(M.before)); }
+          else lost.push("the date range (use the engine's own Tools / date filter)");
+        }
+        return {q:P.join(" ").trim(),lost};
+      }
+      function plain(M){
+        const b=[];
+        if(M.exact) b.push(`the exact phrase “${M.exact}”`);
+        if(M.all.length) b.push(`all of: ${M.all.join(", ")}`);
+        if(M.any.length) b.push(`at least one of: ${M.any.join(", ")}`);
+        if(M.near) b.push(`“${M.near.a}” within ${M.near.n} words of “${M.near.b}”`);
+        if(M.none.length) b.push(`but not: ${M.none.join(", ")}`);
+        if(M.sites.length) b.push(`only on ${M.sites.join(", ")}`);
+        if(M.xsites.length) b.push(`not on ${M.xsites.join(", ")}`);
+        if(M.fts.length) b.push(`${M.fts.map(x=>x.toUpperCase()).join(" / ")} files only`);
+        if(M.title.length) b.push(`“${M.title.join(" ")}” in the title`);
+        if(M.url.length) b.push(`“${M.url.join(" ")}” in the web address`);
+        if(M.text.length) b.push(`“${M.text.join(" ")}” in the page text`);
+        if(M.after) b.push(`after ${plainDay(M.after)}`); if(M.before) b.push(`before ${plainDay(M.before)}`);
+        return b.length?"Finds pages with "+b.join("; ")+".":"";
+      }
+      const engName=(u)=>{ for(const [,L] of ENGINE_GROUPS) for(const [n,x] of L) if(x===u) return n; return "search"; };
+      const ALSO=[["Google","https://www.google.com/search?q="],["Bing","https://www.bing.com/search?q="],["DuckDuckGo","https://duckduckgo.com/?q="],["Brave","https://search.brave.com/search?q="],["Yandex","https://yandex.com/search/?text="]];
+      function build(){
+        const M=model(), u=q("#s_eng").value, e=ENG(u), R=render(M,e);
+        q("#s_out").innerHTML=R.q?`<span class="big" style="font-size:16px;overflow-wrap:anywhere">${esc(R.q)}</span>`:"— pick a preset or fill in a field above —";
+        q("#s_plain").textContent=R.q?"Reads as: "+plain(M):"";
+        const w=[]; if(R.lost.length) w.push(`${esc(engName(u))} doesn't support ${R.lost.map(esc).join(" or ")}.`);
+        if(e==="other"&&R.q&&/\b(site|filetype|intitle|inurl|intext|after|before):|AROUND\(/.test(R.q)) w.push(`${esc(engName(u))} may ignore some operators. For the full search, use Google or Bing.`);
+        if(R.q.split(/\s+/).length>32&&e==="google") w.push("Google only reads the first 32 words — split this into two searches.");
+        q("#s_warn").hidden=!w.length; q("#s_warn").innerHTML=w.join(" ");
+        q("#s_also").innerHTML=R.q?`<span class="muted" style="font-size:12px">Open in:</span> ${ALSO.map(([n,base])=>{ const r=render(M,ENG(base)); return `<a class="btn sb-al" href="${esc(base+encodeURIComponent(r.q))}" target="_blank" rel="noopener" data-log="${esc(n)}" data-q="${esc(r.q)}">${esc(n)}${r.lost.length?" *":""}</a>`; }).join("")}${ALSO.some(([n,base])=>render(M,ENG(base)).lost.length)?`<div class="sal-hint">* runs without some options that engine doesn't support.</div>`:""}`:"";
+        return {q:R.q,u};
+      }
+      const LOG=window.__sbLog||(window.__sbLog=[]);
+      function paintLog(){
+        q("#s_log").innerHTML=LOG.length?`<div class="ta-sub" style="margin-top:4px">Search log <span class="muted" style="text-transform:none;letter-spacing:0;font-weight:normal">— this visit only; nothing is saved</span></div>
+          <ol class="sb-ll">${LOG.map(x=>`<li><span class="muted">${esc(x.t)} · ${esc(x.e)}</span><br><code>${esc(x.q)}</code></li>`).join("")}</ol>
+          <div class="toolrow"><button class="btn" type="button" id="s_lcopy">Copy log</button><button class="btn" type="button" id="s_lclear">Clear log</button></div>`:"";
+      }
+      const logIt=(eName,qq)=>{ LOG.push({t:plainDT(new Date()),e:eName,q:qq}); paintLog(); };
+      const say=(m)=>{ q("#s_msg").textContent=m; setTimeout(()=>{ if(q("#s_msg").textContent===m) q("#s_msg").textContent=""; },2500); };
+      q("#s_open").addEventListener("click",()=>{ const {q:qq,u}=build(); if(!qq){ say("Nothing to search yet."); return; } window.open(u+encodeURIComponent(qq),"_blank","noopener"); logIt(engName(u),qq); });
+      q("#s_copy").addEventListener("click",async()=>{ const {q:qq}=build(); if(!qq){ say("Nothing to copy yet."); return; } icsCopy(qq,q("#s_msg")); });
+      q("#s_clear").addEventListener("click",()=>{ d.querySelectorAll(".sb input").forEach(i=>{ if(i.id!=="s_nn") i.value=""; }); q("#s_ft").value=""; q("#s_nn").value="5"; showPreset(""); build(); });
+      q("#s_pre").addEventListener("change",(e)=>showPreset(e.target.value));
+      d.addEventListener("click",(e)=>{
+        const pb=e.target.closest("[data-preset]"); if(pb){ showPreset(pb.dataset.preset); return; }
+        const db=e.target.closest("[data-days]"); if(db){ const n=+db.dataset.days; q("#s_after").value=n?isoDaysAgo(n):""; q("#s_before").value=""; build(); return; }
+        const al=e.target.closest("a[data-log]"); if(al){ logIt(al.dataset.log,al.dataset.q); return; }
+        if(e.target.id==="s_lcopy"){ icsCopy(LOG.map((x,i)=>`${i+1}. ${x.t} — ${x.e}: ${x.q}`).join("\n"),q("#s_msg")); return; }
+        if(e.target.id==="s_lclear"){ LOG.length=0; paintLog(); return; }
       });
-      d.addEventListener("input",build); build();
+      d.addEventListener("input",(e)=>{ if(e.target.dataset.pk!==undefined){ pv[e.target.dataset.pk]=e.target.value; applyPreset(); } else build(); });
+      d.addEventListener("change",(e)=>{ if(e.target.id==="s_eng"||e.target.id==="s_ft"||e.target.type==="date") build(); });
+      paintLog(); build();
     }
     ,salute(){
       const d=el(`<div class="toolpane">
@@ -2352,9 +2741,9 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         <label class="f">Reported by (optional)<input id="sl_from" class="fld" type="text" placeholder="Name / unit / call sign" autocomplete="off"></label>
         <label class="f full"><span><b>S</b> — Size</span><input id="sl_s" class="fld" type="text" placeholder="How many — e.g. 3 individuals, 1 vehicle" autocomplete="off"></label>
         <label class="f full"><span><b>A</b> — Activity</span><textarea id="sl_a" class="fld" rows="2" placeholder="What they are doing — e.g. photographing perimeter fence, departed west on foot"></textarea></label>
-        <label class="f full"><span><b>L</b> — Location</span><span class="sal-row"><input id="sl_l" class="fld" type="text" placeholder="MGRS grid, address, or landmark; direction of travel" autocomplete="off"><button class="btn" type="button" id="sl_here">Use reporting location</button></span></label>
+        <label class="f full"><span><b>L</b> — Location</span><span class="sal-row"><input id="sl_l" class="fld" type="text" placeholder="Street address or landmark; direction of travel" autocomplete="off"><button class="btn" type="button" id="sl_here">Use my location</button></span></label>
         <label class="f full"><span><b>U</b> — Unit / uniform</span><textarea id="sl_u" class="fld" rows="2" placeholder="Clothing, insignia, vehicle make/color/plate, distinguishing marks"></textarea></label>
-        <label class="f full"><span><b>T</b> — Time observed</span><span class="sal-row"><input id="sl_t" class="fld" type="text" placeholder="DTG — e.g. 031420T OCT 26" autocomplete="off"><button class="btn" type="button" id="sl_now">Now</button></span></label>
+        <label class="f full"><span><b>T</b> — Time observed</span><span class="sal-row"><input id="sl_t" class="fld" type="text" placeholder="e.g. Oct 5, 2026, 2:20 PM" autocomplete="off"><button class="btn" type="button" id="sl_now">Now</button></span></label>
         <label class="f full"><span><b>E</b> — Equipment</span><textarea id="sl_e" class="fld" rows="2" placeholder="Weapons, vehicles, cameras, radios, tools carried or in use"></textarea></label>
         <div class="full toolrow"><button class="btn" type="button" id="sl_desc">Description builder ▸</button><span class="hint">Walks you through a person, vehicle or object. People and vehicles go into <b>U</b>; objects into <b>E</b>.</span></div>
         <label class="f full">Remarks / action taken (optional)<textarea id="sl_r" class="fld" rows="2" placeholder="Assessment, your response, follow-up, source reliability"></textarea></label>
@@ -2373,7 +2762,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         const g=dtgParts(new Date()), mark=$("sl_mark").value, bar="=".repeat(32), L=[];
         if(mark) L.push(mark);
         L.push("SPOT REPORT (SALUTE)");
-        L.push(`REPORT DTG: ${g.local} (${g.zulu})`);
+        L.push(`REPORT TIME: ${plainDT(new Date())}`);
         if(v("sl_from")) L.push(`FROM: ${v("sl_from")}`);
         L.push(bar);
         LINES.forEach(([k,n,id])=>{ const head=`${k} - ${n}: `; L.push(head+indent(v(id)||"UNKNOWN",head.length)); });
@@ -2384,8 +2773,10 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       }
       const upd=()=>{ $("sl_out").textContent=text(); };
       const flash=(m)=>{ $("sl_msg").textContent=m; setTimeout(()=>{$("sl_msg").textContent="";},3000); };
-      $("sl_now").addEventListener("click",()=>{ $("sl_t").value=dtgParts(new Date()).local; upd(); });
-      $("sl_here").addEventListener("click",()=>{ $("sl_l").value=`${mgrsOf(HOME.lat,HOME.lon)} (vic. ${HOME.name})`; upd(); });
+      $("sl_now").addEventListener("click",()=>{ $("sl_t").value=plainDT(new Date()); upd(); });
+      $("sl_here").addEventListener("click",async()=>{ const b=$("sl_here"); b.disabled=true; b.textContent="Locating…";
+        try{ const r=await hereAddress(); $("sl_l").value=r.text; upd(); flash(r.note); }catch(e){ flash(e.message); }
+        b.disabled=false; b.textContent="Use my location"; });
       $("sl_copy").addEventListener("click",async()=>{
         const txt=text();
         try{ await navigator.clipboard.writeText(txt); flash("Copied."); }
@@ -2397,22 +2788,21 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         const rows=LINES.map(([k,n,id])=>{ const x=v(id); return `<tr><td class="ln">${k}</td><td class="k">${esc(n)}</td><td class="v${x?"":" unk"}">${x?esc(x):"Unknown"}</td></tr>`; }).join("");
         $("salPrint").innerHTML=`${mark?`<div class="pmark">${esc(mark)}</div>`:""}
           <h1>SPOT REPORT (SALUTE)</h1>
-          <div class="psub">Report DTG: <b>${esc(g.local)}</b> (${esc(g.zulu)})${v("sl_from")?` &middot; From: <b>${esc(v("sl_from"))}</b>`:""}</div>
+          <div class="psub">Report time: <b>${esc(plainDT(new Date()))}</b>${v("sl_from")?` &middot; From: <b>${esc(v("sl_from"))}</b>`:""}</div>
           <table><thead><tr><th>Line</th><th>Element</th><th>Report</th></tr></thead><tbody>${rows}</tbody></table>
           ${v("sl_r")?`<h2>Remarks / action taken</h2><div class="rem">${esc(v("sl_r"))}</div>`:""}
-          <div class="foot">Generated with Inter-Q SITREP tools. Report observed facts only; verify before acting.</div>
           ${mark?`<div class="pmark end">${esc(mark)}</div>`:""}`;
         document.body.classList.add("print-sal");
         const done=()=>{ document.body.classList.remove("print-sal"); window.removeEventListener("afterprint",done); };
         window.addEventListener("afterprint",done);
-        const t0=document.title; document.title="SALUTE "+g.local.replace(/\s+/g,"_");
+        const t0=document.title; document.title="SALUTE "+plainDT(new Date()).replace(/[^A-Za-z0-9]+/g,"_");
         window.print(); document.title=t0; setTimeout(done,1500);
       });
       $("sl_clear").addEventListener("click",()=>{
         if(!confirm("Clear this SALUTE report?")) return;
-        d.querySelectorAll("input,textarea").forEach(i=>i.value=""); $("sl_t").value=dtgParts(new Date()).local; upd();
+        d.querySelectorAll("input,textarea").forEach(i=>i.value=""); $("sl_t").value=plainDT(new Date()); upd();
       });
-      $("sl_t").value=dtgParts(new Date()).local;
+      $("sl_t").value=plainDT(new Date());
       d.addEventListener("input",upd); d.addEventListener("change",upd); upd();
     }
   };
@@ -2428,9 +2818,9 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const p=new Intl.DateTimeFormat("en-US",{timeZone:tz(),year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(d).reduce((o,x)=>(o[x.type]=x.value,o),{});
     return {Y:p.year,M:p.month,D:p.day,h:p.hour==="24"?"00":p.hour,m:p.minute,zl:zoneLetter(offsetMinFor(d))};
   }
-  const icsDate=(fmt,d=new Date())=>{ const L=icsLocal(d); return fmt==="dtg"?`${L.D} ${MON[+L.M-1]} ${L.Y.slice(2)}`:`${L.M}/${L.D}/${L.Y}`; };
-  const icsTime=(fmt,d=new Date())=>{ const L=icsLocal(d); return fmt==="dtg"?`${L.h}${L.m}${L.zl}`:`${L.h}${L.m}`; };
-  const icsDT=(fmt,d=new Date())=>fmt==="dtg"?dtgParts(d).local:`${icsDate(fmt,d)} ${icsTime(fmt,d)}`;
+  const icsDate=(fmt,d=new Date())=>{ const L=icsLocal(d); return fmt==="dtg"?`${L.D} ${MON[+L.M-1]} ${L.Y.slice(2)}`:new Intl.DateTimeFormat("en-US",{timeZone:tz(),month:"short",day:"numeric",year:"numeric"}).format(d); };
+  const icsTime=(fmt,d=new Date())=>{ const L=icsLocal(d); return fmt==="dtg"?`${L.h}${L.m}${L.zl}`:new Intl.DateTimeFormat("en-US",{timeZone:tz(),hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(d); };
+  const icsDT=(fmt,d=new Date())=>fmt==="dtg"?dtgParts(d).local:`${icsDate(fmt,d)}, ${icsTime(fmt,d)}`;
   const icsInd=(txt,n)=>String(txt).split("\n").map((l,i)=>i?(" ".repeat(n)+l):l).join("\n");
   async function icsCopy(txt,msg){
     const flash=(m)=>{ msg.textContent=m; setTimeout(()=>{msg.textContent="";},3000); };
@@ -2455,7 +2845,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       <option value="">(none)</option><option value="UNCLASSIFIED">UNCLASSIFIED</option>
       <option value="SENSITIVE — FOR OFFICIAL USE ONLY">SENSITIVE — FOR OFFICIAL USE ONLY</option></select></label>`;
   const icsFmtSel=(id)=>`<label class="f">Date / time format<select id="${id}" class="fld">
-      <option value="dtg">Military DTG (041058T OCT 26)</option><option value="std">Standard (10/04/2026 1058)</option></select></label>`;
+      <option value="std">Standard (Oct 4, 2026 · 10:58 AM)</option><option value="dtg">Military DTG (041058T OCT 26)</option></select></label>`;
   const P=(label,val,cls="")=>`<span class="lb">${label}</span><div class="vl ${cls}">${val?esc(val):"&nbsp;"}</div>`;
   const markTop=(m)=>m?`<div class="pmark">${esc(m)}</div>`:"";
   const markEnd=(m)=>m?`<div class="pmark end">${esc(m)}</div>`:"";
@@ -2463,24 +2853,34 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   // ---------- ICS-213 General Message ----------
   function build213(){
     const d=el(`<div class="toolpane">
-      <div class="full sal-hint">ICS-213 General Message. Use it for any message that isn't a resource order or an incident status change. The printed form keeps the reply section blank so the recipient can answer on paper. Use Save to file above to keep it.</div>
+      <details class="full dsc-how i3-how" open><summary><b>How to use the ICS-213</b></summary>
+        <p class="sal-hint"><b>What it's for:</b> any message that needs a written record — a request, a notice, a decision, a question that needs an answer on paper. Don't use it to order resources (that's the ICS-213RR resource request) or to report a change in incident status. If it's urgent, call or radio first, then send the 213 as the written follow-up.</p>
+        <ol class="sal-hint i3-steps">
+          <li>Fill in blocks <b>1–7</b>. <b>Now</b> fills in today's date and time; it uses standard time (Oct 5, 2026 · 2:15 PM); switch to <b>Military DTG</b> in “Date / time format” only if your incident uses it.</li>
+          <li>If your incident requires it, have a supervisor <b>approve</b> it (block 8) and sign the printed copy.</li>
+          <li><b>Print</b> it, or <b>Copy text</b> into an email or text message. Leave blocks 9–10 empty so the recipient can write a reply on the form.</li>
+          <li>Give it to the person in block 2. Paper routing: <b>original to the recipient</b>, who writes the reply and <b>returns it to you</b>; keep a copy, and give one to the <b>Documentation Unit</b> or your section's records.</li>
+          <li>When a reply comes back, type it into blocks 9–10 if you want it in your saved file, then <b>Save to file</b> (top of Reports).</li>
+        </ol>
+        <p class="sal-hint"><b>Writing the message:</b> one subject per form. Write so someone with no background understands it: who, what, where and when. Say exactly what you need and by when (“Request 2 water tenders at Staging B by 1:00 PM today”). Use plain language — no unit slang or abbreviations the reader may not know. Leave out personal details (Social Security numbers, home addresses, medical information) unless the message can't work without them.</p>
+      </details>
       ${icsMarkSel("i3_mark")}
       ${icsFmtSel("i3_fmt")}
-      <label class="f full">1. Incident name (optional)<input id="i3_inc" class="fld" type="text" autocomplete="off"></label>
-      <label class="f">2. To (name and position)<input id="i3_to" class="fld" type="text" autocomplete="off"></label>
-      <label class="f">3. From (name and position)<input id="i3_from" class="fld" type="text" autocomplete="off"></label>
-      <label class="f full">4. Subject<input id="i3_subj" class="fld" type="text" autocomplete="off"></label>
-      <label class="f">5. Date<input id="i3_date" class="fld" type="text" autocomplete="off"></label>
-      <label class="f">6. Time<span class="sal-row"><input id="i3_time" class="fld" type="text" autocomplete="off"><button class="btn" type="button" id="i3_now">Now</button></span></label>
-      <label class="f full">7. Message<textarea id="i3_msg" class="fld" rows="6"></textarea></label>
-      <div class="ics-sec">8. Approved by</div>
+      <label class="f full">1. Incident name (optional)<span class="hint">The name assigned to the incident, e.g. “Oak Fire”. Leave blank if the message isn't tied to one.</span><input id="i3_inc" class="fld" type="text" autocomplete="off"></label>
+      <label class="f">2. To (name and position)<span class="hint">Who it's for — name and ICS position or job title, e.g. “J. Ruiz, Logistics Section Chief”.</span><input id="i3_to" class="fld" type="text" autocomplete="off"></label>
+      <label class="f">3. From (name and position)<span class="hint">You — name and ICS position or job title, so they know who to answer.</span><input id="i3_from" class="fld" type="text" autocomplete="off"></label>
+      <label class="f full">4. Subject<span class="hint">A few words that say what it's about, e.g. “Water for Staging Area B”.</span><input id="i3_subj" class="fld" type="text" autocomplete="off"></label>
+      <label class="f">5. Date<span class="hint">Date the message is written.</span><input id="i3_date" class="fld" type="text" autocomplete="off"></label>
+      <label class="f">6. Time<span class="hint">Time the message is written. “Now” fills in date and time.</span><span class="sal-row"><input id="i3_time" class="fld" type="text" autocomplete="off"><button class="btn" type="button" id="i3_now">Now</button></span></label>
+      <label class="f full">7. Message<span class="hint">The full message, short and complete. Put the request or main point first, then the details. If it runs long, attach extra pages and say so here (“see attached 2 pages”).</span><textarea id="i3_msg" class="fld" rows="6"></textarea></label>
+      <div class="ics-sec">8. Approved by</div><div class="full sal-hint">Only if the message needs a supervisor's OK before it goes out. Enter their name and ICS position; they sign the printed copy.</div>
       <label class="f">Name<input id="i3_apn" class="fld" type="text" autocomplete="off"></label>
       <label class="f">Position / title<input id="i3_app" class="fld" type="text" autocomplete="off"></label>
-      <div class="ics-sec">Reply (optional — leave blank to print for a handwritten reply)</div>
-      <label class="f full">9. Reply<textarea id="i3_rep" class="fld" rows="3"></textarea></label>
-      <label class="f">10. Replied by — name<input id="i3_rpn" class="fld" type="text" autocomplete="off"></label>
+      <div class="ics-sec">Reply (optional — leave blank to print for a handwritten reply)</div><div class="full sal-hint">Blocks 9–10 are filled in by the <b>person who receives the message</b>. If you're the sender, leave them empty. If you're answering a 213 you received, type your answer here and print or copy it back.</div>
+      <label class="f full">9. Reply<span class="hint">The recipient's answer. Keep it direct: approved / denied / done, and any details.</span><textarea id="i3_rep" class="fld" rows="3"></textarea></label>
+      <label class="f">10. Replied by — name<span class="hint">The person answering. They sign the printed copy.</span><input id="i3_rpn" class="fld" type="text" autocomplete="off"></label>
       <label class="f">Position / title<input id="i3_rpp" class="fld" type="text" autocomplete="off"></label>
-      <label class="f full">Reply date / time<span class="sal-row"><input id="i3_rpdt" class="fld" type="text" autocomplete="off"><button class="btn" type="button" id="i3_rpnow">Now</button></span></label>
+      <label class="f full">Reply date / time<span class="hint">When the reply was written.</span><span class="sal-row"><input id="i3_rpdt" class="fld" type="text" autocomplete="off"><button class="btn" type="button" id="i3_rpnow">Now</button></span></label>
       <div class="full toolrow">
         <button class="btn" type="button" id="i3_print">Print / Save as PDF</button>
         <button class="btn" type="button" id="i3_copy">Copy text</button>
@@ -2767,7 +3167,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       ()=>`<div class="ta-h">Step 1 — Scope</div>
         <p class="sal-hint">OPSEC is the process of denying adversaries information about your capabilities and intentions by identifying, controlling and protecting the indicators of what you plan and do. It covers all exploitable information, not just classified material.</p>
         <div class="ta-grid2">
-          <div class="ta-f full">What are you assessing?${seg("ops_mode",S.mode,"mode","",["personal","event"]).replace(">personal<",">Personal — you and your household<").replace(">event<",">Operation or event<")}</div>
+          <div class="ta-f full">Which checklist do you want to start from?<span class="hint">This only picks the ready-made lists you'll tick from in steps 2–4 (critical information, threats and indicators). Either way you can untick anything and add your own.</span>
+            <div class="ops-mode">${[["personal","Personal","Home address, daily routine, family, vehicles and accounts; threats like burglars, scammers and doxxers; giveaways like fitness-app maps, people-search listings and mail piling up."],["event","Operation or event","Dates and routes, personnel, equipment, comms plan and lodging; threats like equipment theft, protesters and extremists; giveaways like rosters posted online and printed plans left in vehicles."]].map(([k,n,dsc])=>`<label class="${S.mode===k?"on":""}"><input type="radio" name="ops_mode" value="${k}" data-act="mode" data-id="" ${S.mode===k?"checked":""}><span><b>${n}</b><small>${dsc}</small></span></label>`).join("")}</div></div>
           <label class="ta-f full">Name<input class="fld ta-in" data-act="meta" data-id="name" value="${esc(meta.name)}" placeholder="${S.mode==="personal"?"e.g. Self and household":"e.g. Royal Danish Air March, 28 AUG 26"}"></label>
           <label class="ta-f">Period covered<input class="fld ta-in" data-act="meta" data-id="period" value="${esc(meta.period)}" placeholder="e.g. Q4 2026 or 20–28 AUG 26"></label>
           <label class="ta-f">Prepared by<input class="fld ta-in" data-act="meta" data-id="by" value="${esc(meta.by)}"></label>
@@ -2851,7 +3252,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       const t=e.target, a=t.dataset.act, id=t.dataset.id; if(!a) return;
       if(a==="mode"){
         const has=S.eefi.some(x=>x.on)||S.thr.some(x=>x.on)||S.ind.some(x=>x.on);
-        if(has&&!confirm("Switching mode resets steps 2–6. Continue?")){ t.checked=false; d.querySelector(`input[name="ops_mode"][value="${S.mode}"]`).checked=true; return; }
+        if(has&&!confirm("Switch to the other checklist? This replaces the lists in steps 2–4 and clears what you've ticked and entered in steps 2–6.")){ t.checked=false; d.querySelector(`input[name="ops_mode"][value="${S.mode}"]`).checked=true; return; }
         S.mode=t.value; initLists(); go(0); return;
       }
       if(a==="meta"){ meta[id]=t.value; paint(); return; }
@@ -2899,8 +3300,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       const L=[], bar="=".repeat(32), g=dtgParts(new Date()), m=meta.mark;
       if(m) L.push(m);
       L.push("OPSEC ASSESSMENT"+(meta.name?" — "+meta.name:""));
-      L.push(`TYPE: ${S.mode==="personal"?"Personal / household":"Operation or event"}${meta.period?"   PERIOD: "+meta.period:""}`);
-      L.push(`PREPARED: ${g.local}${meta.by?" BY "+meta.by:""}`); L.push(bar);
+      L.push(`TYPE: ${S.mode==="personal"?"Personal":"Operation or event"}${meta.period?"   PERIOD: "+meta.period:""}`);
+      L.push(`PREPARED: ${plainDT(new Date())}${meta.by?" BY "+meta.by:""}`); L.push(bar);
       L.push("1. CRITICAL INFORMATION (EEFI)"); const E=selE(); E.length?E.forEach((e,i)=>L.push(`   ${i+1}. ${e.text}`)):L.push("   None selected.");
       L.push("2. THREAT"); const T=selT(); T.length?T.forEach(t=>L.push(`   - ${t.name} | Capability ${LVW[t.cap]}, intent ${LVW[t.int]} | via ${[...t.methods].map(k=>OPS_MSHORT[k]).join(", ")||"—"}`)):L.push("   None selected.");
       L.push("3. INDICATORS"); const I=selI(); I.length?I.forEach(i=>L.push(`   - [${i.type}] ${i.text} (${i.area})`)):L.push("   None selected.");
@@ -2918,8 +3319,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       const g=dtgParts(new Date()), m=meta.mark, E=selE(), T=selT(), I=selI(), x_=(s)=>s?esc(s):"&nbsp;";
       return `${m?`<div class="pmark">${esc(m)}</div>`:""}
         <h1 class="ops-h1">OPSEC ASSESSMENT</h1>
-        <table class="f"><tr><td>${P2("Subject / operation",meta.name)}</td><td>${P2("Type",S.mode==="personal"?"Personal / household":"Operation or event")}</td></tr>
-          <tr><td>${P2("Period covered",meta.period)}</td><td>${P2("Prepared (DTG / by)",g.local+(meta.by?" — "+meta.by:""))}</td></tr></table>
+        <table class="f"><tr><td>${P2("Subject / operation",meta.name)}</td><td>${P2("Type",S.mode==="personal"?"Personal":"Operation or event")}</td></tr>
+          <tr><td>${P2("Period covered",meta.period)}</td><td>${P2("Prepared (date / by)",plainDT(new Date())+(meta.by?" — "+meta.by:""))}</td></tr></table>
         <h2 class="ops-h2">1. Critical information (EEFI)</h2>
         <table class="f"><colgroup><col style="width:8%"><col></colgroup>${E.length?E.map((e,i)=>`<tr><td>${i+1}</td><td>${esc(e.text)}</td></tr>`).join(""):`<tr><td colspan="2">None selected.</td></tr>`}</table>
         <h2 class="ops-h2">2. Threat</h2>
@@ -2976,7 +3377,27 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const opts=(list,sel)=>list.map(([k,n])=>`<option value="${k}" ${sel===k?"selected":""}>${esc(n)}</option>`).join("");
 
     const d=el(`<div class="cp">
-      <p class="sal-hint" style="margin-top:0">Plan your research before you search. Start with the question you need answered (the requirement), break it into indicators — what you'd expect to find if the answer is yes — then list where to look for each one. Every task should support an indicator, and every indicator a requirement (FM 34-2). Use Save to file above to keep it; nothing is sent anywhere.</p>
+      <details class="dsc-how cp-how" open><summary><b>How to use the collection plan</b></summary>
+        <p class="sal-hint"><b>What it's for:</b> planning research before you start searching, so you look for what actually matters, don't miss anything, and can show how you reached your answer. It builds a chain: <b>requirement</b> (the question) → <b>indicators</b> (what you'd expect to find if the answer is yes) → <b>tasks</b> (where you'll look for each indicator). Every task should support an indicator, and every indicator a requirement — if a search doesn't fit the chain, you probably don't need it.</p>
+        <div class="cp-ex sal-hint"><b>Example</b><br>
+          <b>Requirement 1:</b> Is any group planning to disrupt Saturday's march? — supports the decision on route security; needed by Friday 12:00 PM.<br>
+          &nbsp;&nbsp;<b>Indicator 1.1:</b> Calls to protest or block the march on social media.<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<b>Task 1.1.a:</b> X — search <code>"Air March" protest</code> · <b>Task 1.1.b:</b> Reddit — local subreddit, past 30 days.<br>
+          &nbsp;&nbsp;<b>Indicator 1.2:</b> Permit applications for a counter-event on the same day.<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<b>Task 1.2.a:</b> City special-events calendar.</div>
+        <ol class="sal-hint i3-steps">
+          <li>Give the plan a <b>title</b> and write its <b>purpose</b> — the decision or product it supports.</li>
+          <li>Write each <b>requirement</b> as one clear question. Add the decision it supports, the <b>latest time the answer is still useful</b>, and a priority. Work priority 1 first.</li>
+          <li>Under each requirement, list <b>indicators</b> — specific, observable things. Aim for two or more, so one missing source doesn't decide the answer.</li>
+          <li>Under each indicator, add <b>tasks</b>: where to look. Pick a search engine and type a query, or paste a web address into “Where to look”. <b>Search ▸</b> opens it in a new tab and marks the task Working.</li>
+          <li>After each search, set the task's <b>status</b>, tap <b>Now</b> to record when you checked, and write the <b>finding</b> with links. “Nothing found” is a result — record it.</li>
+          <li>Rate each finding (see below). When the indicators are in, write the <b>answer / assessment</b> on the requirement and change its status.</li>
+          <li><b>Save to file</b> (top of Reports) as you go; <b>Print</b> or <b>Copy text</b> to share.</li>
+        </ol>
+        <p class="sal-hint"><b>Rating a finding:</b> two separate judgments. <b>Source reliability</b> (A–F) is about <i>who</i> it came from, based on their track record: A = always right before, E = often wrong before, F = no track record yet (common for new sources — it isn't a bad mark). <b>Information credibility</b> (1–6) is about <i>the information itself</i>: 1 = confirmed by an independent source, 2 = makes sense and fits what you know but isn't confirmed, 3 = possibly true, 4 = doubtful, 5 = contradicted by other information, 6 = can't judge yet. A reliable source can still pass on bad information, so rate them separately — e.g. “B2”.</p>
+        <p class="sal-hint"><b>Task status:</b> <b>Open</b> — not started · <b>Working</b> — in progress · <b>Found</b> — something relevant · <b>Nothing found</b> — searched, nothing relevant · <b>Dead end</b> — source unavailable or not useful; try another.</p>
+        <p class="sal-hint"><b>Stay in bounds:</b> public sources only — look, don't touch (no accounts, follows, joining groups or contacting people). Collect only what the purpose needs, and don't collect on people because of their lawful speech, beliefs or protest. If you find a threat or a crime, report it to law enforcement or your fusion center.</p>
+      </details>
       <div class="toolrow">
         <button class="btn" type="button" data-cp="new">New</button>
         <button class="btn" type="button" data-cp="print">Print / Save as PDF</button>
@@ -2996,38 +3417,38 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       q("#cpMarkBar").textContent=plan.mark||"COLLECTION PLAN"; q("#cpMarkBar").hidden=!plan.mark;
       q("#cpBody").innerHTML=`
         <div class="ta-grid2" style="margin-top:8px">
-          <label class="ta-f full">Plan title<input class="fld ta-in" data-f="title" value="${esc(plan.title)}" placeholder="e.g. Pre-event threat picture — Air March 28 AUG 26"></label>
-          <label class="ta-f full">Purpose — what decision or product does this support?<textarea class="fld ta-in" rows="2" data-f="purpose" placeholder="e.g. Decide whether the route needs additional safety measures">${esc(plan.purpose)}</textarea></label>
-          <label class="ta-f">Analyst<input class="fld ta-in" data-f="analyst" value="${esc(plan.analyst)}"></label>
+          <label class="ta-f full">Plan title<span class="hint">A short name you'll recognize later.</span><input class="fld ta-in" data-f="title" value="${esc(plan.title)}" placeholder="e.g. Pre-event threat picture — Air March, Aug 28, 2026"></label>
+          <label class="ta-f full">Purpose — what decision or product does this support?<span class="hint">Why you're doing this research. Keeps the plan focused — if a question doesn't serve the purpose, drop it.</span><textarea class="fld ta-in" rows="2" data-f="purpose" placeholder="e.g. Decide whether the route needs additional safety measures">${esc(plan.purpose)}</textarea></label>
+          <label class="ta-f">Analyst<span class="hint">Who is doing the research.</span><input class="fld ta-in" data-f="analyst" value="${esc(plan.analyst)}"></label>
           <label class="ta-f">Marking<select class="fld" data-f="mark">${["SENSITIVE — FOR OFFICIAL USE ONLY","PRIVATE — DO NOT DISTRIBUTE","UNCLASSIFIED",""].map(m=>`<option value="${m}" ${plan.mark===m?"selected":""}>${m||"(none)"}</option>`).join("")}</select></label>
         </div>
         ${plan.reqs.map((r,ri)=>`
         <div class="ta-iv cp-req" data-r="${r.id}">
           <div class="ta-row" style="justify-content:space-between"><div class="ta-h" style="border:0;margin:0">Requirement ${ri+1}</div><button class="btn ics-x" type="button" data-cp="delReq" data-r="${r.id}" title="Remove requirement">✕</button></div>
           <div class="ta-grid2">
-            <label class="ta-f full">Question to answer<textarea class="fld ta-in" rows="2" data-rf="q" data-r="${r.id}" placeholder="e.g. Is any group planning to disrupt the event?">${esc(r.q)}</textarea></label>
-            <label class="ta-f">Decision it supports<input class="fld ta-in" data-rf="decision" data-r="${r.id}" value="${esc(r.decision)}" placeholder="e.g. Add route security"></label>
-            <label class="ta-f">Latest time info is of value (LTIOV)<input class="fld ta-in" data-rf="ltiov" data-r="${r.id}" value="${esc(r.ltiov)}" placeholder="e.g. 251200T AUG 26"></label>
-            <label class="ta-f">Priority<select class="fld" data-rf="priority" data-r="${r.id}">${opts([["1","1 — Highest"],["2","2"],["3","3 — Lowest"]],r.priority)}</select></label>
-            <label class="ta-f">Status<select class="fld" data-rf="status" data-r="${r.id}">${opts(CP_RSTAT,r.status)}</select></label>
-            <label class="ta-f full">Answer / assessment<textarea class="fld ta-in" rows="2" data-rf="answer" data-r="${r.id}" placeholder="What you concluded, and how confident you are">${esc(r.answer)}</textarea></label>
+            <label class="ta-f full">Question to answer<span class="hint">One question, answerable with yes/no or a short fact. Split broad questions into several requirements.</span><textarea class="fld ta-in" rows="2" data-rf="q" data-r="${r.id}" placeholder="e.g. Is any group planning to disrupt the event?">${esc(r.q)}</textarea></label>
+            <label class="ta-f">Decision it supports<span class="hint">What someone will decide or do with the answer.</span><input class="fld ta-in" data-rf="decision" data-r="${r.id}" value="${esc(r.decision)}" placeholder="e.g. Add route security"></label>
+            <label class="ta-f">Latest time the answer is still useful<span class="hint">After this, the answer can't change the decision — stop and report what you have.</span><input class="fld ta-in" data-rf="ltiov" data-r="${r.id}" value="${esc(r.ltiov)}" placeholder="e.g. Aug 25, 2026, 12:00 PM"></label>
+            <label class="ta-f">Priority<span class="hint">1 = work this first.</span><select class="fld" data-rf="priority" data-r="${r.id}">${opts([["1","1 — Highest"],["2","2"],["3","3 — Lowest"]],r.priority)}</select></label>
+            <label class="ta-f">Status<span class="hint">Update as indicators come in.</span><select class="fld" data-rf="status" data-r="${r.id}">${opts(CP_RSTAT,r.status)}</select></label>
+            <label class="ta-f full">Answer / assessment<span class="hint">Your conclusion, what it's based on (task numbers), and how confident you are. Say what's still unknown.</span><textarea class="fld ta-in" rows="2" data-rf="answer" data-r="${r.id}" placeholder="What you concluded, and how confident you are">${esc(r.answer)}</textarea></label>
           </div>
           ${r.inds.map((ind,ii)=>`
           <div class="cp-ind" data-i="${ind.id}">
-            <div class="ta-row" style="justify-content:space-between;margin-top:10px"><div class="ta-sub" style="margin:0">Indicator ${ri+1}.${ii+1}</div><button class="btn ics-x" type="button" data-cp="delInd" data-r="${r.id}" data-i="${ind.id}" title="Remove indicator">✕</button></div>
+            <div class="ta-row" style="justify-content:space-between;margin-top:10px"><div class="ta-sub" style="margin:0">Indicator ${ri+1}.${ii+1} <span class="muted" style="text-transform:none;letter-spacing:0;font-weight:normal">— something specific you could observe</span></div><button class="btn ics-x" type="button" data-cp="delInd" data-r="${r.id}" data-i="${ind.id}" title="Remove indicator">✕</button></div>
             <input class="fld ta-in" data-if="text" data-r="${r.id}" data-i="${ind.id}" value="${esc(ind.text)}" placeholder="What would you expect to see if the answer is yes? e.g. Calls to protest the event on social media">
             ${ind.tasks.map((t,ti)=>`
             <div class="cp-task" data-t="${t.id}">
               <div class="ta-row" style="justify-content:space-between"><b class="cp-tn">${ri+1}.${ii+1}.${String.fromCharCode(97+ti)}</b><button class="btn ics-x" type="button" data-cp="delTask" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}" title="Remove task">✕</button></div>
               <div class="ta-grid2">
-                <label class="ta-f">Where to look<input class="fld ta-in" data-tf="where" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}" value="${esc(t.where)}" placeholder="Source, site, person, or URL"></label>
-                <label class="ta-f">Search engine<select class="fld" data-tf="engine" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">${engOpts(t.engine)}</select></label>
-                <label class="ta-f full">Query<span class="sal-row"><input class="fld" data-tf="query" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}" value="${esc(t.query)}" placeholder='e.g. "Air March" protest site:x.com' autocomplete="off"><button class="btn" type="button" data-cp="run" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">Run ▸</button></span></label>
-                <label class="ta-f">Status<select class="fld" data-tf="status" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">${opts(CP_TSTAT,t.status)}</select></label>
-                <label class="ta-f">Checked (DTG)<span class="sal-row"><input class="fld" data-tf="when" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}" value="${esc(t.when)}"><button class="btn" type="button" data-cp="now" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">Now</button></span></label>
-                <label class="ta-f full">Finding<textarea class="fld ta-in" rows="2" data-tf="finding" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}" placeholder="What you found (or didn't), with links">${esc(t.finding)}</textarea></label>
-                <label class="ta-f">Source reliability<select class="fld" data-tf="src" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">${opts(CP_SRC,t.src)}</select></label>
-                <label class="ta-f">Information credibility<select class="fld" data-tf="cred" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">${opts(CP_CRED,t.cred)}</select></label>
+                <label class="ta-f">Where to look<span class="hint">A site, database, record or person — or paste a web address.</span><input class="fld ta-in" data-tf="where" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}" value="${esc(t.where)}" placeholder="Source, site, person, or URL"></label>
+                <label class="ta-f">Search engine<span class="hint">Optional. Used with the query below.</span><select class="fld" data-tf="engine" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">${engOpts(t.engine)}</select></label>
+                <label class="ta-f full">Query<span class="hint">The exact search. Quotes find an exact phrase; site:x.com limits to one site.</span><span class="sal-row"><input class="fld" data-tf="query" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}" value="${esc(t.query)}" placeholder='e.g. "Air March" protest site:x.com' autocomplete="off"><button class="btn" type="button" data-cp="run" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">Run ▸</button></span></label>
+                <label class="ta-f">Status<span class="hint">Open → Working → Found / Nothing found / Dead end.</span><select class="fld" data-tf="status" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">${opts(CP_TSTAT,t.status)}</select></label>
+                <label class="ta-f">Checked<span class="hint">When you searched. Results change — the time matters.</span><span class="sal-row"><input class="fld" data-tf="when" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}" value="${esc(t.when)}"><button class="btn" type="button" data-cp="now" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">Now</button></span></label>
+                <label class="ta-f full">Finding<span class="hint">Facts only, with links. Note if it's secondhand.</span><textarea class="fld ta-in" rows="2" data-tf="finding" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}" placeholder="What you found (or didn't), with links">${esc(t.finding)}</textarea></label>
+                <label class="ta-f">Source reliability<span class="hint">Who it came from — their track record (A–F).</span><select class="fld" data-tf="src" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">${opts(CP_SRC,t.src)}</select></label>
+                <label class="ta-f">Information credibility<span class="hint">The information itself — confirmed? logical? (1–6).</span><select class="fld" data-tf="cred" data-r="${r.id}" data-i="${ind.id}" data-t="${t.id}">${opts(CP_CRED,t.cred)}</select></label>
               </div>
             </div>`).join("")}
             <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" data-cp="addTask" data-r="${r.id}" data-i="${ind.id}">+ Task</button></div>
@@ -3061,7 +3482,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       if(a==="delReq"){ if(!confirm("Remove this requirement and everything under it?")) return; plan.reqs=plan.reqs.filter(x=>x.id!==s.r); if(!plan.reqs.length) plan.reqs.push(blankReq()); touch(); render(); return; }
       if(a==="delInd"){ const r=R(s.r); if(!confirm("Remove this indicator and its tasks?")) return; r.inds=r.inds.filter(x=>x.id!==s.i); if(!r.inds.length) r.inds.push(blankInd()); touch(); render(); return; }
       if(a==="delTask"){ const i=I(s.r,s.i); i.tasks=i.tasks.filter(x=>x.id!==s.t); if(!i.tasks.length) i.tasks.push(blankTask()); touch(); render(); return; }
-      if(a==="now"){ const t=Tk(s.r,s.i,s.t); t.when=dtgParts(new Date()).local; const inp=d.querySelector(`[data-tf="when"][data-t="${s.t}"]`); if(inp) inp.value=t.when; touch(); return; }
+      if(a==="now"){ const t=Tk(s.r,s.i,s.t); t.when=plainDT(new Date()); const inp=d.querySelector(`[data-tf="when"][data-t="${s.t}"]`); if(inp) inp.value=t.when; touch(); return; }
       if(a==="run"){
         const t=Tk(s.r,s.i,s.t);
         if(t.engine&&t.query){ window.open(t.engine+encodeURIComponent(t.query),"_blank","noopener"); }
@@ -3071,7 +3492,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         return;
       }
       if(a==="new"){ if(dirty&&!confirm("Start a new plan? Unsaved changes will be lost.")) return; plan=fresh(); dirty=false; lastSaved=""; render(); status(); return; }
-      if(a==="print"){ icsPrint(printHtml(),"Collection plan "+(plan.title||icsDate("dtg"))); return; }
+      if(a==="print"){ icsPrint(printHtml(),"Collection plan "+(plan.title||icsDate("std"))); return; }
       if(a==="copy"){ icsCopy(text(),q("#cpMsg")); return; }
     });
 
@@ -3086,11 +3507,11 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       if(m) L.push(m);
       L.push("COLLECTION PLAN"+(plan.title?" — "+plan.title:""));
       if(plan.purpose) L.push("PURPOSE: "+plan.purpose);
-      L.push(`ANALYST: ${plan.analyst||"—"}   AS OF: ${dtgParts(new Date()).local}`); L.push(bar);
+      L.push(`ANALYST: ${plan.analyst||"—"}   AS OF: ${plainDT(new Date())}`); L.push(bar);
       plan.reqs.forEach((r,ri)=>{
         L.push(`REQUIREMENT ${ri+1} [PRIORITY ${r.priority}] [${cpLabel(CP_RSTAT,r.status).toUpperCase()}]`);
         L.push("   "+(r.q||"—"));
-        L.push(`   Supports: ${r.decision||"—"}   LTIOV: ${r.ltiov||"—"}`);
+        L.push(`   Supports: ${r.decision||"—"}   NEEDED BY: ${r.ltiov||"—"}`);
         if(r.answer) L.push("   Answer: "+icsInd(r.answer,11));
         r.inds.forEach((i,ii)=>{
           L.push(`   ${ri+1}.${ii+1} INDICATOR: ${i.text||"—"}`);
@@ -3112,11 +3533,11 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         <h1 class="ops-h1">COLLECTION PLAN</h1>
         <table class="f"><tr><td colspan="2"><span class="lb">Title:</span><div class="vl">${x_(plan.title)}</div></td></tr>
           <tr><td colspan="2"><span class="lb">Purpose / decision supported:</span><div class="vl">${x_(plan.purpose)}</div></td></tr>
-          <tr><td><span class="lb">Analyst:</span><div class="vl">${x_(plan.analyst)}</div></td><td><span class="lb">As of (DTG):</span><div class="vl">${esc(dtgParts(new Date()).local)}</div></td></tr></table>
+          <tr><td><span class="lb">Analyst:</span><div class="vl">${x_(plan.analyst)}</div></td><td><span class="lb">As of:</span><div class="vl">${esc(plainDT(new Date()))}</div></td></tr></table>
         ${plan.reqs.map((r,ri)=>`
           <h2 class="ops-h2">Requirement ${ri+1} — priority ${esc(r.priority)} — ${esc(cpLabel(CP_RSTAT,r.status))}</h2>
           <table class="f"><tr><td colspan="2"><span class="lb">Question:</span><div class="vl">${x_(r.q)}</div></td></tr>
-            <tr><td><span class="lb">Decision supported:</span><div class="vl">${x_(r.decision)}</div></td><td><span class="lb">LTIOV:</span><div class="vl">${x_(r.ltiov)}</div></td></tr>
+            <tr><td><span class="lb">Decision supported:</span><div class="vl">${x_(r.decision)}</div></td><td><span class="lb">Needed by:</span><div class="vl">${x_(r.ltiov)}</div></td></tr>
             ${r.answer?`<tr><td colspan="2"><span class="lb">Answer / assessment:</span><div class="vl">${esc(r.answer)}</div></td></tr>`:""}</table>
           <table class="f" style="margin-top:-1pt"><colgroup><col style="width:7%"><col style="width:24%"><col style="width:33%"><col style="width:12%"><col style="width:8%"><col style="width:16%"></colgroup>
             <thead><tr><th>#</th><th>Indicator / where to look</th><th>Query and finding</th><th>Status</th><th>Rating</th><th>Checked</th></tr></thead><tbody>
@@ -3140,6 +3561,30 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   // A small form engine: sections -> fields (text / area / select / dtg) and repeating row tables.
   // Each document prints, copies and saves through the shared REPORTS file bar.
   const MARKS=["SENSITIVE — FOR OFFICIAL USE ONLY","UNCLASSIFIED","PRIVATE — DO NOT DISTRIBUTE",""];
+  // Plain, non-military times for reports anyone may read: "Mon, Oct 5, 2026, 8:53 PM PDT" and "8:53 PM".
+  function sdPlain(d){ return new Intl.DateTimeFormat("en-US",{timeZone:tz(),weekday:"short",month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(d); }
+  function sdClock(d){ const sameDay=new Date().toDateString()===d.toDateString();
+    return new Intl.DateTimeFormat("en-US",{timeZone:tz(),...(sameDay?{}:{month:"short",day:"numeric"}),hour:"numeric",minute:"2-digit"}).format(d); }
+  function sdFmtAddr(j){
+    const a=(j&&j.address)||{}; if(!j||j.error) return "";
+    const st=(a["ISO3166-2-lvl4"]||"").replace(/^US-/,"")||a.state||"";
+    const street=[a.house_number,a.road||a.pedestrian||a.footway||a.path].filter(Boolean).join(" ");
+    const city=a.city||a.town||a.village||a.hamlet||a.suburb||a.county||"";
+    const line=[street||a.amenity||a.building||"",city,[st,a.postcode].filter(Boolean).join(" ")].filter(Boolean).join(", ");
+    return line||String(j.display_name||"");
+  }
+  // Only our own downsized JPEG/PNG data URLs are ever placed in an <img> (files opened later could be crafted).
+  const sdImgOk=(v)=>typeof v==="string"&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/.test(v);
+  // Shrinks a photo to at most 1600 px on the long side (keeps report files small) and re-saves it as JPEG.
+  // Re-saving also drops the hidden location and camera data inside the original — keep the original on the phone as evidence.
+  async function sdShrink(file){
+    let src; try{ src=await createImageBitmap(file,{imageOrientation:"from-image"}); }
+    catch{ src=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=URL.createObjectURL(file); }); }
+    const w=src.width||src.naturalWidth, h=src.height||src.naturalHeight, k=Math.min(1,1600/Math.max(w,h));
+    const c=document.createElement("canvas"); c.width=Math.round(w*k); c.height=Math.round(h*k);
+    c.getContext("2d").drawImage(src,0,0,c.width,c.height);
+    return c.toDataURL("image/jpeg",0.82);
+  }
   function schemaDoc(spec){
     let S={type:spec.types?spec.types[0][0]:"",mark:spec.mark??"UNCLASSIFIED",f:{...(spec.defaults||{})},r:{}};
     const d=el(`<div class="sdoc"></div>`).firstElementChild;
@@ -3151,13 +3596,16 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       const v=S.f[it.f]??"", lab=`${esc(it.l)}${optTag(it)}${it.h?`<span class="hint">${esc(it.h)}</span>`:""}`;
       if(it.t==="area") return `<label class="ta-f ${it.half?"":"full"}">${lab}<textarea class="fld ta-in" rows="${it.n||3}" data-sf="${it.f}" placeholder="${esc(it.ph||"")}">${esc(v)}</textarea></label>`;
       if(it.t==="sel") return `<label class="ta-f ${it.full?"full":""}">${lab}<select class="fld" data-sf="${it.f}">${it.o.map(o=>`<option ${v===o?"selected":""}>${esc(o)}</option>`).join("")}</select></label>`;
-      if(it.t==="dtg") return `<label class="ta-f ${it.full?"full":""}">${lab}<span class="sal-row"><input class="fld" data-sf="${it.f}" value="${esc(v)}" placeholder="${esc(it.ph||"DTG")}" autocomplete="off"><button class="btn" type="button" data-sd="now" data-k="${it.f}">Now</button></span></label>`;
-      if(it.t==="grid") return `<label class="ta-f ${it.full?"full":""}">${lab}<span class="sal-row"><input class="fld" data-sf="${it.f}" value="${esc(v)}" placeholder="${esc(it.ph||"MGRS grid or place")}" autocomplete="off"><button class="btn" type="button" data-sd="here" data-k="${it.f}">Use reporting location</button></span></label>`;
+      if(it.t==="dtg") return `<label class="ta-f ${it.full?"full":""}">${lab}<span class="sal-row"><input class="fld" data-sf="${it.f}" value="${esc(v)}" placeholder="${esc(it.ph||"e.g. Oct 5, 2026, 2:15 PM")}" autocomplete="off"><button class="btn" type="button" data-sd="now" data-k="${it.f}">Now</button></span></label>`;
+      if(it.t==="grid") return `<label class="ta-f ${it.full?"full":""}">${lab}<span class="sal-row"><input class="fld" data-sf="${it.f}" value="${esc(v)}" placeholder="${esc(it.ph||"Street address, or a landmark")}" autocomplete="off"><button class="btn" type="button" data-sd="addr" data-k="${it.f}">Use my location</button></span><span class="sal-hint" data-sd-loc="${it.f}" role="status"></span></label>`;
+      if(it.t==="grid_old") return `<label class="ta-f ${it.full?"full":""}">${lab}<span class="sal-row"><input class="fld" data-sf="${it.f}" value="${esc(v)}" placeholder="${esc(it.ph||"MGRS grid or place")}" autocomplete="off"><button class="btn" type="button" data-sd="here" data-k="${it.f}">Use reporting location</button></span></label>`;
       return `<label class="ta-f ${it.full?"full":""}">${lab}<input class="fld ta-in" data-sf="${it.f}" value="${esc(v)}" placeholder="${esc(it.ph||"")}" autocomplete="off"></label>`;
     }
     const cellHtml=(it,c,row,i,lbl)=>{
       const a=`data-sr="${it.rows}" data-i="${i}" data-c="${c[0]}"`, v=row[c[0]]||"";
       const ctl=Array.isArray(c[3])?`<select class="fld" ${a} aria-label="${esc(c[1])}">${c[3].map(o=>{ const [ov,on]=Array.isArray(o)?o:[o,o]; return `<option value="${esc(ov)}" ${v===ov?"selected":""}>${esc(on)}</option>`; }).join("")}</select>`
+        :c[3]==="time"?`<span class="sal-row sd-cell"><input class="fld" ${a} value="${esc(v)}" placeholder="${esc(c[1])}" aria-label="${esc(c[1])}" autocomplete="off"><button class="btn sd-now" type="button" data-sd="rnow" data-k="${it.rows}" data-i="${i}" data-c="${c[0]}">Now</button></span>`
+        :c[3]==="img"?(sdImgOk(v)?`<span class="sd-cell sd-img"><img src="${v}" alt="Photo ${i+1}"><button class="btn sd-imgx" type="button" data-sd="imgDel" data-k="${it.rows}" data-i="${i}" data-c="${c[0]}">Remove photo</button></span>`:`<span class="sd-cell"><label class="btn sd-imgadd">&#128247; Add photo<input type="file" accept="image/*" hidden data-sp="${it.rows}" data-i="${i}" data-c="${c[0]}"></label></span>`)
         :c[3]==="area"?`<textarea class="fld" rows="2" ${a} placeholder="${esc(c[1])}" aria-label="${esc(c[1])}">${esc(v)}</textarea>`
         :`<input class="fld" ${a} value="${esc(v)}" placeholder="${esc(c[1])}" aria-label="${esc(c[1])}" autocomplete="off">`;
       return lbl?`<label class="ta-f ${c[4]==="full"?"full":""}">${esc(c[1])}${ctl}</label>`:ctl;
@@ -3170,6 +3618,14 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       return `<div class="ta-f full">${esc(it.l)}${optTag(it)}${it.h?`<span class="hint">${esc(it.h)}</span>`:""}
         <div class="sd-rows">${R.map((row,i)=>`<div class="sd-row" style="grid-template-columns:${it.cols.map(c=>c[2]||"1fr").join(" ")} auto">${it.cols.map(c=>cellHtml(it,c,row,i,false)).join("")}<button class="btn ics-x" type="button" data-sd="delRow" data-k="${it.rows}" data-i="${i}" aria-label="Remove row">✕</button></div>`).join("")}</div>
         <div class="toolrow"><button class="btn" type="button" data-sd="addRow" data-k="${it.rows}">+ ${esc(it.add||"Row")}</button></div></div>`;
+    }
+    // "Use my location": GPS, then the nearest street address (OpenStreetMap). Coordinates kept in brackets for responders.
+    async function sdAddr(b){
+      const k=b.dataset.k, msg=d.querySelector(`[data-sd-loc="${k}"]`), say=(t)=>{ if(msg) msg.textContent=t; };
+      b.disabled=true; b.textContent="Locating…"; say("");
+      try{ const r=await hereAddress(); S.f[k]=r.text; const i=d.querySelector(`[data-sf="${k}"]`); if(i) i.value=r.text; prev(); say(r.note); }
+      catch(e){ say(e.message); }
+      b.disabled=false; b.textContent="Use my location";
     }
     function render(){
       d.innerHTML=`${spec.intro?`<p class="sal-hint" style="margin-top:0">${spec.intro}</p>`:""}
@@ -3190,8 +3646,18 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       if(t.dataset.sf!==undefined){ S.f[t.dataset.sf]=t.value; prev(); }
       else if(t.dataset.sr!==undefined){ rowsOf(t.dataset.sr)[+t.dataset.i][t.dataset.c]=t.value; prev(); }
     });
-    d.addEventListener("change",(e)=>{
+    d.addEventListener("change",async(e)=>{
       const t=e.target;
+      if(t.dataset.sp!==undefined){
+        const f=t.files&&t.files[0]; if(!f) return; const lb=t.closest("label"); if(lb) lb.firstChild.textContent="Loading… ";
+        try{
+          const url=await sdShrink(f), row=rowsOf(t.dataset.sp)[+t.dataset.i]; row[t.dataset.c]=url;
+          const it=findRowsItem(t.dataset.sp);
+          if(it.cols.some(c=>c[0]==="time")&&!String(row.time||"").trim()&&f.lastModified) row.time=sdClock(new Date(f.lastModified));
+          if(it.cols.some(c=>c[0]==="n")&&!String(row.n||"").trim()) row.n=String(+t.dataset.i+1);
+        }catch(err){ api.msg("Couldn't read that picture — try a JPEG or PNG."); }
+        render(); return;
+      }
       if(t.hasAttribute("data-sd-type")){ S.type=t.value; render(); }
       else if(t.hasAttribute("data-sd-mark")){ S.mark=t.value; prev(); }
       else if(t.dataset.sf!==undefined){ S.f[t.dataset.sf]=t.value; prev(); }
@@ -3202,7 +3668,10 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       const ab=e.target.closest("[data-sd-act]"); if(ab){ const act=spec.actions.find(x=>x.id===ab.dataset.sdAct); if(act) act.run(S,api); return; }
       const b=e.target.closest("[data-sd]"); if(!b) return; const a=b.dataset.sd;
       if(a==="here"){ S.f[b.dataset.k]=`${mgrsOf(HOME.lat,HOME.lon)} (vic. ${HOME.name})`; const i=d.querySelector(`[data-sf="${b.dataset.k}"]`); if(i) i.value=S.f[b.dataset.k]; prev(); return; }
-      if(a==="now"){ S.f[b.dataset.k]=dtgParts(new Date()).local; const i=d.querySelector(`[data-sf="${b.dataset.k}"]`); if(i) i.value=S.f[b.dataset.k]; prev(); }
+      if(a==="rnow"){ const it=findRowsItem(b.dataset.k); rowsOf(b.dataset.k)[+b.dataset.i][b.dataset.c]=sdClock(new Date()); render(); return; }
+      if(a==="imgDel"){ rowsOf(b.dataset.k)[+b.dataset.i][b.dataset.c]=""; render(); return; }
+      if(a==="addr"){ sdAddr(b); return; }
+      if(a==="now"){ S.f[b.dataset.k]=plainDT(new Date()); const i=d.querySelector(`[data-sf="${b.dataset.k}"]`); if(i) i.value=S.f[b.dataset.k]; prev(); }
       else if(a==="addRow"){ const it=findRowsItem(b.dataset.k); rowsOf(b.dataset.k).push(blankRow(it.cols)); render(); }
       else if(a==="delRow"){ const R=rowsOf(b.dataset.k); R.splice(+b.dataset.i,1); render(); }
       else if(a==="print"){ icsPrint(printHtml(),spec.fileTitle(S)); }
@@ -3221,7 +3690,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         L.push(sec.title.toUpperCase());
         sec.items.filter(vis).forEach(it=>{
           if(it.rows&&it.fmtText){ const R=filledRows(it); const sep=/[.:?]$/.test(it.l)?"":":"; L.push("   "+it.l+sep+(R.length?"":" —")); R.forEach((r,i)=>it.fmtText(r,i).forEach(x=>L.push(x))); return; }
-          if(it.rows){ const R=filledRows(it); if(!R.length&&it.skipEmpty) return; const sep=/[.:?]$/.test(it.l)?"":":"; L.push("   "+it.l+sep+(R.length?"":" —")); R.forEach(r=>L.push("      - "+it.cols.map(c=>(r[c[0]]||"").trim()).filter(Boolean).join(" | ").replace(/\n/g,"\n        "))); }
+          if(it.rows){ const R=filledRows(it); if(!R.length&&it.skipEmpty) return; const sep=/[.:?]$/.test(it.l)?"":":"; L.push("   "+it.l+sep+(R.length?"":" —")); R.forEach(r=>L.push("      - "+it.cols.map(c=>c[3]==="img"?(sdImgOk(r[c[0]])?"[photo attached]":""):(r[c[0]]||"").trim()).filter(Boolean).join(" | ").replace(/\n/g,"\n        "))); }
           else { const v=val(it.f); if(!v&&it.skipEmpty) return; const sep=/[.:]$/.test(it.l)?"":":"; L.push(`   ${it.l}${v.includes("\n")?sep+"\n      "+v.replace(/\n/g,"\n      "):sep+" "+(v||"—")}`); }
         });
         L.push("");
@@ -3234,7 +3703,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       const m=S.mark;
       const body=spec.sections.filter(vis).filter(s=>!s.head).map(sec=>`<h2 class="ops-h2">${esc(sec.title)}</h2>${sec.items.filter(vis).map(it=>{
         if(it.rows&&it.fmtPrint){ const R=filledRows(it); return `<div class="sd-pl">${esc(it.l)}${/[.:?]$/.test(it.l)?"":":"}</div>${R.length?R.map((r,i)=>it.fmtPrint(r,i)).join(""):`<div class="sd-pi"><i>—</i></div>`}`; }
-        if(it.rows){ const R=filledRows(it); if(!R.length&&it.skipEmpty) return ""; return `<div class="sd-pl">${esc(it.l)}${/[.:?]$/.test(it.l)?"":":"}</div><table class="f"><thead><tr>${it.cols.map(c=>`<th>${esc(c[1])}</th>`).join("")}</tr></thead><tbody>${(R.length?R:[blankRow(it.cols)]).map(r=>`<tr>${it.cols.map(c=>`<td style="white-space:pre-wrap">${esc(r[c[0]]||"")||"&nbsp;"}</td>`).join("")}</tr>`).join("")}</tbody></table>`; }
+        if(it.rows){ const R=filledRows(it); if(!R.length&&it.skipEmpty) return ""; return `<div class="sd-pl">${esc(it.l)}${/[.:?]$/.test(it.l)?"":":"}</div><table class="f"><thead><tr>${it.cols.map(c=>`<th>${esc(c[1])}</th>`).join("")}</tr></thead><tbody>${(R.length?R:[blankRow(it.cols)]).map(r=>`<tr>${it.cols.map(c=>c[3]==="img"?`<td>${sdImgOk(r[c[0]])?`<img class="sd-pimg" src="${r[c[0]]}" alt="">`:"&nbsp;"}</td>`:`<td style="white-space:pre-wrap">${esc(r[c[0]]||"")||"&nbsp;"}</td>`).join("")}</tr>`).join("")}</tbody></table>`; }
         const v=val(it.f); if(!v&&it.skipEmpty) return ""; return `<div class="sd-pi"><span class="sd-pl">${esc(it.l)}${/[.:?]$/.test(it.l)?"":":"}</span> <span style="white-space:pre-wrap">${v?esc(v):"<i>—</i>"}</span></div>`;
       }).join("")}`).join("");
       return `${m?`<div class="pmark">${esc(m)}</div>`:""}${spec.printHead?spec.printHead(S,val):`<h1 class="ops-h1">${esc(spec.titleOf(S))}</h1>`}${body}${spec.printFoot?spec.printFoot(S,val):""}${m?`<div class="pmark end">${esc(m)}</div>`:""}`;
@@ -3257,7 +3726,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       {title:"Heading",head:true,items:[
         {f:"num",l:"Order number",ph:"e.g. 26-014"},{f:"code",l:"Code name",ph:"e.g. OPERATION DANISH STRIDE"},
         {f:"hq",l:"Issuing headquarters"},{f:"place",l:"Place of issue"},
-        {f:"dtg",l:"Date-time group of signature",t:"dtg"},{f:"copy",l:"Copy __ of __ copies",ph:"e.g. 1 of 12"},
+        {f:"dtg",l:"Date and time signed",t:"dtg"},{f:"copy",l:"Copy __ of __ copies",ph:"e.g. 1 of 12"},
         {f:"msgref",l:"Message reference number"},{f:"tz",l:"Time zone used throughout",ph:"e.g. T (PDT, UTC-7)"},
         {f:"refs",l:"References",t:"area",n:2,ph:"Higher order, maps, SOPs"},
         {f:"taskorg",l:"Task organization",t:"area",n:3,ph:"Who is under whose control for this operation"}]},
@@ -3282,7 +3751,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         {f:"ci_roe",l:"(4) Rules of engagement / rules for the use of force.",t:"area",n:2,opt:["warno"]},
         {f:"ci_env",l:"(5) Environmental considerations.",t:"area",n:2,opt:["warno"]},
         {f:"ci_fp",l:"(6) Force protection.",t:"area",n:2},
-        {rows:"timeline",l:"(7) Timeline.",add:"Event",cols:[["time","Time / DTG","1fr"],["event","Event","2fr"]]},
+        {rows:"timeline",l:"(7) Timeline.",add:"Event",cols:[["time","Time","1fr","time"],["event","Event","2fr"]]},
         {f:"ci_other",l:"(8) As required.",t:"area",n:2,h:"Orders group, rehearsals, uniform and equipment, earliest movement time."}]},
       {title:"4. Service support",opt:["warno"],items:[
         {f:"ss_concept",l:"a. Support concept.",t:"area",n:2},
@@ -3328,7 +3797,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     sections:[
       {title:"Event",items:[
         {f:"event",l:"Event / training",ph:"e.g. Royal Danish Air March — 28 AUG 26",full:true},
-        {f:"unit",l:"Unit"},{f:"when",l:"Date / DTG of AAR",t:"dtg"},
+        {f:"unit",l:"Unit"},{f:"when",l:"Date of AAR",t:"dtg"},
         {f:"where",l:"Location"},{f:"aartype",l:"AAR type",t:"sel",o:["Informal","Formal"]},
         {f:"leader",l:"AAR leader / facilitator"},{f:"recorder",l:"Recorder"},
         {f:"attendees",l:"Participants",t:"area",n:2},
@@ -3405,7 +3874,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           fmtPrint:(r,i)=>`<div class="sd-qa"><div><b>Q${i+1}.</b>${r.type?` <i>[${esc(DQ_SHORT[r.type])}]</i>`:""}${r.topic?` <b>${esc(r.topic)}</b> —`:""} <span style="white-space:pre-wrap">${esc(r.q)||"—"}</span></div><div class="sd-a"><b>A:</b> <span style="white-space:pre-wrap">${esc(r.a)||"—"}</span></div>${(r.hot||r.src||r.cred)?`<div class="sd-a">${r.hot?"<b>HOT LEAD</b> ":""}${(r.src||r.cred)?`Rating ${esc((r.src||"–")+(r.cred||"–"))}`:""}</div>`:""}</div>`},
         {f:"hearsay",l:"Hearsay — what others told them",t:"area",n:3,h:"Keep second-hand information separate from what they saw or heard themselves. For each item: who told them, when, and how that person knew (IT0753)."},
         {f:"stopref",l:"Self-incrimination",t:"sel",o:["None","Yes — stopped questioning and referred (note below)"],h:"If they began describing their own involvement in a crime or violation: stop, don't advise rights or take a statement, and refer to law enforcement. Record when and to whom in Phase 5."},
-        {rows:"places",l:"Places and map tracking",add:"Place",cols:[["place","Place / description","1.4fr"],["grid","Grid (MGRS) or address","1.4fr"],["time","Time","0.8fr"],["notes","Notes","1.6fr"]],h:"Pin locations down as grids where you can. A yes/no question is fine to confirm a map location (para 9-16)."}]},
+        {rows:"places",l:"Places and map tracking",add:"Place",cols:[["place","Place / description","1.4fr"],["grid","Address","1.4fr"],["time","Time","0.9fr","time"],["notes","Notes","1.6fr"]],h:"Pin locations down as street addresses where you can. A yes/no question is fine to confirm a map location (para 9-16)."}]},
       {title:"Phase 4 — Termination",note:"Close so the door stays open for a follow-up (paras 8-90, 8-91).",items:[
         {f:"tm_read",l:"Read the key points back and corrected anything they disagreed with",t:"sel",o:DONE},
         {f:"tm_more",l:"Asked if there's anything else they think you should know",t:"sel",o:DONE},
@@ -3452,11 +3921,12 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         const f=$("sl_s"); f&&f.dispatchEvent(new Event("input",{bubbles:true}));
         $("repWin").scrollIntoView?.({behavior:"smooth",block:"start"});
       }},
-      {id:"addhere",label:"Add reporting location to places",run:(S,api)=>{
+      {id:"addhere",label:"Add my location to places",run:async(S,api)=>{
+        api.msg("Locating…"); let r; try{ r=await hereAddress(); }catch(e){ api.msg(e.message); return; }
         const R=api.rows("places"); const blankIdx=R.findIndex(p=>!Object.values(p).some(v=>String(v).trim()));
-        const row={place:`vic. ${HOME.name}`,grid:mgrsOf(HOME.lat,HOME.lon),time:"",notes:""};
+        const row={place:"Where I am now",grid:r.text,time:sdClock(new Date()),notes:""};
         if(blankIdx>=0) R[blankIdx]=row; else R.push(row);
-        api.render();
+        api.render(); api.msg(r.note);
       }}
     ],
     titleOf:()=>"DEBRIEF / INTERVIEW REPORT",
@@ -3481,13 +3951,13 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         {f:"rtype",l:"Report type",t:"sel",o:["Initial","Interim / follow-up","Final"],h:"Follow-ups add new facts and reference the earlier report."},
         {f:"num",l:"Report number",ph:"e.g. SPOT-26-003"},
         {f:"refs",l:"Reference(s)",ph:"Earlier report numbers, if a follow-up"},
-        {f:"dtg",l:"DTG of this report",t:"dtg"},
+        {f:"dtg",l:"Date and time of this report",t:"dtg"},
         {f:"from",l:"Reported by (rank, name, unit)"},
         {f:"contact",l:"Reporter contact (phone / email)"},
         {f:"to",l:"Sent to",ph:"e.g. NCRIC SAR portal; JFHQ J2; RPD dispatch",h:"Who received it and how (phone, portal, email)."},
         {f:"cat",l:"Behavior category",t:"sel",o:SAR_CATS,full:true,h:"Pick the closest match. Photography and observation are usually lawful on their own — report them only with other suspicious context (e.g. focus on security features, notes on guard changes)."}]},
       {title:"1. Who and where",note:"Name and location of the area, organization, people or equipment involved.",items:[
-        {f:"where",l:"Location",t:"grid",full:true,h:"Address, landmark or MGRS grid. “Use reporting location” fills in where you are now."},
+        {f:"where",l:"Location",t:"grid",full:true,h:"Street address, or the nearest landmark or cross streets. “Use my location” fills in the nearest address from your phone's GPS — check it's right."},
         {f:"who",l:"People, vehicles and equipment involved",t:"area",n:3,h:"Descriptions, not assumptions. Use the Description builder button at the bottom of the form — it walks you through each person, vehicle or object in the order investigators use."}]},
       {title:"2. What happened",note:"The nature of the incident — what you or the source actually observed.",items:[
         {f:"what",l:"Description of the activity",t:"area",n:4,h:"Describe the behavior in plain words, in the order it happened. Separate what you saw yourself from what someone told you."}]},
@@ -3512,11 +3982,11 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     actions:[{id:"spotdesc",label:"Description builder ▸",run:(S,api)=>openDescriber("Add to item 1 (who and where)",(t)=>{ S.f.who=dsAppend(S.f.who,t); api.render(); },(ty)=>dsCount(S.f.who,ty))}],
     titleOf:()=>"SUSPICIOUS ACTIVITY SPOT REPORT",
     fileTitle:(S)=>`Spot report ${S.f.num||""} ${S.f.dtg||""}`.trim(),
-    textHead:(S,v)=>[`SUSPICIOUS ACTIVITY SPOT REPORT — ${(v("rtype")||"Initial").toUpperCase()}`,`REPORT NUMBER: ${v("num")||"—"}${v("refs")?"   REF: "+v("refs"):""}`,`DTG: ${v("dtg")||"—"}`,`FROM: ${v("from")||"—"}${v("contact")?" ("+v("contact")+")":""}`,`TO: ${v("to")||"—"}`,`BEHAVIOR CATEGORY: ${S.f.cat&&S.f.cat!==SAR_CATS[0]?S.f.cat:"—"}`],
+    textHead:(S,v)=>[`SUSPICIOUS ACTIVITY SPOT REPORT — ${(v("rtype")||"Initial").toUpperCase()}`,`REPORT NUMBER: ${v("num")||"—"}${v("refs")?"   REF: "+v("refs"):""}`,`DATE/TIME: ${v("dtg")||"—"}`,`FROM: ${v("from")||"—"}${v("contact")?" ("+v("contact")+")":""}`,`TO: ${v("to")||"—"}`,`BEHAVIOR CATEGORY: ${S.f.cat&&S.f.cat!==SAR_CATS[0]?S.f.cat:"—"}`],
     textFoot:()=>["Seven-item spot report after IT0777. Report behavior, not identity."],
     printHead:(S,v)=>`<h1 class="ops-h1">SUSPICIOUS ACTIVITY SPOT REPORT</h1>
       <table class="f"><tr><td><span class="lb">Report type:</span><div class="vl">${esc(v("rtype"))}</div></td><td><span class="lb">Report number:</span><div class="vl">${esc(v("num"))||"&nbsp;"}</div></td><td><span class="lb">Reference(s):</span><div class="vl">${esc(v("refs"))||"&nbsp;"}</div></td></tr>
-      <tr><td><span class="lb">DTG of report:</span><div class="vl">${esc(v("dtg"))||"&nbsp;"}</div></td><td><span class="lb">Reported by:</span><div class="vl">${esc(v("from"))||"&nbsp;"}${v("contact")?`<br>${esc(v("contact"))}`:""}</div></td><td><span class="lb">Sent to:</span><div class="vl">${esc(v("to"))||"&nbsp;"}</div></td></tr>
+      <tr><td><span class="lb">Date/time of report:</span><div class="vl">${esc(v("dtg"))||"&nbsp;"}</div></td><td><span class="lb">Reported by:</span><div class="vl">${esc(v("from"))||"&nbsp;"}${v("contact")?`<br>${esc(v("contact"))}`:""}</div></td><td><span class="lb">Sent to:</span><div class="vl">${esc(v("to"))||"&nbsp;"}</div></td></tr>
       <tr><td colspan="3"><span class="lb">Behavior category:</span><div class="vl">${S.f.cat&&S.f.cat!==SAR_CATS[0]?esc(S.f.cat):"&nbsp;"}</div></td></tr></table>`,
     printFoot:()=>`<div class="ops-foot">Seven-item spot report after IT0777 <i>Counterintelligence Liaison Activities</i> (p. 2-21); behavior categories after the ISE-SAR Functional Standard. Report behavior, not identity. Don't investigate — report.</div>`
   };
@@ -3530,13 +4000,13 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     sections:[
       {title:"1. Arrive — safety first",note:"Approach as if the incident is still happening. You can't help anyone if you become a casualty (5-7, 5-8).",items:[
         {f:"arrived",l:"Time you arrived",t:"dtg"},
-        {f:"where",l:"Location",t:"grid",full:true,h:"Address, landmark or grid. “Use reporting location” fills in where you are."},
-        {f:"how",l:"How you learned of it",ph:"e.g. saw it while driving; called by gate guard at 1412",h:"Who told you, and when — note their name and position (5-7)."},
+        {f:"where",l:"Location",t:"grid",addr:true,full:true,h:"Street address, or the nearest landmark or cross streets. “Use my location” fills in the nearest address from your phone's GPS — check it's right."},
+        {f:"how",l:"How you learned of it",ph:"e.g. saw it while driving; called by the front desk at 2:12 PM",h:"Who told you, and when — note their name and position (5-7)."},
         {f:"c_approach",l:"Approached cautiously, watching for anyone still involved",t:"sel",o:DONE},
         {f:"c_hazards",l:"Checked for hazards — fire, fuel, downed lines, chemicals, unstable structures",t:"sel",o:DONE,h:"If you smell chemicals or see unusual containers, back off and stay upwind."},
         {f:"c_secondary",l:"Watched for suspicious items or secondary devices",t:"sel",o:DONE,h:"Don't touch, move or use a radio or phone right next to a suspicious item — move away first."},
         {f:"c_notify",l:"Law enforcement / emergency services notified",t:"sel",o:DONE},
-        {f:"notified",l:"Who you notified and when",ph:"e.g. RPD dispatch 1415; chain of command 1420"}]},
+        {f:"notified",l:"Who you notified and when",ph:"e.g. Richmond PD dispatch at 2:15 PM; my supervisor at 2:20 PM"}]},
       {title:"2. People — care, separate, identify",note:"Life comes before evidence. Then keep people apart so their accounts stay their own (5-9 to 5-11).",items:[
         {f:"c_care",l:"Gave or requested emergency care for anyone injured",t:"sel",o:DONE,h:"If medics move things or people, note what they moved and from where."},
         {f:"medics",l:"What medical responders moved or changed",t:"area",n:2,skipEmpty:true},
@@ -3548,14 +4018,14 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         {f:"c_path",l:"One path in and out, used by everyone",t:"sel",o:DONE},
         {f:"c_hands",l:"Nothing touched, moved, picked up or used inside the boundary",t:"sel",o:DONE,h:"No eating, drinking, smoking, phone calls or restroom use at the scene. If something must be moved to protect it or someone, photograph it first and note where it was."},
         {f:"c_weather",l:"Items at risk from weather or traffic protected in place",t:"sel",o:DONE},
-        {rows:"log",l:"Entry / exit log",add:"Entry",cols:[["who","Name, unit / agency","1.4fr"],["in","Time in","0.7fr"],["out","Time out","0.7fr"],["why","Reason","1.2fr"]],h:"Everyone who crosses the boundary, including you and medics. Investigators will need this."}]},
+        {rows:"log",l:"Entry / exit log",add:"Entry",cols:[["who","Name, unit / agency","1.4fr"],["in","Time in","0.9fr","time"],["out","Time out","0.9fr","time"],["why","Reason","1.2fr"]],h:"Everyone who crosses the boundary, including you and medics. Investigators will need this."}]},
       {title:"4. Record what you found",note:"Write what you saw, heard and smelled when you arrived — before it changes (5-14; ch. 6). Facts, not conclusions.",items:[
         {f:"conditions",l:"Conditions on arrival",t:"area",n:3,h:"Lights on/off, doors and windows open/closed/broken, smells, sounds, temperature, weather, vehicles present."},
         {f:"items",l:"Items of note and where they are",t:"area",n:3,h:"Describe and give location (e.g. “red gas can, 3 ft left of rear door”). Don't touch."},
-        {rows:"photos",l:"Photo log",add:"Photo",cols:[["n","#","50px"],["time","Time","0.7fr"],["what","What it shows","1.6fr"],["from","Taken from","1fr"]],h:"Only if it's safe and doesn't disturb anything: overall views first, then medium, then close-up. Log every photo."},
+        {rows:"photos",l:"Photo log",add:"Photo",cols:[["img","Photo","120px","img"],["n","#","44px"],["time","Time","0.9fr","time"],["what","What it shows","1.6fr","area"],["from","Taken from","1fr"]],h:"Only if it's safe and doesn't disturb anything: overall views first, then medium, then close-up. Log every photo. “Add photo” lets you take a picture or pick one from your phone; it fills in the number and time for you. The report keeps a smaller copy and drops the photo's hidden location data — keep the originals on your phone and give them to investigators. Photos are included when you print and when you save to file."},
         {f:"notes",l:"Other notes",t:"area",n:3,h:"Ink, short, with times. Don't erase — cross out and initial (6-4)."}]},
       {title:"5. Hand over",note:"Brief the responsible agency, give them your record, and step back (5-15).",items:[
-        {f:"to",l:"Handed over to (name, agency, badge #)"},
+        {f:"to",l:"Handed over to (name, agency, badge #)",ph:"e.g. Officer J. Lee, Richmond PD, #1234"},
         {f:"handed",l:"Time of handover",t:"dtg"},
         {f:"c_brief",l:"Briefed them on hazards, people, what was moved, and the entry log",t:"sel",o:DONE},
         {f:"c_give",l:"Gave them these notes, the photo list and any photos",t:"sel",o:DONE},
@@ -3570,14 +4040,17 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     },
     actions:[
       {id:"fosdesc",label:"Description builder ▸",run:(S,api)=>openDescriber("Add to “left before help arrived”",(t)=>{ S.f.left=dsAppend(S.f.left,t); api.render(); },(ty)=>dsCount(S.f.left,ty))},
-      {id:"fosnow",label:"Stamp time in notes",run:(S,api)=>{ S.f.notes=dsAppend(S.f.notes,dtgParts(new Date()).local+" — "); api.render(); }}
+      {id:"fosnow",label:"Stamp time in notes",run:(S,api)=>{ S.f.notes=dsAppend(S.f.notes,sdClock(new Date())+" — "); api.render(); }}
     ],
     titleOf:()=>"FIRST ON SCENE — CHECKLIST AND LOG",
     fileTitle:(S)=>`First on scene ${S.f.arrived||""}`.trim(),
     textHead:(S,v)=>["FIRST ON SCENE — CHECKLIST AND LOG",`ARRIVED: ${v("arrived")||"—"}   LOCATION: ${v("where")||"—"}`],
-    textFoot:()=>["First-responder steps after FM 3-19.13, ch. 5–6. The writer protected and recorded the scene; no investigation was conducted."],
     printHead:(S,v)=>`<h1 class="ops-h1">FIRST ON SCENE — CHECKLIST AND LOG</h1><div class="sd-pi"><b>Arrived:</b> ${esc(v("arrived"))||"—"} &nbsp; <b>Location:</b> ${esc(v("where"))||"—"}</div>`,
-    printFoot:()=>`<div class="ops-foot">First-responder steps after FM 3-19.13 <i>Law Enforcement Investigations</i> (2005), chapters 5 and 6. Prepared by the first person on scene to protect and record it — not an investigation.</div>`
+    printFoot:(S)=>{
+      const P=(S.r.photos||[]).map((r,i)=>({r,i})).filter(x=>sdImgOk(x.r.img));
+      const sheet=P.length?`<h2 class="ops-h2" style="break-before:page;page-break-before:always">Photos</h2>${P.map(({r,i})=>`<div class="sd-photo"><img src="${r.img}" alt=""><div class="sd-pi"><b>Photo ${esc(r.n||String(i+1))}</b>${r.time?` · ${esc(r.time)}`:""}${r.what?` · ${esc(r.what)}`:""}${r.from?` · taken from ${esc(r.from)}`:""}</div></div>`).join("")}`:"";
+      return sheet;
+    }
   };
   const sdNodes={};
   function sdMount(name){
@@ -3923,8 +4396,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   }
   // Plain capture time: "4 Oct 2026, 2132 PDT". Older saves stored a DTG ("042132T OCT 26"); show those plainly too.
   function osStamp(d){
-    const P=new Intl.DateTimeFormat("en-US",{timeZone:tz(),day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hourCycle:"h23",timeZoneName:"short"}).formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
-    return `${P.day} ${P.month} ${P.year}, ${P.hour}${P.minute} ${P.timeZoneName||""}`.trim();
+    return new Intl.DateTimeFormat("en-US",{timeZone:tz(),month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(d);
   }
   function osPlainWhen(w){
     const m=String(w||"").trim().match(/^(\d{2})(\d{2})(\d{2})([A-Z])\s+([A-Z]{3})\s+(\d{2})$/); if(!m) return String(w||"").trim();
@@ -3932,6 +4404,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const mon=m[5][0]+m[5].slice(1).toLowerCase();
     let zn=off?"(UTC"+(off>0?"+":"−")+Math.abs(off)+")":"UTC";
     try{ const dt=new Date(Date.UTC(2000+ +m[6],MON.indexOf(m[5]),+m[1],+m[2]-off,+m[3])); if(offsetMinFor(dt)===off*60) zn=osStamp(dt).split(" ").pop(); }catch{}
+    try{ const dt=new Date(Date.UTC(2000+ +m[6],MON.indexOf(m[5]),+m[1],+m[2]-off,+m[3])); if(!isNaN(dt)) return osStamp(dt); }catch{}
     return `${+m[1]} ${mon} 20${m[6]}, ${m[2]}${m[3]} ${zn}`;
   }
   const osLink=(u)=>/^https?:\/\/\S+$/i.test(u||"");
@@ -4138,7 +4611,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       const L=[], m=S.mark, bar="=".repeat(32), g=dtgParts(new Date());
       if(m) L.push(m);
       L.push("OSINT RESEARCH REPORT"); L.push(bar);
-      L.push(`DTG: ${g.local} (${g.zulu})`); L.push(`FROM: ${S.f.analyst||"—"}`); if(S.f.requester) L.push(`FOR: ${S.f.requester}`); if(S.f.caseNo) L.push(`CASE / REF: ${S.f.caseNo}`);
+      L.push(`DATE/TIME: ${plainDT(new Date())}`); L.push(`FROM: ${S.f.analyst||"—"}`); if(S.f.requester) L.push(`FOR: ${S.f.requester}`); if(S.f.caseNo) L.push(`CASE / REF: ${S.f.caseNo}`);
       L.push(`SUBJECT A U.S. PERSON: ${USP[S.f.usp]||"Not stated"}`); L.push("");
       L.push("1. PURPOSE."); L.push("   "+ind(purp()||"—",3)); L.push("");
       L.push("2. IDENTIFIERS RESEARCHED.");
@@ -4174,7 +4647,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     function printHtml(){
       const m=S.mark, g=dtgParts(new Date()), x_=(v)=>v?esc(v):"&nbsp;";
       return `${m?`<div class="pmark">${esc(m)}</div>`:""}<h1 class="ops-h1">OSINT RESEARCH REPORT</h1>
-        <table class="f"><tr><td><span class="lb">DTG:</span><div class="vl">${esc(g.local)} (${esc(g.zulu)})</div></td><td><span class="lb">From:</span><div class="vl">${x_(S.f.analyst)}</div></td><td><span class="lb">Case / ref:</span><div class="vl">${x_(S.f.caseNo)}</div></td></tr>
+        <table class="f"><tr><td><span class="lb">Date/time:</span><div class="vl">${esc(plainDT(new Date()))}</div></td><td><span class="lb">From:</span><div class="vl">${x_(S.f.analyst)}</div></td><td><span class="lb">Case / ref:</span><div class="vl">${x_(S.f.caseNo)}</div></td></tr>
           <tr><td colspan="2"><span class="lb">Subject a U.S. person:</span><div class="vl">${esc(USP[S.f.usp]||"Not stated")}</div></td><td><span class="lb">Requested by:</span><div class="vl">${x_(S.f.requester)}</div></td></tr></table>
         <h2 class="ops-h2">1. Purpose</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(purp())}</div>
         <h2 class="ops-h2">2. Identifiers researched</h2><table class="f"><colgroup><col style="width:18%"><col><col style="width:32%"></colgroup><thead><tr><th>Type</th><th>Identifier</th><th>Found via</th></tr></thead><tbody>${S.sel.map(s=>`<tr><td>${esc(OS_TNAME[s.type])}</td><td>${esc(s.value)}${s.extra?` (${esc(s.extra)})`:""}</td><td>${x_(s.from)}</td></tr>`).join("")||`<tr><td colspan="3">None.</td></tr>`}</tbody></table>
@@ -4257,7 +4730,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const inp=(p,l,h="",ph="",full=false)=>`<label class="ta-f ${full?"full":""}">${l}<input class="fld ta-in" data-p="${p}" value="${esc(get(p))}" placeholder="${esc(ph)}" autocomplete="off">${h?H(h):""}</label>`;
     const area=(p,l,h="",n=3,ph="")=>`<label class="ta-f full">${l}<textarea class="fld ta-in" rows="${n}" data-p="${p}" placeholder="${esc(ph)}">${esc(get(p))}</textarea>${h?H(h):""}</label>`;
     const sel=(p,l,opts,h="",full=false)=>`<label class="ta-f ${full?"full":""}">${l}<select class="fld" data-p="${p}">${opts.map(o=>{ const [v,n]=Array.isArray(o)?o:[o,o||"— select —"]; return `<option value="${esc(v)}" ${get(p)===v?"selected":""}>${esc(n)}</option>`; }).join("")}</select>${h?H(h):""}</label>`;
-    const dtg=(p,l,h="")=>`<label class="ta-f">${l}<span class="sal-row"><input class="fld" data-p="${p}" value="${esc(get(p))}" placeholder="DTG" autocomplete="off"><button class="btn" type="button" data-now="${p}">Now</button></span>${h?H(h):""}</label>`;
+    const dtg=(p,l,h="")=>`<label class="ta-f">${l}<span class="sal-row"><input class="fld" data-p="${p}" value="${esc(get(p))}" placeholder="e.g. Oct 5, 2026, 2:15 PM" autocomplete="off"><button class="btn" type="button" data-now="${p}">Now</button></span>${h?H(h):""}</label>`;
     const checks=(list)=>`<div class="ln-chk">${list.map(([k,t,why])=>`<div class="ln-ci"><select class="fld" data-p="chk.${k}" aria-label="${esc(t)}">${LN_DONE.map(o=>`<option ${(S.chk[k]||"")===o?"selected":""} value="${o}">${o||"—"}</option>`).join("")}</select><div><b>${esc(t)}</b><div class="sal-hint" style="margin:0">${esc(why)}</div></div></div>`).join("")}</div>`;
     const rows=(key,cols,addLabel,hint)=>{
       const R=S[key]; if(!R.length) R.push(Object.fromEntries(cols.map(c=>[c[0],""])));
@@ -4285,7 +4758,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           ${sel("a.priority","Priority",["","High — can help us most","Medium","Low / occasional"],"Agencies that can provide the most assistance come first (p. 1-3).")}
           ${area("a.mission","Their mission — what they can and can't provide","What they do, the information or support they could share, and their limits.",3)}
           ${inp("a.loc","Location","Office address or where you usually meet.","",true)}
-          ${inp("a.proc","How to contact them","e.g. “by appointment, Wednesdays 1500” or the main desk number.","",true)}
+          ${inp("a.proc","How to contact them","e.g. “by appointment, Wednesdays 3:00 PM” or the main desk number.","",true)}
           ${sel("a.stage","Relationship",["First contact with this agency","Established — continuing contact"],"",true)}
         </div>
         <div class="ta-iv" style="margin-top:8px"><b>Coverage tip.</b> <span class="sal-hint" style="margin:0">Work with enough agencies that one transfer doesn't cut you off, and so information from one can be checked against another — but don't spread yourself too thin (p. 1-5).</span></div>`,
@@ -4383,7 +4856,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     d.addEventListener("click",(e)=>{
       const b=e.target.closest("button"); if(!b) return;
       if(b.dataset.go!==undefined){ go(+b.dataset.go); return; }
-      if(b.dataset.now){ setp(b.dataset.now,dtgParts(new Date()).local); go(S.step); return; }
+      if(b.dataset.now){ setp(b.dataset.now,plainDT(new Date())); go(S.step); return; }
       if(b.dataset.add){ const k=b.dataset.add, c=Object.keys(S[k][0]||{}); S[k].push(Object.fromEntries(c.map(x=>[x,""]))); go(S.step); return; }
       if(b.dataset.del){ S[b.dataset.del].splice(+b.dataset.i,1); go(S.step); return; }
       const a=b.dataset.act; if(!a) return;
@@ -4632,16 +5105,16 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const worked=()=>brokers().filter(b=>{ const t=S.t[b.key]; return t&&(t.st||t.req||t.note); });
     function text(){
       const c=counts(), L=[]; if(S.mark) L.push(S.mark);
-      L.push("DATA REMOVAL TRACKER — "+today()); L.push(`${c.done} done · ${c.wait} in progress · ${c.todo} not started · ${c.due} recheck due · ${c.n} sites`); L.push("=".repeat(32));
-      worked().forEach(b=>{ const t=S.t[b.key]; L.push(`${b.n}: ${stName(t.st)}${t.req?` | requested ${t.req}`:""}${t.ver?` | verified ${t.ver}`:""}${recheckDue(t)?" | RECHECK DUE":""}${t.note?` | ${t.note}`:""}`); });
+      L.push("DATA REMOVAL TRACKER — "+plainDay(today())); L.push(`${c.done} done · ${c.wait} in progress · ${c.todo} not started · ${c.due} recheck due · ${c.n} sites`); L.push("=".repeat(32));
+      worked().forEach(b=>{ const t=S.t[b.key]; L.push(`${b.n}: ${stName(t.st)}${t.req?` | requested ${plainDay(t.req)}`:""}${t.ver?` | verified ${plainDay(t.ver)}`:""}${recheckDue(t)?" | RECHECK DUE":""}${t.note?` | ${t.note}`:""}`); });
       if(!worked().length) L.push("No requests recorded yet."); if(S.mark) L.push(S.mark); return L.join("\n");
     }
     function printHtml(){
       const c=counts(), W=worked(), m=S.mark;
       return `${m?`<div class="pmark">${esc(m)}</div>`:""}<h1 class="ops-h1">DATA REMOVAL TRACKER</h1>
-        <div class="sd-pi">As of ${esc(today())}: <b>${c.done}</b> done, <b>${c.wait}</b> in progress, <b>${c.todo}</b> not started, <b>${c.due}</b> recheck due, of ${c.n} sites.</div>
+        <div class="sd-pi">As of ${esc(plainDay(today()))}: <b>${c.done}</b> done, <b>${c.wait}</b> in progress, <b>${c.todo}</b> not started, <b>${c.due}</b> recheck due, of ${c.n} sites.</div>
         <table class="f"><colgroup><col style="width:24%"><col style="width:20%"><col style="width:12%"><col style="width:12%"><col></colgroup><thead><tr><th>Site</th><th>Status</th><th>Requested</th><th>Verified</th><th>Notes</th></tr></thead>
-        <tbody>${W.length?W.map(b=>{ const t=S.t[b.key]; return `<tr><td>${esc(b.n)}</td><td>${esc(stName(t.st))}${recheckDue(t)?" — <b>recheck due</b>":""}</td><td>${esc(t.req)||"&nbsp;"}</td><td>${esc(t.ver)||"&nbsp;"}</td><td>${esc(t.note)||"&nbsp;"}</td></tr>`; }).join(""):`<tr><td colspan="5">No requests recorded yet.</td></tr>`}</tbody></table>
+        <tbody>${W.length?W.map(b=>{ const t=S.t[b.key]; return `<tr><td>${esc(b.n)}</td><td>${esc(stName(t.st))}${recheckDue(t)?" — <b>recheck due</b>":""}</td><td>${esc(plainDay(t.req))||"&nbsp;"}</td><td>${esc(plainDay(t.ver))||"&nbsp;"}</td><td>${esc(t.note)||"&nbsp;"}</td></tr>`; }).join(""):`<tr><td colspan="5">No requests recorded yet.</td></tr>`}</tbody></table>
         <div class="ops-foot">Broker list adapted from Michael Bazzell's Personal Data Removal Workbook (IntelTechniques, v5.0); links re-checked October 2026. Keep this record private.</div>${m?`<div class="pmark end">${esc(m)}</div>`:""}`;
     }
     d.__get=()=>JSON.parse(JSON.stringify(S));
@@ -4919,13 +5392,14 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     return null;
   }
   function dtg(d){
+    return new Intl.DateTimeFormat("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(d);
     const z = `${p2(d.getUTCDate())}${p2(d.getUTCHours())}${p2(d.getUTCMinutes())}Z ${MON[d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}`;
     const L = zoneLetter(-d.getTimezoneOffset());
     if (!L || L === "Z") return z;
     return `${p2(d.getDate())}${p2(d.getHours())}${p2(d.getMinutes())}${L} ${MON[d.getMonth()]} ${String(d.getFullYear()).slice(2)} (${z})`;
   }
   const caseNo = (d) => `TA-${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}-${p2(d.getHours())}${p2(d.getMinutes())}`;
-  const fmtLocal = (s) => s ? s.replace("T"," ") : "";
+  const fmtLocal = (s) => { if(!s) return ""; const d=new Date(s); return isNaN(d)?s.replace("T"," "):dtg(d); };
 
   // ---------- state ----------
   let st;
@@ -4959,7 +5433,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     P[0] = `<div class="ta-h">Case information</div>
       <div class="ta-grid2">
         ${fld("Case number", inp("case"))}
-        ${fld("Opened (DTG)", `<input class="fld ta-in" type="text" name="opened" readonly>`)}
+        ${fld("Opened", `<input class="fld ta-in" type="text" name="opened" readonly>`)}
         ${fld("Assessor name", inp("assessor"))}
         ${fld("Assessor role / agency", inp("role"))}
         ${fld("Team members", inp("team","Names / roles"), "full")}
@@ -5016,7 +5490,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       <div class="ta-sub">Sign-off</div>
       <div class="ta-grid2">
         ${fld("Completed by", inp("signer"))}
-        ${fld("Date / time (DTG)", `<div class="ta-row"><input class="fld ta-in" type="text" name="signdtg" style="flex:1;min-width:0"><button class="btn" type="button" id="taStamp">Stamp</button></div>`)}
+        ${fld("Date / time", `<div class="ta-row"><input class="fld ta-in" type="text" name="signdtg" style="flex:1;min-width:0"><button class="btn" type="button" id="taStamp">Stamp</button></div>`)}
       </div>`;
     P[8] = `<div class="ta-h">Output</div>
       <div class="ta-row">
@@ -5231,7 +5705,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       A(`<h2>VIII. Threat management</h2><table><thead><tr><th>Option</th><th style="width:28%">Responsible</th><th style="width:16%">Due</th></tr></thead>${m.length ? m.map(([[n,d],i])=>`<tr><td><b>${esc(n)}</b><br><span style="font-size:8.5pt">${esc(d)}</span></td><td>${esc(v(`m${i}_r`))}</td><td>${esc(v(`m${i}_d`))}</td></tr>`).join("") : `<tr><td colspan="3"><span class="na">No options selected</span></td></tr>`}</table>`);
       A(`<table><tr><td class="k">Reassessment date</td><td>${cell(v("reassess"))}</td></tr>${v("plan")?`<tr><td class="k">Plan notes</td><td>${cell(v("plan"))}</td></tr>`:""}</table>`);
     }
-    A(`<h2>Sign-off</h2><div class="sig"><div><b>${esc(v("signer"))}</b>Completed by</div><div><b>${esc(v("signdtg"))}</b>Date / time (DTG)</div><div><b>&nbsp;</b>Reviewed by</div><div><b>&nbsp;</b>Date / time (DTG)</div></div>`);
+    A(`<h2>Sign-off</h2><div class="sig"><div><b>${esc(v("signer"))}</b>Completed by</div><div><b>${esc(v("signdtg"))}</b>Date / time</div><div><b>&nbsp;</b>Reviewed by</div><div><b>&nbsp;</b>Date / time (DTG)</div></div>`);
     A(`<div class="pmark end">${MARK}</div>`);
     return H.join("");
   }
