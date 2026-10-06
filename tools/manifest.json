@@ -1,0 +1,46 @@
+{
+  "id": "./",
+  "name": "Inter-Q Field Kit",
+  "short_name": "IQ Kit",
+  "description": "Reports, OSINT, search builder, AI prompts and field tools. Works offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#000000",
+  "theme_color": "#03140a",
+  "icons": [
+    {
+      "src": "iqkit-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "iqkit-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "iqkit-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Receipt stamper",
+      "short_name": "Stamper",
+      "url": "./#stamper",
+      "icons": [
+        {
+          "src": "iqkit-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
