@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>Inter-Q Field Kit</title>
 <link rel="manifest" href="manifest.json">
-<meta name="iq-build" content="2026-10-06 16:30">
+<meta name="iq-build" content="2026-10-06 17:00">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
@@ -218,7 +218,7 @@
   .foot { font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); text-align:center; line-height:1.6; text-shadow:0 0 5px rgba(var(--glow),.4); }
   .foot a { color:var(--link); }
   .iq-upd { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px 10px; margin-top:8px; }
-  .iq-upd .btn { font-size:12px; padding:2px 10px; }
+  .iq-upd .btn { font-size:12px; padding:2px 10px; } .iq-upd a.btn { text-decoration:none; }
   :root[data-theme="blue"] .iq-upd, :root[data-theme="blue"] .iq-upd b { color:#fff; }
 
   /* SITREP report */
@@ -1159,7 +1159,7 @@
 
   <div class="foot">
     <a href="/">&lt;&lt; back to inter-q.com</a>
-    <div class="iq-upd"><span>Build <b id="iqBuild"></b></span><button class="btn" type="button" id="iqUpd">↻ Check for update</button><span id="iqUpdMsg" role="status"></span></div>
+    <div class="iq-upd"><span>Build <b id="iqBuild"></b></span><button class="btn" type="button" id="iqUpd">↻ Check for update</button><a href="#" id="iqMail" class="btn">✉ Report a problem / feedback</a><span id="iqUpdMsg" role="status"></span></div>
   </div>
 </div>
 
@@ -7091,6 +7091,20 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       say(`You're up to date (build ${mine}).`);
     }catch(e){ say("Couldn't reach the site — using the saved copy."); }
     btn.disabled=false;
+  });
+})();
+
+// Feedback link: the address is assembled only when tapped, so spam bots reading the page can't collect it.
+// Opens an email with the build and device type filled in, so every report says which version it's about.
+(function(){
+  const a=document.getElementById("iqMail"); if(!a) return;
+  a.addEventListener("click",(e)=>{
+    e.preventDefault();
+    const to=["inter-q","aol.com"].join(String.fromCharCode(64)), m=document.querySelector('meta[name="iq-build"]'), build=m?m.content:"?";
+    const ua=navigator.userAgent, dev=/iPhone|iPad/.test(ua)?"iPhone/iPad":/Android/.test(ua)?"Android":/Mac/.test(ua)?"Mac":/Windows/.test(ua)?"Windows":"Other";
+    const app=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true?"installed app":"browser";
+    const subj=`IQ Kit feedback (build ${build})`, body=`What happened or what would you like?\n\n\nWhich tool or report:\n\n---\nBuild: ${build}\nDevice: ${dev}, ${app}\nTheme: ${document.documentElement.dataset.theme||"green"}`;
+    location.href=`mailto:${to}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
   });
 })();
 
