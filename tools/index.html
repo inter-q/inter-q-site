@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>Inter-Q Field Kit</title>
 <link rel="manifest" href="manifest.json">
+<meta name="iq-build" content="2026-10-06 16:30">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
@@ -119,7 +120,11 @@
   * { box-sizing:border-box; }
   /* Hold the page steady on phones: no rubber-band bounce, no sideways drift, no double-tap zoom.
      (maximum-scale=1 in the viewport stops iPhone zooming in when you tap a typing box.) */
-  html, body { overscroll-behavior:none; overflow-x:hidden; max-width:100%; touch-action:manipulation; }
+  /* overflow-x:clip (not hidden) stops sideways drift without turning the body into its own scroll box —
+     "hidden" on both html and body can stop the mouse wheel scrolling in some desktop app windows. */
+  html, body { overscroll-behavior:none; overflow-x:clip; max-width:100%; }
+  @supports not (overflow-x:clip) { body { overflow-x:hidden; } }
+  @media (pointer:coarse) { html, body { touch-action:manipulation; } }
   [hidden] { display:none !important; }
   body {
     margin:0; padding:16px; min-height:100vh;
@@ -212,6 +217,9 @@
 
   .foot { font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); text-align:center; line-height:1.6; text-shadow:0 0 5px rgba(var(--glow),.4); }
   .foot a { color:var(--link); }
+  .iq-upd { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px 10px; margin-top:8px; }
+  .iq-upd .btn { font-size:12px; padding:2px 10px; }
+  :root[data-theme="blue"] .iq-upd, :root[data-theme="blue"] .iq-upd b { color:#fff; }
 
   /* SITREP report */
   #s_plain, .alert, .toolout { overflow-wrap:anywhere; }
@@ -1151,6 +1159,7 @@
 
   <div class="foot">
     <a href="/">&lt;&lt; back to inter-q.com</a>
+    <div class="iq-upd"><span>Build <b id="iqBuild"></b></span><button class="btn" type="button" id="iqUpd">↻ Check for update</button><span id="iqUpdMsg" role="status"></span></div>
   </div>
 </div>
 
@@ -7061,6 +7070,28 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); ev=e; if(how&&!how.hidden&&!standalone()) show("iqHowGo"); });
   window.addEventListener("appinstalled",()=>{ ev=null; if(how&&!how.hidden) show("iqHowDone"); });
   if(btn) btn.addEventListener("click",async()=>{ if(!ev) return; ev.prompt(); let ok=false; try{ ok=(await ev.userChoice).outcome==="accepted"; }catch(_){} ev=null; show(ok?"iqHowDone":"iqHowWait"); });
+})();
+
+// Check for update: asks GitHub for the newest page and compares build stamps. Reloads only if there's a newer one.
+// Nothing saved on the device (stamper setup, etc.) is touched.
+(function(){
+  const meta=document.querySelector('meta[name="iq-build"]'), mine=meta?meta.content:"", btn=document.getElementById("iqUpd"), msg=document.getElementById("iqUpdMsg");
+  const b=document.getElementById("iqBuild"); if(b) b.textContent=mine||"—"; if(!btn) return;
+  const say=(t)=>{ msg.textContent=t; };
+  btn.addEventListener("click",async()=>{
+    if(!navigator.onLine){ say("Offline — using the saved copy."); return; }
+    btn.disabled=true; say("Checking…");
+    try{
+      const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration().catch(()=>null);
+      if(reg) await reg.update().catch(()=>{});
+      const u=new URL(location.href); u.hash=""; u.search="?iqcheck="+Date.now();
+      const r=await fetch(u.href,{cache:"no-store"}); if(!r.ok) throw new Error(r.status);
+      const m=(await r.text()).match(/<meta name="iq-build" content="([^"]*)"/), latest=m?m[1]:"";
+      if(latest&&latest!==mine){ say(`Updating to build ${latest}…`); setTimeout(()=>location.reload(),400); return; }
+      say(`You're up to date (build ${mine}).`);
+    }catch(e){ say("Couldn't reach the site — using the saved copy."); }
+    btn.disabled=false;
+  });
 })();
 
 // Browser tab: IQ:_ with a blinking cursor, drawn in the current theme colors. Skipped inside the installed app
