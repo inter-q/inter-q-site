@@ -2,7 +2,7 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>Inter-Q Field Kit</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#03140a">
@@ -108,6 +108,9 @@
   .theme-sw .sw { width:10px; height:10px; border:1px solid rgba(255,255,255,.35); flex:none; }
   .theme-sw button[aria-pressed="true"] { background:var(--ink); color:var(--on-ink); font-weight:bold; text-shadow:none; }
   * { box-sizing:border-box; }
+  /* Hold the page steady on phones: no rubber-band bounce, no sideways drift, no double-tap zoom.
+     (maximum-scale=1 in the viewport stops iPhone zooming in when you tap a typing box.) */
+  html, body { overscroll-behavior:none; overflow-x:hidden; max-width:100%; touch-action:manipulation; }
   [hidden] { display:none !important; }
   body {
     margin:0; padding:16px; min-height:100vh;
@@ -746,7 +749,7 @@
         <div class="rep-pane" id="rep-ics213" data-rep="ics213" hidden></div>
         <div class="rep-pane" id="rep-ics214" data-rep="ics214" hidden></div>
       </div>
-      <div class="muted rep-note">Nothing in REPORTS is sent anywhere. Switching between reports keeps what you've entered. To keep a report, use Save to file — it's saved only on your device, optionally encrypted — and Open file to continue later. Closing or reloading the page clears anything unsaved.</div>
+      <details class="dsc-how rep-note"><summary><b>Saving and privacy</b></summary><div class="muted" style="margin-top:6px">Nothing in REPORTS is sent anywhere. Switching between reports keeps what you've entered. To keep a report, use Save to file — it's saved only on your device, optionally encrypted — and Open file to continue later. Closing or reloading the page clears anything unsaved.</div></details>
     </div>
   </section>
 
@@ -1141,6 +1144,13 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+// Instructions and guides are collapsed by default. howBox() builds one; it remembers which ones you opened
+// so a step doesn't snap shut when the form redraws while you type.
+const HOWOPEN=new Set();
+function howBox(key,title,html,cls){ return `<details class="dsc-how rep-how${cls?" "+cls:""}" data-how="${key}"${HOWOPEN.has(key)?" open":""}><summary><b>${title}</b></summary>${html}</details>`; }
+document.addEventListener("toggle",(e)=>{ const d=e.target; if(d&&d.dataset&&d.dataset.how){ if(d.open) HOWOPEN.add(d.dataset.how); else HOWOPEN.delete(d.dataset.how); } },true);
+</script>
+<script>
 (() => {
   "use strict";
   // ================= settings =================
@@ -1497,7 +1507,7 @@
     const L=[];
     const bar="="+"=".repeat(46);
     L.push(bar);
-    L.push("        UNCLASSIFIED // OPEN SOURCE (OSINT)");
+    L.push("                  UNCLASSIFIED");
     L.push("            SITUATION REPORT  (SITREP)");
     L.push(bar);
     L.push(`DATE/TIME: ${plainDT(d)}`);
@@ -1545,21 +1555,16 @@
     else L.push(`   Overall condition ${cond.name}. No elevated conditions on the feeds${(cond.failed||[]).length?` that loaded (unavailable: ${cond.failed.join(", ")})`:""}.`);
     L.push("");
     L.push(bar);
-    L.push(`GENERATED ${plainDT(d)} — UNOFFICIAL,`);
-    L.push("OPEN-SOURCE AGGREGATION. VERIFY AGAINST OFFICIAL SOURCES.");
-    L.push("IN AN EMERGENCY DIAL YOUR LOCAL EMERGENCY NUMBER.");
-    L.push("        UNCLASSIFIED // OPEN SOURCE (OSINT)");
+    L.push(`GENERATED ${plainDT(d)}`);
+    L.push("                  UNCLASSIFIED");
     L.push(bar);
     return L.join("\n");
   }
   function openReport(){
     $("reportText").textContent=buildReport();
     $("reportWin").hidden=false;
-    $("reportWin").scrollIntoView?.({behavior:"smooth",block:"start"});
-    const n=$("reportNotes");
-    if(n){ n.focus();
-      try{ const r=document.createRange(); r.selectNodeContents(n); r.collapse(false); const s=getSelection(); s.removeAllRanges(); s.addRange(r); }catch(e){}
-    }
+    // Open at the top of the SITREP so the reader starts there (notes stay below; tap them to type).
+    $("reportWin").scrollIntoView?.({block:"start"});
   }
 
   // ================= reference links =================
@@ -2148,7 +2153,7 @@
     coord(){
       host.innerHTML="";
       const d=el(`<div class="toolpane">
-        <div class="full sal-hint">Turn an <b>address</b> into coordinates, or type <b>coordinates</b> to convert them. You get degrees-minutes-seconds, decimal, UTM and MGRS grid, plus map links.</div>
+        ${howBox("intro-coord","How to use the coordinate converter",`<div class="sal-hint" style="margin-top:6px">Turn an <b>address</b> into coordinates, or type <b>coordinates</b> to convert them. You get degrees-minutes-seconds, decimal, UTM and MGRS grid, plus map links.</div>`,"full")}
         <label class="f full">Address or place<span class="hint">A street address, landmark, intersection or ZIP code. Add the city and state for the best match.</span><span class="sal-row sd-cell"><input id="c_addr" class="fld" type="search" placeholder="e.g. 1300 Macdonald Ave, Richmond, CA" autocomplete="off"><button class="btn" type="button" id="c_find">Find</button></span></label>
         <div class="full toolrow" style="margin-top:-2px"><button class="btn" type="button" id="c_gps">Use my location</button><span class="muted" id="c_msg" role="status"></span></div>
         <div class="full c-matches" id="c_matches"></div>
@@ -3736,7 +3741,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     }
     ,salute(){
       const d=el(`<div class="toolpane">
-        <div class="full sal-hint">Spot report for observed activity. Report what you saw, not what you think it means — put interpretation in Remarks. Blank lines go out as UNKNOWN. Use Save to file above to keep it.</div>
+        ${howBox("intro-salute","How to use the SALUTE report",`<div class="sal-hint" style="margin-top:6px">Spot report for observed activity. Report what you saw, not what you think it means — put interpretation in Remarks. Blank lines go out as UNKNOWN. Use Save to file above to keep it.</div>`,"full")}
         <label class="f">Marking<select id="sl_mark" class="fld">
           <option value="UNCLASSIFIED">UNCLASSIFIED</option>
           <option value="SENSITIVE — FOR OFFICIAL USE ONLY">SENSITIVE — FOR OFFICIAL USE ONLY</option>
@@ -3950,7 +3955,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   // ---------- ICS-214 Activity Log ----------
   function build214(){
     const d=el(`<div class="toolpane">
-      <div class="full sal-hint">ICS-214 Activity Log — a running record of notable activities for one operational period. Type in "Log an activity" and press Enter to add a time-stamped entry; entries stay editable. Switching to another report won't erase it, but closing or reloading the page will — use Save to file above to keep it and Open file to continue the log later.</div>
+      ${howBox("intro-ics214","How to use the ICS-214",`<div class="sal-hint" style="margin-top:6px">ICS-214 Activity Log — a running record of notable activities for one operational period. Type in "Log an activity" and press Enter to add a time-stamped entry; entries stay editable. Switching to another report won't erase it, but closing or reloading the page will — use Save to file above to keep it and Open file to continue the log later.</div>`,"full")}
       ${icsMarkSel("i4_mark")}
       ${icsFmtSel("i4_fmt")}
       <label class="f full">1. Incident name<input id="i4_inc" class="fld" type="text" autocomplete="off"></label>
@@ -4121,7 +4126,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const S={mode:"personal",step:0,listsFor:null,eefi:[],thr:[],ind:[],vr:{}};
     const d=el(`<div class="ops">
       <div class="ta-intro" id="opsIntro">
-        <p>OPSEC assessment worksheet: see yourself, your unit or your event the way an adversary would, then decide what to change. Follows the five-step OPSEC process (AR 530-1; IT0464 <i>Operations Security</i>).</p>
+        ${howBox("intro-opsec","About the OPSEC assessment",`<p style="margin:6px 0 0">OPSEC assessment worksheet: see yourself, your unit or your event the way an adversary would, then decide what to change. Follows the five-step OPSEC process (AR 530-1; IT0464 <i>Operations Security</i>).</p>`)}
         <div class="ta-row"><button class="btn" id="opsStart" type="button">[ BEGIN OPSEC ASSESSMENT ]</button></div>
       </div>
       <div id="opsForm" hidden>
@@ -4168,7 +4173,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     // ---------- panels ----------
     const R=[
       ()=>`<div class="ta-h">Step 1 — Scope</div>
-        <p class="sal-hint">OPSEC is the process of denying adversaries information about your capabilities and intentions by identifying, controlling and protecting the indicators of what you plan and do. It covers all exploitable information, not just classified material.</p>
+        ${howBox("step-step-1-scope","Instructions",`<p class="sal-hint" style="margin:6px 0 0">OPSEC is the process of denying adversaries information about your capabilities and intentions by identifying, controlling and protecting the indicators of what you plan and do. It covers all exploitable information, not just classified material.</p>`)}
         <div class="ta-grid2">
           <div class="ta-f full">Which checklist do you want to start from?<span class="hint">This only picks the ready-made lists you'll tick from in steps 2–4 (critical information, threats and indicators). Either way you can untick anything and add your own.</span>
             <div class="ops-mode">${[["personal","Personal","Home address, daily routine, family, vehicles and accounts; threats like burglars, scammers and doxxers; giveaways like fitness-app maps, people-search listings and mail piling up."],["event","Operation or event","Dates and routes, personnel, equipment, comms plan and lodging; threats like equipment theft, protesters and extremists; giveaways like rosters posted online and printed plans left in vehicles."]].map(([k,n,dsc])=>`<label class="${S.mode===k?"on":""}"><input type="radio" name="ops_mode" value="${k}" data-act="mode" data-id="" ${S.mode===k?"checked":""}><span><b>${n}</b><small>${dsc}</small></span></label>`).join("")}</div></div>
@@ -4178,11 +4183,11 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           <label class="ta-f full">Marking<select class="fld" data-act="meta" data-id="mark">${["SENSITIVE — FOR OFFICIAL USE ONLY","PRIVATE — DO NOT DISTRIBUTE","UNCLASSIFIED",""].map(m=>`<option value="${m}" ${meta.mark===m?"selected":""}>${m||"(none)"}</option>`).join("")}</select><span class="hint">A written list of your vulnerabilities is exactly what an adversary wants. Mark it and control copies.</span></label>
         </div>`,
       ()=>`<div class="ta-h">Step 2 — Critical information</div>
-        <p class="sal-hint">What would an adversary need to know to hurt you, embarrass you or disrupt the mission? These are your essential elements of friendly information (EEFI). Tick everything that applies, then add your own.</p>
+        ${howBox("step-step-2-critical-information","Instructions",`<p class="sal-hint" style="margin:6px 0 0">What would an adversary need to know to hurt you, embarrass you or disrupt the mission? These are your essential elements of friendly information (EEFI). Tick everything that applies, then add your own.</p>`)}
         <div class="ta-level">${S.eefi.map(e=>`<label style="grid-template-columns:auto 1fr"><input type="checkbox" data-act="eefi" data-id="${e.id}" ${e.on?"checked":""}><b style="font-weight:normal">${esc(e.text)}</b></label>`).join("")}</div>
         <div class="sal-row" style="margin-top:8px"><input class="fld" id="opsAddE" placeholder="Add critical information…"><button class="btn" type="button" data-act="addE">Add</button></div>`,
       ()=>`<div class="ta-h">Step 3 — Threat</div>
-        <p class="sal-hint">Who would want that information, how capable are they, how motivated are they, and how would they collect it? Tick the threats that apply.</p>
+        ${howBox("step-step-3-threat","Instructions",`<p class="sal-hint" style="margin:6px 0 0">Who would want that information, how capable are they, how motivated are they, and how would they collect it? Tick the threats that apply.</p>`)}
         ${S.thr.map(t=>`<div class="ta-mg"><label><input type="checkbox" data-act="thrOn" data-id="${t.id}" ${t.on?"checked":""}><div style="flex:1"><input class="fld ta-in" data-act="thrName" data-id="${t.id}" value="${esc(t.name)}"></div></label>
           <div class="ta-grid2" ${t.on?"":"hidden"} data-det="${t.id}">
             <div class="ta-f">Capability${seg("tc_"+t.id,t.cap,"thrCap",t.id)}</div>
@@ -4191,7 +4196,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           </div></div>`).join("")}
         <div class="ta-row" style="margin-top:8px"><button class="btn" type="button" data-act="addT">+ Add a threat</button></div>`,
       ()=>{ const areas=[...new Set(S.ind.map(i=>i.area))]; return `<div class="ta-h">Step 4 — Indicators</div>
-        <p class="sal-hint">How do you give yourself away? <b>Patterns</b> are routines an observer can predict. <b>Signatures</b> reveal that you're present. <b>Indicators</b> are visible actions that point to a plan. Tick what applies, then check how it can be collected and what it reveals.</p>
+        ${howBox("step-step-4-indicators","Instructions",`<p class="sal-hint" style="margin:6px 0 0">How do you give yourself away? <b>Patterns</b> are routines an observer can predict. <b>Signatures</b> reveal that you're present. <b>Indicators</b> are visible actions that point to a plan. Tick what applies, then check how it can be collected and what it reveals.</p>`)}
         ${areas.map(a=>`<div class="ta-sub">${esc(a)}</div>${S.ind.filter(i=>i.area===a).map(i=>`<div class="ta-mg"><label><input type="checkbox" data-act="indOn" data-id="${i.id}" ${i.on?"checked":""}><div style="flex:1"><b style="font-weight:normal">${esc(i.text)}</b><span>${esc(i.type)}</span></div></label>
           <div ${i.on?"":"hidden"} data-det="${i.id}" style="margin:6px 0 0 24px;display:flex;flex-direction:column;gap:6px">
             <div class="ta-f">Can be collected through<div class="seg">${OPS_METHODS.map(([k])=>chk(i.methods.has(k),"indM",i.id,OPS_MSHORT[k],`data-m="${k}"`)).join("")}</div></div>
@@ -4201,7 +4206,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         <div class="ta-grid2"><label class="ta-f">Area<input class="fld ta-in" id="opsAddIA" value="Other"></label><label class="ta-f">Type<select class="fld" id="opsAddIT"><option>Pattern</option><option>Signature</option><option selected>Indicator</option></select></label>
         <div class="sal-row full"><input class="fld" id="opsAddI" placeholder="Describe the pattern, signature or indicator…"><button class="btn" type="button" data-act="addI">Add</button></div></div>`; },
       ()=>{ const {out,not}=vulns(); out.sort((a,b)=>LV[b.risk[0]]-LV[a.risk[0]]); return `<div class="ta-h">Step 5 — Vulnerabilities and risk</div>
-        <p class="sal-hint">A vulnerability exists where a threat can collect an indicator that reveals critical information. Likelihood starts from the threat's capability and intent; set the impact if it were exploited.</p>
+        ${howBox("step-step-5-vulnerabilities-and-risk","Instructions",`<p class="sal-hint" style="margin:6px 0 0">A vulnerability exists where a threat can collect an indicator that reveals critical information. Likelihood starts from the threat's capability and intent; set the impact if it were exploited.</p>`)}
         <div class="ta-tally" id="opsTally"></div>
         ${out.length?`<details class="ops-rk" ${out.some(x=>x.rank)?"":"open"}><summary><b>How to rank vulnerabilities</b> (FM 34-60 matrix)</summary>
           <p class="sal-hint">Score each vulnerability 0–5 on three questions and add them up. The total sorts which ones to fix first: <b>12–15 Critical</b>, <b>9–11 Significant</b>, <b>5–8 Important</b>, below 5 Minor. Use it alongside likelihood × impact — the ranking compares vulnerabilities against each other; the risk rating says how bad each one is.</p>
@@ -4216,7 +4221,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           :`<div class="ta-banner ok">No vulnerabilities yet. Select critical information (step 2), threats (step 3) and indicators (step 4) that line up.</div>`}
         ${not.length?`<div class="ta-sub">Not assessed as vulnerable</div>${not.map(x=>`<div class="sal-hint">• ${esc(x.ind.text)} — ${x.why}.</div>`).join("")}`:""}`; },
       ()=>{ const {out}=vulns(); out.sort((a,b)=>LV[b.risk[0]]-LV[a.risk[0]]); return `<div class="ta-h">Step 6 — Countermeasures</div>
-        <p class="sal-hint">For each vulnerability, decide how to eliminate it or reduce it to an acceptable level, who owns it and by when. Then rate the risk that remains.</p>
+        ${howBox("step-step-6-countermeasures","Instructions",`<p class="sal-hint" style="margin:6px 0 0">For each vulnerability, decide how to eliminate it or reduce it to an acceptable level, who owns it and by when. Then rate the risk that remains.</p>`)}
         ${S.mode==="personal"?`<div class="ta-iv"><b>Helpful tools on this page:</b><div class="ta-row" style="margin-top:6px"><button class="btn" type="button" data-act="goExposure">Check my own exposure (search builder)</button><a class="btn" href="https://privacy.ca.gov/drop/" target="_blank" rel="noopener">CA Privacy DROP — data broker removal</a><button class="btn" type="button" data-act="goPrivacy">Privacy &amp; OPSEC links</button></div></div>`:""}
         ${out.length?out.map((x,n)=>`<div class="ta-iv"><div><b>V${n+1}.</b> ${esc(x.ind.text)} — risk <b>${x.risk}</b></div>
           <div class="ta-grid2" style="margin-top:6px">
@@ -4631,7 +4636,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       b.disabled=false; b.textContent="Use my location";
     }
     function render(){
-      d.innerHTML=`${spec.intro?`<p class="sal-hint" style="margin-top:0">${spec.intro}</p>`:""}
+      d.innerHTML=`${spec.intro?howBox("intro-"+spec.name,"How to use this report",`<p class="sal-hint" style="margin:6px 0 0">${spec.intro}</p>`):""}
         <div class="ta-grid2">
           ${spec.types?`<label class="ta-f">Document<select class="fld" data-sd-type>${spec.types.map(([k,n])=>`<option value="${k}" ${S.type===k?"selected":""}>${esc(n)}</option>`).join("")}</select></label>`:""}
           <label class="ta-f">Marking<select class="fld" data-sd-mark>${MARKS.map(m=>`<option value="${m}" ${S.mark===m?"selected":""}>${m||"(none)"}</option>`).join("")}</select></label>
@@ -5432,7 +5437,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     let S=fresh();
     const STEPS=["1 Purpose","2 Identifiers","3 Research","4 Findings","5 Analysis","6 Report"];
     const d=el(`<div class="osa">
-      <p class="sal-hint" style="margin-top:0">A guided checklist for researching a <b>person, username, email, phone number, website, IP address, company, image, place, vehicle, aircraft or vessel</b> with public sources — U.S. and international — then turning what you find into a military-format report. Each check opens the right site with the identifier copied to your clipboard (and pre-filled where the site allows), so you can work straight down the list.</p>
+      ${howBox("intro-osint","How to use the OSINT checklist",`<p class="sal-hint" style="margin:6px 0 0">A guided checklist for researching a <b>person, username, email, phone number, website, IP address, company, image, place, vehicle, aircraft or vessel</b> with public sources — U.S. and international — then turning what you find into a military-format report. Each check opens the right site with the identifier copied to your clipboard (and pre-filled where the site allows), so you can work straight down the list.</p>`)}
       <div class="ta-steps" id="osSteps" role="tablist" aria-label="OSINT steps">${STEPS.map((s,i)=>`<button class="btn" type="button" role="tab" data-go="${i}">${s}</button>`).join("")}</div>
       <div id="osPanel" style="margin-top:10px"></div>
       <div class="ta-nav"><button class="btn" id="osBack" type="button">&#9664; Back</button><span class="muted" id="osMsg"></span><button class="btn" id="osNext" type="button">Next &#9654;</button></div>
@@ -5462,7 +5467,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         </div>
 `,
       ()=>`<div class="ta-h">Step 2 — Identifiers</div>
-        <p class="sal-hint"><b>Identifiers</b> are the starting clues about your subject — a name, username, email, phone number, website, IP address, company, image, address, or a vehicle, aircraft or vessel number. Each one you add gets its own checklist of searches in step 3, built from the links and databases on this page. Add as many as you have; you can add more anytime as you find them. Following a new clue to the next search (pivoting) is how most research works.</p>
+        ${howBox("step-step-2-identifiers","Instructions",`<p class="sal-hint" style="margin:6px 0 0"><b>Identifiers</b> are the starting clues about your subject — a name, username, email, phone number, website, IP address, company, image, address, or a vehicle, aircraft or vessel number. Each one you add gets its own checklist of searches in step 3, built from the links and databases on this page. Add as many as you have; you can add more anytime as you find them. Following a new clue to the next search (pivoting) is how most research works.</p>`)}
         <div class="ta-grid2 os-add">
           <label class="ta-f">Type${sel("",OS_TYPES,S.lastType||"person",'id="osType"')}</label>
           <label class="ta-f">Identifier<input class="fld ta-in" id="osVal" placeholder="e.g. Jane Q. Doe" autocomplete="off"></label>
@@ -5477,7 +5482,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         const cur=selById(S.cur)||S.sel[0]; S.cur=cur.id;
         const T=tasksFor(cur), cats=[...new Set(T.map(t=>t.cat))], p=prog(cur), nf=S.finds.filter(f=>f.sel===cur.id).length;
         return `<div class="ta-h">Step 3 — Research</div>
-          <p class="sal-hint"><b>Open ▸</b> copies the identifier and opens the source (pre-filled where possible — otherwise paste). Mark each check, note what you saw, and use <b>+ Finding</b> for anything worth reporting.</p>
+          ${howBox("step-step-3-research","Instructions",`<p class="sal-hint" style="margin:6px 0 0"><b>Open ▸</b> copies the identifier and opens the source (pre-filled where possible — otherwise paste). Mark each check, note what you saw, and use <b>+ Finding</b> for anything worth reporting.</p>`)}
           <div class="ta-grid2"><label class="ta-f full">Identifier${sel("",S.sel.map(s=>[s.id,`${selLabel(s)} — ${prog(s).done}/${prog(s).total}`]),cur.id,'id="osCur"')}</label></div>
           <div class="os-cprow"><span class="sal-hint">Click to copy:</span> ${cpChips(cur)}</div>
           <div class="os-bar"><div style="width:${p.total?Math.round(p.done/p.total*100):0}%"></div></div>
@@ -5489,7 +5494,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           ${pivotHtml()}`;
       },
       ()=>`<div class="ta-h">Step 4 — Findings</div>
-        <p class="sal-hint">One entry per fact. Record where it came from and when, rate it, and say whether a second, independent source confirms it. Rating: source reliability A–F, information credibility 1–6 (FM 34-3).</p>
+        ${howBox("step-step-4-findings","Instructions",`<p class="sal-hint" style="margin:6px 0 0">One entry per fact. Record where it came from and when, rate it, and say whether a second, independent source confirms it. Rating: source reliability A–F, information credibility 1–6 (FM 34-3).</p>`)}
         ${S.finds.length?S.finds.map((f,i)=>`<div class="ta-iv"><div class="ta-row" style="justify-content:space-between"><b class="cp-tn">F${i+1}</b><button class="btn ics-x" type="button" data-oa="delFind" data-i="${i}" aria-label="Remove finding">✕</button></div>
           <div class="ta-grid2">
             <label class="ta-f full">Finding<textarea class="fld ta-in" rows="2" data-ofd="text" data-i="${i}" placeholder="What you found — facts only">${esc(f.text)}</textarea></label>
@@ -5508,7 +5513,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         ${pivotHtml()}`,
       ()=>{ const fs=S.finds, single=fs.filter(f=>f.corr!=="yes").length;
         return `<div class="ta-h">Step 5 — Analysis</div>
-        <p class="sal-hint">Answer the purpose from step 1 using only the findings. Separate what you know from what you judge, and say how sure you are.</p>
+        ${howBox("step-step-5-analysis","Instructions",`<p class="sal-hint" style="margin:6px 0 0">Answer the purpose from step 1 using only the findings. Separate what you know from what you judge, and say how sure you are.</p>`)}
         <div class="ta-iv"><b>Purpose:</b> ${esc(purp())||"<i>— not stated in step 1 —</i>"}</div>
         <div class="ta-tally" style="margin:8px 0"><span class="pill p-ok">${S.sel.length} identifier${S.sel.length===1?"":"s"}</span><span class="pill p-ok">${fs.length} finding${fs.length===1?"":"s"}</span><span class="pill ${single?"p-warn":"p-ok"}">${single} uncorroborated</span>${S.sel.map(s=>{ const p=prog(s); const v=s.value.length>24?s.value.slice(0,23)+"…":s.value; return `<span class="pill ${p.done<p.total?"p-warn":"p-ok"}" title="${esc(selLabel(s))}">${esc(OS_TNAME[s.type])} ${esc(v)} ${p.done}/${p.total}</span>`; }).join("")}</div>
         <div class="ta-grid2">
@@ -5519,7 +5524,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           <label class="ta-f full">Recommended next steps<textarea class="fld ta-in" rows="2" data-of="next" placeholder="e.g. Refer to law enforcement; request records through proper channels; close — no concern found">${esc(S.f.next)}</textarea></label>
         </div>`; },
       ()=>`<div class="ta-h">Step 6 — Report</div>
-        <p class="sal-hint">Military-format OSINT report. Review it, then print, copy or save. It contains personal information — share it only with people who need it.</p>
+        ${howBox("step-step-6-report","Instructions",`<p class="sal-hint" style="margin:6px 0 0">Military-format OSINT report. Review it, then print, copy or save. It contains personal information — share it only with people who need it.</p>`)}
         <div class="toolrow" style="margin:8px 0"><button class="btn" type="button" data-oa="print">Print / Save as PDF</button><button class="btn" type="button" data-oa="copy">Copy text</button><button class="btn" type="button" data-oa="clear">Clear</button></div>
         <pre class="toolout report ta-preview" id="osPrev"></pre>`
     ];
@@ -5719,7 +5724,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       h:{office:"",num:"",refs:"",project:"",date:"",prep:"",prep_pos:"",reviewer:"",rev:""}});
     let S=fresh();
     const d=el(`<div class="osa lna">
-      <p class="sal-hint" style="margin-top:0">A guided walk-through of one liaison contact — from knowing the agency, through planning and the meeting itself, to the <b>Liaison Contact Report</b> and an <b>agency card</b> the next liaison officer can pick up. Built on IT0777 <i>Counterintelligence Liaison Activities</i> and FM 34-60 chapter 4. Each step explains what to do and why.</p>
+      ${howBox("intro-lcr","How to use the liaison contact guide",`<p class="sal-hint" style="margin:6px 0 0">A guided walk-through of one liaison contact — from knowing the agency, through planning and the meeting itself, to the <b>Liaison Contact Report</b> and an <b>agency card</b> the next liaison officer can pick up. Built on IT0777 <i>Counterintelligence Liaison Activities</i> and FM 34-60 chapter 4. Each step explains what to do and why.</p>`)}
       <div class="ta-mark" id="lnMark"></div>
       <div class="ta-steps" id="lnSteps" role="tablist" aria-label="Liaison steps">${LN_STEPS.map((s,i)=>`<button class="btn" type="button" data-go="${i}">${s}</button>`).join("")}</div>
       <div id="lnPanel" style="margin-top:10px"></div>
@@ -5754,7 +5759,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const banner=()=>warnings().map(([c,t])=>`<div class="ta-banner ${c}" style="margin-bottom:8px;font-weight:normal">${esc(t)}</div>`).join("");
     const R=[
       ()=>`<div class="ta-h">Step 1 — Know the agency</div>
-        <p class="sal-hint">Before anything else, understand who you're dealing with. The course calls familiarity with the agency's mission “probably the most essential factor” in liaison. This step also becomes the <b>agency card</b> — the quick reference you, or the officer who replaces you, will rely on.</p>
+        ${howBox("step-step-1-know-the-agency","Instructions",`<p class="sal-hint" style="margin:6px 0 0">Before anything else, understand who you're dealing with. The course calls familiarity with the agency's mission “probably the most essential factor” in liaison. This step also becomes the <b>agency card</b> — the quick reference you, or the officer who replaces you, will rely on.</p>`)}
         <div class="ta-grid2">
           ${inp("a.name","Agency / office","The organization, not a person.","e.g. Richmond PD — Special Investigations",true)}
           ${sel("a.type","Type",["",...LN_TYPES])}
@@ -5766,7 +5771,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         </div>
         <div class="ta-iv" style="margin-top:8px"><b>Coverage tip.</b> <span class="sal-hint" style="margin:0">Work with enough agencies that one transfer doesn't cut you off, and so information from one can be checked against another — but don't spread yourself too thin (p. 1-5).</span></div>`,
       ()=>`<div class="ta-h">Step 2 — Plan the contact</div>
-        <p class="sal-hint">Answer the four planning questions before every visit (IT0777 Lesson 2, Part A), then decide what you'll bring and what you'll ask.</p>
+        ${howBox("step-step-2-plan-the-contact","Instructions",`<p class="sal-hint" style="margin:6px 0 0">Answer the four planning questions before every visit (IT0777 Lesson 2, Part A), then decide what you'll bring and what you'll ask.</p>`)}
         <div data-ln-ban>${banner()}</div>
         <div class="ta-grid2">
           ${sel("p.ptype","1. Purpose of the contact",LN_PURP,"",true)}
@@ -5783,7 +5788,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         </div><div class="ta-iv"><span class="sal-hint" style="margin:0"><b>Call on the senior person first,</b> even if a subordinate will do the real work — it keeps doors open and avoids looking like you're going around the boss (p. 1-5).</span></div>`:""}
         <div class="ta-sub">Before you go</div>${checks(LN_CHK_PREP)}`,
       ()=>`<div class="ta-h">Step 3 — The meeting</div>
-        <p class="sal-hint">Use this during or right after the meeting. Notes can put people off — the course stresses a good memory and writing up soon afterward (p. 1-8).</p>
+        ${howBox("step-step-3-the-meeting","Instructions",`<p class="sal-hint" style="margin:6px 0 0">Use this during or right after the meeting. Notes can put people off — the course stresses a good memory and writing up soon afterward (p. 1-8).</p>`)}
         <div data-ln-ban>${banner()}</div>
         <div class="ta-grid2">
           ${dtg("c.when","Date and time (from – to)","e.g. 041300T–041420T OCT 26 — tap Now at the start, then add the end time.")}
@@ -5797,7 +5802,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           ${sel("illegal","Was anything illegal suggested?",["No","Yes"],"If yes, break off contact immediately (p. 1-6).")}
         </div>`,
       ()=>`<div class="ta-h">Step 4 — Record the facts</div>
-        <p class="sal-hint"><b>Facts only in this step</b> — what was said, agreed and exchanged, in order. Your opinions go in step 5. Write leads and fragmentary information in detail so someone can act on them (p. 2-22).</p>
+        ${howBox("step-step-4-record-the-facts","Instructions",`<p class="sal-hint" style="margin:6px 0 0"><b>Facts only in this step</b> — what was said, agreed and exchanged, in order. Your opinions go in step 5. Write leads and fragmentary information in detail so someone can act on them (p. 2-22).</p>`)}
         <div data-ln-ban>${banner()}</div>
         <div class="ta-sub">Chronology — what was discussed</div>
         ${rows("chron",[["time","Time","90px"],["fact","What was said, agreed or exchanged","2fr","area"]],"Item")}
@@ -5823,7 +5828,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         <div class="ta-sub">Production — reports this contact produced</div>
         ${rows("prod",[["num","Report number / type","1fr"],["subj","Subject","2fr"]],"Report","e.g. a spot report, SAR to the fusion center, or information report. Leave blank if none.")}`,
       ()=>`<div class="ta-h">Step 6 — Liaison Contact Report</div>
-        <p class="sal-hint">The report keeps the relationship going after you: the next officer reads it to pick up where you left off (p. 2-22). Number reports office–year–sequence and cite the last one on this agency.</p>
+        ${howBox("step-step-6-liaison-contact-report","Instructions",`<p class="sal-hint" style="margin:6px 0 0">The report keeps the relationship going after you: the next officer reads it to pick up where you left off (p. 2-22). Number reports office–year–sequence and cite the last one on this agency.</p>`)}
         <div data-ln-ban>${banner()}</div>
         <div class="ta-grid2">
           ${inp("h.office","Office code","Used to build the report number.","e.g. JFHQ")}
@@ -6931,7 +6936,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     document.body.appendChild(box); act=s.selectedIndex; reposition(); paintAct(true);
     box.addEventListener("mousedown",(e)=>e.preventDefault());
     box.addEventListener("click",(e)=>{ if(e.target.closest(".dd-x")){ close(true); return; } const o=e.target.closest(".dd-o"); if(o) choose(+o.dataset.i); });
-    box.addEventListener("mousemove",(e)=>{ const o=e.target.closest(".dd-o"); if(o&&+o.dataset.i!==act&&!o.classList.contains("dis")){ act=+o.dataset.i; paintAct(false); } });
+    // Highlight-on-hover for a real mouse only: on iPhone, changing the list under a finger makes the first tap count as "hover", so you had to tap twice.
+    box.addEventListener("pointermove",(e)=>{ if(e.pointerType!=="mouse") return; const o=e.target.closest(".dd-o"); if(o&&+o.dataset.i!==act&&!o.classList.contains("dis")){ act=+o.dataset.i; paintAct(false); } });
     document.addEventListener("keydown",onKey,true); window.addEventListener("resize",reposition); window.addEventListener("scroll",onScroll,true);
   }
   function step(dir){ let i=act; for(let n=0;n<opts.length;n++){ i=(i+dir+opts.length)%opts.length; if(!opts[i].disabled){ act=i; break; } } paintAct(true); }
