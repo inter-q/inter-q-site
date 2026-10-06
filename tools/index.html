@@ -210,6 +210,12 @@
   .sb-tw { overflow-x:auto; margin-top:6px; } .sb-t { border-collapse:collapse; font-size:12px; min-width:520px; width:100%; } .sb-t th, .sb-t td { border:1px solid rgba(var(--glow),.35); padding:3px 6px; text-align:left; vertical-align:top; }
   .c-matches { display:flex; flex-wrap:wrap; gap:4px; align-items:center; } .c-m { font-size:12px; padding:2px 8px; text-align:left; text-transform:none; letter-spacing:0; max-width:100%; overflow-wrap:anywhere; } .c-m.on { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); }
   #c_acts a.btn { text-decoration:none; }
+  .aib .ta-sub { grid-column:1/-1; } .aib-tabs { margin:0; } .aib-pane { border:1px dashed rgba(var(--glow),.35); padding:8px 10px; }
+  .aib-boost { display:flex; flex-wrap:wrap; gap:4px; margin-top:3px; } .aib-boost label { display:inline-flex; gap:5px; align-items:center; border:1px solid var(--lo); padding:3px 8px; font-size:12px; cursor:pointer; background:var(--btn); text-transform:none; letter-spacing:0; } .aib-boost label:has(input:checked) { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); } .aib-boost input { accent-color:var(--ink); margin:0; width:auto; flex:none; }
+  .aib-out { white-space:pre-wrap; overflow-wrap:anywhere; max-height:320px; overflow-y:auto; font-size:13px; }
+  .aib-send { display:flex; flex-wrap:wrap; gap:5px; } .aib-ai small { font-size:10px; opacity:.75; } .aib-ai.sug { border-color:var(--hi); background:var(--ok-bg); color:var(--bright); } .aib-ai.sug::before { content:"★ "; }
+  .aib-warn { font-size:13px; color:var(--warn); border:1px solid var(--warn); background:var(--warn-bg); padding:6px 8px; } .aib-warn.hard { color:var(--crit); border-color:var(--crit); background:var(--crit-bg); }
+  .aib-eg { display:block; border-left:2px solid var(--lo); padding:3px 8px; margin-top:4px; }
   .ta-steps .btn.on { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); }
   .ta-steps .btn:disabled { opacity:.4; cursor:not-allowed; box-shadow:none; }
   .ta-h { font-weight:bold; text-transform:uppercase; letter-spacing:.06em; color:var(--title-ink); font-size:14px; margin:6px 0 2px; border-bottom:1px solid var(--lo); padding-bottom:3px; }
@@ -620,6 +626,7 @@
         <label for="toolSel">Tool</label>
         <select id="toolSel" class="fld">
           <option value="search">Search builder (presets &amp; operators)</option>
+          <option value="ai">AI box (prompts &amp; assistants)</option>
           <option value="stamp">LOGSTAT fuel receipt stamper</option>
           <option value="describe">Description builder (person / vehicle / object)</option>
           <option value="unit">Unit converter</option>
@@ -890,13 +897,12 @@
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://grok.com/" target="_blank" rel="noopener">Grok</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://chat.mistral.ai/chat" target="_blank" rel="noopener">Mistral</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.perplexity.ai/" target="_blank" rel="noopener">Perplexity</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://lumo.proton.me/" target="_blank" rel="noopener">Lumo (Proton)</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://app.cline.bot/" target="_blank" rel="noopener">Cline</a></li>
         </ul></fieldset>
         <fieldset class="grp"><legend>AI resources</legend><ul>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://deepmind.google/blog/" target="_blank" rel="noopener">DeepMind blog</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://blog.google/products/gemini/google-gems-tips/" target="_blank" rel="noopener">Gemini Gems tips</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.promptcowboy.ai/" target="_blank" rel="noopener">PromptCowboy</a></li>
         </ul></fieldset>
       </div>
@@ -1559,36 +1565,23 @@
     ["General",[
       ["Google","https://www.google.com/search?q="],
       ["Bing","https://www.bing.com/search?q="],
-      ["Yahoo","https://search.yahoo.com/search?p="],
-      ["Ask","https://www.ask.com/web?q="],
-      ["Lycos","https://search.lycos.com/web/?q="],
-      ["You.com","https://you.com/search?q="]
+      ["Yahoo","https://search.yahoo.com/search?p="]
     ]],
     ["Privacy-focused",[
       ["DuckDuckGo","https://duckduckgo.com/?q="],
       ["DuckDuckGo Lite","https://lite.duckduckgo.com/lite/?q="],
       ["Startpage","https://www.startpage.com/sp/search?query="],
       ["Brave","https://search.brave.com/search?q="],
-      ["Mullvad Leta","https://leta.mullvad.net/search?q="],
       ["Mojeek","https://www.mojeek.com/search?q="],
       ["Ecosia","https://www.ecosia.org/search?q="],
       ["Qwant","https://www.qwant.com/?q="],
-      ["Swisscows","https://swisscows.com/web?query="],
-      ["MetaGer","https://metager.org/meta/meta.ger3?eingabe="],
       ["SearXNG","https://searx.be/search?q="],
-      ["Yep","https://yep.com/web?q="],
-      ["Stract","https://stract.com/search?q="],
-      ["Presearch","https://presearch.com/search?q="],
       ["Gibiru","https://gibiru.com/results.html?q="],
       ["Lukol","https://www.lukol.com/s.php?q="]
     ]],
     ["Metasearch",[
       ["Dogpile","https://www.dogpile.com/serp?q="],
-      ["MetaCrawler","https://www.metacrawler.com/serp?q="],
-      ["Million Short","https://millionshort.com/search?keywords="]
-    ]],
-    ["AI answers",[
-      ["Perplexity","https://www.perplexity.ai/search?q="]
+      ["MetaCrawler","https://www.metacrawler.com/serp?q="]
     ]],
     ["Regional",[
       ["Yandex","https://yandex.com/search/?text="],
@@ -2730,6 +2723,230 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       d.addEventListener("input",(e)=>{ if(e.target.dataset.pk!==undefined){ pv[e.target.dataset.pk]=e.target.value; applyPreset(); } else build(); });
       d.addEventListener("change",(e)=>{ if(e.target.id==="s_eng"||e.target.id==="s_ft"||e.target.type==="date") build(); });
       paintLog(); build();
+    }
+    ,ai(){
+      host.innerHTML="";
+      // AI assistants. pre = prefill URL (null → copy and open). All send buttons also copy the prompt as a backup.
+      const AIS=[
+        ["ChatGPT","https://chatgpt.com/?q=","https://chatgpt.com/","All-rounder — writing, explaining, brainstorming, everyday questions."],
+        ["Claude","https://claude.ai/new?q=","https://claude.ai/new","Long documents, careful writing and editing, reasoning through a problem."],
+        ["Perplexity","https://www.perplexity.ai/search?q=","https://www.perplexity.ai/","Research — current facts with numbered sources you can click and check."],
+        ["Gemini",null,"https://gemini.google.com/app","Google search, YouTube videos, and your Gmail / Docs if connected."],
+        ["Grok","https://grok.com/?q=","https://grok.com/","What people are posting right now on X; breaking events."],
+        ["Mistral","https://chat.mistral.ai/chat?q=","https://chat.mistral.ai/chat","Fast answers; strong in French and other European languages."],
+        ["Lumo",null,"https://lumo.proton.me/","Most private — encrypted chats, not used for training."],
+        ["AI Studio",null,"https://aistudio.google.com/","Google's workbench — very long files, model settings."]
+      ];
+      const BOOST=[
+        ["src","Cite sources with links","Cite your sources with links, and say which facts you couldn't confirm."],
+        ["ask","Ask me questions first","Before answering, ask me up to 3 questions if anything important is unclear."],
+        ["unsure","Flag what you're unsure of","Clearly mark anything you're unsure of or that I should verify."],
+        ["plain","Plain language","Use plain language a non-expert can follow. Define any jargon or acronyms."],
+        ["short","Keep it short","Keep it short — no more than about 150 words unless I ask for more."],
+        ["bluf","Bottom line first","Start with the bottom line up front (BLUF) in one or two sentences, then the details."],
+        ["steps","Step by step","Give numbered steps I can follow."],
+        ["table","Use a table","Put the main comparison or data in a table."],
+        ["opts","Give me options","Give me 3 options with the pros and cons of each, then your recommendation."],
+        ["vi","Answer in Vietnamese","Answer in Vietnamese."]
+      ];
+      const T=(role,task,ctx,req,fmt)=>[role&&`You are ${role}.`,task,ctx&&`\nContext:\n${ctx}`,req&&req.length?`\nRequirements:\n${req.map(r=>"- "+r).join("\n")}`:"",fmt&&`\nFormat: ${fmt}`].filter(Boolean).join("\n").trim();
+      const BLK=(s)=>String(s||"").trim()?`"""\n${String(s).trim()}\n"""`:"";
+      // Templates: in = [key,label,placeholder,type("area")|undefined,optional]
+      const TPL=[
+        ["Research & OSINT",[
+          {id:"research",n:"Research a topic",d:"A sourced overview of a topic, organized for a briefing. Best on Perplexity.",ai:"Perplexity",
+            in:[["topic","Topic","e.g. drone use by wildfire responders in California"],["why","What it's for (optional)","e.g. a 10-minute brief to my section",0,1]],
+            f:(x)=>T("a careful research analyst",`Research this topic and give me a sourced overview: ${x.topic}.`,x.why?`This is for ${x.why}.`:"",["Separate confirmed facts from claims, opinion and speculation","Use recent, reputable sources and include the date of each","Note gaps or conflicting information"],"a short summary, then key points as bullets, then a source list with links.")},
+          {id:"factcheck",n:"Fact-check a claim",d:"Checks a claim against sources and rates how well it holds up.",ai:"Perplexity",
+            in:[["claim","Claim to check","e.g. a viral post saying the evacuation order was lifted","area"]],
+            f:(x)=>T("a fact-checker",`Fact-check this claim:\n${BLK(x.claim)}`,"",["Find the original source of the claim if you can","Check it against official and reputable sources","Say what's true, false, misleading or unverified, and why"],"verdict first (True / False / Misleading / Unverified), then evidence with links.")},
+          {id:"searchplan",n:"Build a search plan",d:"Turns a question into search-engine queries with operators — paste them into the Search builder.",ai:"ChatGPT",
+            in:[["q","What you're trying to find out","e.g. whether a planned march will pass near the state building"]],
+            f:(x)=>T("an open-source research specialist",`Help me plan searches to answer this question: ${x.q}`,"",["Break it into 3–5 smaller questions","For each, write 2–3 ready-to-paste search queries using operators (quotes, site:, OR, -, filetype:, after:)","Suggest specific public sources or sites to check","Public information only"],"a table with columns: question, search query, where to look.")},
+          {id:"extract",n:"Pull key facts from text",d:"Paste an article, post or report — get who, what, when, where in a clean list.",ai:"Claude",
+            in:[["text","Text to analyze","Paste the article, post or report","area"]],
+            f:(x)=>T("an intelligence analyst",`Extract the key facts from the text below.\n${BLK(x.text)}`,"",["List people, organizations, places, dates/times, vehicles and phone numbers or accounts mentioned","Quote the exact words for anything important","Note anything that seems inconsistent, missing or unverified","Don't add facts that aren't in the text"],"sections: Summary (2 sentences), Who, What, When, Where, Open questions.")},
+          {id:"org",n:"Profile an organization",d:"Public overview of a company, agency or group.",ai:"Perplexity",
+            in:[["org","Organization","e.g. Acme Builders Inc, Oakland"]],
+            f:(x)=>T("a research analyst",`Give me a public-source profile of: ${x.org}.`,"",["What it does, where it operates, size, and leadership","Recent news, legal issues or controversies, with dates","Official website and social accounts","Cite every fact with a link"],"short sections with bullet points and a source list.")},
+          {id:"compare",n:"Compare options",d:"Side-by-side comparison against the criteria you care about.",ai:"ChatGPT",
+            in:[["a","Options to compare","e.g. Garmin inReach Mini 2 vs. Zoleo vs. iPhone satellite SOS"],["c","What matters to you","e.g. cost, battery life, coverage in the Sierra"]],
+            f:(x)=>T("a neutral advisor",`Compare these options: ${x.a}.`,`What matters to me: ${x.c}.`,["Judge each option on each criterion","Note costs and any hidden downsides","Say which is best for which kind of user"],"a comparison table, then a 3-sentence recommendation.")}
+        ]],
+        ["Writing & reports",[
+          {id:"email",n:"Draft an email or message",d:"A clear, ready-to-send message in the tone you choose.",ai:"Claude",
+            in:[["to","To (who and their role)","e.g. my battalion S4"],["what","What you need to say","e.g. receipts for the Oct fuel buys will be late by 2 days; why; what I need from them","area"],["tone","Tone","e.g. professional and direct"]],
+            f:(x)=>T("an expert writer of clear workplace messages",`Write a message to ${x.to}.`,`What I need to say:\n${BLK(x.what)}`,[`Tone: ${x.tone||"professional and direct"}`,"Put the main point or request in the first sentence","Keep it short and specific, with any dates and deadlines","Include a clear subject line"],"subject line, then the message.")},
+          {id:"ics213",n:"Notes → ICS-213 message",d:"Turns rough notes into a clean General Message (block 7). Paste it into Reports ▸ ICS-213.",ai:"ChatGPT",
+            in:[["notes","Your notes","e.g. need 2 water tenders at staging B by 1300, current supply runs out tonight","area"]],
+            f:(x)=>T("an incident command system (ICS) staff member",`Turn my notes into the message text for an ICS-213 General Message.\n${BLK(x.notes)}`,"",["Put the request or main point first","Include who, what, where, when and by when","Plain language — no unit slang","Under 120 words"],"a Subject line (under 8 words), then the message text.")},
+          {id:"aar",n:"Notes → after action review",d:"Organizes notes into what happened, sustains, improves and actions.",ai:"Claude",
+            in:[["notes","Your notes","Paste notes from the event or debrief","area"]],
+            f:(x)=>T("an experienced military operations officer",`Organize my notes into an after action review.\n${BLK(x.notes)}`,"",["What was planned vs. what happened","Sustains (what went well) and improves (what to fix), each with the reason","Specific actions with an owner and deadline where the notes allow","Don't invent facts — mark gaps as [need info]"],"sections: Summary, Planned vs. actual, Sustain, Improve, Actions.")},
+          {id:"bluf",n:"BLUF memo or info paper",d:"Bottom-line-up-front write-up for leadership.",ai:"Claude",
+            in:[["topic","Subject","e.g. fuel receipt turn-in problems"],["notes","Key facts and your recommendation","Paste facts, numbers and what you recommend","area"]],
+            f:(x)=>T("a staff officer writing for a senior leader",`Write a one-page information paper on: ${x.topic}.`,`Facts and recommendation:\n${BLK(x.notes)}`,["Bottom line up front in 2 sentences","Background, discussion and recommendation sections","Short paragraphs and bullets; active voice","No information that isn't in my notes"],"BLUF, Background, Discussion, Recommendation.")},
+          {id:"edit",n:"Improve my writing",d:"Edits for clarity, grammar and tone and explains the changes.",ai:"Claude",
+            in:[["text","Your text","Paste what you wrote","area"],["aud","Who will read it (optional)","e.g. my commander",0,1]],
+            f:(x)=>T("a professional editor",`Edit the text below for clarity, grammar and tone${x.aud?` for ${x.aud}`:""}.\n${BLK(x.text)}`,"",["Keep my meaning and voice","Cut unnecessary words","Fix grammar and punctuation"],"the edited version first, then a short list of the main changes.")},
+          {id:"shorten",n:"Shorten something",d:"Cuts text down to a target length without losing the point.",ai:"ChatGPT",
+            in:[["text","Text","Paste the text","area"],["len","Target length","e.g. 3 sentences, or 50 words"]],
+            f:(x)=>T("",`Shorten the text below to ${x.len||"half its length"}. Keep every key fact, number and date.\n${BLK(x.text)}`,"",[],"")},
+          {id:"bullet",n:"Award or evaluation bullets",d:"Turns accomplishments into strong, specific bullets.",ai:"ChatGPT",
+            in:[["what","What was accomplished","e.g. ran the supply point for 3 weeks during a wildfire response; cut receipt errors by half","area"]],
+            f:(x)=>T("an experienced military writer of award and evaluation bullets",`Write 5 strong bullets from these accomplishments:\n${BLK(x.what)}`,"",["Start each with a strong action verb","Show the action, the scale and the result (numbers where given)","One line each; no invented numbers"],"a bulleted list.")}
+        ]],
+        ["Explain & learn",[
+          {id:"explain",n:"Explain it simply",d:"Plain-English explanation with an example.",ai:"ChatGPT",
+            in:[["topic","What to explain","e.g. how MGRS grid coordinates work"],["level","For whom (optional)","e.g. a new soldier",0,1]],
+            f:(x)=>T("a patient instructor",`Explain ${x.topic} ${x.level?`to ${x.level}`:"to someone new to it"}.`,"",["Start with a one-sentence answer","Then explain it step by step with a concrete example","End with common mistakes to avoid"],"")},
+          {id:"manual",n:"Explain a manual or regulation",d:"Paste a section of a manual, policy or law — get what it means and what to do.",ai:"Claude",
+            in:[["text","Section text","Paste the section","area"],["q","Your question (optional)","e.g. does this apply to state active duty?",0,1]],
+            f:(x)=>T("an expert who explains regulations in plain English",`Explain this section in plain English.${x.q?` My question: ${x.q}`:""}\n${BLK(x.text)}`,"",["What it requires, who it applies to, and any deadlines","Quote the exact words that matter","Say if anything is unclear or depends on other rules"],"summary, then what I need to do, then key quotes.")},
+          {id:"class",n:"Plan a class or training",d:"A lesson plan with timings, practice and a check on learning.",ai:"Claude",
+            in:[["topic","Topic","e.g. SALUTE reporting"],["aud","Audience","e.g. 12 new soldiers"],["time","Length","e.g. 45 minutes"]],
+            f:(x)=>T("an experienced military instructor",`Build a lesson plan to teach ${x.topic} to ${x.aud} in ${x.time}.`,"",["Learning objective (task, condition, standard)","Timed outline: intro, teach, demonstrate, practice, check","A hands-on practical exercise","5 check-on-learning questions with answers"],"")},
+          {id:"quiz",n:"Quiz me",d:"Practice questions, one at a time, with feedback.",ai:"ChatGPT",
+            in:[["topic","Topic","e.g. ICS positions and responsibilities"]],
+            f:(x)=>T("a tutor",`Quiz me on ${x.topic}.`,"",["Ask one multiple-choice question at a time and wait for my answer","Tell me if I'm right and explain briefly","Get harder as I go; after 10 questions give my score and what to review"],"")}
+        ]],
+        ["Plan & decide",[
+          {id:"plan",n:"Plan an event or operation",d:"A checklist plan with timeline, roles and supplies.",ai:"Claude",
+            in:[["what","What you're planning","e.g. a 2-day CERT exercise at the county fairgrounds"],["when","When and how many people","e.g. Nov 14–15, about 60 people"],["notes","Anything else (optional)","Budget, constraints, must-haves","area",1]],
+            f:(x)=>T("an experienced operations planner",`Help me plan: ${x.what}, ${x.when}.`,x.notes?BLK(x.notes):"",["Timeline working back from the event","Roles and who does what","Supplies and logistics","Risks and backup plans","Flag decisions I need to make"],"sections with checklists.")},
+          {id:"risk",n:"Risk assessment",d:"Hazards, likelihood, severity and controls for an activity.",ai:"ChatGPT",
+            in:[["act","Activity","e.g. night road march, 12 miles, rural roads"],["cond","Conditions (optional)","e.g. October, possible fog",0,1]],
+            f:(x)=>T("a safety officer",`Do a risk assessment for: ${x.act}${x.cond?` (${x.cond})`:""}.`,"",["List the main hazards","Rate each for probability and severity before controls","Give specific controls, then the residual risk","Note who should supervise each control"],"a table: hazard, initial risk, controls, residual risk.")},
+          {id:"decide",n:"Help me decide",d:"Lays out a decision fairly so you can choose.",ai:"Claude",
+            in:[["dec","The decision","e.g. take the new position or stay in my current role"],["ctx","What matters to you","e.g. family time, pay, career growth","area"]],
+            f:(x)=>T("a thoughtful, neutral advisor",`Help me think through this decision: ${x.dec}.`,`What matters to me:\n${BLK(x.ctx)}`,["Ask me any key questions first","Lay out the options with pros, cons and risks","Point out anything I may be overlooking","Don't decide for me — help me see it clearly"],"")},
+          {id:"it",n:"Troubleshoot a tech problem",d:"Step-by-step fixes, from most likely to least.",ai:"ChatGPT",
+            in:[["dev","Device / software","e.g. Windows 11 laptop, Outlook"],["prob","The problem","e.g. Outlook won't send — stuck in outbox since update"],["tried","What you've tried (optional)","e.g. restarted",0,1]],
+            f:(x)=>T("an experienced IT support engineer",`Help me fix this problem on ${x.dev}: ${x.prob}.${x.tried?` Already tried: ${x.tried}.`:""}`,"",["Most likely causes first","Numbered steps with exact menu names or commands","Say how to tell if each step worked","Warn me before anything risky"],"")}
+        ]],
+        ["Translate & communicate",[
+          {id:"translate",n:"Translate",d:"Natural translation in the right tone, with notes on tricky parts.",ai:"ChatGPT",
+            in:[["text","Text","Paste the text","area"],["lang","Into which language","e.g. Vietnamese"],["tone","Tone or audience (optional)","e.g. formal, for elderly residents",0,1]],
+            f:(x)=>T("a professional translator",`Translate the text below into ${x.lang||"Vietnamese"}${x.tone?` (${x.tone})`:""}.\n${BLK(x.text)}`,"",["Natural wording, not word-for-word","Keep names, numbers, dates and addresses exact","Note any phrases that don't translate well"],"the translation, then brief notes.")},
+          {id:"public",n:"Public safety message",d:"Clear message for the public — alert, flyer or social post.",ai:"Claude",
+            in:[["what","What people need to know","e.g. cooling center open at the library, 10 AM–8 PM, through Sunday","area"],["where","Where it will go","e.g. text alert and Facebook post"]],
+            f:(x)=>T("a public information officer",`Write a public safety message for ${x.where}.`,BLK(x.what),["Most important action first","Who, what, where, when, and where to get updates","6th-grade reading level; no jargon","Calm, clear tone"],"one version for each channel named.")},
+          {id:"talk",n:"Prepare for a hard conversation",d:"Talking points and likely responses.",ai:"Claude",
+            in:[["who","With whom","e.g. a soldier who keeps missing drill"],["goal","What you want to come out of it","e.g. understand why and agree on a plan"]],
+            f:(x)=>T("an experienced leader and coach",`Help me prepare for a conversation with ${x.who}.`,`My goal: ${x.goal}.`,["Opening lines that set a respectful tone","Key points to make","Likely responses and how to answer them","How to close with clear next steps"],"")}
+        ]]
+      ];
+      const PM={}; TPL.forEach(([,L])=>L.forEach(t=>PM[t.id]=t));
+      const QUICK=["research","factcheck","extract","email","ics213","explain","translate","it"];
+      const d=el(`<div class="toolpane aib">
+        <details class="full dsc-how" open><summary><b>How to use the AI box</b></summary>
+          <ol class="sal-hint i3-steps">
+            <li><b>Start a prompt</b> — pick a <b>template</b> and fill in its blanks, use the <b>step-by-step builder</b>, or just type in the prompt box.</li>
+            <li>Tick any <b>add-ons</b> you want — cite sources, ask me questions first, keep it short, answer in Vietnamese.</li>
+            <li>Check the <b>final prompt</b>, then press an AI. ChatGPT, Claude, Perplexity, Grok and Mistral open with your prompt filled in; the others open and you paste (Ctrl+V / long-press ▸ Paste). Every button also copies the prompt, so you can always paste it.</li>
+            <li>Not happy with the answer? Reply in the chat: <i>“shorter”</i>, <i>“give me sources”</i>, <i>“explain step 3”</i>, <i>“what am I missing?”</i>. The first answer is a draft.</li>
+          </ol>
+          <p class="sal-hint"><b>What makes a prompt work:</b> tell it <b>who to be</b> (“You are a safety officer”), <b>exactly what you want</b>, the <b>background</b> it can't know, any <b>rules</b> (length, what to include or avoid), and the <b>format</b> (bullets, table, email). Paste the actual text rather than describing it. Templates do all this for you.<br>
+          <span class="aib-eg"><b>Weak:</b> “tell me about drones and wildfires”<br><b>Strong:</b> “You are a research analyst. Give me a sourced overview of drone use by wildfire responders in California for a 10-minute brief. Separate facts from claims, include dates. Format: summary, key points, sources with links.”</span></p>
+          <p class="sal-hint"><b>Check the answer:</b> AI can sound sure and still be wrong — names, numbers, dates, laws and quotes especially. Use Perplexity or “cite sources” for facts, and open the sources. <b>Don't paste</b> anything marked FOUO / CUI or classified, fusion-center products, Social Security or card numbers, or other people's personal details — public AIs keep what you type. The box warns you if it spots any.</p>
+        </details>
+        <div class="full aib-tabs ta-steps" role="tablist"><button class="btn on" type="button" data-tab="tpl">Templates</button><button class="btn" type="button" data-tab="build">Build step by step</button><button class="btn" type="button" data-tab="free">Write freely</button></div>
+        <div class="full aib-pane" data-pane="tpl">
+          <div class="sb-quick"><span class="muted" style="font-size:12px">Quick picks:</span> ${QUICK.map(id=>`<button class="btn sb-qb" type="button" data-tpl="${id}">${esc(PM[id].n)}</button>`).join("")}</div>
+          <label class="f full">All templates<select id="ai_tpl" class="fld"><option value="">— choose a template —</option>${TPL.map(([c,L])=>`<optgroup label="${esc(c)}">${L.map(t=>`<option value="${t.id}">${esc(t.n)}</option>`).join("")}</optgroup>`).join("")}</select></label>
+          <div class="sal-hint" id="ai_tdesc"></div>
+          <div id="ai_tin"></div>
+        </div>
+        <div class="full aib-pane" data-pane="build" hidden>
+          <div class="sal-hint">Fill in what you can — each line becomes part of a well-structured prompt.</div>
+          <div class="ta-grid2">
+            <label class="ta-f">Who should the AI be?<span class="hint">A role sets the expertise and tone.</span><input class="fld" data-b="role" placeholder="e.g. an experienced logistics officer" autocomplete="off"></label>
+            <label class="ta-f">What do you want?<span class="hint">One clear task. Start with a verb.</span><input class="fld" data-b="task" placeholder="e.g. Write a checklist for setting up a fuel point" autocomplete="off"></label>
+            <label class="ta-f full">Background it needs<span class="hint">Who it's for, the situation, what you already know. Paste text here too.</span><textarea class="fld" rows="3" data-b="ctx" placeholder="e.g. For a 12-person State Guard team supporting a county fire response. We have 2 tankers and no power at the site."></textarea></label>
+            <label class="ta-f full">Rules<span class="hint">Must include, must avoid, limits. One per line.</span><textarea class="fld" rows="2" data-b="req" placeholder="e.g. Include safety and spill steps&#10;No more than 15 items"></textarea></label>
+            <label class="ta-f">Format<select class="fld" data-b="fmt"><option value="">— any —</option><option>a bulleted list</option><option>numbered steps</option><option>a checklist</option><option>a table</option><option>a short paragraph</option><option>an email with a subject line</option><option>a BLUF memo (bottom line first)</option><option>a briefing outline</option></select></label>
+            <label class="ta-f">Tone<select class="fld" data-b="tone"><option value="">— any —</option><option>plain and simple</option><option>professional</option><option>friendly</option><option>direct, military style</option><option>formal</option></select></label>
+          </div>
+        </div>
+        <div class="full aib-pane" data-pane="free" hidden><div class="sal-hint">Type or paste your prompt in the box below. Tip: say who the AI should be, what you want, the background, and the format.</div></div>
+        <label class="f full">Prompt<span class="hint">Templates and the builder fill this in — edit it as much as you like.</span><textarea id="ai_in" class="fld" rows="7" placeholder="Pick a template above, or type your question here…"></textarea></label>
+        <div class="full"><span class="muted" style="font-size:12px">Add-ons:</span><div class="aib-boost">${BOOST.map(([k,n])=>`<label><input type="checkbox" data-bo="${k}">${esc(n)}</label>`).join("")}</div></div>
+        <div class="full aib-warn" id="ai_warn" hidden></div>
+        <div class="full"><div class="ta-sub" style="margin:4px 0">Final prompt <span class="muted" id="ai_len" style="text-transform:none;letter-spacing:0;font-weight:normal"></span></div><pre class="toolout report aib-out" id="ai_out">—</pre></div>
+        <div class="full"><div class="ta-sub" style="margin:2px 0 4px">Send to <span class="muted" style="text-transform:none;letter-spacing:0;font-weight:normal">— ★ suggested for this template</span></div>
+          <div class="aib-send">${AIS.map(([n,pre])=>`<button class="btn aib-ai" type="button" data-ai="${esc(n)}">${esc(n)}${pre?"":` <small>(paste)</small>`}</button>`).join("")}</div>
+          <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" id="ai_copy">Copy prompt</button><button class="btn" type="button" id="ai_clear">Clear</button><span class="muted" id="ai_msg" role="status"></span></div></div>
+        <details class="full sb-ref"><summary><b>Which AI for what?</b></summary>
+          <div class="sb-tw"><table class="sb-t"><tbody>${AIS.map(([n,pre,,why])=>`<tr><td><b>${esc(n)}</b></td><td>${esc(why)}</td><td>${pre?"Prompt fills in":"Copy & paste"}</td></tr>`).join("")}</tbody></table></div>
+          <div class="sal-hint">Same question, different answers? Try two and compare — where they disagree is usually what you need to check.</div>
+        </details>
+        <div class="full sb-log" id="ai_log"></div>
+      </div>`);
+      host.appendChild(d);
+      const q=(s)=>d.querySelector(s); let cur=null, tv={}, b={}, sugg="";
+      const say=(m,ms=4000)=>{ q("#ai_msg").textContent=m; if(ms) setTimeout(()=>{ if(q("#ai_msg").textContent===m) q("#ai_msg").textContent=""; },ms); };
+      const final=()=>{ const base=q("#ai_in").value.trim(); if(!base) return ""; const add=BOOST.filter(([k])=>q(`[data-bo="${k}"]`).checked).map(x=>"- "+x[2]); return add.length?`${base}\n\nAlso:\n${add.join("\n")}`:base; };
+      // Sensitive-content check — warns, never blocks.
+      const CHK=[[/\b(FOUO|CUI|U\/\/FOUO|LES\b|LAW ENFORCEMENT SENSITIVE|FOR OFFICIAL USE ONLY|CONTROLLED UNCLASSIFIED|SECRET|NOFORN|TOP SECRET)\b/i,"a security marking (FOUO / CUI / classified)",1],[/\b(CIAC|JRIC|NCRIC|fusion cent(er|re))\b/i,"fusion-center material",1],[/\b\d{3}-\d{2}-\d{4}\b/,"what looks like a Social Security number",1],[/\b(?:\d[ -]?){15,16}\b/,"what looks like a card or account number",1],[/\b(DOD ?ID|EDIPI|PIV)\b[^\n]{0,20}\d{8,10}/i,"a DoD ID number",1],[/\b\d{1,5}\s+[A-Za-z0-9 .]{2,30}\s(St|Street|Ave|Avenue|Rd|Road|Blvd|Dr|Drive|Ln|Lane|Ct|Way)\b/i,"a street address",0],[/[\w.+-]+@[\w-]+\.[\w.]+/,"an email address",0],[/\(?\b\d{3}\)?[-. ]\d{3}[-. ]\d{4}\b/,"a phone number",0]];
+      const scan=(t)=>CHK.filter(([re])=>re.test(t));
+      function upd(){
+        const f=final(), hits=scan(f);
+        q("#ai_out").textContent=f||"— pick a template or type a prompt —";
+        q("#ai_len").textContent=f?`— ${f.length.toLocaleString()} characters`:"";
+        const hard=hits.filter(h=>h[2]), soft=hits.filter(h=>!h[2]);
+        q("#ai_warn").hidden=!hits.length;
+        q("#ai_warn").innerHTML=hits.length?`<b>${hard.length?"Stop and check":"Check"}:</b> your prompt contains ${hits.map(h=>esc(h[1])).join(", ")}. ${hard.length?"Don't send official, fusion-center or ID information to a public AI — remove it or describe it in general terms.":"Is it needed? Public AIs keep what you type; use a placeholder like [NAME] or [ADDRESS] if not."}`:"";
+        q("#ai_warn").classList.toggle("hard",!!hard.length);
+        d.querySelectorAll(".aib-ai").forEach(x=>x.classList.toggle("sug",x.dataset.ai===sugg));
+      }
+      function showTpl(id){
+        cur=PM[id]||null; tv={}; q("#ai_tpl").value=cur?cur.id:""; sugg=cur?cur.ai:"";
+        q("#ai_tdesc").innerHTML=cur?`<b>${esc(cur.n)}.</b> ${esc(cur.d)}`:"";
+        q("#ai_tin").innerHTML=cur?`<div class="ta-grid2">${cur.in.map(([k,l,ph,t,opt])=>t==="area"?`<label class="ta-f full">${esc(l)}<textarea class="fld" rows="4" data-tk="${k}" placeholder="${esc(ph)}"></textarea></label>`:`<label class="ta-f">${esc(l)}<input class="fld" data-tk="${k}" placeholder="${esc(ph)}" autocomplete="off"></label>`).join("")}</div>`:"";
+        d.querySelectorAll("[data-tpl]").forEach(x=>x.classList.toggle("on",cur&&x.dataset.tpl===cur.id));
+        applyTpl(); const f=q("#ai_tin .fld"); f&&f.focus({preventScroll:true});
+      }
+      function applyTpl(){
+        if(!cur){ upd(); return; }
+        const x=Object.fromEntries(cur.in.map(([k])=>[k,String(tv[k]||"").trim()]));
+        const ready=cur.in.filter(i=>!i[4]).every(([k])=>x[k]);
+        q("#ai_in").value=ready?cur.f(x):""; upd();
+      }
+      function applyBuild(){
+        const role=(b.role||"").trim().replace(/^(you are|act as)\s+/i,""), task=(b.task||"").trim(); if(!task&&!role&&!(b.ctx||"").trim()){ q("#ai_in").value=""; upd(); return; }
+        const req=(b.req||"").split("\n").map(s=>s.trim()).filter(Boolean); if(b.tone) req.push(`Tone: ${b.tone}`);
+        q("#ai_in").value=T(role,task||"Help me with the following.",(b.ctx||"").trim(),req,b.fmt?b.fmt+".":""); sugg=""; upd();
+      }
+      const LOG=window.__aiLog||(window.__aiLog=[]);
+      const paintLog=()=>{ q("#ai_log").innerHTML=LOG.length?`<div class="ta-sub" style="margin-top:4px">Prompt log <span class="muted" style="text-transform:none;letter-spacing:0;font-weight:normal">— this visit only; nothing is saved</span></div><ol class="sb-ll">${LOG.map(x=>`<li><span class="muted">${esc(x.t)} · ${esc(x.ai)}</span><br><code>${esc(x.p.length>220?x.p.slice(0,220)+"…":x.p)}</code></li>`).join("")}</ol><div class="toolrow"><button class="btn" type="button" id="ai_lcopy">Copy log</button><button class="btn" type="button" id="ai_lclear">Clear log</button></div>`:""; };
+      function send(name){
+        const p=final(); if(!p){ say("Write or build a prompt first."); return; }
+        const hard=scan(p).filter(h=>h[2]);
+        if(hard.length&&!confirm(`Your prompt contains ${hard.map(h=>h[1]).join(", ")}.\n\nPublic AIs keep what you type. Send anyway?`)) return;
+        const A=AIS.find(a=>a[0]===name), enc=encodeURIComponent(p), canFill=A[1]&&enc.length<6000;
+        try{ navigator.clipboard&&navigator.clipboard.writeText(p).catch(()=>{}); }catch(e){}
+        window.open(canFill?A[1]+enc:A[2],"_blank","noopener");
+        say(canFill?`Opened ${name} with your prompt. (Also copied, in case you need to paste.)`:`Copied. ${name} is opening — paste your prompt (Ctrl+V, or long-press ▸ Paste).`,7000);
+        LOG.push({t:plainDT(new Date()),ai:name,p}); paintLog();
+      }
+      d.addEventListener("click",(e)=>{
+        const tb=e.target.closest("[data-tab]"); if(tb){ d.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x===tb)); d.querySelectorAll(".aib-pane").forEach(p=>p.hidden=p.dataset.pane!==tb.dataset.tab); if(tb.dataset.tab==="free"){ sugg=""; upd(); q("#ai_in").focus(); } return; }
+        const tp=e.target.closest("[data-tpl]"); if(tp){ showTpl(tp.dataset.tpl); return; }
+        const ab=e.target.closest("[data-ai]"); if(ab){ send(ab.dataset.ai); return; }
+        if(e.target.id==="ai_copy"){ const p=final(); if(!p){ say("Nothing to copy yet."); return; } icsCopy(p,q("#ai_msg")); return; }
+        if(e.target.id==="ai_clear"){ q("#ai_in").value=""; d.querySelectorAll("[data-tk],[data-b]").forEach(x=>x.value=""); d.querySelectorAll("[data-bo]").forEach(x=>x.checked=false); tv={}; b={}; showTpl(""); return; }
+        if(e.target.id==="ai_lcopy"){ icsCopy(LOG.map((x,i)=>`${i+1}. ${x.t} — ${x.ai}\n${x.p}`).join("\n\n"),q("#ai_msg")); return; }
+        if(e.target.id==="ai_lclear"){ LOG.length=0; paintLog(); return; }
+      });
+      d.addEventListener("input",(e)=>{ const t=e.target;
+        if(t.dataset.tk!==undefined){ tv[t.dataset.tk]=t.value; applyTpl(); }
+        else if(t.dataset.b!==undefined){ b[t.dataset.b]=t.value; applyBuild(); }
+        else upd(); });
+      d.addEventListener("change",(e)=>{ const t=e.target;
+        if(t.id==="ai_tpl"){ showTpl(t.value); }
+        else if(t.dataset.b!==undefined){ b[t.dataset.b]=t.value; applyBuild(); }
+        else if(t.dataset.bo!==undefined) upd(); });
+      paintLog(); upd();
     }
     ,salute(){
       const d=el(`<div class="toolpane">
