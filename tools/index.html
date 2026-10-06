@@ -235,6 +235,14 @@
   .dd-box.sheet .dd-o { padding:11px 14px; font-size:16px; } .dd-box.sheet .dd-o.in { padding-left:26px; }
   .dd-x { background:transparent; border:1px solid var(--lo); color:var(--ink); padding:2px 9px; cursor:pointer; font-size:14px; }
   @media print { .dd-box { display:none !important; } }
+  /* Collapsible directory sections — closed by default; tap the title bar to open */
+  .dir > .bar { cursor:pointer; user-select:none; justify-content:flex-start; }
+  .dir > .bar::before { content:"▸"; width:1em; } .dir.open > .bar::before { content:"▾"; }
+  .dir > .bar:hover { filter:brightness(1.15); } .dir > .bar:focus-visible { outline:2px solid var(--hi); outline-offset:-2px; }
+  .dir:not(.open) > .body { display:none; }
+  .dir-ctl { display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); letter-spacing:.08em; }
+  .dir-ctl span { margin-right:4px; } .dir-ctl .btn { font-size:12px; padding:2px 9px; }
+  @media print { .dir:not(.open) > .body { display:block; } }
   .ta-steps .btn.on { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); }
   .ta-steps .btn:disabled { opacity:.4; cursor:not-allowed; box-shadow:none; }
   .ta-h { font-weight:bold; text-transform:uppercase; letter-spacing:.06em; color:var(--title-ink); font-size:14px; margin:6px 0 2px; border-bottom:1px solid var(--lo); padding-bottom:3px; }
@@ -701,7 +709,8 @@
     </section>
   </div>
 
-  <section class="win" aria-labelledby="t-search">
+  <div class="dir-ctl"><span>DIRECTORY</span><button class="btn" type="button" data-dir-all="1">Expand all</button><button class="btn" type="button" data-dir-all="0">Collapse all</button></div>
+  <section class="win dir" aria-labelledby="t-search">
     <div class="bar"><span id="t-search">SEARCH &amp; LOOKUP</span></div>
     <div class="body">
       <div class="refgroups">
@@ -906,32 +915,7 @@
     </div>
   </section>
 
-  <section class="win" aria-labelledby="t-ai">
-    <div class="bar"><span id="t-ai">AI ASSISTANTS</span></div>
-    <div class="body">
-      <div class="refgroups">
-        <fieldset class="grp"><legend>Chat &amp; models</legend><ul>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://claude.ai/" target="_blank" rel="noopener">Claude</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://grok.com/" target="_blank" rel="noopener">Grok</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://chat.mistral.ai/chat" target="_blank" rel="noopener">Mistral</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.perplexity.ai/" target="_blank" rel="noopener">Perplexity</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://copilot.microsoft.com/" target="_blank" rel="noopener">Microsoft Copilot</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://duck.ai/" target="_blank" rel="noopener">Duck.ai (private, no account)</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.meta.ai/" target="_blank" rel="noopener">Meta AI</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://lumo.proton.me/" target="_blank" rel="noopener">Lumo (Proton)</a></li>
-        </ul></fieldset>
-        <fieldset class="grp"><legend>AI resources</legend><ul>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://deepmind.google/blog/" target="_blank" rel="noopener">DeepMind blog</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.promptcowboy.ai/" target="_blank" rel="noopener">PromptCowboy</a></li>
-        </ul></fieldset>
-      </div>
-    </div>
-  </section>
-
-  <section class="win" aria-labelledby="t-toolbox">
+  <section class="win dir" aria-labelledby="t-toolbox">
     <div class="bar"><span id="t-toolbox">TOOLBOX</span></div>
     <div class="body">
       <div class="refgroups">
@@ -985,7 +969,7 @@
     </div>
   </section>
 
-  <section class="win" aria-labelledby="t-training">
+  <section class="win dir" aria-labelledby="t-training">
     <div class="bar"><span id="t-training">TRAINING</span></div>
     <div class="body">
       <div class="refgroups">
@@ -1013,7 +997,7 @@
     </div>
   </section>
 
-  <section class="win" aria-labelledby="t-intel">
+  <section class="win dir" aria-labelledby="t-intel">
     <div class="bar"><span id="t-intel">INTEL</span></div>
     <div class="body">
       <div class="refgroups">
@@ -1038,7 +1022,8 @@
     </div>
   </section>
 
-  <section class="win" aria-label="Reference links">
+  <section class="win dir" aria-labelledby="t-reflinks">
+    <div class="bar"><span id="t-reflinks">REFERENCE LINKS</span></div>
     <div class="body"><div class="refgroups" id="reflinks"></div></div>
   </section>
 
@@ -6879,6 +6864,17 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   });
   // If the page re-renders and the dropdown disappears, close the list.
   setInterval(()=>{ if(box&&sel&&!document.body.contains(sel)) close(false); },500);
+})();
+</script>
+<script>
+// Directory sections collapse to their title bar (closed by default). The site finder still searches every link.
+(function(){
+  const secs=[...document.querySelectorAll("section.dir")];
+  const set=(s,open)=>{ s.classList.toggle("open",open); const b=s.querySelector(":scope > .bar"); if(b) b.setAttribute("aria-expanded",String(open)); };
+  secs.forEach(s=>{ const b=s.querySelector(":scope > .bar"); if(!b) return; b.setAttribute("role","button"); b.setAttribute("tabindex","0"); b.title="Show or hide this section"; set(s,false);
+    b.addEventListener("click",()=>set(s,!s.classList.contains("open")));
+    b.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); set(s,!s.classList.contains("open")); } }); });
+  document.addEventListener("click",(e)=>{ const a=e.target.closest("[data-dir-all]"); if(a) secs.forEach(s=>set(s,a.dataset.dirAll==="1")); });
 })();
 </script>
 </body>
