@@ -6897,13 +6897,14 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
 // so every dropdown on the page opens this dark list instead. The real <select> stays in place and keeps its value,
 // so every form, save file and report works exactly as before; choosing an item fires the normal input/change events.
 (function(){
-  let box=null, sel=null, opts=[], act=-1, typed="", typedT=0;
+  let box=null, sel=null, opts=[], act=-1, typed="", typedT=0, viaTouch=false;
   const esc=(s)=>String(s??"").replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const usable=(s)=>s&&s.tagName==="SELECT"&&!s.multiple&&!s.disabled&&!(s.size>1)&&!s.closest("[data-native-select]");
   function close(focus){
     if(!box) return; box.remove(); box=null; document.removeEventListener("keydown",onKey,true);
     window.removeEventListener("resize",reposition); window.removeEventListener("scroll",onScroll,true);
-    const s=sel; sel=null; if(focus&&s) s.focus({preventScroll:true});
+    // Never hand focus back to the dropdown after a touch: on iPhone that opens Apple's own picker as a second menu.
+    const s=sel; sel=null; if(focus&&s&&!viaTouch) s.focus({preventScroll:true});
   }
   function choose(i){
     const o=opts[i]; if(!o||o.disabled) return;
@@ -6959,19 +6960,19 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   document.addEventListener("mousedown",(e)=>{
     if(box&&!box.contains(e.target)&&e.target!==sel) close(false);
     const s=e.target.closest&&e.target.closest("select"); if(e.button!==0||!usable(s)) return;
-    e.preventDefault(); s.focus({preventScroll:true}); if(box&&sel===s) close(false); else open(s);
+    e.preventDefault(); viaTouch=false; s.focus({preventScroll:true}); if(box&&sel===s) close(false); else open(s);
   },true);
   // Touch: a tap (not a scroll) opens the themed list as a sheet; stops the phone's white picker.
   let tStart=null;
   document.addEventListener("touchstart",(e)=>{ const s=e.target.closest&&e.target.closest("select"); tStart=usable(s)?{s,x:e.touches[0].clientX,y:e.touches[0].clientY}:null; if(box&&!box.contains(e.target)&&!s) close(false); },{passive:true,capture:true});
   document.addEventListener("touchend",(e)=>{
     if(!tStart) return; const t=e.changedTouches[0], s=tStart.s; const moved=Math.abs(t.clientX-tStart.x)>10||Math.abs(t.clientY-tStart.y)>10; tStart=null;
-    if(moved) return; e.preventDefault(); open(s);
+    if(moved) return; e.preventDefault(); viaTouch=true; if(document.activeElement===s) s.blur(); open(s);
   },{passive:false,capture:true});
   // Keyboard on a focused dropdown: Enter, Space, Alt+Down or F4 opens the themed list. Plain arrows still change the value directly.
   document.addEventListener("keydown",(e)=>{
     if(box) return; const s=e.target; if(!usable(s)) return;
-    if(e.key==="Enter"||e.key===" "||e.key==="F4"||(e.altKey&&(e.key==="ArrowDown"||e.key==="ArrowUp"))){ e.preventDefault(); open(s); }
+    if(e.key==="Enter"||e.key===" "||e.key==="F4"||(e.altKey&&(e.key==="ArrowDown"||e.key==="ArrowUp"))){ e.preventDefault(); viaTouch=false; open(s); }
   });
   // If the page re-renders and the dropdown disappears, close the list.
   setInterval(()=>{ if(box&&sel&&!document.body.contains(sel)) close(false); },500);
