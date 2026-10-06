@@ -1,30 +1,49 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="amber">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Inter-Q Tools</title>
 <meta name="robots" content="noindex,nofollow">
 <style>
-  /* The Matrix: green code rain on black, phosphor-green monospace UI. */
+  /* Terminal UI on black, amber (day) or red (night) — see the theme palettes below. */
   :root {
     color-scheme: dark;
-    --ground:#000; --win:#0d2516; --ink:#4dff88; --ink-dim:#4fbf74;
-    --hi:#4dff88; --lo:#1f9a50;
-    --title-a:#0c3f1d; --title-b:#082a13; --title-ink:#9dffbe;
-    --well:#06140c; --phosphor:#4dff88;
-    --ok:#4dff88; --ok-bg:#0a4417; --warn:#ffd21a; --warn-bg:#3c3009; --crit:#ff6b6b; --crit-bg:#431010;
-    --link:#78ffa0;
     --font-ui:"Courier New",Consolas,"Lucida Console",monospace;
     --font-mono:"Courier New",Consolas,"Lucida Console",monospace;
   }
+  /* Display themes. Amber (default): readable in daylight and easier on night vision than green.
+     Red: night mode — dimmer, long-wavelength light that best preserves dark adaptation. */
+  :root, :root[data-theme="amber"] {
+    --ground:#000; --win:#1f1604; --ink:#ffb000; --ink-dim:#d39a2c;
+    --hi:#ffb000; --lo:#9a6a10;
+    --title-a:#3d2a05; --title-b:#2a1d03; --title-ink:#ffd27a;
+    --well:#130c02; --phosphor:#ffb000;
+    --ok:#ffb000; --ok-bg:#4a3306; --warn:#fff07a; --warn-bg:#3d3608; --crit:#ff6b6b; --crit-bg:#431010;
+    --link:#ffc94d;
+    --rule:#4a3410; --bright:#ffe0a0; --edge:#b07a15; --btn:#2a1c04; --btn-hi:#3d2a06; --btn-act:#4a3300; --on-ink:#1a1000;
+    --glow:255,170,0;
+  }
+  :root[data-theme="red"] {
+    --ground:#000; --win:#160403; --ink:#e0382c; --ink-dim:#a8342a;
+    --hi:#e0382c; --lo:#7a1d16;
+    --title-a:#330907; --title-b:#220504; --title-ink:#f06a5c;
+    --well:#0d0201; --phosphor:#e0382c;
+    --ok:#e0382c; --ok-bg:#3a0a07; --warn:#ff8f7a; --warn-bg:#3d1208; --crit:#ffa39a; --crit-bg:#5c0e0a;
+    --link:#f2685a;
+    --rule:#3a0d0a; --bright:#ff7a6e; --edge:#8f241c; --btn:#220604; --btn-hi:#360a07; --btn-act:#450c08; --on-ink:#140100;
+    --glow:255,40,25;
+  }
+  .theme-sw { display:inline-flex; border:1px solid var(--lo); flex:none; }
+  .theme-sw button { background:transparent; color:var(--ink-dim); border:0; padding:4px 10px; cursor:pointer; font-size:13px; font-family:var(--font-ui); }
+  .theme-sw button[aria-pressed="true"] { background:var(--ink); color:var(--on-ink); font-weight:bold; text-shadow:none; }
   * { box-sizing:border-box; }
   [hidden] { display:none !important; }
   body {
     margin:0; padding:16px; min-height:100vh;
     background:#000;
     color:var(--phosphor); font-family:var(--font-ui); font-size:16.5px;
-    text-shadow:0 0 3px rgba(0,255,110,.35);
+    text-shadow:0 0 3px rgba(var(--glow),.35);
   }
   .wrap { position:relative; z-index:1; max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
   a { color:var(--link); }
@@ -32,17 +51,30 @@
   .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
 
   /* green scanline divider */
-  hr.rainbow { border:0; height:1px; margin:2px 0; background:var(--ink); box-shadow:0 0 6px rgba(0,255,100,.7); }
+  hr.rainbow { border:0; height:1px; margin:2px 0; background:var(--ink); box-shadow:0 0 6px rgba(var(--glow),.7); }
 
-  .top { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:12px; }
-  .clock { font-family:var(--font-mono); text-align:right; font-size:15px; line-height:1.5; font-variant-numeric:tabular-nums; color:var(--ink); text-shadow:0 0 6px rgba(0,255,100,.6); }
-  .clock b { color:#aaffc8; }
+  .top { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; }
+  /* site finder (upper left) */
+  .finder { position:relative; flex:1 1 280px; max-width:420px; min-width:0; }
+  .finder .fld { width:100%; font-size:15px; padding:6px 8px; }
+  .finder-res { position:absolute; z-index:50; left:0; right:0; top:calc(100% + 2px); background:var(--win); border:1px solid var(--edge); box-shadow:0 10px 24px rgba(0,0,0,.8), 0 0 18px rgba(var(--glow),.18); max-height:min(60vh,420px); overflow:auto; }
+  .finder-res a { display:block; padding:6px 9px; border-bottom:1px dotted var(--rule); text-decoration:none; color:var(--link); }
+  .finder-res a .fs { display:block; font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.06em; }
+  .finder-res a.on, .finder-res a:hover { background:var(--btn-hi); }
+  .finder-res .fnone { padding:8px 9px; color:var(--ink-dim); font-size:13px; }
+  .clock { margin-left:auto; }
+  .wxu-wrap { display:flex; align-items:center; gap:8px; }
+  .wxu { display:inline-flex; border:1px solid var(--lo); }
+  .wxu button { background:transparent; color:var(--ink-dim); border:0; padding:0 7px; cursor:pointer; font-size:12px; letter-spacing:0; text-transform:none; line-height:1.6; }
+  .wxu button[aria-pressed="true"] { background:var(--ink); color:var(--on-ink); font-weight:bold; text-shadow:none; }
+  .clock { font-family:var(--font-mono); text-align:right; font-size:15px; line-height:1.5; font-variant-numeric:tabular-nums; color:var(--ink); text-shadow:0 0 6px rgba(var(--glow),.6); }
+  .clock b { color:var(--bright); }
 
   /* glowing terminal panel — lifted off the black for readability */
   .win { background:var(--win); color:var(--ink); padding:0; display:flex; flex-direction:column; min-width:0;
-    border:1px solid #27b35e; border-radius:3px;
-    box-shadow:0 10px 24px rgba(0,0,0,.7), 0 0 0 1px rgba(0,255,120,.12), 0 0 18px rgba(0,255,110,.14); }
-  .bar { background:linear-gradient(90deg,var(--title-a),var(--title-b)); color:var(--title-ink); font-weight:bold; font-size:14px; padding:5px 9px; display:flex; justify-content:space-between; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:.08em; border-bottom:1px solid #27b35e; text-shadow:0 0 6px rgba(0,255,120,.6); }
+    border:1px solid var(--edge); border-radius:3px;
+    box-shadow:0 10px 24px rgba(0,0,0,.7), 0 0 0 1px rgba(var(--glow),.12), 0 0 18px rgba(var(--glow),.14); }
+  .bar { background:linear-gradient(90deg,var(--title-a),var(--title-b)); color:var(--title-ink); font-weight:bold; font-size:14px; padding:5px 9px; display:flex; justify-content:space-between; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:.08em; border-bottom:1px solid var(--edge); text-shadow:0 0 6px rgba(var(--glow),.6); }
   .bar .ts { font-weight:normal; font-family:var(--font-mono); font-size:12px; opacity:.9; }
   .body { padding:12px; display:flex; flex-direction:column; gap:8px; min-width:0; }
   .well { background:var(--well); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); padding:8px; min-width:0; overflow-x:auto; }
@@ -72,7 +104,7 @@
 
   table { border-collapse:collapse; width:100%; font-size:15px; }
   th { text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-dim); padding:2px 6px 4px 0; border-bottom:1px solid var(--lo); }
-  td { padding:4px 6px 4px 0; border-bottom:1px dotted #0c3a1e; vertical-align:top; }
+  td { padding:4px 6px 4px 0; border-bottom:1px dotted var(--rule); vertical-align:top; }
   td.n { font-family:var(--font-mono); text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
   tr.hot td { background:var(--warn-bg); } tr.crit td { background:var(--crit-bg); }
   .alert { border-left:6px solid var(--warn); padding:4px 8px; background:var(--warn-bg); }
@@ -81,22 +113,22 @@
 
   /* retro grouped reference links */
   .refgroups { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr)); gap:14px 16px; }
-  fieldset.grp { border:1px solid var(--lo); margin:0; padding:10px 12px 12px; background:rgba(0,255,90,.03); min-width:0; }
+  fieldset.grp { border:1px solid var(--lo); margin:0; padding:10px 12px 12px; background:rgba(var(--glow),.03); min-width:0; }
   fieldset.grp legend { font-weight:bold; font-size:12px; text-transform:uppercase; letter-spacing:.08em; padding:0 6px; color:var(--title-ink); font-family:var(--font-ui); }
   fieldset.grp ul { list-style:none; margin:0; padding:0; }
-  fieldset.grp li { display:flex; gap:6px; align-items:baseline; padding:3px 0; border-bottom:1px dotted #0c3a1e; }
+  fieldset.grp li { display:flex; gap:6px; align-items:baseline; padding:3px 0; border-bottom:1px dotted var(--rule); }
   fieldset.grp li:last-child { border-bottom:0; }
   fieldset.grp li .mk { font-family:var(--font-mono); color:var(--ink-dim); font-size:12px; }
   a.reflink { font-size:15px; }
   a.reflink::after { content:" \2197"; font-size:12px; color:var(--ink-dim); }
 
-  .btn { background:#06220f; color:var(--ink); cursor:pointer; padding:4px 12px; font-family:var(--font-ui);
-    border:1px solid var(--lo); text-shadow:0 0 6px rgba(0,255,100,.5); }
-  .btn:hover { background:#0a3a1a; box-shadow:0 0 10px rgba(0,255,90,.4); }
-  .btn:active { background:#042; box-shadow:inset 0 0 8px rgba(0,255,90,.5); }
+  .btn { background:var(--btn); color:var(--ink); cursor:pointer; padding:4px 12px; font-family:var(--font-ui);
+    border:1px solid var(--lo); text-shadow:0 0 6px rgba(var(--glow),.5); }
+  .btn:hover { background:var(--btn-hi); box-shadow:0 0 10px rgba(var(--glow),.4); }
+  .btn:active { background:var(--btn-act); box-shadow:inset 0 0 8px rgba(var(--glow),.5); }
   .btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible { outline:1px dotted var(--ink); outline-offset:2px; }
 
-  .foot { font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); text-align:center; line-height:1.6; text-shadow:0 0 5px rgba(0,255,90,.4); }
+  .foot { font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); text-align:center; line-height:1.6; text-shadow:0 0 5px rgba(var(--glow),.4); }
   .foot a { color:var(--link); }
 
   /* SITREP report */
@@ -157,21 +189,21 @@
   .ta-banner small { display:block; font-weight:normal; font-size:13px; margin-top:2px; }
   .ta-steps { display:flex; flex-wrap:wrap; gap:4px; }
   .ta-steps .btn { font-size:12px; padding:3px 7px; }
-  .ta-steps .btn.on { background:var(--ok-bg); border-color:var(--hi); color:#aaffc8; }
+  .ta-steps .btn.on { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); }
   .ta-steps .btn:disabled { opacity:.4; cursor:not-allowed; box-shadow:none; }
   .ta-h { font-weight:bold; text-transform:uppercase; letter-spacing:.06em; color:var(--title-ink); font-size:14px; margin:6px 0 2px; border-bottom:1px solid var(--lo); padding-bottom:3px; }
   .ta-sub { font-weight:bold; text-transform:uppercase; letter-spacing:.05em; color:var(--title-ink); font-size:12.5px; margin:12px 0 0; }
-  .ta-q { border-bottom:1px dotted #0c3a1e; padding:8px 0; display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .ta-q { border-bottom:1px dotted var(--rule); padding:8px 0; display:flex; flex-direction:column; gap:6px; min-width:0; }
   .ta-q:last-child { border-bottom:0; }
   .ta-q .qt { font-size:15px; }
-  .ta-q .qt b { color:#aaffc8; }
+  .ta-q .qt b { color:var(--bright); }
   .ta-q .qd { font-size:13px; color:var(--ink-dim); }
   .ta-in { width:100%; }
   textarea.ta-in { min-height:64px; resize:vertical; }
   .seg { display:flex; flex-wrap:wrap; gap:4px; }
-  .seg label { display:inline-flex; align-items:center; gap:5px; border:1px solid var(--lo); padding:3px 9px; cursor:pointer; font-size:13px; background:#06220f; }
-  .seg input { accent-color:#4dff88; margin:0; }
-  .seg label:has(input:checked) { background:var(--ok-bg); border-color:var(--hi); color:#aaffc8; }
+  .seg label { display:inline-flex; align-items:center; gap:5px; border:1px solid var(--lo); padding:3px 9px; cursor:pointer; font-size:13px; background:var(--btn); }
+  .seg input { accent-color:var(--ink); margin:0; }
+  .seg label:has(input:checked) { background:var(--ok-bg); border-color:var(--hi); color:var(--bright); }
   .seg label.hot:has(input:checked) { background:var(--warn-bg); border-color:var(--warn); color:var(--warn); }
   .seg label.sev:has(input:checked) { background:var(--crit-bg); border-color:var(--crit); color:var(--crit); }
   .ta-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px 10px; }
@@ -182,14 +214,14 @@
   .ta-nav { display:flex; justify-content:space-between; gap:8px; margin-top:10px; flex-wrap:wrap; }
   .ta-tally { display:flex; flex-wrap:wrap; gap:6px; }
   .ta-level { display:flex; flex-direction:column; gap:6px; }
-  .ta-level label { display:grid; grid-template-columns:auto 1fr; gap:2px 8px; border:1px solid var(--lo); padding:6px 9px; cursor:pointer; background:#06220f; }
-  .ta-level label input { grid-row:1/3; margin-top:3px; accent-color:#4dff88; }
+  .ta-level label { display:grid; grid-template-columns:auto 1fr; gap:2px 8px; border:1px solid var(--lo); padding:6px 9px; cursor:pointer; background:var(--btn); }
+  .ta-level label input { grid-row:1/3; margin-top:3px; accent-color:var(--ink); }
   .ta-level label b.crit { color:var(--crit); } .ta-level label b.warn { color:var(--warn); } .ta-level label b.ok { color:var(--ok); }
   .ta-level label span { font-size:13px; color:var(--ink-dim); }
   .ta-level label:has(input:checked) { background:var(--ok-bg); border-color:var(--hi); }
-  .ta-mg { border-bottom:1px dotted #0c3a1e; padding:7px 0; }
+  .ta-mg { border-bottom:1px dotted var(--rule); padding:7px 0; }
   .ta-mg > label { display:flex; gap:8px; align-items:flex-start; cursor:pointer; }
-  .ta-mg > label input { margin-top:4px; accent-color:#4dff88; }
+  .ta-mg > label input { margin-top:4px; accent-color:var(--ink); }
   .ta-mg > label span { font-size:13px; color:var(--ink-dim); display:block; }
   .ta-mg .ta-grid2 { margin:6px 0 0 24px; }
   .ta-iv { border:1px solid var(--lo); padding:8px; margin-top:8px; }
@@ -200,7 +232,7 @@
   .rep-note { margin-top:10px; font-size:12px; }
   .cp-task { border-left:2px solid var(--lo); padding:4px 0 4px 10px; margin-top:8px; }
   .sd-sec { margin-top:12px; }
-  .os-task { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:8px; align-items:start; border-bottom:1px dotted #0c3a1e; padding:7px 0; }
+  .os-task { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:8px; align-items:start; border-bottom:1px dotted var(--rule); padding:7px 0; }
   .os-tl { display:flex; gap:8px; align-items:flex-start; min-width:0; }
   .os-tl .btn { white-space:nowrap; flex:none; }
   .os-nob { opacity:.55; cursor:default; }
@@ -216,43 +248,43 @@
   .rs .rs-prev canvas { max-width:100%; max-height:70vh; border:1px solid currentColor; background:#fff; }
   .rs .rs-fname { font-weight:bold; overflow-wrap:anywhere; margin-bottom:6px; }
   .rs .rs-w { padding:6px 8px; margin:4px 0; border:1px solid currentColor; font-size:13px; }
-  .rs .rs-w.bad { color:#ff6b6b; } .rs .rs-w.warn { color:#ffd166; } .rs .rs-w.ok { color:#4dff88; }
-  .rs .rs-sec { border:1px solid rgba(77,255,136,.35); padding:6px 10px; }
+  .rs .rs-w.bad { color:var(--crit); } .rs .rs-w.warn { color:var(--warn); } .rs .rs-w.ok { color:var(--ok); }
+  .rs .rs-sec { border:1px solid rgba(var(--glow),.35); padding:6px 10px; }
   .rs .rs-sec summary { cursor:pointer; font-weight:bold; }
   .rs .rs-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px; margin-top:8px; }
-  .rs .rs-vrow { display:flex; justify-content:space-between; gap:8px; align-items:center; padding:4px 0; border-bottom:1px dashed rgba(77,255,136,.25); overflow-wrap:anywhere; }
+  .rs .rs-vrow { display:flex; justify-content:space-between; gap:8px; align-items:center; padding:4px 0; border-bottom:1px dashed rgba(var(--glow),.25); overflow-wrap:anywhere; }
   .rs .rs-vrow > span { min-width:0; }
   .rs .rs-qr { display:flex; justify-content:center; margin:8px 0; } .rs .rs-qr img, .rs .rs-qr canvas { background:#fff; padding:8px; }
   .rs .rs-help { margin:6px 0 0 18px; padding:0; } .rs .rs-help li { margin:4px 0; overflow-wrap:anywhere; }
   .rs, .rs .rs-sec, .rs details { min-width:0; max-width:100%; } .rs .toolrow > * { max-width:100%; }
   .rs #rsLink { width:100%; margin-top:6px; }
   @media (max-width:600px){ .rs input.fld, .rs select.fld { font-size:16px; } }
-  .sd-stop { display:block; margin-top:8px; padding:6px 8px; border:1px solid #ff6b6b; color:#ff9b9b; }
-  .ops-rk { margin:8px 0; border:1px dashed rgba(77,255,136,.35); padding:6px 10px; } .ops-rk summary { cursor:pointer; }
+  .sd-stop { display:block; margin-top:8px; padding:6px 8px; border:1px solid var(--crit); color:var(--crit); }
+  .ops-rk { margin:8px 0; border:1px dashed rgba(var(--glow),.35); padding:6px 10px; } .ops-rk summary { cursor:pointer; }
   .ops-matrix { overflow-x:auto; margin:8px 0; }
-  .ops-mt { border-collapse:collapse; width:100%; font-size:12px; } .ops-mt th, .ops-mt td { border:1px solid rgba(77,255,136,.35); padding:3px 6px; text-align:left; vertical-align:top; } .ops-mt td:nth-child(n+3), .ops-mt th:nth-child(n+3) { text-align:center; white-space:nowrap; }
+  .ops-mt { border-collapse:collapse; width:100%; font-size:12px; } .ops-mt th, .ops-mt td { border:1px solid rgba(var(--glow),.35); padding:3px 6px; text-align:left; vertical-align:top; } .ops-mt td:nth-child(n+3), .ops-mt th:nth-child(n+3) { text-align:center; white-space:nowrap; }
   .ta-grid3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
   @media (max-width:520px){ .ta-grid3 { grid-template-columns:1fr; } }
   .ln-chk { display:flex; flex-direction:column; gap:6px; }
-  .ln-ci { display:grid; grid-template-columns:92px minmax(0,1fr); gap:8px; align-items:start; padding:4px 0; border-bottom:1px dashed rgba(77,255,136,.2); }
+  .ln-ci { display:grid; grid-template-columns:92px minmax(0,1fr); gap:8px; align-items:start; padding:4px 0; border-bottom:1px dashed rgba(var(--glow),.2); }
   .lna .sd-row textarea, .lna .sd-row input { min-width:0; }
   @media (max-width:600px){ .lna input.fld, .lna select.fld, .lna textarea.fld { font-size:16px; } .lna .sd-row { grid-template-columns:1fr auto !important; } .lna .sd-row > :not(button) { grid-column:1; } .lna .sd-row > button { grid-column:2; grid-row:1; } }
-  select.fld option, select.fld optgroup { background-color:#06140c; color:#9dffbe; }
-  select.fld optgroup { color:#4fbf74; font-style:normal; font-weight:bold; }
-  select.fld option:checked { background-color:#0a4417; color:#d8ffe6; }
-  select.fld option:disabled { color:#2f7a4a; }
+  select.fld option, select.fld optgroup { background-color:var(--well); color:var(--title-ink); }
+  select.fld optgroup { color:var(--ink-dim); font-style:normal; font-weight:bold; }
+  select.fld option:checked { background-color:var(--ok-bg); color:var(--bright); }
+  select.fld option:disabled { color:var(--lo); }
   .dsc-ov { position:fixed; inset:0; background:rgba(0,0,0,.72); z-index:1000; display:flex; justify-content:center; align-items:flex-start; padding:16px; overflow-y:auto; }
-  .dsc-box { background:var(--win); border:2px solid var(--hi); width:min(760px,100%); padding:12px 14px; box-shadow:0 0 24px rgba(77,255,136,.25); }
-  .dsc-how { border:1px dashed rgba(77,255,136,.35); padding:6px 10px; margin-bottom:8px; } .dsc-how summary { cursor:pointer; }
+  .dsc-box { background:var(--win); border:2px solid var(--hi); width:min(760px,100%); padding:12px 14px; box-shadow:0 0 24px rgba(var(--glow),.25); }
+  .dsc-how { border:1px dashed rgba(var(--glow),.35); padding:6px 10px; margin-bottom:8px; } .dsc-how summary { cursor:pointer; }
   .dsc-tabs { margin:6px 0; }
   .dsc-out { white-space:pre-wrap; overflow-wrap:anywhere; min-height:3em; }
   @media (max-width:600px){ .dsc input.fld, .dsc select.fld { font-size:16px; } .dsc-ov { padding:6px; } }
   @media print { .dsc-ov { display:none !important; } }
   .drt-bar { height:6px; border:1px solid var(--lo); margin:6px 0 10px; } .drt-bar > div { height:100%; background:var(--hi); width:0; transition:width .2s; }
   .drt-filters { gap:8px; } .drt-filters > .fld { flex:1 1 180px; min-width:0; } .drt-rc { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-dim); }
-  .drt-list { max-height:70vh; overflow-y:auto; overscroll-behavior:contain; border:1px solid rgba(77,255,136,.25); padding:0 8px; }
+  .drt-list { max-height:70vh; overflow-y:auto; overscroll-behavior:contain; border:1px solid rgba(var(--glow),.25); padding:0 8px; }
   @media print { .drt-list { max-height:none; overflow:visible; } }
-  .drt-row { border-bottom:1px dashed rgba(77,255,136,.25); padding:8px 0; } .drt-row.done .drt-name b { color:var(--ink-dim); text-decoration:line-through; text-decoration-color:rgba(77,255,136,.5); }
+  .drt-row { border-bottom:1px dashed rgba(var(--glow),.25); padding:8px 0; } .drt-row.done .drt-name b { color:var(--ink-dim); text-decoration:line-through; text-decoration-color:rgba(var(--glow),.5); }
   .drt-h { display:flex; justify-content:space-between; gap:8px; align-items:flex-start; } .drt-name { min-width:0; overflow-wrap:anywhere; } .drt-act { display:flex; gap:6px; flex-shrink:0; } .drt-act .btn { text-decoration:none; }
   .drt-star { color:var(--warn); }
   .drt-f { display:grid; grid-template-columns:minmax(150px,1.1fr) auto auto minmax(140px,2fr); gap:6px; margin-top:6px; align-items:end; }
@@ -262,6 +294,10 @@
   .os-selrow { display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
   .os-selv, .osa .ta-iv { min-width:0; overflow-wrap:anywhere; }
   .osa .ta-tally .pill { white-space:normal; overflow-wrap:anywhere; max-width:100%; }
+  .os-cp { display:inline-block; margin:2px 6px 2px 0; padding:1px 8px; font-size:12px; max-width:100%; overflow-wrap:anywhere; text-align:left; }
+  .os-cp::after { content:" \29C9"; opacity:.7; }
+  .os-cp.ok::after { content:" \2713"; opacity:1; }
+  .os-cprow { margin-top:6px; }
   .os-pivot { margin-top:12px; }
   .os-pivot .fld { min-width:0; }
   @media (max-width:520px){ .os-task { grid-template-columns:1fr; } .os-tr { grid-template-columns:1fr 1fr; } .os-tr .btn { grid-column:1/-1; } .os-pivot .sal-row { flex-wrap:wrap; } }
@@ -281,7 +317,7 @@
   #icsPrint .sd-right { text-align:right; font-size:10pt; margin-bottom:6pt; }
   #icsPrint .sd-sign { margin:16pt 0 6pt 55%; }
   #icsPrint div.sd-pl { margin:6pt 0 2pt 12pt; }
-  .cp-tn { color:#aaffc8; font-size:13px; }
+  .cp-tn { color:var(--bright); font-size:13px; }
   .cp-ind > .fld { margin-top:4px; }
   /* ICS forms */
   .ics-sec { grid-column:1/-1; margin-top:6px; padding-top:6px; border-top:1px dashed var(--lo); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--title-ink); }
@@ -304,6 +340,9 @@
   #icsPrint .pmark { text-align:center; font-weight:bold; border:1.5pt solid #000; padding:3pt; letter-spacing:.06em; margin:0 0 8pt; }
   #icsPrint .pmark.end { margin:10pt 0 0; }
   #icsPrint table.f { width:100%; border-collapse:collapse; table-layout:fixed; }
+  #icsPrint h3.os-sec { font-size:10.5pt; margin:8pt 0 4pt; break-after:avoid; page-break-after:avoid; }
+  #icsPrint table.os-ft a { color:#0563C1 !important; text-decoration:underline; }
+  #icsPrint table.os-ft tr { break-inside:avoid; page-break-inside:avoid; }
   #icsPrint table.f td, #icsPrint table.f th { border:1pt solid #000; padding:3pt 5pt; vertical-align:top; text-align:left; background:#fff; }
   #icsPrint .ttl { font-size:13pt; font-weight:bold; text-align:center; padding:5pt; }
   #icsPrint .lb { display:block; font-size:7.5pt; font-weight:bold; margin-bottom:2pt; }
@@ -386,9 +425,18 @@
 <div class="wrap">
 
   <div class="top">
+    <div class="finder" role="search">
+      <label class="sr" for="finderIn">Find a site in the directory</label>
+      <input class="fld" id="finderIn" type="search" placeholder="Find a site (court, whois…)" autocomplete="off" spellcheck="false" aria-controls="finderRes" aria-expanded="false">
+      <div class="finder-res" id="finderRes" role="listbox" hidden></div>
+    </div>
+    <div class="theme-sw" role="group" aria-label="Display color">
+      <button type="button" data-theme-set="amber" aria-pressed="true" title="Amber — best for daylight">&#9728; Amber</button>
+      <button type="button" data-theme-set="red" aria-pressed="false" title="Red — night mode, protects night vision">&#9790; Red</button>
+    </div>
     <div class="clock" aria-live="off">
-      <div><b id="dtgL">------</b></div>
-      <div id="dtgZ">------</div>
+      <div><b id="dtgL">&nbsp;</b></div>
+      <div id="dtgZ">&nbsp;</div>
     </div>
   </div>
 
@@ -567,7 +615,7 @@
       <div class="body" id="events"><div class="muted">Loading…</div></div>
     </section>
     <section class="win" aria-labelledby="t-wx">
-      <div class="bar"><span id="t-wx">Weather</span><span class="ts" id="ts-wx"></span></div>
+      <div class="bar"><span id="t-wx">Weather</span><span class="wxu-wrap"><span class="wxu" role="group" aria-label="Temperature units"><button type="button" data-wxu="F" aria-pressed="false">°F</button><button type="button" data-wxu="C" aria-pressed="false">°C</button></span><span class="ts" id="ts-wx"></span></span></div>
       <div class="body" id="wx"><div class="muted">Loading…</div></div>
     </section>
     <section class="win" aria-labelledby="t-aqi">
@@ -578,12 +626,8 @@
       <div class="bar"><span id="t-eq">Earthquakes · 500 km, 7 days</span><span class="ts" id="ts-eq"></span></div>
       <div class="body" id="eq"><div class="muted">Loading…</div></div>
     </section>
-    <section class="win" aria-labelledby="t-space">
-      <div class="bar"><span id="t-space">Space weather</span><span class="ts" id="ts-space"></span></div>
-      <div class="body" id="space"><div class="muted">Loading…</div></div>
-    </section>
     <section class="win" aria-labelledby="t-sun">
-      <div class="bar"><span id="t-sun">Sun &amp; ISS</span><span class="ts" id="ts-sun"></span></div>
+      <div class="bar"><span id="t-sun">Sunrise &amp; sunset</span><span class="ts" id="ts-sun"></span></div>
       <div class="body" id="sun"><div class="muted">Loading…</div></div>
     </section>
     <section class="win" id="win-nws" aria-labelledby="t-nws" hidden>
@@ -650,8 +694,6 @@
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://sam.gov/search/" target="_blank" rel="noopener">SAM.gov (contractors/exclusions)</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://find-and-update.company-information.service.gov.uk/" target="_blank" rel="noopener">UK Companies House (companies &amp; directors)</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://e-justice.europa.eu/topics/registers-business-insolvency-land/business-registers-search-company-eu_en" target="_blank" rel="noopener">EU business registers (e-Justice)</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://ised-isde.canada.ca/cc/lgcy/fdrlCrpSrch.html" target="_blank" rel="noopener">Corporations Canada (federal)</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://abr.business.gov.au/" target="_blank" rel="noopener">Australia ABN Lookup</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://search.gleif.org/" target="_blank" rel="noopener">GLEIF LEI search (parent companies)</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://offshoreleaks.icij.org/" target="_blank" rel="noopener">ICIJ Offshore Leaks</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://aleph.occrp.org/" target="_blank" rel="noopener">OCCRP Aleph (leaks &amp; registries)</a></li>
@@ -701,7 +743,6 @@
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.whitepages.com/" target="_blank" rel="noopener">Whitepages</a></li>
         </ul></fieldset>
         <fieldset class="grp"><legend>National record directories</legend><ul>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.brbpublications.com/free-resources/public-record-sites" target="_blank" rel="noopener">BRB free public-record directory</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.blackbookonline.info/" target="_blank" rel="noopener">Black Book Online</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.onlinesearches.com/" target="_blank" rel="noopener">OnlineSearches (records directory)</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.missingmoney.com/" target="_blank" rel="noopener">MissingMoney (unclaimed property)</a></li>
@@ -711,7 +752,6 @@
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://whatsmyname.app/" target="_blank" rel="noopener">WhatsMyName</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://instantusername.com/" target="_blank" rel="noopener">Instant Username</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.social-searcher.com/" target="_blank" rel="noopener">Social Media Searcher</a></li>
-          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://epieos.com/" target="_blank" rel="noopener">Epieos (email/username)</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://haveibeenpwned.com/" target="_blank" rel="noopener">Have I Been Pwned</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://namechk.com/" target="_blank" rel="noopener">Namechk</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://keybase.io/" target="_blank" rel="noopener">Keybase (linked-account proofs)</a></li>
@@ -946,8 +986,6 @@
   <hr class="rainbow">
 
   <div class="foot">
-    Refreshes every 5 minutes · Feeds: Open-Meteo, USGS, NASA EONET, GDACS, NOAA SWPC, OpenFEMA, wheretheiss.at, sunrise-sunset.org<br>
-    Unofficial. In an emergency call your local emergency number and follow official instructions.<br>
     <a href="/">&lt;&lt; back to inter-q.com</a>
   </div>
 </div>
@@ -1016,10 +1054,10 @@
     return Math.round((d2-u)/60000);
   }
   function tick(){
-    const d=new Date(), off=offsetMinFor(d);
-    const L=new Intl.DateTimeFormat("en-GB",{timeZone:tz(),year:"2-digit",month:"numeric",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
-    $("dtgL").textContent=`${L.day}${L.hour}${L.minute}${zoneLetter(off)} ${MON[+L.month-1]} ${L.year}`;
-    $("dtgZ").textContent=`${pad(d.getUTCDate())}${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}Z ${MON[d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}`;
+    // Plain clock for anyone: "Mon, Oct 5, 2026" over "7:03 AM PDT".
+    const d=new Date();
+    $("dtgL").textContent=new Intl.DateTimeFormat("en-US",{timeZone:tz(),weekday:"short",month:"short",day:"numeric",year:"numeric"}).format(d);
+    $("dtgZ").textContent=new Intl.DateTimeFormat("en-US",{timeZone:tz(),hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(d);
   }
   const hhmm=(d)=>new Intl.DateTimeFormat("en-GB",{timeZone:tz(),hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).format(d);
   const shortDT=(d)=>new Intl.DateTimeFormat("en-GB",{timeZone:tz(),month:"short",day:"numeric",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).format(d);
@@ -1073,6 +1111,12 @@
     try{ const res=await fetch(url,{...opts,signal:ctl.signal}); if(!res.ok) throw new Error("HTTP "+res.status); return await res.json(); }
     finally{ clearTimeout(t); }
   }
+  document.addEventListener("click",(e)=>{
+    const b=e.target.closest("[data-wxu]"); if(!b) return;
+    WXU=b.dataset.wxu; try{ localStorage.setItem("iq-wx-unit",WXU); }catch(_){}
+    document.querySelectorAll("[data-wxu]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    wx().catch(err=>fail("wx","weather",err));
+  });
   function stamp(id){ $("ts-"+id).textContent="updated "+hhmm(new Date()); }
   function fail(id,what,e){ $(id).innerHTML=`<div class="err">Couldn't load ${esc(what)} (${esc(e.message||e)}). Retries next refresh.</div>`; $("ts-"+id).textContent="offline"; }
 
@@ -1119,8 +1163,11 @@
     return {level,reasons};
   }
 
+  // Weather units: the °F / °C buttons override the default (°F in the US, °C elsewhere). The choice is remembered on this device.
+  let WXU=null; try{ WXU=localStorage.getItem("iq-wx-unit"); }catch(e){}
   async function wx(){
-    const u=usHere(); // °F for US, else °C
+    const u=WXU==="F"?true:WXU==="C"?false:usHere(); // °F also switches wind to mph and rain to inches; °C to km/h and mm
+    document.querySelectorAll("[data-wxu]").forEach(b=>b.setAttribute("aria-pressed",String((b.dataset.wxu==="F")===u)));
     const unit=u?"fahrenheit":"celsius", wu=u?"mph":"kmh", sym=u?"°F":"°C", wsym=u?"mph":"km/h", pu=u?"inch":"mm";
     const j=await getJSON(`https://api.open-meteo.com/v1/forecast?latitude=${HOME.lat}&longitude=${HOME.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,uv_index_max&forecast_days=3&temperature_unit=${unit}&wind_speed_unit=${wu}&precipitation_unit=${pu}&timezone=auto`);
     const c=j.current, dly=j.daily;
@@ -1176,33 +1223,8 @@
     return {level,reasons};
   }
 
-  async function space(){
-    const j=await getJSON("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json");
-    const last=j[j.length-1], kp=parseFloat(last.Kp!=null?last.Kp:last[1]);
-    const G=kp>=9?"G5":kp>=8?"G4":kp>=7?"G3":kp>=6?"G2":kp>=5?"G1":"—";
-    const band=kp>=7?"p-crit":kp>=5?"p-warn":"p-ok";
-    const txt=kp>=5?`Geomagnetic storm ${G}`:"No storm";
-    let flare="—";
-    try{ const x=await getJSON("https://services.swpc.noaa.gov/json/goes/primary/xray-flares-latest.json"); const fx=Array.isArray(x)?x[0]:x; flare=(fx&&(fx.max_class||fx.current_class))||"—"; }catch{}
-    let aur=null;
-    try{ const ov=await getJSON("https://services.swpc.noaa.gov/json/ovation_aurora_latest.json"); const lonR=((Math.round(HOME.lon)%360)+360)%360, latR=Math.max(-90,Math.min(90,Math.round(HOME.lat))); const row=ov.coordinates[lonR*181+(latR+90)]; if(row)aur=row[2]; }catch{}
-    $("space").innerHTML=`<div class="readouts">
-      <div class="ro"><div class="k">Planetary Kp</div><div class="v">${kp.toFixed(2)}</div></div>
-      <div class="ro"><div class="k">Storm level</div><div class="v">${G}</div></div>
-      <div class="ro"><div class="k">X-ray flare</div><div class="v">${esc(flare)}</div></div>
-      <div class="ro"><div class="k">Aurora here</div><div class="v">${aur==null?"—":aur+"<small>%</small>"}</div></div>
-    </div><div><span class="pill ${band}">${txt}</span> <span class="muted">High Kp or M/X-class flares can disrupt GPS, HF radio and power grids. "Aurora here" is the modeled chance of aurora overhead at your location.</span></div>`;
-    REPORT.space={kp:+kp.toFixed(2),G,storm:kp>=5,flare,aurora:aur};
-    stamp("space");
-    let lvl=kp>=7?2:kp>=5?1:0; const reasons=[];
-    if(/^X/i.test(flare)) lvl=Math.max(lvl,2); else if(/^M/i.test(flare)) lvl=Math.max(lvl,1);
-    if(kp>=5) reasons.push(`Geomagnetic storm ${G} (Kp ${kp.toFixed(1)})`);
-    if(/^[MX]/i.test(flare)) reasons.push(`Solar flare ${flare}`);
-    return {level:lvl,reasons};
-  }
-
   async function sun(){
-    let sunHtml=""; REPORT.sun=null; REPORT.iss=null;
+    let sunHtml=""; REPORT.sun=null;
     try{
       const s=await getJSON(`https://api.sunrise-sunset.org/json?lat=${HOME.lat}&lng=${HOME.lon}&formatted=0`);
       const sr=new Date(s.results.sunrise), ss=new Date(s.results.sunset);
@@ -1213,16 +1235,8 @@
         <div class="ro"><div class="k">Sunset</div><div class="v">${hhmm(ss)}</div></div>
       </div><div class="muted">Day length ${h}h ${m}m.</div>`;
     }catch(e){ sunHtml=`<div class="muted">Sun times unavailable.</div>`; }
-    let issHtml="";
-    try{
-      const i=await getJSON("https://api.wheretheiss.at/v1/satellites/25544");
-      const d=Math.round(km(HOME.lat,HOME.lon,i.latitude,i.longitude));
-      REPORT.iss={dist:d};
-      const over=d<1500;
-      issHtml=`<div style="margin-top:8px"><span class="pill ${over?"p-warn":"p-ok"}">ISS ${over?"overhead-ish":"distant"}</span> <span class="muted">${d.toLocaleString()} km away, over ${i.latitude.toFixed(1)}, ${i.longitude.toFixed(1)} at ${Math.round(i.altitude)} km altitude.</span></div>`;
-    }catch(e){ issHtml=`<div class="muted" style="margin-top:8px">ISS position unavailable.</div>`; }
-    if(!REPORT.sun&&!REPORT.iss) throw new Error("sun and ISS feeds unreachable");
-    $("sun").innerHTML=sunHtml+issHtml;
+    if(!REPORT.sun) throw new Error("sun feed unreachable");
+    $("sun").innerHTML=sunHtml;
     stamp("sun");
     return {level:0,reasons:[]};
   }
@@ -1278,7 +1292,7 @@
   }
 
   // ================= orchestration =================
-  const PANELS=[["events","events",events],["wx","weather",wx],["aqi","air quality",aqi],["eq","earthquakes",eq],["space","space weather",space],["sun","sun/ISS",sun],["nws","NWS",nws],["fema","FEMA",fema],["bart","BART",bart]];
+  const PANELS=[["events","events",events],["wx","weather",wx],["aqi","air quality",aqi],["eq","earthquakes",eq],["sun","sunrise/sunset",sun],["nws","NWS",nws],["fema","FEMA",fema],["bart","BART",bart]];
   // A location change during a refresh queues another pass, so feeds always end on the current location.
   let busy=false, again=false;
   async function refresh(){
@@ -1289,7 +1303,7 @@
   }
   const CORE=["events","weather","air quality","earthquakes","NWS"];
   async function refreshOnce(){
-    ["events","wx","aqi","eq","space","sun","iss","nws"].forEach(k=>{ REPORT[k]=null; });   // never report data from a previous location
+    ["events","wx","aqi","eq","sun","nws"].forEach(k=>{ REPORT[k]=null; });   // never report data from a previous location
     const results=await Promise.all(PANELS.map(async([id,what,fn])=>{ try{const r=await fn(); return {...r,what};}catch(e){fail(id,what,e);return {level:0,reasons:[],failed:what,what};} }));
     const level=Math.max(...results.map(r=>r.level));
     const reasons=results.flatMap(r=>r.reasons);
@@ -1314,7 +1328,7 @@
   function buildReport(){
     const d=REPORT.generated||new Date(), g=dtgParts(d);
     const cond=REPORT.condition||{name:"UNKNOWN",reasons:[]};
-    const W=(REPORT.wx)||null, A=REPORT.aqi, E=REPORT.eq, S=REPORT.space, SU=REPORT.sun, IS=REPORT.iss, EV=REPORT.events, NW=REPORT.nws;
+    const W=(REPORT.wx)||null, A=REPORT.aqi, E=REPORT.eq, SU=REPORT.sun, EV=REPORT.events, NW=REPORT.nws;
     const latH=(HOME.lat>=0?"N":"S"), lonH=(HOME.lon>=0?"E":"W");
     const L=[];
     const bar="="+"=".repeat(46);
@@ -1350,22 +1364,17 @@
     if(A) L.push(`   US AQI ${A.us} (${A.band}). PM2.5 ${A.pm25} ug/m3. EU AQI ${A.eu}.`);
     else L.push("   Data unavailable.");
     L.push("");
-    L.push("6. SPACE WEATHER.");
-    if(S){ L.push(`   Planetary Kp ${S.kp}. ${S.storm?("Geomagnetic storm "+S.G+" in progress."):"No geomagnetic storm."}`); L.push(`   X-ray flare ${S.flare||"n/a"}. Aurora chance here ${S.aurora==null?"n/a":S.aurora+"%"}.`); }
-    else L.push("   Data unavailable.");
-    L.push("");
-    L.push("7. ASTRONOMICAL.");
+    L.push("6. ASTRONOMICAL.");
     if(SU) L.push(`   Sunrise ${SU.sunrise}, sunset ${SU.sunset}, day length ${SU.dl}.`);
     else L.push("   Sun data unavailable.");
-    if(IS) L.push(`   ISS ${IS.dist.toLocaleString()} km from location.`);
     L.push("");
-    L.push("8. OFFICIAL ALERTS (NWS).");
+    L.push("7. OFFICIAL ALERTS (NWS).");
     if(NW&&NW.applicable===false) L.push("   N/A — location outside US coverage.");
     else if(NW&&NW.alerts&&NW.alerts.length) NW.alerts.forEach(a=>L.push(`   - ${a.event} (${a.severity})${a.until?(" until "+shortDT(new Date(a.until))):""}`));
     else if(NW) L.push("   None active.");
     else L.push("   Data unavailable.");
     L.push("");
-    L.push("9. ASSESSMENT.");
+    L.push("8. ASSESSMENT.");
     const drivers=(cond.alerts||[]);
     if(cond.name==="UNKNOWN") L.push("   Overall condition UNKNOWN — no feeds could be reached. Verify with official sources.");
     else if(cond.name==="DEGRADED") L.push(`   Overall condition DEGRADED — core feeds unavailable (${(cond.failed||[]).join(", ")}). Verify with official sources.`);
@@ -1403,12 +1412,9 @@
         ["Flightradar24 (air traffic)","https://www.flightradar24.com/"],
         ["Ransomware.live (cyber)","https://www.ransomware.live/"]
       ]],
-      ["Sky & space", [
-        ["NOAA space weather","https://www.swpc.noaa.gov/"],
-        ["Aurora 30-min forecast","https://www.swpc.noaa.gov/products/aurora-30-minute-forecast"],
+      ["Sky & weather", [
         ["NESDIS real-time satellite","https://www.nesdis.noaa.gov/imagery/interactive-maps/the-world-real-time"],
-        ["Windy (weather map)","https://www.windy.com/"],
-        ["Spot the ISS","https://spotthestation.nasa.gov/"]
+        ["Windy (weather map)","https://www.windy.com/"]
       ]],
       ["Live cameras — global", [
         ["EarthCam (world webcams)","https://www.earthcam.com/"],
@@ -3682,7 +3688,6 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       add("Government & political","p_os","OpenSecrets",null,"https://www.opensecrets.org/");
       add("Government & political","p_tc","Public-sector pay (Transparent California)",null,"https://transparentcalifornia.com/");
       add("Government & political","p_mm","Unclaimed property (MissingMoney)",null,"https://www.missingmoney.com/","Can confirm past addresses tied to a name.");
-      add("Records directories","p_brb","BRB free public-record directory",null,"https://www.brbpublications.com/free-resources/public-record-sites","Find the right county or state database for the record you need.");
       add("Genealogy & obituaries","p_fs","FamilySearch",null,"https://www.familysearch.org/");
       add("Genealogy & obituaries","p_fg","Find a Grave",null,"https://www.findagrave.com/");
       add("Genealogy & obituaries","p_va","Veteran burials (VA Gravesite Locator)",null,"https://gravelocator.cem.va.gov/");
@@ -3726,7 +3731,6 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       add("Search","e_pgp","Public encryption key (keys.openpgp.org)",`https://keys.openpgp.org/search?q=${osq(v)}`,null,"Only finds keys whose owner verified the address.");
       add("Search","e_gh","Code commits by this address (GitHub)",`https://github.com/search?q=${osq("author-email:"+v)}&type=commits`,null,"Needs a free GitHub account. Commit history can reveal real names and employers.");
       add("Exposure","e_sfs","Spam reports (StopForumSpam)",`https://www.stopforumspam.com/search?q=${osq(v)}`,null);
-      add("Exposure","e_epi","Epieos (accounts linked to an email)",null,"https://epieos.com/","Free account required; limited free lookups.");
       if(dom){
         add("Mail domain","e_mx","Mail servers for "+dom+" (MXToolbox)",`https://mxtoolbox.com/SuperTool.aspx?action=mx%3a${osq(dom)}&run=toolpage`,"https://mxtoolbox.com/","Confirms the domain can receive mail.");
         if(!OS_FREEMAIL.test(dom)) add("Mail domain","e_dom","Custom domain — research "+dom+" as a website",null,null,"Use \"Found a new lead?\" below to add the domain as a website identifier.");
@@ -3808,8 +3812,6 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       add("Registration","o_oc","Company registries worldwide (OpenCorporates)","https://opencorporates.com/companies?q="+osq(v),"https://opencorporates.com/","Officers, addresses and filing history from 140+ registries. Free account for full records.");
       add("Registration","o_sos","CA business filings (bizfile)",null,"https://bizfileonline.sos.ca.gov/search/business","Other states: search \"secretary of state business search\" plus the state.");
       add("Registration","o_ukco","UK companies (Companies House)","https://find-and-update.company-information.service.gov.uk/search?q="+osq(v),null,"Directors, owners (persons with significant control) and filings — all free.");
-      add("Registration","o_ca","Canada federal corporations",null,"https://ised-isde.canada.ca/cc/lgcy/fdrlCrpSrch.html","Federal only; provinces keep their own registries.");
-      add("Registration","o_abn","Australian businesses (ABN Lookup)","https://abr.business.gov.au/Search/ResultsActive?SearchText="+osq(v),null);
       add("Registration","o_eu","EU business registers (e-Justice)",null,"https://e-justice.europa.eu/topics/registers-business-insolvency-land/business-registers-search-company-eu_en","Searches EU national business registers plus Iceland, Liechtenstein and Norway. Basic details free; some registers charge for documents.");
       add("Registration","o_lei","Legal entity ID & parent companies (GLEIF)",null,"https://search.gleif.org/","Shows who owns whom for companies that trade financially.");
       add("Registration","o_cslb","CA contractors (CSLB)",null,"https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx","Unlicensed \"contractors\" are a common scam.");
@@ -3899,6 +3901,55 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     return T;
   }
 
+  // Report sections for findings, matching the leadership report layout (grouped tables, clickable links, plain dates).
+  const OS_CATS=[["","Auto"],["video","Videos & media appearances"],["social","Social media"],["web","Websites & news"],["photo","Photos & background"],["other","Other"]];
+  const OS_CAT_NAME=Object.fromEntries(OS_CATS.filter(c=>c[0]));
+  const OS_SOC=[[/(^|\.)facebook\.com$|(^|\.)fb\.com$/,"FB","Facebook"],[/(^|\.)instagram\.com$/,"IG","Instagram"],[/(^|\.)(x|twitter)\.com$/,"X","X / Twitter"],[/(^|\.)tiktok\.com$/,"TT","TikTok"],[/(^|\.)linkedin\.com$/,"LI","LinkedIn"],[/(^|\.)reddit\.com$/,"RD","Reddit"],[/(^|\.)threads\.(net|com)$/,"TH","Threads"],[/(^|\.)bsky\.app$/,"BS","Bluesky"],[/(^|\.)truthsocial\.com$/,"TS","Truth Social"]];
+  const osHost=(u)=>{ try{ return new URL(u).hostname.toLowerCase(); }catch{ return ""; } };
+  const osSoc=(f)=>{ const h=osHost(f.url); return OS_SOC.find(x=>x[0].test(h))||(f.cat==="social"?[null,"SM","Social media"]:null); };
+  function osCat(f){
+    if(f.cat&&OS_CAT_NAME[f.cat]) return f.cat;
+    const h=osHost(f.url), s=(f.source||"")+" "+(f.text||"");
+    if(/(^|\.)(youtube\.com|youtu\.be|vimeo\.com|rumble\.com|dailymotion\.com)$/.test(h)||/\b(video|interview|youtube)\b/i.test(f.source||"")) return "video";
+    if(OS_SOC.some(x=>x[0].test(h))) return "social";
+    if(/(^|\.)(alamy|gettyimages|flickr|shutterstock|imgur)\.com$/.test(h)||/picture-gallery|\/gallery/i.test(f.url||"")||/^\s*photo\b/i.test(f.text||"")) return "photo";
+    if(h||/\b(news|article|web)\b/i.test(s)) return "web";
+    return "other";
+  }
+  // Account handle from a profile link, e.g. facebook.com/steve.cho.9693 -> steve.cho.9693
+  function osAcct(f){
+    if(f.acct) return f.acct; if(!osSoc({url:f.url||""})) return "";
+    try{ const u=new URL(f.url); const id=u.searchParams.get("id"); if(id) return id; const seg=u.pathname.split("/").filter(Boolean).filter(x=>!/^(profile\.php|people|user|users|in|@)$/i.test(x)); return (seg[0]||"").replace(/^@/,""); }catch{ return ""; }
+  }
+  // Plain capture time: "4 Oct 2026, 2132 PDT". Older saves stored a DTG ("042132T OCT 26"); show those plainly too.
+  function osStamp(d){
+    const P=new Intl.DateTimeFormat("en-US",{timeZone:tz(),day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hourCycle:"h23",timeZoneName:"short"}).formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
+    return `${P.day} ${P.month} ${P.year}, ${P.hour}${P.minute} ${P.timeZoneName||""}`.trim();
+  }
+  function osPlainWhen(w){
+    const m=String(w||"").trim().match(/^(\d{2})(\d{2})(\d{2})([A-Z])\s+([A-Z]{3})\s+(\d{2})$/); if(!m) return String(w||"").trim();
+    const L=m[4], off=L==="Z"?0:L>="N"?-(L.charCodeAt(0)-77):(L.charCodeAt(0)-64-(L>"J"?1:0));
+    const mon=m[5][0]+m[5].slice(1).toLowerCase();
+    let zn=off?"(UTC"+(off>0?"+":"−")+Math.abs(off)+")":"UTC";
+    try{ const dt=new Date(Date.UTC(2000+ +m[6],MON.indexOf(m[5]),+m[1],+m[2]-off,+m[3])); if(offsetMinFor(dt)===off*60) zn=osStamp(dt).split(" ").pop(); }catch{}
+    return `${+m[1]} ${mon} 20${m[6]}, ${m[2]}${m[3]} ${zn}`;
+  }
+  const osLink=(u)=>/^https?:\/\/\S+$/i.test(u||"");
+  // Groups findings into report sections with item numbers (V1, FB1, S1, P1…), in OS_CATS order.
+  function osGroups(finds){
+    const groups=[], cnt={};
+    OS_CATS.filter(c=>c[0]).forEach(([k,name])=>{
+      const items=finds.filter(f=>osCat(f)===k).map(f=>{ const pre=k==="video"?"V":k==="social"?(osSoc(f)||[0,"SM"])[1]:k==="web"?"S":k==="photo"?"P":"O"; cnt[pre]=(cnt[pre]||0)+1; return {f,item:pre+cnt[pre]}; });
+      if(items.length) groups.push({k,name,items});
+    });
+    return groups;
+  }
+  // Description lines for one finding, in order: what it shows, link, posted (social), capture time, rating.
+  function osDesc(f,k){
+    const r=[(f.src||"")+(f.cred||""), f.corr==="yes"?"corroborated":f.corr==="no"?"single source":""].filter(Boolean).join(", ");
+    return {text:(f.text||"").trim(), url:(f.url||"").trim(), posted:k==="social"&&f.posted?`Posted ${f.posted}.`:"", captured:f.when?`Captured ${osPlainWhen(f.when)}.`:"", rating:r?`Rating ${r}.`:""};
+  }
+
   function buildOsint(){
     let uid=0; const nid=(p)=>p+(++uid)+Math.random().toString(36).slice(2,5);
     const fresh=()=>({step:0,mark:"SENSITIVE — FOR OFFICIAL USE ONLY",f:{purpose:"",caseNo:"",requester:"",analyst:"",usp:"",eng:OS_ENG[0][1],assess:"",likely:"",conf:"",gaps:"",next:""},sel:[],tasks:{},finds:[]});
@@ -3916,6 +3967,9 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const selLabel=(s)=>s?`${OS_TNAME[s.type].toUpperCase()} ${s.value}${s.extra?` (${s.extra})`:""}`:"—";
     const tasksFor=(s)=>osTasks(s.type,s.value,s.extra,S.f.eng);
     const tkey=(s,t)=>s.id+":"+t.id;
+    // Click-to-copy values for an identifier. Phone numbers get every common format, since sites search them differently.
+    const cpVals=(s)=>s.type==="phone"?[...new Set(osPhone(s.value).formats)]:s.type==="vehicle"?[osVeh(s.value).c]:s.type==="username"?[s.value,"@"+s.value]:[s.value];
+    const cpChips=(s)=>cpVals(s).map(v=>`<button class="btn os-cp" type="button" data-oa="cp" data-v="${esc(v)}" title="Click to copy">${esc(v)}</button>`).join("");
     const prog=(s)=>{ const T=tasksFor(s); const done=T.filter(t=>(S.tasks[tkey(s,t)]||{}).st).length; return {done,total:T.length}; };
     const sel=(cls,opts,val,attrs="")=>`<select class="fld ${cls}" ${attrs}>${opts.map(o=>{ const [v,n]=Array.isArray(o)?o:[o,o||"— select —"]; return `<option value="${esc(v)}" ${val===v?"selected":""}>${esc(n)}</option>`; }).join("")}</select>`;
     const R=[
@@ -3936,10 +3990,12 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         <div class="ta-grid2 os-add">
           <label class="ta-f">Type${sel("",OS_TYPES,S.lastType||"person",'id="osType"')}</label>
           <label class="ta-f">Identifier<input class="fld ta-in" id="osVal" placeholder="e.g. Jane Q. Doe" autocomplete="off"></label>
+          <div class="full sal-hint" id="osImgHint" hidden><b>Image:</b> paste the address of the picture itself, not the page it's on. On a computer, right-click the picture and choose <b>Copy image address</b>. On a phone, press and hold the picture and choose <b>Copy image link</b> (or open it in a new tab and copy that address). It usually ends in .jpg, .png or .webp. Facebook and Instagram picture links often expire or need a login. If a search can't load the picture, save it or take a screenshot and use the site's <b>upload</b> button instead.</div>
           <label class="ta-f full" id="osExtraWrap">City / state (optional — narrows name searches)<input class="fld ta-in" id="osExtra" autocomplete="off"></label>
           <div class="full toolrow"><button class="btn" type="button" data-oa="addSel">+ Add identifier</button></div>
+          <div class="full">${noteHtml("add")}</div>
         </div>
-        ${S.sel.length?`<div class="sd-rows" style="margin-top:8px">${S.sel.map(s=>{ const p=prog(s); return `<div class="ta-iv os-selrow"><div class="os-selv"><b>${esc(OS_TNAME[s.type])}</b> ${esc(s.value)}${s.extra?` <span class="muted">(${esc(s.extra)})</span>`:""}${s.from?` <span class="muted">— found via ${esc(s.from)}</span>`:""}<div class="sal-hint">${p.done} of ${p.total} checks done</div></div><button class="btn ics-x" type="button" data-oa="delSel" data-id="${esc(s.id)}" aria-label="Remove identifier">✕</button></div>`; }).join("")}</div>`:`<div class="sal-hint" style="margin-top:8px">No identifiers yet.</div>`}`,
+        ${S.sel.length?`<div class="sd-rows" style="margin-top:8px">${S.sel.map(s=>{ const p=prog(s); return `<div class="ta-iv os-selrow"><div class="os-selv"><b>${esc(OS_TNAME[s.type])}</b>${s.extra?` <span class="muted">(${esc(s.extra)})</span>`:""}<div class="os-cprow">${cpChips(s)}</div>${s.from?` <span class="muted">— found via ${esc(s.from)}</span>`:""}<div class="sal-hint">${p.done} of ${p.total} checks done</div></div><button class="btn ics-x" type="button" data-oa="delSel" data-id="${esc(s.id)}" aria-label="Remove identifier">✕</button></div>`; }).join("")}</div>`:`<div class="sal-hint" style="margin-top:8px">No identifiers yet.</div>`}`,
       ()=>{
         if(!S.sel.length) return `<div class="ta-h">Step 3 — Research</div><div class="ta-banner ok">Add at least one identifier in step 2.</div>`;
         const cur=selById(S.cur)||S.sel[0]; S.cur=cur.id;
@@ -3947,6 +4003,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         return `<div class="ta-h">Step 3 — Research</div>
           <p class="sal-hint"><b>Open ▸</b> copies the identifier and opens the source (pre-filled where possible — otherwise paste). Mark each check, note what you saw, and use <b>+ Finding</b> for anything worth reporting.</p>
           <div class="ta-grid2"><label class="ta-f full">Identifier${sel("",S.sel.map(s=>[s.id,`${selLabel(s)} — ${prog(s).done}/${prog(s).total}`]),cur.id,'id="osCur"')}</label></div>
+          <div class="os-cprow"><span class="sal-hint">Click to copy:</span> ${cpChips(cur)}</div>
           <div class="os-bar"><div style="width:${p.total?Math.round(p.done/p.total*100):0}%"></div></div>
           <div class="sal-hint" id="osProgTxt">${p.done} of ${p.total} checks done · ${nf} finding${nf===1?"":"s"} for this identifier</div>
           ${cats.map(c=>`<div class="ta-sub">${esc(c)}</div>${T.filter(t=>t.cat===c).map(t=>{ const st=S.tasks[tkey(cur,t)]||{}; return `<div class="os-task">
@@ -3961,9 +4018,12 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           <div class="ta-grid2">
             <label class="ta-f full">Finding<textarea class="fld ta-in" rows="2" data-ofd="text" data-i="${i}" placeholder="What you found — facts only">${esc(f.text)}</textarea></label>
             <label class="ta-f">Identifier${sel("",[["","—"],...S.sel.map(s=>[s.id,selLabel(s)])],f.sel,`data-ofd="sel" data-i="${i}"`)}</label>
-            <label class="ta-f">Source<input class="fld ta-in" data-ofd="source" data-i="${i}" value="${esc(f.source)}"></label>
+            <label class="ta-f">Report section${sel("",OS_CATS.map(c=>[c[0],c[0]?c[1]:"Auto — "+OS_CAT_NAME[osCat(f)]]),f.cat||"",`data-ofd="cat" data-i="${i}"`)}</label>
+            <label class="ta-f">Platform / outlet<input class="fld ta-in" data-ofd="source" data-i="${i}" value="${esc(f.source)}" placeholder="e.g. YouTube — Democast"></label>
+            <label class="ta-f">Account / handle<input class="fld ta-in" data-ofd="acct" data-i="${i}" value="${esc(f.acct||"")}" placeholder="${esc(osAcct({url:f.url})||"Social media only")}"></label>
+            <label class="ta-f">Date posted<input class="fld ta-in" data-ofd="posted" data-i="${i}" value="${esc(f.posted||"")}" placeholder="e.g. 2 JUN 2023"></label>
             <label class="ta-f full">Link / where to find it again<input class="fld ta-in" data-ofd="url" data-i="${i}" value="${esc(f.url)}" placeholder="https://… (save an archived copy if it might disappear)"></label>
-            <label class="ta-f">Captured (DTG)<span class="sal-row"><input class="fld" data-ofd="when" data-i="${i}" value="${esc(f.when)}"><button class="btn" type="button" data-oa="nowFind" data-i="${i}">Now</button></span></label>
+            <label class="ta-f">Captured<span class="sal-row"><input class="fld" data-ofd="when" data-i="${i}" value="${esc(f.when)}"><button class="btn" type="button" data-oa="nowFind" data-i="${i}">Now</button></span></label>
             <label class="ta-f">Corroborated?${sel("",[["","—"],["yes","Yes — independent second source"],["no","No — single source"]],f.corr,`data-ofd="corr" data-i="${i}"`)}</label>
             <label class="ta-f">Source reliability${sel("",CP_SRC,f.src,`data-ofd="src" data-i="${i}"`)}</label>
             <label class="ta-f">Information credibility${sel("",CP_CRED,f.cred,`data-ofd="cred" data-i="${i}"`)}</label>
@@ -3987,8 +4047,13 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         <div class="toolrow" style="margin:8px 0"><button class="btn" type="button" data-oa="print">Print / Save as PDF</button><button class="btn" type="button" data-oa="copy">Copy text</button><button class="btn" type="button" data-oa="clear">Clear</button></div>
         <pre class="toolout report ta-preview" id="osPrev"></pre>`
     ];
+    // One-time "identifier added" notice, shown right where the person added it.
+    function noteHtml(where){
+      const n=S.note; if(!n||n.where!==where) return ""; const s=selById(n.id); if(!s) return "";
+      return `<div class="ta-banner ok os-note" role="status">New identifier added: ${esc(selLabel(s))}${where==="pivot"&&S.cur!==s.id?` <button class="btn" type="button" data-oa="goSel" data-id="${esc(s.id)}">Research it now ▸</button>`:""}<small>${where==="pivot"?"It's in the Identifier list at the top of the checklist. You're still on the same checklist.":`${S.sel.length} identifier${S.sel.length===1?"":"s"} in the list below.`}</small></div>`;
+    }
     function pivotHtml(){
-      return `<div class="ta-iv os-pivot"><b>Found a new lead?</b> Add it as an identifier and research it too.
+      return `<div class="ta-iv os-pivot">${noteHtml("pivot")}<b>Found a new lead?</b> Add it as an identifier and research it too.
         <div class="sal-row" style="margin-top:6px">${sel("",OS_TYPES,"username",'id="osPvT" aria-label="Type"')}<input class="fld" id="osPvV" placeholder="New identifier" aria-label="New identifier" autocomplete="off"><button class="btn" type="button" data-oa="pivot">Add</button></div></div>`;
     }
     function paint(){
@@ -3997,7 +4062,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     }
     function go(i){
       const moved=i!==S.step, y=window.scrollY, ph=P().offsetHeight; if(!moved) P().style.minHeight=ph+"px"; S.step=i; P().innerHTML=R[i](); paint();
-      if(i===1){ const t=q("#osType"), w=q("#osExtraWrap"); const sync=()=>{ w.hidden=t.value!=="person"; q("#osVal").placeholder={person:"e.g. Jane Q. Doe",username:"e.g. jdoe_42",email:"e.g. jdoe@example.com",phone:"e.g. (510) 555-0142",domain:"e.g. example.com",ip:"e.g. 203.0.113.7",org:"e.g. Acme Builders Inc",image:"https://… direct link to the image",place:"Address, or lat, lon",vehicle:"VIN, N-number, IMO or MMSI"}[t.value]; }; t.addEventListener("change",sync); sync(); }
+      if(i===1){ const t=q("#osType"), w=q("#osExtraWrap"); const sync=()=>{ w.hidden=t.value!=="person"; q("#osImgHint").hidden=t.value!=="image"; q("#osVal").placeholder={person:"e.g. Jane Q. Doe",username:"e.g. jdoe_42",email:"e.g. jdoe@example.com",phone:"e.g. (510) 555-0142",domain:"e.g. example.com",ip:"e.g. 203.0.113.7",org:"e.g. Acme Builders Inc",image:"https://… direct link to the image",place:"Address, or lat, lon",vehicle:"VIN, N-number, IMO or MMSI"}[t.value]; }; t.addEventListener("change",sync); sync(); }
+      S.note=null;
       if(i===STEPS.length-1) q("#osPrev").textContent=text();
       if(moved) $("repWin").scrollIntoView?.({block:"start",behavior:"smooth"});
       else { window.scrollTo(0,y); P().style.minHeight=""; }
@@ -4027,7 +4093,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       if(k){ if(k==="mark") S.mark=t.value; else S.f[k]=t.value; paint(); return; }
       if(t.id==="osCur"){ S.cur=t.value; go(2); return; }
       if(t.dataset.ot){ const s=selById(S.cur); const key=s.id+":"+t.dataset.t; const o=S.tasks[key]||(S.tasks[key]={}); o[t.dataset.ot]=t.value; if(t.dataset.ot==="st") updProg(s); return; }
-      if(t.dataset.ofd){ S.finds[+t.dataset.i][t.dataset.ofd]=t.value; }
+      if(t.dataset.ofd){ S.finds[+t.dataset.i][t.dataset.ofd]=t.value; if(t.dataset.ofd==="url"||t.dataset.ofd==="cat") go(3); }
     });
     d.addEventListener("input",(e)=>{
       const t=e.target;
@@ -4039,19 +4105,21 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     d.addEventListener("click",async(e)=>{
       const g=e.target.closest("[data-go]"); if(g&&d.contains(g)&&g.closest("#osSteps")){ go(+g.dataset.go); return; }
       const b=e.target.closest("[data-oa]"); if(!b) return; const a=b.dataset.oa;
-      if(a==="addSel"){ const ty=q("#osType").value; if(addSel(ty,q("#osVal").value,q("#osExtra").value)){ S.lastType=ty; go(1); const vv=q("#osVal"); vv&&vv.focus({preventScroll:true}); } return; }
+      if(a==="cp"){ const ok=await copy(b.dataset.v); if(ok){ b.classList.add("ok"); setTimeout(()=>b.classList.remove("ok"),1500); } flash(ok?`Copied: ${b.dataset.v}`:"Couldn't copy — select the text and copy it instead."); return; }
+      if(a==="addSel"){ const ty=q("#osType").value; if(addSel(ty,q("#osVal").value,q("#osExtra").value)){ S.lastType=ty; S.note={where:"add",id:S.cur}; go(1); flash("New identifier added."); const vv=q("#osVal"); vv&&vv.focus({preventScroll:true}); } return; }
       if(a==="delSel"){ const s=selById(b.dataset.id); if(!s) return; if(!confirm(`Remove ${selLabel(s)} and its checklist notes? Findings stay, marked "identifier removed".`)) return; S.sel=S.sel.filter(x=>x.id!==s.id); Object.keys(S.tasks).forEach(k=>{ if(k.startsWith(s.id+":")) delete S.tasks[k]; }); S.finds.forEach(f=>{ if(f.sel===s.id){ f.sel=""; f.text=(f.text?f.text+"\n":"")+`[identifier removed: ${selLabel(s)}]`; } }); go(1); return; }
-      if(a==="pivot"){ const cur=selById(S.cur); if(addSel(q("#osPvT").value,q("#osPvV").value,"",cur?selLabel(cur):"")){ flash(S.step===2?"Added and selected — its checklist is below.":"Added — research it in step 3."); go(S.step); } return; }
+      if(a==="pivot"){ const cur=selById(S.cur); if(addSel(q("#osPvT").value,q("#osPvV").value,"",cur?selLabel(cur):"")){ S.note={where:"pivot",id:S.cur}; if(cur) S.cur=cur.id; flash("New identifier added."); go(S.step); } return; }
+      if(a==="goSel"){ if(selById(b.dataset.id)){ S.cur=b.dataset.id; go(2); q("#osCur")?.scrollIntoView({block:"start",behavior:"smooth"}); } return; }
       if(a==="open"){
         const s=selById(S.cur), t=tasksFor(s).find(x=>x.id===b.dataset.t); const text2=s.type==="phone"?osPhone(s.value).formats[1]||s.value:s.type==="vehicle"?osVeh(s.value).c:s.value;
         window.open(t.url||t.home,"_blank","noopener"); const ok=await copy(text2);
         flash(t.url?(ok?"Opened — identifier also copied.":"Opened."):(ok?"Opened — identifier copied; paste it into the site's search box.":"Opened — type the identifier into the site's search box.")); return; }
       if(a==="addFind"){ const s=selById(S.cur); const t=b.dataset.t&&s?tasksFor(s).find(x=>x.id===b.dataset.t):null;
-        S.finds.push({text:"",sel:s&&S.step===2?s.id:"",source:t?t.label:"",url:"",when:dtgParts(new Date()).local,corr:"",src:"",cred:""});
+        S.finds.push({text:"",sel:s&&S.step===2?s.id:"",source:t?t.label:"",url:"",when:osStamp(new Date()),corr:"",src:"",cred:"",cat:"",posted:"",acct:""});
         if(t){ const key=s.id+":"+t.id; const o=S.tasks[key]||(S.tasks[key]={}); if(!o.st) o.st="found"; }
         go(3); const last=d.querySelectorAll('[data-ofd="text"]'); last.length&&last[last.length-1].focus(); return; }
       if(a==="delFind"){ if(S.finds[+b.dataset.i].text&&!confirm("Remove this finding?")) return; S.finds.splice(+b.dataset.i,1); go(3); return; }
-      if(a==="nowFind"){ S.finds[+b.dataset.i].when=dtgParts(new Date()).local; go(3); return; }
+      if(a==="nowFind"){ S.finds[+b.dataset.i].when=osStamp(new Date()); go(3); return; }
       if(a==="print"){ icsPrint(printHtml(),"OSINT report "+(S.f.caseNo||icsDate("dtg"))); return; }
       if(a==="copy"){ icsCopy(text(),q("#osMsg")); return; }
       if(a==="clear"){ if(!confirm("Clear this research? Identifiers, checklist and findings will be erased.")) return; S=fresh(); go(0); return; }
@@ -4074,10 +4142,20 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       L.push(`SUBJECT A U.S. PERSON: ${USP[S.f.usp]||"Not stated"}`); L.push("");
       L.push("1. PURPOSE."); L.push("   "+ind(purp()||"—",3)); L.push("");
       L.push("2. IDENTIFIERS RESEARCHED.");
-      S.sel.length?S.sel.forEach((s,i)=>{ const p=prog(s); L.push(`   ${letter(i)}. ${selLabel(s)} — ${p.done} of ${p.total} checks${s.from?`; found via ${s.from}`:""}`); }):L.push("   None.");
+      S.sel.length?S.sel.forEach((s,i)=>{ L.push(`   ${letter(i)}. ${selLabel(s)}${s.from?` — found via ${s.from}`:""}`); }):L.push("   None.");
       L.push("");
       L.push("3. KEY FINDINGS.");
-      S.finds.length?S.finds.forEach((f,i)=>{ L.push(`   F${i+1}. ${ind(f.text||"—",7)}`); L.push("       "+[`Source: ${f.source||"—"}${f.url?` <${f.url}>`:""}.`,`Captured ${f.when||"—"}.`,`Rating ${(f.src||"-")+(f.cred||"-")}.`,f.corr==="yes"?"Corroborated.":f.corr==="no"?"Single source.":"",f.sel&&selById(f.sel)?`Re: ${selLabel(selById(f.sel))}.`:""].filter(Boolean).join(" ")); }):L.push("   None.");
+      if(!S.finds.length) L.push("   None.");
+      osGroups(S.finds).forEach((g,gi)=>{
+        L.push(`   ${letter(gi)}. ${g.name}.`);
+        g.items.forEach(({f,item})=>{
+          const D=osDesc(f,g.k), head=g.k==="social"?[f.source||(osSoc(f)||[])[2],osAcct(f)]:[f.source,f.posted?"Posted "+f.posted:""];
+          L.push(`      ${item}. ${head.filter(Boolean).join(" | ")||"—"}`);
+          [D.text,D.url,D.posted,D.captured,D.rating].filter(Boolean).forEach(x=>L.push("          "+ind(x,10)));
+        });
+        L.push("");
+      });
+      if(S.finds.length) L.pop();
       L.push("");
       L.push("4. ASSESSMENT."); L.push("   "+ind(S.f.assess||"—",3)); if(S.f.likely||S.f.conf) L.push(`   Likelihood: ${S.f.likely||"—"}. Confidence: ${S.f.conf||"—"}.`); L.push("");
       L.push("5. INFORMATION GAPS."); L.push("   "+ind(S.f.gaps||"—",3)); L.push("");
@@ -4099,8 +4177,14 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
         <table class="f"><tr><td><span class="lb">DTG:</span><div class="vl">${esc(g.local)} (${esc(g.zulu)})</div></td><td><span class="lb">From:</span><div class="vl">${x_(S.f.analyst)}</div></td><td><span class="lb">Case / ref:</span><div class="vl">${x_(S.f.caseNo)}</div></td></tr>
           <tr><td colspan="2"><span class="lb">Subject a U.S. person:</span><div class="vl">${esc(USP[S.f.usp]||"Not stated")}</div></td><td><span class="lb">Requested by:</span><div class="vl">${x_(S.f.requester)}</div></td></tr></table>
         <h2 class="ops-h2">1. Purpose</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(purp())}</div>
-        <h2 class="ops-h2">2. Identifiers researched</h2><table class="f"><colgroup><col style="width:16%"><col><col style="width:16%"><col style="width:26%"></colgroup><thead><tr><th>Type</th><th>Identifier</th><th>Checks</th><th>Found via</th></tr></thead><tbody>${S.sel.map(s=>{ const p=prog(s); return `<tr><td>${esc(OS_TNAME[s.type])}</td><td>${esc(s.value)}${s.extra?` (${esc(s.extra)})`:""}</td><td>${p.done} of ${p.total}</td><td>${x_(s.from)}</td></tr>`; }).join("")||`<tr><td colspan="4">None.</td></tr>`}</tbody></table>
-        <h2 class="ops-h2">3. Key findings</h2><table class="f"><colgroup><col style="width:6%"><col style="width:40%"><col style="width:28%"><col style="width:12%"><col></colgroup><thead><tr><th>#</th><th>Finding</th><th>Source</th><th>Captured</th><th>Rating</th></tr></thead><tbody>${S.finds.map((f,i)=>`<tr><td>F${i+1}</td><td style="white-space:pre-wrap">${x_(f.text)}${f.sel&&selById(f.sel)?`<br><i>Re: ${esc(selLabel(selById(f.sel)))}</i>`:""}</td><td>${x_(f.source)}${f.url?`<br>${esc(f.url)}`:""}</td><td>${x_(f.when)}</td><td>${esc((f.src||"–")+(f.cred||"–"))}${f.corr==="yes"?"<br>Corroborated":f.corr==="no"?"<br>Single source":""}</td></tr>`).join("")||`<tr><td colspan="5">None.</td></tr>`}</tbody></table>
+        <h2 class="ops-h2">2. Identifiers researched</h2><table class="f"><colgroup><col style="width:18%"><col><col style="width:32%"></colgroup><thead><tr><th>Type</th><th>Identifier</th><th>Found via</th></tr></thead><tbody>${S.sel.map(s=>`<tr><td>${esc(OS_TNAME[s.type])}</td><td>${esc(s.value)}${s.extra?` (${esc(s.extra)})`:""}</td><td>${x_(s.from)}</td></tr>`).join("")||`<tr><td colspan="3">None.</td></tr>`}</tbody></table>
+        <h2 class="ops-h2">3. Key findings</h2>${S.finds.length?osGroups(S.finds).map((g,gi)=>{
+          const lnk=(u)=>osLink(u)?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u)}</a>`:esc(u);
+          const desc=(f)=>{ const D=osDesc(f,g.k); return [D.text?`<div style="white-space:pre-wrap">${esc(D.text)}</div>`:"",D.url?`<div>${lnk(D.url)}</div>`:"",D.posted?`<div>${esc(D.posted)}</div>`:"",D.captured?`<div>${esc(D.captured)}</div>`:"",D.rating?`<div>${esc(D.rating)}</div>`:""].join(""); };
+          const h=g.k==="social"?["Item","Platform","Account","Description"]:g.k==="web"||g.k==="other"?["Item","Source","Date","Description"]:["Item","Platform / Outlet","Date Posted","Description"];
+          const c2=(f)=>g.k==="social"?esc(f.source||(osSoc(f)||[])[2]||""):esc(f.source||""), c3=(f)=>g.k==="social"?esc(osAcct(f)):esc(f.posted||"");
+          return `<h3 class="os-sec">${letter(gi)}. ${esc(g.name)}.</h3><table class="f os-ft"><colgroup><col style="width:9%"><col style="width:20%"><col style="width:16%"><col></colgroup><thead><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${g.items.map(({f,item})=>`<tr><td>${item}</td><td>${c2(f)||"&nbsp;"}</td><td style="word-break:break-word">${c3(f)||"&nbsp;"}</td><td style="word-break:break-word">${desc(f)||"&nbsp;"}</td></tr>`).join("")}</tbody></table>`;
+        }).join(""):`<div class="sd-pi">None.</div>`}
         <h2 class="ops-h2">4. Assessment</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(S.f.assess)}</div>${(S.f.likely||S.f.conf)?`<div class="sd-pi"><b>Likelihood:</b> ${x_(S.f.likely)}. &nbsp; <b>Confidence:</b> ${x_(S.f.conf)}.</div>`:""}
         <h2 class="ops-h2">5. Information gaps</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(S.f.gaps)}</div>
         <h2 class="ops-h2">6. Recommended next steps</h2><div class="sd-pi" style="white-space:pre-wrap">${x_(S.f.next)}</div>
@@ -4115,7 +4199,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       const sel=(Array.isArray(s.sel)?s.sel:[]).filter(x=>x&&types.includes(x.type)&&typeof x.value==="string"&&OS_SAFE_ID.test(String(x.id||""))).map(x=>({id:x.id,type:x.type,value:x.value,extra:str(x.extra),from:str(x.from)}));
       const ids=new Set(sel.map(x=>x.id));
       const tasks={}; Object.entries(s.tasks&&typeof s.tasks==="object"?s.tasks:{}).forEach(([k,o])=>{ if(ids.has(k.split(":")[0])&&o&&typeof o==="object") tasks[k]={st:OS_ST.some(z=>z[0]===o.st)?o.st:"",note:str(o.note)}; });
-      const finds=(Array.isArray(s.finds)?s.finds:[]).filter(f=>f&&typeof f==="object").map(f=>({text:str(f.text),sel:ids.has(f.sel)?f.sel:"",source:str(f.source),url:str(f.url),when:str(f.when),corr:["","yes","no"].includes(f.corr)?f.corr:"",src:CP_SRC.some(z=>z[0]===f.src)?f.src:"",cred:CP_CRED.some(z=>z[0]===f.cred)?f.cred:""}));
+      const finds=(Array.isArray(s.finds)?s.finds:[]).filter(f=>f&&typeof f==="object").map(f=>({text:str(f.text),sel:ids.has(f.sel)?f.sel:"",source:str(f.source),url:str(f.url),when:str(f.when),cat:OS_CAT_NAME[f.cat]?f.cat:"",posted:str(f.posted),acct:str(f.acct),corr:["","yes","no"].includes(f.corr)?f.corr:"",src:CP_SRC.some(z=>z[0]===f.src)?f.src:"",cred:CP_CRED.some(z=>z[0]===f.cred)?f.cred:""}));
       const F=fresh().f, f={}; Object.keys(F).forEach(k=>{ const v=(s.f||{})[k]; f[k]=typeof v==="string"?v:F[k]; });
       if(s.f&&/^Other/.test(f.purpose)) f.purpose=str(s.f.purposeOther); // files saved before Purpose became free text
       if(s.f&&typeof s.f.question==="string"&&s.f.question.trim()) f.purpose=[f.purpose,s.f.question.trim()].filter(Boolean).join(" — "); // older files had a separate question
@@ -5259,6 +5343,71 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     st.dirty = false;
   }
   window.__taIO = { get:taGet, set:taSet, has:() => !!(st && st.active) };
+})();
+</script>
+<script>
+// Site finder: searches every link in the directories on this page (name, section, group and address).
+(function(){
+  const inp=document.getElementById("finderIn"), box=document.getElementById("finderRes");
+  if(!inp||!box) return;
+  const esc=(s)=>String(s??"").replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const norm=(s)=>String(s||"").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"");
+  let items=[], sel=-1, shown=[];
+  function index(){   // rebuilt each search: the reference links can change with location
+    const map=new Map();
+    document.querySelectorAll("a.reflink").forEach(a=>{
+      const href=a.href, name=a.textContent.trim(); if(!href||!name) return;
+      const win=a.closest("section.win"), grp=a.closest("fieldset.grp");
+      const sec=win?((win.querySelector(".bar span")||{}).textContent||win.getAttribute("aria-label")||""):"";
+      const g=grp?((grp.querySelector("legend")||{}).textContent||""):"";
+      let host=""; try{ host=new URL(href).hostname.replace(/^www\./,""); }catch{}
+      const where=[sec,g].filter(Boolean).join(" · ");
+      const k=href+"|"+name;
+      if(map.has(k)){ const it=map.get(k); if(where&&!it.where.includes(g)) it.where+=" / "+g; return; }
+      map.set(k,{name,href,host,where,hay:norm(name+" "+g+" "+sec+" "+host)});
+    });
+    items=[...map.values()];
+  }
+  function score(it,q,words){
+    const n=norm(it.name);
+    if(n===q) return 100; if(n.startsWith(q)) return 80; if(new RegExp("\\b"+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).test(n)) return 60;
+    if(n.includes(q)) return 50; if(it.host.includes(q)) return 40;
+    return words.every(w=>it.hay.includes(w))?20:0;
+  }
+  function close(){ box.hidden=true; inp.setAttribute("aria-expanded","false"); sel=-1; }
+  function paint(){
+    box.querySelectorAll("a").forEach((a,i)=>{ a.classList.toggle("on",i===sel); a.setAttribute("aria-selected",i===sel?"true":"false"); });
+    const on=box.querySelector("a.on"); on&&on.scrollIntoView({block:"nearest"});
+  }
+  function search(){
+    const q=norm(inp.value.trim()); if(!q){ close(); return; }
+    index(); const words=q.split(/\s+/).filter(Boolean);
+    const hits=items.map(it=>({it,s:score(it,q,words)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||a.it.name.localeCompare(b.it.name));
+    shown=hits.slice(0,15).map(x=>x.it); sel=shown.length?0:-1;
+    box.innerHTML=shown.length?shown.map((it,i)=>`<a role="option" id="fr${i}" href="${esc(it.href)}" target="_blank" rel="noopener">${esc(it.name)}<span class="fs">${esc(it.where||it.host)}</span></a>`).join("")+(hits.length>15?`<div class="fnone">${hits.length-15} more — keep typing to narrow it down.</div>`:"")
+      :`<div class="fnone">No site matches "${esc(inp.value.trim())}".</div>`;
+    box.hidden=false; inp.setAttribute("aria-expanded","true"); paint();
+  }
+  inp.addEventListener("input",search);
+  inp.addEventListener("focus",()=>{ if(inp.value.trim()) search(); });
+  inp.addEventListener("keydown",(e)=>{
+    if(e.key==="Escape"){ if(!box.hidden) close(); else inp.value=""; return; }
+    if(box.hidden||!shown.length) return;
+    if(e.key==="ArrowDown"){ e.preventDefault(); sel=(sel+1)%shown.length; paint(); }
+    else if(e.key==="ArrowUp"){ e.preventDefault(); sel=(sel-1+shown.length)%shown.length; paint(); }
+    else if(e.key==="Enter"){ e.preventDefault(); const a=box.querySelectorAll("a")[sel]; if(a) window.open(a.href,"_blank","noopener"); }
+  });
+  document.addEventListener("click",(e)=>{ if(!e.target.closest(".finder")) close(); });
+  box.addEventListener("click",(e)=>{ if(e.target.closest("a")) setTimeout(close,0); });
+})();
+</script>
+<script>
+// Display color switch (amber / red). Every visit opens in amber; Red lasts until the page is closed or reloaded.
+(function(){
+  const root=document.documentElement;
+  const paint=()=>{ const t=root.dataset.theme==="red"?"red":"amber"; document.querySelectorAll("[data-theme-set]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.themeSet===t))); };
+  document.addEventListener("click",(e)=>{ const b=e.target.closest("[data-theme-set]"); if(!b) return; root.dataset.theme=b.dataset.themeSet; paint(); });
+  paint();
 })();
 </script>
 </body>
