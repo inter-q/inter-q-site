@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <script>if(/[?&]notepad\b/.test(location.search)){ document.documentElement.classList.add("np-mode"); var t=(location.search.match(/[?&]theme=(green|blue|amber|red)\b/)||[])[1]; if(t) document.documentElement.dataset.theme=t; }</script>
-<meta name="iq-build" content="2026-10-07 15:30">
+<meta name="iq-build" content="2026-10-07 16:00">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
@@ -491,6 +491,21 @@
   html.lg .cm-shut { width:88px; height:88px; } html.lg .cm-hud { font-size:16px; } html.lg .cm-az { font-size:26px; }
   html.lg .cm-it b { font-size:17px; } html.lg .cm-it > span { font-size:15px; } html.lg .cm-chk { font-size:17px; } html.lg .cm-text { font-size:15px; }
   @media (prefers-reduced-motion:reduce) { .cm-flash.on { animation:none; } }
+  .cm-fix[hidden] { display:none; }
+  .cm-fix { display:flex; flex-direction:column; gap:8px; }
+  .cm-fixbtns { display:flex; flex-wrap:wrap; gap:6px; }
+  .cm-fixbtn { color:var(--warn) !important; border-color:var(--warn) !important; min-height:42px; }
+  .cm-help { border:1px solid var(--warn); padding:10px 12px; font-size:14px; line-height:1.45; background:var(--well); }
+  .cm-help ol { margin:8px 0 10px; padding-left:22px; } .cm-help li { margin:4px 0; } .cm-help b { color:var(--bright); }
+  html.lg .cm-help { font-size:17px; }
+  /* Camera window fits the screen: its title bar stays put and only the content under it scrolls (nothing slides behind the bar). */
+  #cmOverlay { overflow:hidden; align-items:stretch; }
+  .np-win.cm-win { height:100%; max-height:100%; min-height:0; overflow:hidden; }
+  .cm-win > .np-bar { position:static; flex:none; }
+  .cm-ctl [data-cm="flip"] { grid-column:1; } .cm-ctl .cm-shut { grid-column:2; } .cm-ctl [data-cm="file"] { grid-column:3; justify-self:end; }
+  .cm-win > .cm-body { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; }
+  /* Other pop-up windows: a sticky title bar sits at the very top of the screen, not inside the window margin, so content can't show above it. */
+  @media (min-width:701px) { #npOverlay .np-bar, #rcOverlay .np-bar { top:-16px; } #skOverlay .np-bar { top:-12px; } }
   /* Sketch: measure settings row; report attachments */
   .sk-bar[hidden] { display:none !important; }
   .sk-ml { font-size:13px; color:var(--ink-dim); display:inline-flex; align-items:center; gap:6px; white-space:nowrap; flex:none; }
@@ -8799,10 +8814,15 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   function startGPS(){
     if(watch!=null) return;
     if(!navigator.geolocation){ posErr="This browser can't read location."; return; }
-    watch=navigator.geolocation.watchPosition((p)=>{ const c=p.coords; pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,altAcc:c.altitudeAccuracy,t:p.timestamp||Date.now()}; posErr=""; hud(); },
-      (e)=>{ posErr=e.code===1?"Location is blocked for this site (allow it in the browser or phone settings).":e.code===3?"Still looking for a GPS fix…":"Location isn't available right now."; hud(); },
+    watch=navigator.geolocation.watchPosition(gpsOK,gpsErr,
       {enableHighAccuracy:true,maximumAge:3000,timeout:30000});
   }
+  function gpsOK(p){ const c=p.coords; pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,altAcc:c.altitudeAccuracy,t:p.timestamp||Date.now()}; posErr=""; if(blocked.loc){ blocked.loc=""; fixUI(); } hud(); }
+  function gpsErr(e){ if(e.code===1){ posErr="Location is off for IQ Kit — tap “Turn on location” below."; blocked.loc="site"; }
+    else if(e.code===2){ posErr="No location — the phone's location may be turned off."; blocked.loc="device"; }
+    else posErr="Still looking for a GPS fix…";
+    fixUI(); hud(); }
+  function retryGPS(){ stopGPS(); posErr="Asking for location…"; hud(); try{ navigator.geolocation.getCurrentPosition(gpsOK,gpsErr,{enableHighAccuracy:true,timeout:20000,maximumAge:0}); }catch(_){} startGPS(); }
   function stopGPS(){ if(watch!=null){ try{ navigator.geolocation.clearWatch(watch); }catch(_){} watch=null; } }
   // Direction the back camera faces (W3C Device Orientation spec, "compass heading" of the device's -Z axis).
   function camHeading(alpha,beta,gamma){
@@ -8826,7 +8846,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   function startCompass(){
     if(oriOn) return;
     try{ if(window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==="function"){   // iPhone: must be asked during the tap
-        DeviceOrientationEvent.requestPermission().then(s=>{ if(s!=="granted"){ hdgSrc="denied"; hud(); } }).catch(()=>{}); } }catch(_){}
+        DeviceOrientationEvent.requestPermission().then(s=>{ if(s!=="granted"){ hdgSrc="denied"; blocked.cmp="site"; fixUI(); hud(); } else if(blocked.cmp){ blocked.cmp=""; hdgSrc=""; fixUI(); hud(); } }).catch(()=>{}); } }catch(_){}
     if("ondeviceorientationabsolute" in window) window.addEventListener("deviceorientationabsolute",onOri);
     else window.addEventListener("deviceorientation",onOri);
     oriOn=true;
@@ -8843,8 +8863,9 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}}});
       if(!root||root.hidden||view!=="live"){ stopCam(); return; }
       try{ const n=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="videoinput").length; q('[data-cm="flip"]').hidden=n<2; }catch(_){}
+      if(blocked.cam){ blocked.cam=""; fixUI(); }
       v.srcObject=stream; v.classList.toggle("mirror",facing==="user"); await v.play().catch(()=>{}); q(".cm-off").hidden=true;
-    }catch(err){ stream=null; camOff(err&&err.name==="NotAllowedError"?`Camera is blocked for this site. Allow it in the browser or phone settings, or use “${FILEBTN}”.`:`Couldn't start the camera. Use “${FILEBTN}” instead.`); }
+    }catch(err){ stream=null; if(err&&err.name==="NotAllowedError"){ blocked.cam="site"; fixUI(); } camOff(err&&err.name==="NotAllowedError"?`Camera is blocked for this site. Allow it in the browser or phone settings, or use “${FILEBTN}”.`:`Couldn't start the camera. Use “${FILEBTN}” instead.`); }
     finally{ starting=false; }
   }
   function stopCam(){ if(stream){ stream.getTracks().forEach(t=>{ try{ t.stop(); }catch(_){} }); stream=null; } const v=q("video"); if(v) v.srcObject=null; }
@@ -8963,6 +8984,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
             <button class="btn" type="button" data-cm="file" title="${DESK?"Stamp a photo from this computer (its time and location are read from the file when saved there)":"Use the phone's own camera app (data is recorded when it opens)"}">${FILEBTN}</button>
             <input type="file" data-cm="filein" accept="image/*"${DESK?"":' capture="environment"'} hidden>
           </div>
+          <div class="cm-fix" hidden></div>
           <div class="cm-msg" aria-live="polite"></div>
           <div class="sal-hint cm-tip">${DESK?"On a computer there's usually no GPS or compass: location is the browser's estimate (its accuracy is printed), and altitude and azimuth aren't available. Photos you choose keep the time, location and direction saved in the file, when it has them.":"Point the camera at the subject and hold it upright and steady: the azimuth is the direction the camera faces (magnetic). If the compass seems off, move the phone in a figure 8."}</div>
           <div class="rc-head"><span class="ta-sub">Photos on this device</span><span class="muted cm-count"></span></div>
@@ -9007,6 +9029,65 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     q(".cm-count").textContent=all.length?`${all.length} photo${all.length>1?"s":""}`:"";
     box.innerHTML=all.length?all.map(p=>`<button class="cm-it" type="button" data-cm="openp" data-id="${esc(p.id)}"><img src="${p.thumb}" alt=""><span><b>${esc(fmtDT(new Date(p.t)))}</b><span class="muted">${esc(p.meta.pos?mgrsOf(p.meta.pos.lat,p.meta.pos.lon):"no location")}${p.meta.hdg!=null?" · "+deg3(p.meta.hdg)+" "+pt16(p.meta.hdg):""}</span>${p.notes?`<span>${esc(p.notes.split("\n")[0].slice(0,80))}</span>`:""}</span></button>`).join(""):`<div class="muted rc-empty">No photos yet.</div>`;
   }
+
+  // ---- when the camera, location or compass was turned down: phones don't let a web page switch these back on itself,
+  // so show the exact steps for this phone and browser, and retry by itself when the person comes back. ----
+  const blocked={loc:"",cam:"",cmp:""};
+  const UA=navigator.userAgent, IOS=/iPhone|iPad|iPod/.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1), AND=/Android/.test(UA);
+  const APP=(()=>{ try{ return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true; }catch(_){ return false; } })();
+  const MAC=/Macintosh/.test(UA)&&!IOS, WIN=/Windows/.test(UA);
+  const ol=(a)=>`<ol>${a.map(x=>`<li>${x}</li>`).join("")}</ol>`;
+  function steps(kind){
+    const site=location.host||"inter-q.com";
+    if(kind==="loc"){
+      if(IOS) return (APP?`<p>IQ Kit on your Home Screen uses Safari's location setting.</p>`:"")+ol([
+        `Open the <b>Settings</b> app → <b>Privacy &amp; Security</b> → <b>Location Services</b>, and make sure it's <b>on</b>.`,
+        `On that same screen, scroll to <b>Safari Websites</b> → choose <b>While Using the App</b> (or <b>Ask Next Time</b>), and turn on <b>Precise Location</b>.`,
+        APP?`Come back to IQ Kit and tap <b>Try again</b>. If it still says blocked, close IQ Kit completely (swipe it away) and open it again.`
+           :`In Safari, tap the page menu (<b>aA</b> or <b>⋯</b>) in the address bar → <b>Website Settings</b> → <b>Location</b> → <b>Allow</b> (or <b>Ask</b>). Then tap <b>Try again</b>.`]);
+      if(AND) return ol([
+        `Swipe down from the top of the screen and make sure <b>Location</b> is <b>on</b>.`,
+        APP?`Open IQ Kit's site settings: in Chrome tap <b>⋮</b> → <b>Settings</b> → <b>Site settings</b> → <b>Location</b> → <b>${esc(site)}</b> → <b>Allow</b>.`
+           :`Tap the icon to the left of the web address (<b>⚙</b> or the lock) → <b>Permissions</b> → <b>Location</b> → <b>Allow</b>.`,
+        `If Chrome itself is blocked: phone <b>Settings</b> → <b>Apps</b> → <b>Chrome</b> → <b>Permissions</b> → <b>Location</b> → <b>Allow only while using the app</b>.`,
+        `Come back and tap <b>Try again</b>.`]);
+      return ol([`Click the icon at the left of the address bar (lock or ⚙) → <b>Location</b> → <b>Allow</b>, then tap <b>Try again</b> (or reload the page).`,
+        MAC?`If it's still off: <b>System Settings</b> → <b>Privacy &amp; Security</b> → <b>Location Services</b> → turn it on for your browser.`
+           :WIN?`If it's still off: Windows <b>Settings</b> → <b>Privacy &amp; security</b> → <b>Location</b> → turn on location and let desktop apps use it.`:`If it's still off, check the computer's privacy settings for location.`]);
+    }
+    if(kind==="cam"){
+      if(IOS) return ol([APP?`Open the <b>Settings</b> app → <b>Apps</b> → <b>Safari</b> → <b>Camera</b> → <b>Ask</b> or <b>Allow</b>.`
+           :`In Safari, tap the page menu (<b>aA</b> or <b>⋯</b>) in the address bar → <b>Website Settings</b> → <b>Camera</b> → <b>Allow</b> (or <b>Ask</b>).`,
+        `If it's still blocked: <b>Settings</b> → <b>Apps</b> → <b>Safari</b> → <b>Camera</b> → <b>Allow</b>.`,`Come back and tap <b>Try again</b>. You can always use <b>${esc(FILEBTN)}</b> instead.`]);
+      if(AND) return ol([APP?`In Chrome tap <b>⋮</b> → <b>Settings</b> → <b>Site settings</b> → <b>Camera</b> → <b>${esc(site)}</b> → <b>Allow</b>.`
+           :`Tap the icon to the left of the web address (<b>⚙</b> or the lock) → <b>Permissions</b> → <b>Camera</b> → <b>Allow</b>.`,
+        `If Chrome itself is blocked: phone <b>Settings</b> → <b>Apps</b> → <b>Chrome</b> → <b>Permissions</b> → <b>Camera</b> → <b>Allow</b>.`,`Come back and tap <b>Try again</b>. You can always use <b>${esc(FILEBTN)}</b> instead.`]);
+      return ol([`Click the icon at the left of the address bar (lock or ⚙) → <b>Camera</b> → <b>Allow</b>, then tap <b>Try again</b>.`,
+        MAC?`If it's still off: <b>System Settings</b> → <b>Privacy &amp; Security</b> → <b>Camera</b> → turn it on for your browser.`:WIN?`If it's still off: Windows <b>Settings</b> → <b>Privacy &amp; security</b> → <b>Camera</b> → turn on camera access for apps and desktop apps.`:`If it's still off, check the computer's privacy settings for the camera.`]);
+    }
+    return IOS?ol([`Tap <b>Try again</b> below and choose <b>Allow</b> when asked about <b>Motion &amp; Orientation</b>.`,`If no question appears, close IQ Kit (or the Safari tab) completely, open it again, open the camera and tap <b>Allow</b>.`])
+      :ol([`Tap <b>Try again</b>. If the compass still doesn't read, check the browser's site settings for <b>Motion sensors</b> → <b>Allow</b>.`]);
+  }
+  const FIXNAME={loc:"location",cam:"camera",cmp:"compass"};
+  let fixOpen="";
+  function fixUI(){
+    const box=q(".cm-fix"); if(!box) return; const ks=Object.keys(blocked).filter(k=>blocked[k]);
+    if(fixOpen&&!blocked[fixOpen]) fixOpen="";
+    box.hidden=!ks.length; if(!ks.length){ box.innerHTML=""; return; }
+    box.innerHTML=`<div class="cm-fixbtns">${ks.map(k=>`<button class="btn cm-fixbtn" type="button" data-cm="fix" data-k="${k}" aria-expanded="${fixOpen===k}">⚠ Turn on ${FIXNAME[k]}</button>`).join("")}</div>`+
+      (fixOpen?`<div class="cm-help"><b>${blocked[fixOpen]==="device"?"Your phone's location is turned off.":`${{loc:"Location",cam:"The camera",cmp:"The compass"}[fixOpen]} is blocked for IQ Kit.`}</b> A web page can't turn it back on by itself — it takes a few taps:${steps(fixOpen)}
+        <div class="cm-fixbtns"><button class="btn" type="button" data-cm="retry" data-k="${fixOpen}">Try again</button><button class="btn" type="button" data-cm="fix" data-k="">Hide steps</button></div></div>`:"");
+  }
+  function retry(k){
+    if(k==="loc") retryGPS();
+    if(k==="cam"){ stopCam(); startCam(); }
+    if(k==="cmp"){ stopCompass(); hdgSrc=""; blocked.cmp=""; startCompass(); fixUI(); hud(); }
+  }
+  // Coming back from Settings: try again on its own.
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&root&&!root.hidden&&blocked.loc) retryGPS(); });
+  try{ if(navigator.permissions&&navigator.permissions.query){
+    navigator.permissions.query({name:"geolocation"}).then(p=>{ p.onchange=()=>{ if(p.state!=="denied"&&root&&!root.hidden) retryGPS(); }; }).catch(()=>{});
+    navigator.permissions.query({name:"camera"}).then(p=>{ p.onchange=()=>{ if(p.state!=="denied"&&root&&!root.hidden&&view==="live"&&!stream){ blocked.cam=""; startCam(); } }; }).catch(()=>{}); } }catch(_){}
   function hudSoon(){ if(!hudT) hudT=requestAnimationFrame(()=>{ hudT=0; hud(); }); }
   function hud(){
     if(!root||root.hidden||view!=="live") return;
@@ -9022,6 +9103,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     if(a!=="del"&&armDel){ armDel=0; const d=q('[data-cm="del"]'); if(d) d.textContent="Delete"; }
     if(a==="close") return close();
     if(a==="shoot") return shoot();
+    if(a==="fix"){ fixOpen=b.dataset.k===fixOpen?"":b.dataset.k; fixUI(); const h=q(".cm-help"); if(h) h.scrollIntoView({block:"nearest"}); return; }
+    if(a==="retry"){ retry(b.dataset.k); return; }
     if(a==="flip"){ facing=facing==="environment"?"user":"environment"; hdg=null; stopCam(); startCam(); return; }
     if(a==="file"){ tapMeta=snapshot("file"); q('[data-cm="filein"]').click(); return; }
     if(a==="back") return showLive();
