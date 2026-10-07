@@ -6,7 +6,7 @@
 <title>Inter-Q Field Kit</title>
 <link rel="manifest" href="manifest.json">
 <script>if(/[?&]notepad\b/.test(location.search)){ document.documentElement.classList.add("np-mode"); var t=(location.search.match(/[?&]theme=(green|blue|amber|red)\b/)||[])[1]; if(t) document.documentElement.dataset.theme=t; }</script>
-<meta name="iq-build" content="2026-10-06 22:00">
+<meta name="iq-build" content="2026-10-06 22:20">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
@@ -346,8 +346,10 @@
   .np-sec { display:flex; flex-direction:column; gap:3px; } .np-sec .ta-sub { margin:0; }
   .np-sec textarea { width:100%; resize:vertical; font-size:15px; line-height:1.5; overflow:hidden; }
   .np-secs.cornell { display:grid; grid-template-columns:30% 1fr; gap:10px; } .np-secs.cornell .np-sum { grid-column:1/-1; }
+  .np-secs.swot { display:grid; grid-template-columns:1fr 1fr; gap:10px; } .np-secs.swot .np-ideas { grid-column:1/-1; }
   .np-foot { margin-top:auto; padding-top:8px; border-top:1px dotted var(--rule); }
   html.np-mode body { padding:0; } html.np-mode .wrap, html.np-mode #iqHowto { display:none !important; }
+  @media (max-width:700px) { .np-secs.swot { grid-template-columns:1fr; } }
   @media (max-width:700px) { #npOverlay { padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px); } .np-win { border:0; min-height:100%; } .np-head { grid-template-columns:1fr 1fr; } .np-secs.cornell { grid-template-columns:1fr; }
     .np-bar { top:env(safe-area-inset-top,0px); box-shadow:0 calc(-1 * env(safe-area-inset-top,0px)) 0 var(--title-a); } .np-barbtns .btn { font-size:15px; padding:3px 12px; }
     .np-head .ta-f:last-child { grid-column:1/-1; } .np-head .fld { font-size:16px; height:36px; } .np-sec textarea { font-size:16px; }
@@ -356,12 +358,18 @@
   #npPrint { display:none; }
   @media print {
     body.print-np > *:not(#npPrint) { display:none !important; } body.print-np #npPrint { display:block !important; }
-    html:has(body.print-np) { color-scheme:light; background:#fff !important; } body.print-np { background:#fff !important; padding:0 !important; margin:0 !important; }
+    html:has(body.print-np) { color-scheme:light; background:#fff !important; } body.print-np { background:#fff !important; padding:0 !important; margin:0 !important; min-height:0 !important; height:auto !important; }
   }
-  #npPrint { color:#000; background:#fff; font:11pt/1.45 Arial, Helvetica, sans-serif; } #npPrint * { color:#000 !important; text-shadow:none !important; }
-  #npPrint h1 { font-size:15pt; margin:0 0 6pt; } #npPrint h2 { font-size:11.5pt; text-transform:uppercase; border-bottom:1pt solid #000; margin:12pt 0 4pt; padding-bottom:2pt; }
-  #npPrint table { width:100%; border-collapse:collapse; } #npPrint table.nh td { padding:1pt 0; width:50%; }
-  #npPrint table.nc th, #npPrint table.nc td { border:0.75pt solid #000; padding:5pt 6pt; vertical-align:top; text-align:left; } #npPrint table.nc td { height:5in; }
+  #npPrint { color:#000; background:#fff; font:11pt/1.5 Arial, Helvetica, sans-serif; } #npPrint * { color:#000 !important; text-shadow:none !important; }
+  #npPrint table.np-pg { width:100%; border-collapse:collapse; margin:0; } #npPrint table.np-pg > * > tr > td { border:0 !important; } #npPrint .np-sp { height:0.6in; padding:0 !important; } #npPrint .np-pc { padding:0 0.75in !important; vertical-align:top; }
+  #npPrint td, #npPrint th { border-bottom-style:none; }
+  #npPrint .nk { font-size:9pt; text-transform:uppercase; letter-spacing:.08em; margin:0 0 2pt; }
+  #npPrint h1 { font-size:17pt; line-height:1.25; margin:0 0 4pt; }
+  #npPrint .nm { display:flex; flex-wrap:wrap; gap:4pt 18pt; font-size:10pt; padding:0 0 6pt; border-bottom:1.5pt solid #000; margin:0 0 4pt; }
+  #npPrint h2 { font-size:10.5pt; text-transform:uppercase; letter-spacing:.04em; border-bottom:0.75pt solid #000; margin:13pt 0 4pt; padding-bottom:2pt; break-after:avoid; page-break-after:avoid; }
+  #npPrint .nb { white-space:normal; }
+  #npPrint table.nc { width:100%; border-collapse:collapse; margin-top:10pt; } #npPrint table.nc th, #npPrint table.nc td { border:0.75pt solid #000; padding:5pt 6pt; vertical-align:top; text-align:left; }
+  #npPrint table.nc th { font-size:10pt; text-transform:uppercase; letter-spacing:.04em; background:#eee !important; } #npPrint table.nc td { height:4.5in; } #npPrint table.ns td { height:2.4in; width:50%; } #npPrint table.nc td, #npPrint table.nc th { border:0.75pt solid #000 !important; }
   .cam-row { display:flex; gap:10px; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px dotted var(--rule); }
   .cam-row .cam-t { min-width:0; } .cam-row .cam-t b { font-size:14px; } .cam-row .sal-hint { margin-top:1px; } .cam-row .cam-go { flex:none; text-decoration:none; font-size:13px; padding:3px 10px; }
   .cam-yt { border:1px solid var(--lo); padding:8px 10px; margin:4px 0 6px; } .cam-yt a.btn { text-decoration:none; } .cam-yt .btn { font-size:13px; padding:3px 10px; }
@@ -7309,20 +7317,37 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   const fmtDate=(d)=>d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});
   const fmtTime=(d)=>mil()?d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).replace(":",""):d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
   // Formats: [key, name, [[sectionKey, label, placeholder, rows]], layout]
+  // Formats: [key, name, [[section, label, placeholder, rows]], layout, group]. Shared section keys carry text across formats.
   const F=[
-    ["plain","Plain notes",[["notes","Notes","Start typing. Lines that start with - or 1. keep going when you press Enter.",14]]],
-    ["class","Class notes",[["topic","Topic / lesson","What today's class covers",2],["key","Key points","- main ideas, in your own words",8],["terms","Terms & definitions","- term — meaning",4],["q","Questions / follow up","- what to ask or look up",3],["hw","Homework & due dates","- assignment — due date",2]]],
-    ["cornell","Cornell notes",[["cues","Cues & questions","Keywords and questions (fill in after class)",12],["notes","Notes","Notes during class",12],["sum","Summary","2–3 sentences: the main point in your own words",3]],"cornell"],
-    ["outline","Outline",[["outline","Outline","I. Main idea\n  A. Supporting point\n    1. Detail\n(Tab indents, Shift+Tab outdents, Esc then Tab moves on)",14]]],
-    ["meeting","Meeting / briefing",[["att","Attendees","Names / roles",2],["agenda","Agenda / topics","- topic",4],["notes","Discussion","- what was said",6],["dec","Decisions","- decision",3],["act","Action items","- who — what — by when",3]]],
-    ["bluf","BLUF summary",[["bluf","Bottom line up front","The one thing the reader must know",2],["key","Key points","- point",6],["sowhat","So what / implications","Why it matters",3],["next","Next steps","- who — what — by when",3]]]
+    ["class","Class notes",[["topic","Topic / lesson","What today's class covers",2],["key","Key points","- main ideas, in your own words",8],["terms","Terms & definitions","- term — meaning",4],["q","Questions / follow up","- what to ask or look up",3],["hw","Homework & due dates","- assignment — due date",2]],null,"Study"],
+    ["cornell","Cornell notes",[["cues","Cues & questions","Keywords and questions (fill in after class)",12],["notes","Notes","Notes during class",12],["sum","Summary","2–3 sentences: the main point in your own words",3]],"cornell","Study"],
+    ["outline","Outline",[["outline","Outline","I. Main idea\n  A. Supporting point\n    1. Detail\n(Tab indents, Shift+Tab outdents, Esc then Tab moves on)",14]],null,"Study"],
+    ["reading","Reading notes",[["src","Source","Title, author, chapter / pages",2],["arg","Main argument","What the author is arguing, in one or two sentences",3],["pts","Key points","- point (p. 12)",8],["quotes","Quotes","\u201c…\u201d (p. 34)",4],["take","My take","Agree / disagree, and why",3]],null,"Study"],
+    ["flash","Exam review / flashcards",[["cards","Terms & definitions","term — definition (one per line)",14],["weak","Review again","- terms I keep missing",3]],null,"Study"],
+    ["opord","Operations order notes",[["sit","1. Situation","Threat / enemy, friendly forces, attachments, weather and terrain",6],["mis","2. Mission","Who, what, when, where, why",2],["exe","3. Execution","Commander's intent, concept, tasks to units, coordinating instructions",8],["sus","4. Sustainment","Logistics, medical, personnel",4],["cs","5. Command & signal","Chain of command, locations, frequencies / call signs",3],["mine","My tasks & questions","- task or question",3]],null,"Military"],
+    ["cub","Commander's update / staff sync",[["stat","Status by section","- S1: Green — …\n- S4: Amber — …",6],["iss","Issues","- issue",4],["dneed","Decisions needed","- decision — from whom — by when",3],["task","Taskings","- who — what — by when",4]],null,"Military"],
+    ["hotwash","Hot wash / AAR notes",[["plan","What was supposed to happen","The plan, standard or task",3],["hap","What happened","Facts, in order",4],["sust","Sustain","- what worked",4],["imp","Improve","- what to fix and how",4],["aact","Actions","- who — what — by when",3]],null,"Military"],
+    ["counsel","Counseling notes",[["purp","Purpose","Event-oriented, performance or professional growth",2],["disc","Key points discussed","- point",6],["poa","Plan of action","- specific, measurable steps",4],["ldr","Leader responsibilities","- what I will do to support",3],["fu","Follow-up","Date and what will be checked",2]],null,"Military"],
+    ["rfi","Phone message / RFI log",[["log","Messages & requests","[time] From (name, unit, phone) — message or request — action taken — suspense\n(Time-stamp starts each entry)",12],["open","Open items / suspenses","- item — due",3]],null,"Military"],
+    ["duty","Duty log / staff journal",[["dlog","Log","[time] entry — press Time-stamp to start each line",14],["shift","Shift summary","What the next shift needs to know",3],["pass","Pass-down items","- item for the next shift",3]],null,"Military"],
+    ["bluf","BLUF summary",[["bluf","Bottom line up front","The one thing the reader must know",2],["key","Key points","- point",6],["sowhat","So what / implications","Why it matters",3],["next","Next steps","- who — what — by when",3]],null,"Military"],
+    ["meeting","Meeting / briefing",[["att","Attendees","Names / roles",2],["agenda","Agenda / topics","- topic",4],["notes","Discussion","- what was said",6],["dec","Decisions","- decision",3],["act","Action items","- who — what — by when",3]],null,"Business"],
+    ["oneone","1-on-1 notes",[["wins","Wins","- what went well",3],["pri","Priorities","- what matters most next",3],["block","Blockers / support needed","- blocker",3],["fb","Feedback (both ways)","- feedback",3],["commit","Commitments","- who — what — by when",3]],null,"Business"],
+    ["status","Project status",[["overall","Overall status","Green / Amber / Red — one line why",2],["done","Done since last update","- item",4],["nxt","Next","- item — date",4],["risk","Risks & issues","- risk — impact — mitigation",3],["dec2","Decisions needed","- decision — from whom — by when",2]],null,"Business"],
+    ["interview","Interview notes",[["cand","Candidate & role","Name and position",2],["qa","Questions & answers","Q: …\nA: …",10],["str","Strengths","- strength",3],["con","Concerns","- concern",3],["rec","Recommendation","Hire / no hire / next step — and why",2]],null,"Business"],
+    ["decision","Decision log",[["what","Decision","What was decided",2],["opts","Options considered","- option — pros / cons",5],["why","Rationale","Why this option",4],["who","Decided by / date","Name, role, date",2],["rev","Review on","Date, and what would change the decision",2]],null,"Business"],
+    ["call","Client / vendor call",[["cwho","Who","Name, company or agency, contact",2],["cpur","Purpose","Why the call",2],["needs","Their needs / issues","- item",5],["prom","What we promised","- promise — by when",3],["cfu","Follow-up","- who — what — by when",3]],null,"Business"],
+    ["swot","Brainstorm / SWOT",[["sw_s","Strengths","- strength",4],["sw_w","Weaknesses","- weakness",4],["sw_o","Opportunities","- opportunity",4],["sw_t","Threats","- threat",4],["ideas","Top ideas / actions","- idea — owner",4]],"swot","Business"],
+    ["plain","Plain notes",[["notes","Notes","Start typing. Lines that start with - or 1. keep going when you press Enter.",14]],null,"General"]
   ];
-  const fmtOf=(k)=>F.find(f=>f[0]===k)||F[1];
+  const GROUPS=["General","Study","Military","Business"];
+  const fmtOf=(k)=>F.find(f=>f[0]===k)||F.find(f=>f[0]==="plain");
   let N=LS.get("iq.note",null);
-  const fresh=(fmt)=>{ const d=new Date(); return {fmt:fmt||(N&&N.fmt)||"class",date:fmtDate(d),time:fmtTime(d),name:LS.get("iq.noteName",""),subject:"",s:{},ts:Date.now()}; };
-  if(!N||typeof N!=="object"||!N.s) N=fresh("class");
+  const fresh=(fmt)=>{ const d=new Date(); return {fmt:fmt||(N&&N.fmt)||"plain",date:fmtDate(d),time:fmtTime(d),name:LS.get("iq.noteName",""),subject:"",s:{},ts:Date.now()}; };
+  if(!N||typeof N!=="object"||!N.s) N=fresh("plain");   // first time: Plain notes
   const save=()=>{ N.ts=Date.now(); LS.set("iq.note",N); if(N.name) LS.set("iq.noteName",N.name); };
-  const title=()=>`${fmtOf(N.fmt)[1].toUpperCase()}${N.subject?` — ${N.subject}`:""}`;
+  const title=()=>`${fmtOf(N.fmt)[1]}${N.subject?` — ${N.subject}`:""}`;
+  const docTitle=()=>N.subject||fmtOf(N.fmt)[1];
   function asText(){
     const f=fmtOf(N.fmt), L=[title(),`Name: ${N.name||"—"}`,`Subject: ${N.subject||"—"}`,`Date: ${N.date||"—"}   Time: ${N.time||"—"}`,""];
     f[2].forEach(([k,lab])=>{ const v=String(N.s[k]||"").trim(); if(!v&&f[2].length>1) return; L.push(lab.toUpperCase()); L.push(v||"—"); L.push(""); });
@@ -7330,9 +7355,11 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   }
   function asHtml(){
     const f=fmtOf(N.fmt), sec=(k)=>String(N.s[k]||"").trim(), p=(t)=>esc(t).replace(/\n/g,"<br>");
-    const head=`<h1>${esc(title())}</h1><table class="nh"><tr><td><b>Name:</b> ${esc(N.name||"—")}</td><td><b>Subject:</b> ${esc(N.subject||"—")}</td></tr><tr><td><b>Date:</b> ${esc(N.date||"—")}</td><td><b>Time:</b> ${esc(N.time||"—")}</td></tr></table>`;
+    const meta=[N.name&&`<span><b>Prepared by:</b> ${esc(N.name)}</span>`,N.date&&`<span><b>Date:</b> ${esc(N.date)}</span>`,N.time&&`<span><b>Time:</b> ${esc(N.time)}</span>`].filter(Boolean).join("");
+    const head=`<div class="nk">${esc(f[1])}</div><h1>${esc(docTitle())}</h1>${meta?`<div class="nm">${meta}</div>`:""}`;
     let body="";
     if(f[3]==="cornell") body=`<table class="nc"><tr><th style="width:30%">Cues &amp; questions</th><th>Notes</th></tr><tr><td>${p(sec("cues"))}</td><td>${p(sec("notes"))}</td></tr></table><h2>Summary</h2><div>${p(sec("sum"))||"—"}</div>`;
+    else if(f[3]==="swot") body=`<table class="nc ns"><tr><th>Strengths</th><th>Weaknesses</th></tr><tr><td>${p(sec("sw_s"))||"—"}</td><td>${p(sec("sw_w"))||"—"}</td></tr><tr><th>Opportunities</th><th>Threats</th></tr><tr><td>${p(sec("sw_o"))||"—"}</td><td>${p(sec("sw_t"))||"—"}</td></tr></table>${sec("ideas")?`<h2>Top ideas / actions</h2><div class="nb">${p(sec("ideas"))}</div>`:""}`;
     else body=f[2].map(([k,lab])=>sec(k)||f[2].length===1?`<h2>${esc(lab)}</h2><div class="nb">${p(sec(k))||"—"}</div>`:"").join("");
     return head+body;
   }
@@ -7342,8 +7369,12 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   async function copy(t){ try{ await navigator.clipboard.writeText(t); return true; }catch(_){ const x=document.createElement("textarea"); x.value=t; x.style.cssText="position:fixed;opacity:0;top:0"; document.body.appendChild(x); x.select(); let ok=false; try{ ok=document.execCommand("copy"); }catch(_){} x.remove(); return ok; } }
   function print(){
     let pa=document.getElementById("npPrint"); if(!pa){ pa=document.createElement("div"); pa.id="npPrint"; document.body.appendChild(pa); }
-    pa.innerHTML=asHtml(); document.body.classList.add("print-np");
-    const done=()=>{ document.body.classList.remove("print-np"); window.removeEventListener("afterprint",done); }; window.addEventListener("afterprint",done);
+    pa.innerHTML=`<table class="np-pg"><thead><tr><td class="np-sp"></td></tr></thead><tfoot><tr><td class="np-sp"></td></tr></tfoot><tbody><tr><td class="np-pc">${asHtml()}</td></tr></tbody></table>`;
+    document.body.classList.add("print-np");
+    const t0=document.title; document.title=fileBase();
+    let ps=document.getElementById("npPageStyle"); if(!ps){ ps=document.createElement("style"); ps.id="npPageStyle"; document.head.appendChild(ps); }
+    ps.textContent="@page { size: letter; margin: 0; }";   // only while the notepad prints
+    const done=()=>{ document.body.classList.remove("print-np"); document.title=t0; ps.textContent=""; window.removeEventListener("afterprint",done); }; window.addEventListener("afterprint",done);
     setTimeout(()=>{ window.print(); setTimeout(done,1500); },50);
   }
   // Lists keep going on Enter; Tab / Shift+Tab indent in the outline.
@@ -7395,7 +7426,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           <label class="ta-f">Subject / class<input class="fld" data-h="subject" value="${esc(N.subject)}" list="npSubs" autocomplete="off" placeholder="e.g. MLO course — Module 3"></label>
           <label class="ta-f">Date<input class="fld" data-h="date" value="${esc(N.date)}"></label>
           <label class="ta-f">Time<input class="fld" data-h="time" value="${esc(N.time)}"></label>
-          <label class="ta-f">Format<select class="fld" data-np="fmt">${F.map(x=>`<option value="${x[0]}"${x[0]===N.fmt?" selected":""}>${x[1]}</option>`).join("")}</select></label>
+          <label class="ta-f">Format<select class="fld" data-np="fmt">${GROUPS.map(g=>`<optgroup label="${g}">${F.filter(x=>x[4]===g).map(x=>`<option value="${x[0]}"${x[0]===N.fmt?" selected":""}>${x[1]}</option>`).join("")}</optgroup>`).join("")}</select></label>
         </div>
         <datalist id="npSubs">${subs.map(x=>`<option value="${esc(x)}"></option>`).join("")}</datalist>
         <div class="toolrow np-tools"><button class="btn" type="button" data-np="stamp" title="Insert the current time where you're typing">Time-stamp</button><button class="btn" type="button" data-np="copy">Copy</button><button class="btn" type="button" data-np="print">Print / PDF</button><button class="btn" type="button" data-np="txt">Save .txt</button><button class="btn" type="button" data-np="doc">Save Word</button><button class="btn" type="button" data-np="new">New note</button><span class="muted np-msg" role="status"></span></div>
@@ -7419,7 +7450,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       if(a==="copy"){ msg(await copy(asText())?"Copied.":"Couldn't copy — select the text and copy it."); return; }
       if(a==="print"){ print(); return; }
       if(a==="txt"){ download(fileBase()+".txt","text/plain;charset=utf-8",asText()); msg("Saved as a text file."); return; }
-      if(a==="doc"){ download(fileBase()+".doc","application/msword",`<html><head><meta charset="utf-8"><title>${esc(title())}</title><style>body{font:11pt Calibri,Arial,sans-serif}h1{font-size:15pt}h2{font-size:12pt;margin:12pt 0 3pt;border-bottom:1pt solid #000}table{border-collapse:collapse;width:100%}td,th{border:1pt solid #000;padding:4pt;vertical-align:top;text-align:left}table.nh td{border:0;padding:1pt 0}</style></head><body>${asHtml()}</body></html>`); msg("Saved — opens in Word."); return; }
+      if(a==="doc"){ download(fileBase()+".doc","application/msword",`<html><head><meta charset="utf-8"><title>${esc(title())}</title><style>body{font:11pt Calibri,Arial,sans-serif;margin:0.75in}.nk{font-size:9pt;text-transform:uppercase;letter-spacing:1pt;margin:0}h1{font-size:17pt;margin:0 0 4pt}.nm{font-size:10pt;border-bottom:1.5pt solid #000;padding-bottom:6pt}.nm span{margin-right:18pt}h2{font-size:10.5pt;text-transform:uppercase;margin:13pt 0 3pt;border-bottom:.75pt solid #000}table{border-collapse:collapse;width:100%;margin-top:10pt}td,th{border:.75pt solid #000;padding:5pt;vertical-align:top;text-align:left}th{background:#eee;font-size:10pt;text-transform:uppercase}</style></head><body>${asHtml()}</body></html>`); msg("Saved — opens in Word."); return; }
       if(a==="new"){ const has=Object.values(N.s).some(v=>String(v||"").trim()); if(has&&!armNew){ armNew=true; msg("Tap New note again to clear this note (save or copy it first)."); setTimeout(()=>armNew=false,5000); return; } armNew=false; N=fresh(N.fmt); save(); render(root,opts); const t=root.querySelector("textarea"); t&&t.focus(); return; }
     };
   }
