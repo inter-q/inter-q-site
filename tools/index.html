@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <script>if(/[?&]notepad\b/.test(location.search)){ document.documentElement.classList.add("np-mode"); var t=(location.search.match(/[?&]theme=(green|blue|amber|red)\b/)||[])[1]; if(t) document.documentElement.dataset.theme=t; }</script>
-<meta name="iq-build" content="2026-10-07 12:00">
+<meta name="iq-build" content="2026-10-07 15:30">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
@@ -447,6 +447,70 @@
   .win.feed > .body { padding:8px 10px; }
   html.lg .win.feed > .bar { min-height:52px; font-size:16px; } html.lg .cc-src > summary { min-height:52px; display:flex; align-items:center; gap:8px; font-size:17px; }
   @media print { .cc-src:not([open]) > .grid, .win.feed:not(.open) > .body { display:block; } }
+  /* Camera: field photo with data stamp */
+  #cmOverlay { position:fixed; inset:0; z-index:1500; background:rgba(0,0,0,.6); display:flex; justify-content:center; align-items:flex-start; padding:12px; overflow-y:auto; overscroll-behavior:contain; }
+  #cmOverlay[hidden] { display:none; }
+  html.cm-open body { overflow:hidden; }
+  .np-win.cm-win { max-width:900px; min-height:0; }
+  .cm-body { display:flex; flex-direction:column; gap:8px; padding:8px 10px 12px !important; }
+  .cm-live, .cm-rev { display:flex; flex-direction:column; gap:8px; } .cm-live[hidden], .cm-rev[hidden] { display:none; }
+  .cm-view { position:relative; background:#000; border:1px solid var(--edge); height:min(62vh,560px); overflow:hidden; }
+  .cm-view video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; } .cm-view video.mirror { transform:scaleX(-1); }
+  .cm-cross { position:absolute; left:50%; top:50%; width:44px; height:44px; margin:-22px 0 0 -22px; pointer-events:none; }
+  .cm-cross::before, .cm-cross::after { content:""; position:absolute; background:rgba(255,213,74,.9); box-shadow:0 0 2px #000; }
+  .cm-cross::before { left:21px; top:0; width:2px; height:44px; } .cm-cross::after { top:21px; left:0; height:2px; width:44px; }
+  .cm-hud { position:absolute; left:8px; top:8px; right:8px; pointer-events:none; color:#fff; font-family:var(--font-mono); font-size:13px; line-height:1.35; text-shadow:0 1px 2px #000,0 0 3px #000; }
+  .cm-hud > div { width:max-content; max-width:100%; background:rgba(0,0,0,.45); padding:1px 6px; }
+  .cm-az { font-size:22px; font-weight:700; color:#ffd54a; } .cm-az.dim { font-size:15px; color:#fff; }
+  .cm-l2:empty { display:none; }
+  .cm-off { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; color:#fff; background:rgba(0,0,0,.75); font-size:15px; }
+  .cm-off[hidden] { display:none; } .cm-off.quiet { background:rgba(0,0,0,.35); }
+  .cm-flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; } .cm-flash.on { animation:cmFlash .35s ease-out; }
+  @keyframes cmFlash { 0% { opacity:.85; } 100% { opacity:0; } }
+  .cm-ctl { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px; }
+  .cm-ctl .btn { min-height:44px; font-size:14px; } .cm-ctl .btn:last-of-type { justify-self:end; } .cm-ctl .btn:first-child { justify-self:start; }
+  .cm-shut { width:72px; height:72px; border-radius:50%; border:4px solid var(--ink); background:#fff; box-shadow:inset 0 0 0 4px #000; cursor:pointer; }
+  .cm-shut:active { transform:scale(.94); } .cm-shut:focus-visible { outline:2px dotted var(--ink); outline-offset:3px; }
+  .cm-msg, .cm-msg2 { min-height:1.3em; font-size:13px; color:var(--ink-dim); } .cm-msg.warn, .cm-msg2.warn { color:var(--warn); }
+  .cm-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:8px; }
+  .cm-it { display:flex; gap:8px; align-items:flex-start; text-align:left; background:var(--btn); color:var(--ink); border:1px solid var(--lo); padding:6px; cursor:pointer; font-family:var(--font-ui); }
+  .cm-it:hover { background:var(--btn-hi); } .cm-it img { width:84px; height:63px; object-fit:cover; flex:none; background:#000; }
+  .cm-it > span { display:flex; flex-direction:column; gap:2px; font-size:12px; min-width:0; overflow-wrap:anywhere; } .cm-it b { font-size:13px; color:var(--bright); }
+  .cm-revtop { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .cm-imgwrap { background:#000; border:1px solid var(--edge); text-align:center; }
+  .cm-img { display:block; max-width:100%; max-height:62vh; margin:0 auto; }
+  .cm-notes { display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--ink-dim); } .cm-notes textarea { width:100%; box-sizing:border-box; font-size:15px; min-height:70px; }
+  .cm-chk { display:flex; gap:8px; align-items:center; font-size:13px; }
+  .cm-acts { display:flex; flex-wrap:wrap; gap:6px; } .cm-acts .btn { min-height:42px; font-size:14px; flex:1 1 auto; }
+  .cm-text { margin:0; font-size:12px; white-space:pre-wrap; overflow-wrap:anywhere; color:var(--ink-dim); border:1px dashed var(--lo); padding:8px; }
+  @media (max-width:700px) {
+    #cmOverlay { padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px); align-items:stretch; }
+    .np-win.cm-win { border:0; min-height:100%; } .cm-view { height:58vh; } .cm-notes textarea { font-size:16px; }
+    .cm-ctl .btn { font-size:13px; padding:4px 8px; } .cm-list { grid-template-columns:1fr; }
+  }
+  html.lg .cm-shut { width:88px; height:88px; } html.lg .cm-hud { font-size:16px; } html.lg .cm-az { font-size:26px; }
+  html.lg .cm-it b { font-size:17px; } html.lg .cm-it > span { font-size:15px; } html.lg .cm-chk { font-size:17px; } html.lg .cm-text { font-size:15px; }
+  @media (prefers-reduced-motion:reduce) { .cm-flash.on { animation:none; } }
+  /* Sketch: measure settings row; report attachments */
+  .sk-bar[hidden] { display:none !important; }
+  .sk-ml { font-size:13px; color:var(--ink-dim); display:inline-flex; align-items:center; gap:6px; white-space:nowrap; flex:none; }
+  .sk-num { width:84px !important; height:36px; font-size:15px; box-sizing:border-box; flex:none; }
+  html.lg .sk-num { width:110px !important; }
+  .rep-att { margin-top:12px; border-top:1px solid var(--rule); padding-top:10px; }
+  .rep-att-h { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .rep-att-h b { color:var(--bright); }
+  .rep-att-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; margin-top:8px; }
+  .rep-att-list:empty { display:none; }
+  .rep-att-it { border:1px solid var(--lo); padding:6px; display:flex; flex-direction:column; gap:5px; background:var(--btn); }
+  .rep-att-it img { width:100%; height:130px; object-fit:contain; background:#fff; border:1px solid var(--lo); }
+  .rep-att-it .cap { font-size:13px; color:var(--ink); overflow-wrap:anywhere; } .rep-att-it .tm { font-size:12px; color:var(--ink-dim); }
+  .rep-att-it .toolrow { display:flex; gap:6px; flex-wrap:wrap; }
+  html.lg .rep-att-it img { height:170px; } html.lg .rep-att-it .cap { font-size:17px; }
+  .att-print { break-before:page; page-break-before:always; }
+  .att-print figure { margin:0 0 14pt; break-inside:avoid; page-break-inside:avoid; }
+  .att-print img { display:block; max-width:100%; max-height:8in; border:0.75pt solid #000; margin:0 auto; }
+  .att-print figcaption { font:9.5pt Arial, Helvetica, sans-serif; margin-top:4pt; color:#000 !important; }
+  .att-print h2 { font:bold 11pt Arial, Helvetica, sans-serif; text-transform:uppercase; border-bottom:1.5pt solid #000; margin:0 0 8pt; padding-bottom:2pt; color:#000 !important; }
   /* Sketchpad */
   #skOverlay { position:fixed; inset:0; z-index:1500; background:rgba(0,0,0,.6); display:flex; justify-content:center; align-items:stretch; padding:12px; overflow-y:auto; overscroll-behavior:contain; }
   #skOverlay[hidden] { display:none; }
@@ -832,6 +896,7 @@
     <div class="iq-btns"><button type="button" class="np-btn" id="npBtn" title="Notepad — class and meeting notes" aria-label="Open notepad"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><rect x="4.5" y="4.5" width="15" height="17"/><path d="M8 2.5v4M12 2.5v4M16 2.5v4M7.5 10.5h9M7.5 13.5h9M7.5 16.5h6"/></svg><span class="np-lbl">Notes</span></button>
       <button type="button" class="np-btn rc-btn" id="recBtn" title="Sound recorder" aria-label="Open sound recorder"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5.5 10.5v1a6.5 6.5 0 0 0 13 0v-1M12 18v3.5M8.5 21.5h7"/></svg><span class="np-lbl">Record</span></button>
       <button type="button" class="np-btn" id="skBtn" title="Sketchpad — quick diagrams" aria-label="Open sketchpad"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><path d="M15.5 4.5l4 4L9 19H5v-4z"/><path d="M13 7l4 4"/><path d="M3.5 21.5h17" stroke-dasharray="2 2.5"/></svg><span class="np-lbl">Sketch</span></button>
+      <button type="button" class="np-btn" id="camBtn" title="Camera — photo stamped with time, location and direction" aria-label="Open camera"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><path d="M3 7.5h4l1.5-2.5h7L17 7.5h4V19H3z"/><circle cx="12" cy="13" r="3.6"/></svg><span class="np-lbl">Photo</span></button>
       <button type="button" class="np-btn lg-btn" id="lgBtn" aria-pressed="false" aria-label="Large text and buttons" title="Large mode — bigger buttons and text (good with gloves)"><span class="lg-aa" aria-hidden="true"><span>A</span><span>A</span></span><span class="np-lbl">Large</span></button></div>
     <div class="finder" role="search">
       <label class="sr" for="finderIn">Search reports, tools and sites</label>
@@ -1061,6 +1126,7 @@
         <div class="rep-pane" id="rep-ics213" data-rep="ics213" hidden></div>
         <div class="rep-pane" id="rep-ics214" data-rep="ics214" hidden></div>
       </div>
+      <div class="rep-att" id="repAtt"></div>
       <details class="dsc-how rep-note"><summary><b>Saving and privacy</b></summary><div class="muted" style="margin-top:6px">Nothing in REPORTS is sent anywhere. Switching between reports keeps what you've entered. To keep a report, use Save to file — it's saved only on your device, optionally encrypted — and Open file to continue later. Closing or reloading the page clears anything unsaved.</div></details>
     </div>
   </section>
@@ -6594,6 +6660,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const name=$("repSel").value, io=repIO(name); if(!io) return;
     const pw=$("repPw").value, fn=(($("repFn").value.trim()||REP_LABEL[name]).replace(/[^A-Za-z0-9 _.-]/g,"").replace(/\.json$/i,""))+".json";
     const state=io.get(), body={report:name,saved:new Date().toISOString(),state};
+    const sks=window.__repAtt&&window.__repAtt.get(name); if(sks&&sks.length) body.sketches=sks;
     let out;
     try{
       if(pw){
@@ -6622,6 +6689,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     $("repSel").value=name; showReport(name);
     const io=repIO(name); if(!io) throw new Error("couldn't load the "+REP_NICE[name]);
     io.set(body.state||{});
+    if(window.__repAtt) window.__repAtt.set(name,Array.isArray(body.sketches)?body.sketches:[]);
     repSaved[name]=repKey(io.get());
     io.clean&&io.clean("Opened "+fname);
     repMsg(`Opened ${REP_NICE[name]} — ${fname}${body.saved?" (saved "+new Date(body.saved).toLocaleString()+")":""}`,8000);
@@ -7306,6 +7374,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     };
     items.push({name:"Notepad",href:"#",go:"btn:npBtn",host:"",where:"Toolbar button",hay:norm("notepad notes note taking class meeting cornell outline duty log journal tool")});
     items.push({name:"Large mode (gloves)",href:"#",go:"btn:lgBtn",host:"",where:"Toolbar button",hay:norm("large mode glove gloves big buttons bigger text font size accessibility zoom")});
+    items.push({name:"Camera (field photo)",href:"#",go:"btn:camBtn",host:"",where:"Toolbar button",hay:norm("camera photo picture take photo field photo geotag timestamp date time gps coordinates mgrs azimuth compass direction bearing altitude elevation notes evidence scene documentation")});
     items.push({name:"Sketchpad",href:"#",go:"btn:skBtn",host:"",where:"Toolbar button",hay:norm("sketchpad sketch draw drawing diagram canvas map room layout vehicle position direction of travel scene crime scene tool nato military symbols app-6 2525 unit symbol")});
     items.push({name:"Sound recorder",href:"#",go:"btn:recBtn",host:"",where:"Toolbar button",hay:norm("sound recorder audio voice memo record recording microphone mic dictation meeting lecture tool")});
     [["repSel","REPORTS.EXE","report"],["toolSel","TOOLS.EXE","tool"]].forEach(([id,win,kind])=>{
@@ -8055,6 +8124,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   function drawItem(ctx,it,P){
     const col=P[it.c]||P.ink; ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=it.w||4; ctx.lineCap="round"; ctx.lineJoin="round";
     if(it.t==="sym"){ drawSym(ctx,it,P); return; }
+    if(it.t==="map"){ drawMap(ctx,it,P); return; }
+    if(it.t==="meas"){ drawMeas(ctx,it,P); return; }
     if(it.t==="pen"){ const p=it.p; if(!p.length) return; ctx.beginPath(); ctx.moveTo(p[0][0],p[0][1]);
       if(p.length<3){ if(p.length===1){ ctx.arc(p[0][0],p[0][1],ctx.lineWidth/2,0,Math.PI*2); ctx.fill(); return; } ctx.lineTo(p[1][0],p[1][1]); }
       else { for(let i=1;i<p.length-1;i++){ const mx=(p[i][0]+p[i+1][0])/2, my=(p[i][1]+p[i+1][1])/2; ctx.quadraticCurveTo(p[i][0],p[i][1],mx,my); } const L=p[p.length-1]; ctx.lineTo(L[0],L[1]); }
@@ -8071,6 +8142,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   const dSeg=(px,py,ax,ay,bx,by)=>{ const dx=bx-ax, dy=by-ay, l=dx*dx+dy*dy; let t=l?((px-ax)*dx+(py-ay)*dy)/l:0; t=Math.max(0,Math.min(1,t)); return Math.hypot(px-(ax+t*dx),py-(ay+t*dy)); };
   function hits(it,x,y,tol){
     if(it.t==="sym") return symHit(it,x,y,tol);
+    if(it.t==="map") return mapHit(it,x,y,tol);
+    if(it.t==="meas") return dSeg(x,y,it.a[0],it.a[1],it.b[0],it.b[1])<=(it.w||4)/2+tol+4;
     const w=(it.w||4)/2+tol;
     if(it.t==="pen"){ const p=it.p; if(p.length===1) return Math.hypot(x-p[0][0],y-p[0][1])<=w; for(let i=1;i<p.length;i++) if(dSeg(x,y,p[i-1][0],p[i-1][1],p[i][0],p[i][1])<=w) return true; return false; }
     if(it.t==="text"){ const lines=String(it.txt).split("\n"), wd=Math.max(...lines.map(l=>l.length))*it.s*.6, ht=lines.length*it.s*1.2; return x>=it.x-tol&&x<=it.x+wd+tol&&y>=it.y-tol&&y<=it.y+ht+tol; }
@@ -8163,15 +8236,149 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   }
   const symHit=(it,x,y,tol)=>{ const g=symGeo(it), lw=it.lab?it.lab.length*it.s*.2+it.s*.2:0; return x>=g.left-tol&&x<=g.right+lw+tol&&y>=g.top-it.s*.45-tol&&y<=g.bot+(it.i==="hq"?it.s*.75:0)+tol; };
 
+  // ---- Map symbols: terrain and map features (military map legend colors) + NATO APP-6 control measures ----
+  // m: "pt" = tap to place, "ln" = drag to draw along a path, "ar" = drag to draw an area.
+  const MC_L={terrain:"#8b4a1c",water:"#1565c0",veg:"#2e7d32"}, MC_D={terrain:"#e0a060",water:"#64b5ff",veg:"#7ccf6f"}, MC=Object.assign({},MC_L);
+  const MAPCAT=[
+    ["terrain","Terrain features","Brown contour shapes, as on military maps. The five major and three minor terrain features."],
+    ["water","Water","Blue features."],
+    ["veg","Vegetation","Green features."],
+    ["built","Man-made features","Black features: buildings, bridges, towers."],
+    ["lines","Roads, rails and lines","Drag along the route to draw."],
+    ["nav","Navigation","North arrow, scale and elevations."],
+    ["ctl","Control measures (NATO APP-6)","Points, lines and areas used to plan and control movement."]
+  ];
+  // pathLen / pointAt: walk along a drawn path to place ticks and repeating marks.
+  function pathWalk(p,step,fn){ let acc=step/2; for(let i=1;i<p.length;i++){ const [x0,y0]=p[i-1],[x1,y1]=p[i], L=Math.hypot(x1-x0,y1-y0); if(!L) continue; const ux=(x1-x0)/L, uy=(y1-y0)/L; while(acc<=L){ fn(x0+ux*acc,y0+uy*acc,ux,uy); acc+=step; } acc-=L; } }
+  function pathStroke(ctx,p){ ctx.beginPath(); ctx.moveTo(p[0][0],p[0][1]); if(p.length<3){ p.slice(1).forEach(q=>ctx.lineTo(q[0],q[1])); } else { for(let i=1;i<p.length-1;i++){ const mx=(p[i][0]+p[i+1][0])/2, my=(p[i][1]+p[i+1][1])/2; ctx.quadraticCurveTo(p[i][0],p[i][1],mx,my); } const L=p[p.length-1]; ctx.lineTo(L[0],L[1]); } ctx.stroke(); }
+  const ell=(ctx,x,y,rx,ry)=>{ ctx.beginPath(); ctx.ellipse(x,y,Math.max(.5,rx),Math.max(.5,ry),0,0,Math.PI*2); ctx.stroke(); };
+  const txtC=(ctx,s,x,y,size,col,bold=true)=>{ ctx.fillStyle=col; ctx.font=`${bold?"bold ":""}${Math.round(size)}px Arial, Helvetica, sans-serif`; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); };
+  const tear=(ctx,x,y,s,P,code)=>{ const r=s*.42; ctx.strokeStyle=P.ink; ctx.fillStyle=P.bg; ctx.lineWidth=Math.max(1.5,s*.05); ctx.beginPath(); ctx.moveTo(x,y); ctx.bezierCurveTo(x-r*1.1,y-r*1.2,x-r*1.1,y-r*2.3,x,y-r*2.3); ctx.bezierCurveTo(x+r*1.1,y-r*2.3,x+r*1.1,y-r*1.2,x,y); ctx.closePath(); ctx.fill(); ctx.stroke(); txtC(ctx,code,x,y-r*1.45,s*(code.length>2?.24:.3),P.ink); };
+  const MAPDEF={
+    // Terrain (contour diagrams; draw at the spot the feature sits)
+    hill:{lw:0.95,c:"terrain",m:"pt",n:"Hilltop",d:"Major. Ground slopes down in every direction: closed, nested contour rings.",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,s*.04); [1,.68,.36].forEach(k=>ell(ctx,x,y,s*.9*k,s*.6*k)); }},
+    ridge:{lw:1.25,c:"terrain",m:"pt",n:"Ridge",d:"Major. A line of high ground; contours make long U shapes pointing away from the crest.",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,s*.04); [1,.66,.33].forEach(k=>{ ctx.beginPath(); ctx.ellipse(x,y,s*1.05*k+s*.1,s*.45*k+s*.05,0,0,Math.PI*2); ctx.stroke(); }); }},
+    valley:{lw:0.95,c:"terrain",m:"pt",n:"Valley",d:"Major. Low ground, usually with a stream; contours form U shapes pointing upstream (toward high ground).",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,s*.04); [-.28,0,.28].forEach(o=>{ ctx.beginPath(); ctx.moveTo(x-s*.85,y+o*s+s*.35); ctx.quadraticCurveTo(x-s*.1,y+o*s+s*.35,x-s*.1,y+o*s-s*.05); ctx.quadraticCurveTo(x-s*.1,y+o*s-s*.4,x-s*.85,y+o*s-s*.4); ctx.stroke(); }); ctx.strokeStyle=MC.water; ctx.beginPath(); ctx.moveTo(x-s*.9,y); ctx.lineTo(x+s*.9,y); ctx.stroke(); }},
+    saddle:{lw:1.25,c:"terrain",m:"pt",n:"Saddle",d:"Major. A dip between two hilltops: two sets of rings with an hourglass gap between them.",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,s*.04); [-1,1].forEach(sd=>[.45,.25].forEach(k=>ell(ctx,x+sd*s*.62,y,s*k*1.1,s*k*.9))); ctx.beginPath(); ctx.moveTo(x-s*1.2,y-s*.62); ctx.quadraticCurveTo(x,y-s*.18,x+s*1.2,y-s*.62); ctx.moveTo(x-s*1.2,y+s*.62); ctx.quadraticCurveTo(x,y+s*.18,x+s*1.2,y+s*.62); ctx.stroke(); }},
+    depr:{lw:0.9,c:"terrain",m:"pt",n:"Depression",d:"Major. A low point or sinkhole: closed contours with tick marks pointing inward (downhill).",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,s*.04); [1,.6].forEach(k=>{ const rx=s*.85*k, ry=s*.55*k; ell(ctx,x,y,rx,ry); for(let a=0;a<Math.PI*2;a+=Math.PI/6){ const ex=x+rx*Math.cos(a), ey=y+ry*Math.sin(a); ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex-(ex-x)*.2,ey-(ey-y)*.2); ctx.stroke(); } }); }},
+    spur:{lw:0.75,c:"terrain",m:"pt",n:"Spur",d:"Minor. A short finger of high ground off a ridge; contours form U or V shapes pointing away from high ground.",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,s*.04); [0,.3,.6].forEach(o=>{ ctx.beginPath(); ctx.moveTo(x-s*.7,y-s*.6+o*s); ctx.quadraticCurveTo(x,y+s*.3+o*s,x+s*.7,y-s*.6+o*s); ctx.stroke(); }); }},
+    draw:{lw:0.75,c:"terrain",m:"pt",n:"Draw",d:"Minor. A short stream course; contours form V shapes pointing toward high ground.",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,s*.04); [0,.3,.6].forEach(o=>{ ctx.beginPath(); ctx.moveTo(x-s*.7,y+s*.3-o*s+s*.3); ctx.lineTo(x,y-s*.35-o*s+s*.3); ctx.lineTo(x+s*.7,y+s*.3-o*s+s*.3); ctx.stroke(); }); }},
+    cliff:{c:"terrain",m:"ln",n:"Cliff",d:"Minor. A vertical drop: draw the edge; ticks point toward the low side.",f:(ctx,p,w)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=w; pathStroke(ctx,p); ctx.lineWidth=Math.max(1.2,w*.6); pathWalk(p,9+w*2,(x,y,ux,uy)=>{ ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x-uy*(6+w*2),y+ux*(6+w*2)); ctx.stroke(); }); }},
+    contour:{c:"terrain",m:"ln",n:"Contour line",d:"A line of equal elevation. Add the height as the label (e.g. 400).",f:(ctx,p,w)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,w*.6); pathStroke(ctx,p); }},
+    cut:{c:"terrain",m:"ln",n:"Cut",d:"Minor. Where ground was dug away for a road or railroad; ticks point toward the road.",f:(ctx,p,w)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,w*.6); pathStroke(ctx,p); pathWalk(p,10+w*2,(x,y,ux,uy)=>{ ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+uy*(7+w*2),y-ux*(7+w*2)); ctx.stroke(); }); }},
+    fill:{c:"terrain",m:"ln",n:"Fill",d:"Minor. Where ground was built up for a road or railroad; ticks point away from the road.",f:(ctx,p,w)=>{ ctx.strokeStyle=MC.terrain; ctx.lineWidth=Math.max(1.2,w*.6); pathStroke(ctx,p); pathWalk(p,10+w*2,(x,y,ux,uy)=>{ ctx.beginPath(); ctx.moveTo(x-uy*2,y+ux*2); ctx.lineTo(x-uy*(9+w*2),y+ux*(9+w*2)); ctx.stroke(); }); }},
+    // Water
+    river:{c:"water",m:"ln",n:"River / stream",d:"Drag along the course of the water.",f:(ctx,p,w)=>{ ctx.strokeStyle=MC.water; ctx.lineWidth=Math.max(2,w); pathStroke(ctx,p); }},
+    lake:{c:"water",m:"ar",n:"Lake / pond",d:"Drag to cover the water area.",f:(ctx,a,b)=>{ const x=(a[0]+b[0])/2,y=(a[1]+b[1])/2,rx=Math.abs(b[0]-a[0])/2,ry=Math.abs(b[1]-a[1])/2; ctx.fillStyle="#9fd3ff"; ctx.strokeStyle=MC.water; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(x,y,Math.max(1,rx),Math.max(1,ry),0,0,Math.PI*2); ctx.fill(); ctx.stroke(); }},
+    marsh:{lw:0.9,c:"water",m:"pt",n:"Marsh / swamp",d:"Wet ground: blue tufts of grass.",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.water; ctx.lineWidth=Math.max(1.3,s*.045); [[-.5,-.25],[.25,-.3],[-.15,.25],[.6,.2]].forEach(([dx,dy])=>{ const cx=x+dx*s, cy=y+dy*s; ctx.beginPath(); ctx.moveTo(cx-s*.25,cy); ctx.lineTo(cx+s*.25,cy); ctx.moveTo(cx,cy); ctx.lineTo(cx,cy-s*.2); ctx.moveTo(cx-s*.1,cy); ctx.lineTo(cx-s*.17,cy-s*.15); ctx.moveTo(cx+s*.1,cy); ctx.lineTo(cx+s*.17,cy-s*.15); ctx.stroke(); }); }},
+    spring:{c:"water",m:"pt",n:"Spring",d:"Water coming out of the ground: a small circle with a tail.",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.water; ctx.lineWidth=Math.max(1.5,s*.05); ell(ctx,x,y,s*.18,s*.18); ctx.beginPath(); ctx.moveTo(x+s*.18,y); ctx.quadraticCurveTo(x+s*.45,y-s*.2,x+s*.7,y); ctx.stroke(); }},
+    well:{c:"water",m:"pt",n:"Water well",d:"A drilled or dug well: a blue circle with a dot.",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.water; ctx.fillStyle=MC.water; ctx.lineWidth=Math.max(1.5,s*.05); ell(ctx,x,y,s*.25,s*.25); ctx.beginPath(); ctx.arc(x,y,s*.07,0,Math.PI*2); ctx.fill(); }},
+    // Vegetation
+    woods:{c:"veg",m:"ar",n:"Woods",d:"Drag to cover the wooded area (green tint).",f:(ctx,a,b)=>{ const l=Math.min(a[0],b[0]),t=Math.min(a[1],b[1]),w=Math.abs(b[0]-a[0]),h=Math.abs(b[1]-a[1]); ctx.fillStyle="rgba(120,200,110,.45)"; ctx.strokeStyle=MC.veg; ctx.lineWidth=1.5; ctx.setLineDash([5,3]); ctx.beginPath(); ctx.roundRect?ctx.roundRect(l,t,w,h,Math.min(18,w/3,h/3)):ctx.rect(l,t,w,h); ctx.fill(); ctx.stroke(); ctx.setLineDash([]); }},
+    orchard:{c:"veg",m:"ar",n:"Orchard / vineyard",d:"Drag to cover it: rows of green dots.",f:(ctx,a,b)=>{ const l=Math.min(a[0],b[0]),t=Math.min(a[1],b[1]),w=Math.abs(b[0]-a[0]),h=Math.abs(b[1]-a[1]); ctx.strokeStyle=MC.veg; ctx.lineWidth=1.2; ctx.setLineDash([4,3]); ctx.strokeRect(l,t,w,h); ctx.setLineDash([]); ctx.fillStyle=MC.veg; for(let yy=t+8;yy<t+h-3;yy+=11) for(let xx=l+8;xx<l+w-3;xx+=11){ ctx.beginPath(); ctx.arc(xx,yy,2.2,0,Math.PI*2); ctx.fill(); } }},
+    tree:{c:"veg",m:"pt",n:"Single tree / landmark tree",d:"A lone tree that stands out on the ground.",f:(ctx,x,y,s)=>{ ctx.strokeStyle=MC.veg; ctx.fillStyle="rgba(120,200,110,.6)"; ctx.lineWidth=Math.max(1.5,s*.05); ctx.beginPath(); ctx.arc(x,y-s*.2,s*.3,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,y+s*.1); ctx.lineTo(x,y+s*.45); ctx.stroke(); }},
+    // Man-made
+    bldg:{c:"built",m:"pt",n:"Building",d:"A house or other building: a small solid square.",f:(ctx,x,y,s,P)=>{ ctx.fillStyle=P.ink; ctx.fillRect(x-s*.2,y-s*.2,s*.4,s*.4); }},
+    church:{c:"built",m:"pt",n:"Church / place of worship",d:"A square with a cross on top.",f:(ctx,x,y,s,P)=>{ ctx.fillStyle=P.ink; ctx.strokeStyle=P.ink; ctx.fillRect(x-s*.2,y-s*.05,s*.4,s*.35); ctx.lineWidth=Math.max(1.5,s*.06); ctx.beginPath(); ctx.moveTo(x,y-s*.05); ctx.lineTo(x,y-s*.5); ctx.moveTo(x-s*.13,y-s*.33); ctx.lineTo(x+s*.13,y-s*.33); ctx.stroke(); }},
+    school:{c:"built",m:"pt",n:"School",d:"A square with a flag on top.",f:(ctx,x,y,s,P)=>{ ctx.fillStyle=P.ink; ctx.strokeStyle=P.ink; ctx.fillRect(x-s*.2,y-s*.05,s*.4,s*.35); ctx.lineWidth=Math.max(1.5,s*.05); ctx.beginPath(); ctx.moveTo(x,y-s*.05); ctx.lineTo(x,y-s*.55); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,y-s*.55); ctx.lineTo(x+s*.25,y-s*.45); ctx.lineTo(x,y-s*.35); ctx.closePath(); ctx.fill(); }},
+    hosp:{c:"built",m:"pt",n:"Hospital",d:"A cross in a box.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.05); ctx.strokeRect(x-s*.3,y-s*.3,s*.6,s*.6); ctx.fillStyle="#d40000"; ctx.fillRect(x-s*.06,y-s*.22,s*.12,s*.44); ctx.fillRect(x-s*.22,y-s*.06,s*.44,s*.12); }},
+    cem:{c:"built",m:"pt",n:"Cemetery",d:"An outlined plot with crosses.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.2,s*.04); ctx.strokeRect(x-s*.45,y-s*.3,s*.9,s*.6); [[-.2,0],[.2,0]].forEach(([dx])=>{ const cx=x+dx*s; ctx.beginPath(); ctx.moveTo(cx,y-s*.18); ctx.lineTo(cx,y+s*.18); ctx.moveTo(cx-s*.09,y-s*.07); ctx.lineTo(cx+s*.09,y-s*.07); ctx.stroke(); }); }},
+    bridge:{c:"built",m:"ln",n:"Bridge",d:"Drag along the road, across the water: ) ( shapes on each side.",f:(ctx,p,w,P)=>{ const A=p[0],B=p[p.length-1],L=Math.hypot(B[0]-A[0],B[1]-A[1])||1, ux=(B[0]-A[0])/L, uy=(B[1]-A[1])/L, nx=-uy, ny=ux, o=8+w, fl=5+w; ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,w*.6); [-1,1].forEach(sd=>{ ctx.beginPath(); ctx.moveTo(A[0]+nx*sd*(o+fl)-ux*fl,A[1]+ny*sd*(o+fl)-uy*fl); ctx.lineTo(A[0]+nx*sd*o,A[1]+ny*sd*o); ctx.lineTo(B[0]+nx*sd*o,B[1]+ny*sd*o); ctx.lineTo(B[0]+nx*sd*(o+fl)+ux*fl,B[1]+ny*sd*(o+fl)+uy*fl); ctx.stroke(); }); }},
+    tower:{c:"built",m:"pt",n:"Tower / antenna",d:"Radio, cell or water tower: a dot in a triangle.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.fillStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.05); ctx.beginPath(); ctx.moveTo(x,y-s*.42); ctx.lineTo(x+s*.36,y+s*.24); ctx.lineTo(x-s*.36,y+s*.24); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.arc(x,y,s*.07,0,Math.PI*2); ctx.fill(); }},
+    mine:{c:"built",m:"pt",n:"Mine / quarry",d:"Crossed pick axes.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.06); ctx.beginPath(); ctx.moveTo(x-s*.3,y+s*.3); ctx.lineTo(x+s*.3,y-s*.3); ctx.moveTo(x+s*.3,y+s*.3); ctx.lineTo(x-s*.3,y-s*.3); ctx.stroke(); ctx.beginPath(); ctx.arc(x+s*.3,y-s*.3,s*.16,Math.PI*.75,Math.PI*1.75); ctx.stroke(); ctx.beginPath(); ctx.arc(x-s*.3,y-s*.3,s*.16,Math.PI*1.25,Math.PI*2.25); ctx.stroke(); }},
+    tank:{c:"built",m:"pt",n:"Storage tank",d:"Fuel, gas or water tank: a small circle.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.06); ell(ctx,x,y,s*.25,s*.25); }},
+    helipad:{c:"built",m:"pt",n:"Heliport / helipad",d:"An H in a circle.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.05); ell(ctx,x,y,s*.38,s*.38); txtC(ctx,"H",x,y+s*.02,s*.45,P.ink); }},
+    // Lines
+    road:{c:"lines",m:"ln",n:"Paved road",d:"A double line (black edges, open middle).",f:(ctx,p,w,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=w+6; pathStroke(ctx,p); ctx.strokeStyle=P.bg; ctx.lineWidth=w+2; pathStroke(ctx,p); }},
+    road2:{c:"lines",m:"ln",n:"Main highway",d:"Black edges with a red middle.",f:(ctx,p,w,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=w+7; pathStroke(ctx,p); ctx.strokeStyle="#e53935"; ctx.lineWidth=w+3; pathStroke(ctx,p); }},
+    dirt:{c:"lines",m:"ln",n:"Unpaved / dirt road",d:"A dashed double line.",f:(ctx,p,w,P)=>{ ctx.setLineDash([10,6]); ctx.strokeStyle=P.ink; ctx.lineWidth=w+5; pathStroke(ctx,p); ctx.strokeStyle=P.bg; ctx.lineWidth=w+1; pathStroke(ctx,p); ctx.setLineDash([]); }},
+    trail:{c:"lines",m:"ln",n:"Trail / footpath",d:"A single dashed line.",f:(ctx,p,w,P)=>{ ctx.setLineDash([7,5]); ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,w*.6); pathStroke(ctx,p); ctx.setLineDash([]); }},
+    rail:{c:"lines",m:"ln",n:"Railroad",d:"A line with cross ties.",f:(ctx,p,w,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(2,w*.7); pathStroke(ctx,p); ctx.lineWidth=Math.max(1.5,w*.5); pathWalk(p,12,(x,y,ux,uy)=>{ const k=5+w; ctx.beginPath(); ctx.moveTo(x-uy*k,y+ux*k); ctx.lineTo(x+uy*k,y-ux*k); ctx.stroke(); }); }},
+    power:{c:"lines",m:"ln",n:"Power line",d:"A thin line with pylons (dots).",f:(ctx,p,w,P)=>{ ctx.strokeStyle=P.ink; ctx.fillStyle=P.ink; ctx.lineWidth=1.3; pathStroke(ctx,p); pathWalk(p,28,(x,y)=>{ ctx.beginPath(); ctx.arc(x,y,2.5+w*.3,0,Math.PI*2); ctx.fill(); }); }},
+    fence:{c:"lines",m:"ln",n:"Fence / wire",d:"A line with x marks (also a NATO wire obstacle).",f:(ctx,p,w,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.3,w*.5); pathStroke(ctx,p); pathWalk(p,18,(x,y)=>{ const k=4+w*.6; ctx.beginPath(); ctx.moveTo(x-k,y-k); ctx.lineTo(x+k,y+k); ctx.moveTo(x-k,y+k); ctx.lineTo(x+k,y-k); ctx.stroke(); }); }},
+    border:{c:"lines",m:"ln",n:"Boundary",d:"Property, county or unit boundary: dash-dot line.",f:(ctx,p,w,P)=>{ ctx.setLineDash([12,4,2,4]); ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,w*.6); pathStroke(ctx,p); ctx.setLineDash([]); }},
+    // Navigation
+    north:{c:"nav",m:"pt",n:"North arrow",d:"Shows which way is north on your sketch.",f:(ctx,x,y,s,P)=>{ ctx.fillStyle=P.ink; ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.05); ctx.beginPath(); ctx.moveTo(x,y-s*.6); ctx.lineTo(x+s*.22,y+s*.3); ctx.lineTo(x,y+s*.15); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(x,y-s*.6); ctx.lineTo(x-s*.22,y+s*.3); ctx.lineTo(x,y+s*.15); ctx.closePath(); ctx.stroke(); txtC(ctx,"N",x,y-s*.82,s*.32,P.ink); }},
+    scale:{c:"nav",m:"pt",n:"Scale bar",d:"A bar for distance. Put the distance in the label (e.g. 100 m).",lab:"100 m",f:(ctx,x,y,s,P,lab)=>{ const w=s*2; ctx.strokeStyle=P.ink; ctx.fillStyle=P.ink; ctx.lineWidth=Math.max(1.2,s*.04); ctx.strokeRect(x-w/2,y-s*.08,w,s*.16); ctx.fillRect(x-w/2,y-s*.08,w/4,s*.16); ctx.fillRect(x,y-s*.08,w/4,s*.16); ctx.font=`${Math.round(s*.28)}px Arial, Helvetica, sans-serif`; ctx.textBaseline="top"; ctx.textAlign="left"; ctx.fillText("0",x-w/2,y+s*.14); ctx.textAlign="right"; ctx.fillText(lab||"",x+w/2,y+s*.14); },noLab:true},
+    spot:{c:"nav",m:"pt",n:"Spot elevation",d:"A dot with the height next to it (put the height in the label).",lab:"412",f:(ctx,x,y,s,P)=>{ ctx.fillStyle=MC.terrain; ctx.beginPath(); ctx.arc(x,y,s*.08,0,Math.PI*2); ctx.fill(); }},
+    bm:{c:"nav",m:"pt",n:"Bench mark",d:"A surveyed point of exact elevation: an X with BM.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.05); ctx.beginPath(); ctx.moveTo(x-s*.12,y-s*.12); ctx.lineTo(x+s*.12,y+s*.12); ctx.moveTo(x-s*.12,y+s*.12); ctx.lineTo(x+s*.12,y-s*.12); ctx.stroke(); txtC(ctx,"BM",x,y-s*.35,s*.28,P.ink); }},
+    // NATO APP-6 control measures
+    op:{c:"ctl",m:"pt",n:"Observation post (OP)",d:"A triangle with a dot: where someone watches from.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.fillStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.05); ctx.beginPath(); ctx.moveTo(x,y-s*.45); ctx.lineTo(x+s*.42,y+s*.28); ctx.lineTo(x-s*.42,y+s*.28); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.arc(x,y+s*.03,s*.07,0,Math.PI*2); ctx.fill(); }},
+    ckp:{c:"ctl",m:"pt",n:"Checkpoint (CKP)",d:"A point used to check progress or control movement. Teardrop points at the spot.",f:(ctx,x,y,s,P)=>tear(ctx,x,y,s,P,"CKP")},
+    sp:{c:"ctl",m:"pt",n:"Start point (SP)",d:"Where a movement or convoy begins.",f:(ctx,x,y,s,P)=>tear(ctx,x,y,s,P,"SP")},
+    rp:{c:"ctl",m:"pt",n:"Release point (RP)",d:"Where a movement ends and elements go to their own areas.",f:(ctx,x,y,s,P)=>tear(ctx,x,y,s,P,"RP")},
+    rally:{c:"ctl",m:"pt",n:"Rally point (RLY)",d:"Where people regroup if separated.",f:(ctx,x,y,s,P)=>tear(ctx,x,y,s,P,"RLY")},
+    lu:{c:"ctl",m:"pt",n:"Linkup point (LU)",d:"Where two groups meet.",f:(ctx,x,y,s,P)=>tear(ctx,x,y,s,P,"LU")},
+    ccp:{c:"ctl",m:"pt",n:"Casualty collection point (CCP)",d:"Where injured people are brought for care and evacuation.",f:(ctx,x,y,s,P)=>tear(ctx,x,y,s,P,"CCP")},
+    lz:{c:"ctl",m:"pt",n:"Landing zone (LZ)",d:"Where helicopters land to drop off.",f:(ctx,x,y,s,P)=>tear(ctx,x,y,s,P,"LZ")},
+    pz:{c:"ctl",m:"pt",n:"Pickup zone (PZ)",d:"Where helicopters land to pick up.",f:(ctx,x,y,s,P)=>tear(ctx,x,y,s,P,"PZ")},
+    trp:{c:"ctl",m:"pt",n:"Target reference point (TRP)",d:"A recognizable point used to aim or direct attention.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.05); ell(ctx,x,y,s*.3,s*.3); ctx.beginPath(); ctx.moveTo(x-s*.45,y); ctx.lineTo(x+s*.45,y); ctx.moveTo(x,y-s*.45); ctx.lineTo(x,y+s*.45); ctx.stroke(); txtC(ctx,"TRP",x,y-s*.62,s*.24,P.ink); }},
+    dp:{c:"ctl",m:"pt",n:"Decision point (DP)",d:"Where a leader expects to make a decision. A star.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,s*.05); ctx.beginPath(); for(let i=0;i<10;i++){ const r=i%2?s*.18:s*.42, a=-Math.PI/2+i*Math.PI/5; ctx[i?"lineTo":"moveTo"](x+r*Math.cos(a),y+r*Math.sin(a)); } ctx.closePath(); ctx.stroke(); }},
+    roadblk:{c:"ctl",m:"pt",n:"Roadblock / blocking obstacle",d:"A barrier across a route.",f:(ctx,x,y,s,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(2,s*.08); ctx.beginPath(); ctx.moveTo(x-s*.5,y); ctx.lineTo(x+s*.5,y); ctx.stroke(); ctx.lineWidth=Math.max(1.5,s*.05); ctx.beginPath(); ctx.moveTo(x-s*.5,y-s*.25); ctx.lineTo(x-s*.5,y+s*.25); ctx.moveTo(x+s*.5,y-s*.25); ctx.lineTo(x+s*.5,y+s*.25); ctx.stroke(); }},
+    pl:{c:"ctl",m:"ln",n:"Phase line (PL)",d:"A line used to control and report progress. Name it in the label (e.g. PL BLUE).",lab:"PL",f:(ctx,p,w,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=Math.max(1.5,w*.6); pathStroke(ctx,p); }},
+    lof:{c:"ctl",m:"ln",n:"Route / axis",d:"A planned path of movement; ends with an arrowhead.",f:(ctx,p,w,P)=>{ ctx.strokeStyle=P.ink; ctx.fillStyle=P.ink; ctx.lineWidth=Math.max(1.5,w*.7); pathStroke(ctx,p); const n=p.length; if(n<2) return; const [x1,y1]=p[Math.max(0,n-4)],[x2,y2]=p[n-1], ang=Math.atan2(y2-y1,x2-x1), L=12+w*2; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-L*Math.cos(ang-.45),y2-L*Math.sin(ang-.45)); ctx.lineTo(x2-L*Math.cos(ang+.45),y2-L*Math.sin(ang+.45)); ctx.closePath(); ctx.fill(); }},
+    aa:{c:"ctl",m:"ar",n:"Assembly area (AA)",d:"Where a unit gathers before moving. Drag to outline it.",lab:"AA",f:(ctx,a,b,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse((a[0]+b[0])/2,(a[1]+b[1])/2,Math.max(1,Math.abs(b[0]-a[0])/2),Math.max(1,Math.abs(b[1]-a[1])/2),0,0,Math.PI*2); ctx.stroke(); }},
+    obj:{c:"ctl",m:"ar",n:"Objective (OBJ)",d:"The place to be reached or secured. Drag to outline it.",lab:"OBJ",f:(ctx,a,b,P)=>{ ctx.strokeStyle=P.ink; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse((a[0]+b[0])/2,(a[1]+b[1])/2,Math.max(1,Math.abs(b[0]-a[0])/2),Math.max(1,Math.abs(b[1]-a[1])/2),0,0,Math.PI*2); ctx.stroke(); }},
+    nfa:{c:"ctl",m:"ar",n:"Restricted / no-go area",d:"An area to avoid. Drag to outline it; filled with diagonal lines.",f:(ctx,a,b,P)=>{ const l=Math.min(a[0],b[0]),t=Math.min(a[1],b[1]),w=Math.abs(b[0]-a[0]),h=Math.abs(b[1]-a[1]); ctx.strokeStyle=P.ink; ctx.lineWidth=2; ctx.strokeRect(l,t,w,h); ctx.save(); ctx.beginPath(); ctx.rect(l,t,w,h); ctx.clip(); ctx.lineWidth=1; for(let d=-h;d<w;d+=10){ ctx.beginPath(); ctx.moveTo(l+d,t+h); ctx.lineTo(l+d+h,t); ctx.stroke(); } ctx.restore(); }}
+  };
+  const MAPW={thin:2,med:4,thick:7};
+  function drawMap(ctx,it,P){
+    const D=MAPDEF[it.k]; if(!D) return;
+    Object.assign(MC,P.bg==="#000000"?MC_D:MC_L);
+    ctx.save(); ctx.lineCap="round"; ctx.lineJoin="round";
+    let lx,ly,align="left";
+    if(D.m==="pt"){ D.f(ctx,it.x,it.y,it.s,P,it.lab); lx=it.x+it.s*(D.lw||.5)+4; ly=it.y; if(it.k==="spot"){ lx=it.x+it.s*.18; } }
+    else if(D.m==="ln"){ if(!it.p||!it.p.length) { ctx.restore(); return; } D.f(ctx,it.p,it.w,P,it.lab); const L=it.p[it.p.length-1]; lx=L[0]+6; ly=L[1]-10; if(it.k==="pl"){ const F=it.p[0]; if(it.lab){ ctx.restore(); ctx.save(); txtC(ctx,it.lab,F[0],F[1]-12,14,P.ink); txtC(ctx,it.lab,L[0],L[1]-12,14,P.ink); ctx.restore(); return; } } }
+    else { D.f(ctx,it.a,it.b,P,it.lab); lx=(it.a[0]+it.b[0])/2; ly=(it.a[1]+it.b[1])/2; align="center"; }
+    if(it.lab&&!D.noLab){ const size=D.m==="pt"?Math.max(12,it.s*.32):15, col=D.c==="terrain"||it.k==="spot"?MC.terrain:D.c==="water"?MC.water:D.c==="veg"?MC.veg:P.ink;
+      ctx.fillStyle=col; ctx.font=`bold ${Math.round(size)}px Arial, Helvetica, sans-serif`; ctx.textAlign=align; ctx.textBaseline="middle"; ctx.fillText(it.lab,lx,ly); }
+    ctx.restore();
+  }
+  function mapHit(it,x,y,tol){
+    const D=MAPDEF[it.k]; if(!D) return false;
+    if(D.m==="pt"){ const r=it.s*(it.k==="scale"?1.1:Math.max(.75,D.lw||0))+tol, lw=it.lab&&!D.noLab?it.lab.length*it.s*.2:0; return x>=it.x-r&&x<=it.x+r+lw&&y>=it.y-r&&y<=it.y+r; }
+    if(D.m==="ln"){ const p=it.p||[], w=(it.w||4)/2+8+tol; for(let i=1;i<p.length;i++) if(dSeg(x,y,p[i-1][0],p[i-1][1],p[i][0],p[i][1])<=w) return true; return p.length===1&&Math.hypot(x-p[0][0],y-p[0][1])<=w; }
+    const l=Math.min(it.a[0],it.b[0])-tol, r=Math.max(it.a[0],it.b[0])+tol, t=Math.min(it.a[1],it.b[1])-tol, b=Math.max(it.a[1],it.b[1])+tol; return x>=l&&x<=r&&y>=t&&y<=b;
+  }
+
+
+  // ---- Distance and bearing: north is the top of the page; 1 grid square (40 page units) = the scale the user sets ----
+  const sc=()=>S.scale||(S.scale={per:0,u:"m",b:"deg"});
+  const UNIT={m:{n:"m",big:1000,bn:"km"},ft:{n:"ft",big:5280,bn:"mi"},yd:{n:"yd",big:1760,bn:"mi"}};
+  function measText(a,b){
+    const dx=b[0]-a[0], dy=b[1]-a[1], px=Math.hypot(dx,dy), deg=(Math.atan2(dx,-dy)*180/Math.PI+360)%360, c=sc();
+    const brg=c.b==="mil"?String(Math.round(deg*6400/360)%6400).padStart(4,"0")+" mil":String(Math.round(deg)%360).padStart(3,"0")+"°";
+    const sq=px/GRID; let dist;
+    if(c.per>0){ const U=UNIT[c.u]||UNIT.m, v=sq*c.per; dist=v>=U.big?(v/U.big).toFixed(2)+" "+U.bn:(v<10?v.toFixed(1):String(Math.round(v)))+" "+U.n; }
+    else dist=(sq<10?sq.toFixed(1):String(Math.round(sq)))+" sq";
+    return brg+" · "+dist;
+  }
+  function drawMeas(ctx,it,P){
+    if(!Array.isArray(it.a)||!Array.isArray(it.b)) return;
+    const col=P[it.c]||P.ink, [x1,y1]=it.a, [x2,y2]=it.b, w=it.w||4, ang=Math.atan2(y2-y1,x2-x1), L=Math.max(12,w*3.5), nx=-Math.sin(ang), ny=Math.cos(ang);
+    ctx.save(); ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=Math.max(1.5,w*.7); ctx.lineCap="round";
+    ctx.setLineDash([10,6]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]);
+    const t=6+w; ctx.beginPath(); ctx.moveTo(x1+nx*t,y1+ny*t); ctx.lineTo(x1-nx*t,y1-ny*t); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-L*Math.cos(ang-.42),y2-L*Math.sin(ang-.42)); ctx.lineTo(x2-L*Math.cos(ang+.42),y2-L*Math.sin(ang+.42)); ctx.closePath(); ctx.fill();
+    if(Math.hypot(x2-x1,y2-y1)>=4){
+      const txt=measText(it.a,it.b), fs=w<=2?14:w<=4?16:20; ctx.font=`bold ${fs}px Arial, Helvetica, sans-serif`;
+      const tw2=ctx.measureText(txt).width, side=ny<0?-1:1, off=fs*.9+w;   // label on the upper side of the line
+      let mx=(x1+x2)/2-nx*off*side, my=(y1+y2)/2-ny*off*side;
+      mx=Math.max(tw2/2+4,Math.min((S.W||9999)-tw2/2-4,mx)); my=Math.max(fs*.7,Math.min((S.H||9999)-fs*.7,my));
+      ctx.fillStyle=P.bg; ctx.globalAlpha=.85; ctx.fillRect(mx-tw2/2-4,my-fs*.65,tw2+8,fs*1.3); ctx.globalAlpha=1;
+      ctx.fillStyle=col; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(txt,mx,my);
+    }
+    ctx.restore();
+  }
   // ---- window ----
   let root=null, cv=null, stage=null, view={k:1,ox:0,oy:0}, live=null, ptr=null, armClr=false, txtBox=null;
   const q=(s)=>root&&root.querySelector(s);
-  const I={ sym:'<rect x="3" y="7" width="18" height="11"/><path d="M3 7l18 11M21 7L3 18"/>', pen:'<path d="M3 17c3-6 5 3 8-3s4-6 6-2 2 4 4 1"/>', line:'<path d="M4 20L20 4"/>', arrow:'<path d="M4 20L19 5M11 5h8v8"/>', rect:'<rect x="4" y="6" width="16" height="12"/>', ellipse:'<ellipse cx="12" cy="12" rx="8.5" ry="6.5"/>', text:'<path d="M5 6V4h14v2M12 4v16M9 20h6"/>', erase:'<path d="M9 20h11M4.5 15.5l9-9 6 6-7.5 7.5H9z"/><path d="M8.5 11.5l6 6"/>' };
+  const I={ meas:'<circle cx="12" cy="12" r="8.5"/><path d="M12 12l4.2-5.8"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2"/>', map:'<path d="M2.5 19.5l6-11 4 6.5 3-4.5 6 9z"/><path d="M7 12.5l1.5 1.5 1.5-1.5"/>', sym:'<rect x="3" y="7" width="18" height="11"/><path d="M3 7l18 11M21 7L3 18"/>', pen:'<path d="M3 17c3-6 5 3 8-3s4-6 6-2 2 4 4 1"/>', line:'<path d="M4 20L20 4"/>', arrow:'<path d="M4 20L19 5M11 5h8v8"/>', rect:'<rect x="4" y="6" width="16" height="12"/>', ellipse:'<ellipse cx="12" cy="12" rx="8.5" ry="6.5"/>', text:'<path d="M5 6V4h14v2M12 4v16M9 20h6"/>', erase:'<path d="M9 20h11M4.5 15.5l9-9 6 6-7.5 7.5H9z"/><path d="M8.5 11.5l6 6"/>' };
   const ic=(k)=>`<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg>`;
   function say(t,warn){ const m=q(".sk-msg"); if(!m) return; m.textContent=t||""; m.classList.toggle("warn",!!warn); clearTimeout(say.t); if(t&&!warn) say.t=setTimeout(()=>{ if(m.textContent===t) m.textContent=""; },5000); }
   function build(){
     const r=document.createElement("div"); r.id="skOverlay"; r.hidden=true; document.body.appendChild(r);
-    const T=[["pen","Pen"],["line","Line"],["arrow","Arrow"],["rect","Box"],["ellipse","Circle"],["text","Text"],["sym","Symbols"],["erase","Erase"]];
+    const T=[["pen","Pen"],["line","Line"],["arrow","Arrow"],["rect","Box"],["ellipse","Circle"],["text","Text"],["sym","Units"],["map","Map"],["meas","Measure"],["erase","Erase"]];
     r.innerHTML=`<div class="np-win sk-win" role="dialog" aria-label="Sketchpad">
       <div class="bar np-bar"><span>SKETCH.EXE</span><span class="np-barbtns"><button class="btn" type="button" data-sk="close" aria-label="Close sketchpad">✕</button></span></div>
       <div class="body sk-body">
@@ -8193,14 +8400,22 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
           <button class="btn" type="button" data-sk="nophoto" hidden>Remove photo</button>
           <input type="file" data-sk="file" accept="image/*" hidden>
         </div>
+        <div class="sk-bar sk-meas" role="toolbar" aria-label="Measure settings" hidden>
+          <span class="sk-ml">North = top of page.</span>
+          <label class="sk-ml">1 grid square =<input class="fld sk-num" data-sk="scale" type="number" inputmode="decimal" min="0" step="any" placeholder="?" aria-label="Distance one grid square stands for"></label>
+          <button class="btn" type="button" data-sk="munit" data-v="m" aria-pressed="false">m</button><button class="btn" type="button" data-sk="munit" data-v="ft" aria-pressed="false">ft</button><button class="btn" type="button" data-sk="munit" data-v="yd" aria-pressed="false">yd</button>
+          <span class="sep"></span>
+          <button class="btn" type="button" data-sk="bunit" data-v="deg" aria-pressed="false">Degrees</button><button class="btn" type="button" data-sk="bunit" data-v="mil" aria-pressed="false">Mils</button>
+        </div>
         <div class="sk-stage"><canvas aria-label="Drawing area. Draw with your finger, a stylus or the mouse." role="img"></canvas></div>
         <div class="sk-foot">
           <input class="fld" data-sk="caption" autocomplete="off" placeholder="Caption (optional) — e.g. Room 204, north at top">
           <div class="sk-bar sk-acts"><button class="btn" type="button" data-sk="undo">Undo</button><button class="btn" type="button" data-sk="redo">Redo</button><button class="btn" type="button" data-sk="clear">Clear</button>
-          <button class="btn" type="button" data-sk="png">Save image</button><button class="btn" type="button" data-sk="share" hidden>Share</button><button class="btn" type="button" data-sk="copy" hidden>Copy</button></div>
+          <button class="btn" type="button" data-sk="png">Save image</button><button class="btn" type="button" data-sk="attach" title="Add this sketch to the report open in REPORTS">Attach to report</button><button class="btn" type="button" data-sk="share" hidden>Share</button><button class="btn" type="button" data-sk="copy" hidden>Copy</button></div>
           <div class="sk-msg" aria-live="polite"></div>
         </div>
         <div class="sk-pick" hidden role="dialog" aria-label="Military symbols"></div>
+        <div class="sk-pick sk-mpick" hidden role="dialog" aria-label="Map symbols"></div>
         <div class="sal-hint sk-hint">The sketch autosaves on this device until you press Clear. Nothing is sent anywhere. Save image, Share or Copy adds the caption, date and time under the drawing.</div>
       </div></div>`;
     root=r; stage=q(".sk-stage"); cv=q("canvas");
@@ -8208,7 +8423,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     try{ if(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([new Uint8Array(1)],"t.png",{type:"image/png"})]})) q('[data-sk="share"]').hidden=false; }catch(_){}
     if(navigator.clipboard&&window.ClipboardItem) q('[data-sk="copy"]').hidden=false;
     r.addEventListener("click",onClick);
-    r.addEventListener("input",(e)=>{ if(e.target.dataset.sk==="caption"){ S.caption=e.target.value; save(); } else if(e.target.dataset.sk==="symlab"){ symSel.lab=e.target.value.trim(); } });
+    r.addEventListener("input",(e)=>{ if(e.target.dataset.sk==="caption"){ S.caption=e.target.value; save(); } else if(e.target.dataset.sk==="symlab"){ symSel.lab=e.target.value.trim(); } else if(e.target.dataset.sk==="maplab"){ mapSel.lab=e.target.value.trim(); } else if(e.target.dataset.sk==="scale"){ const v=parseFloat(e.target.value); sc().per=v>0?v:0; save(); render(); } });
     // Phone tool rows scroll sideways: fade the right edge while more buttons are hidden there.
     r.querySelectorAll(".sk-bar").forEach(bar=>bar.addEventListener("scroll",()=>moreHint(bar),{passive:true}));
     q('[data-sk="file"]').addEventListener("change",(e)=>{ const f=e.target.files&&e.target.files[0]; e.target.value=""; if(f) usePhoto(f); });
@@ -8255,7 +8470,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const p=pt(e);
     if(tool!=="erase"&&!onPage(p)) return;   // ignore the gray margin around the page
     e.preventDefault(); ptr=e.pointerId; try{ cv.setPointerCapture(ptr); }catch(_){}
-    if(tool==="text"||tool==="sym"){ live=null; return; }
+    if(tool==="text"||tool==="sym"||(tool==="map"&&MAPDEF[mapSel.k].m==="pt")){ live=null; return; }
+    if(tool==="map"){ const D=MAPDEF[mapSel.k], lab=mapLab(); live=D.m==="ln"?{t:"map",k:mapSel.k,w:MAPW[width],lab,p:[p]}:{t:"map",k:mapSel.k,lab,a:p,b:p}; render(); return; }
     if(tool==="erase"){ live={t:"erase",hit:false}; eraseAt(p); return; }
     live=tool==="pen"?{t:"pen",c:color,w:WIDTH[width],p:[p]}:{t:tool,c:color,w:WIDTH[width],a:p,b:p};
     render();
@@ -8264,7 +8480,7 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     if(e.pointerId!==ptr||!live) return; e.preventDefault();
     const evs=(e.getCoalescedEvents&&e.getCoalescedEvents())||[e];
     if(live.t==="erase"){ evs.forEach(ev=>eraseAt(pt(ev))); return; }
-    if(live.t==="pen"){ evs.forEach(ev=>{ const p=clampP(pt(ev)), L=live.p[live.p.length-1]; if(Math.hypot(p[0]-L[0],p[1]-L[1])>=1.2) live.p.push(p); }); }
+    if(live.t==="pen"||(live.t==="map"&&live.p)){ evs.forEach(ev=>{ const p=clampP(pt(ev)), L=live.p[live.p.length-1]; if(Math.hypot(p[0]-L[0],p[1]-L[1])>=1.2) live.p.push(p); }); }
     else live.b=clampP(pt(e));
     blit();
   }
@@ -8272,10 +8488,11 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     if(e.pointerId!==ptr) return; ptr=null;
     if(tool==="text"&&e.type==="pointerup"){ openText(clampP(pt(e))); return; }
     if(tool==="sym"){ if(e.type==="pointerup") placeSym(clampP(pt(e))); return; }
+    if(tool==="map"&&!live){ if(e.type==="pointerup"){ const p=clampP(pt(e)); snap(); S.items.push({t:"map",k:mapSel.k,x:p[0],y:p[1],s:SYM_SIZE[width],lab:mapLab()}); save(); render(); } return; }
     const it=live; live=null;
     if(!it||it.t==="erase"){ if(it&&it.hit) save(); render(); return; }
     if(e.type==="pointercancel"){ render(); return; }
-    if(it.t!=="pen"&&Math.hypot(it.b[0]-it.a[0],it.b[1]-it.a[1])<4){ render(); return; }   // a tap, not a shape
+    if(it.p?(it.t==="map"&&(it.p.length<2||Math.hypot(it.p[it.p.length-1][0]-it.p[0][0],it.p[it.p.length-1][1]-it.p[0][1])<4&&it.p.length<4)):Math.hypot(it.b[0]-it.a[0],it.b[1]-it.a[1])<4){ render(); if(it.t==="map") say(MAPDEF[it.k].m==="ln"?"Drag along the drawing to draw it.":"Drag across the drawing to mark the area."); return; }   // a tap, not a shape
     snap(); S.items.push(it); save(); render();
   }
   function eraseAt(p){
@@ -8337,11 +8554,19 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const P=PAPER[S.paper]; root.querySelectorAll("[data-dot]").forEach(d=>{ d.style.background=P[d.dataset.dot]; });
     q("[data-inkname]").textContent=S.paper==="black"?"White":"Black";
     q('[data-sk="paper"]').textContent=S.paper==="black"?"White page":"Black page";
-    cv.style.cursor=tool==="text"?"text":tool==="erase"?"cell":tool==="sym"?"copy":"crosshair";
+    const mb=q(".sk-meas"); if(mb){ const was=mb.hidden; mb.hidden=tool!=="meas"; const c=sc();
+      root.querySelectorAll('[data-sk="munit"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===c.u)));
+      root.querySelectorAll('[data-sk="bunit"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===c.b)));
+      const si=q('[data-sk="scale"]'); if(document.activeElement!==si) si.value=c.per>0?String(c.per):"";
+      if(was!==mb.hidden&&stage) requestAnimationFrame(()=>{ fit(); render(); moreHint(mb); }); }
+    cv.style.cursor=tool==="text"?"text":tool==="erase"?"cell":tool==="sym"||(tool==="map"&&MAPDEF[mapSel.k].m==="pt")?"copy":"crosshair";
   }
   // Saved image: the drawing at 2x, with the caption and the date and time underneath.
-  function toCanvas(){
-    const k=2, P=PAPER[S.paper], W=S.W||800, H=S.H||600, d=new Date();
+  // For reports: the same image as Save image, at most 1600 px wide; JPEG when there's a photo underneath (smaller).
+  function sketchImage(){ const W=S.W||800, c=toCanvas(Math.min(2,1600/W)), d=new Date(); return {src:S.bg?c.toDataURL("image/jpeg",.85):c.toDataURL("image/png"),w:c.width,h:c.height,cap:(S.caption||"").trim(),time:`${fmtDate(d)} ${fmtTime(d)}`}; }
+  window.__sketch={ open:()=>open() };
+  function toCanvas(k=2){
+    const P=PAPER[S.paper], W=S.W||800, H=S.H||600, d=new Date();
     const cap=(S.caption||"").trim(), capLines=cap?wrapText(cap,18,W-20).split("\n"):[], band=(34+capLines.length*24+(cap?4:0))*k;
     const c=document.createElement("canvas"); c.width=W*k; c.height=H*k+band; const ctx=c.getContext("2d");
     paint(ctx,S.items,{paper:S.paper,grid:S.grid,k,ox:0,oy:0,W,H});
@@ -8357,11 +8582,16 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     const b=e.target.closest("[data-sk]"); if(!b||b.tagName==="INPUT") return; const a=b.dataset.sk;
     if(a!=="clear"&&armClr){ armClr=false; q('[data-sk="clear"]').textContent="Clear"; }
     if(a==="close") return close();
-    if(a==="tool"){ commitText(); if(b.dataset.v==="sym"){ openPick(); return; } tool=b.dataset.v; paintBar(); return; }
+    if(a==="tool"){ commitText(); if(b.dataset.v==="sym"){ openPick(); return; } if(b.dataset.v==="map"){ openMapPick(); return; } tool=b.dataset.v; paintBar();
+      if(tool==="meas") say(sc().per>0?"Drag from the start point to the end point. North is the top of the page.":"Drag from the start point to the end point. Set what 1 grid square equals to get real distances (turn on Grid to see the squares)."); return; }
+    if(a==="munit"){ sc().u=b.dataset.v; save(); paintBar(); render(); return; }
+    if(a==="bunit"){ sc().b=b.dataset.v; save(); paintBar(); render(); return; }
     if(a==="symaff"){ symSel.a=b.dataset.v; paintPick(); return; }
     if(a==="symech"){ symSel.e=b.dataset.v; paintPick(); return; }
     if(a==="symic"){ symSel.i=b.dataset.v; symSel.lab=(q('[data-sk="symlab"]').value||"").trim(); closePick(); tool="sym"; paintBar(); say(`Tap the drawing to place: ${symName(symSel)}${symSel.lab?" — "+symSel.lab:""}. Tap again for another.`); return; }
-    if(a==="pickclose"){ symSel.lab=(q('[data-sk="symlab"]').value||"").trim(); closePick(); return; }
+    if(a==="pickclose"){ const l=q('[data-sk="symlab"]'); if(l) symSel.lab=(l.value||"").trim(); const ml=q('[data-sk="maplab"]'); if(ml) mapSel.lab=(ml.value||"").trim(); closePick(); return; }
+    if(a==="mapic"){ mapSel.k=b.dataset.v; mapSel.lab=(q('[data-sk="maplab"]').value||"").trim(); closePick(); tool="map"; paintBar(); const D=MAPDEF[mapSel.k], l=mapLab();
+      say(`${D.m==="pt"?"Tap the drawing to place":D.m==="ln"?"Drag along the drawing to draw":"Drag across the drawing to mark"}: ${D.n}${l?" — "+l:""}. Again for another.`); return; }
     if(a==="color"){ color=b.dataset.v; if(tool==="erase") tool="pen"; paintBar(); return; }
     if(a==="width"){ width=b.dataset.v; if(tool==="erase") tool="pen"; paintBar(); return; }
     if(a==="grid"){ S.grid=!S.grid; save(); paintBar(); render(); return; }
@@ -8376,8 +8606,11 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       if(!armClr){ armClr=true; b.textContent="Tap again to clear"; setTimeout(()=>{ if(armClr){ armClr=false; b.textContent="Clear"; } },4000); return; }
       armClr=false; b.textContent="Clear"; cancelText(); snap(); S.items=[]; S.bg=null; loadBg(); paintBar(); S.caption=""; S.created=Date.now(); q('[data-sk="caption"]').value=""; fit(); save(); render(); say("Cleared. Undo brings it back."); return;
     }
-    if(!S.items.length&&!S.bg&&(a==="png"||a==="share"||a==="copy")) return say("Draw something first.");
+    if(!S.items.length&&!S.bg&&(a==="png"||a==="share"||a==="copy"||a==="attach")) return say("Draw something first.");
     commitText();
+    if(a==="attach"){ if(!window.__repAtt) return say("Reports aren't available on this page.",true);
+      try{ const r=window.__repAtt.add(sketchImage()); say(`Attached to ${r.nice} (sketch ${r.n}). It prints at the end of that report and is kept when you Save to file. To attach to a different report, choose it in REPORTS first.`); }
+      catch(err){ say("Couldn't attach the sketch.",true); } return; }
     if(a==="png"){ try{ const bl=await pngBlob(), u=URL.createObjectURL(bl), x=document.createElement("a"); x.href=u; x.download=fname(); document.body.appendChild(x); x.click(); setTimeout(()=>{ URL.revokeObjectURL(u); x.remove(); },1000); say("Saved "+fname()+" to your downloads."); }catch(err){ say("Couldn't save the image.",true); } return; }
     if(a==="share"){ try{ const f=new File([await pngBlob()],fname(),{type:"image/png"}); await navigator.share({files:[f],title:S.caption||"Sketch"}); }catch(err){ if(err&&err.name!=="AbortError") say("Couldn't share — use Save image instead.",true); } return; }
     if(a==="copy"){ try{ await navigator.clipboard.write([new ClipboardItem({"image/png":pngBlob()})]); say("Copied. Paste it into a message, email or document."); }catch(err){ say("Couldn't copy here — use Save image instead.",true); } return; }
@@ -8419,7 +8652,28 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     pk.hidden=false; paintPick(); pk.scrollTop=0;
     setTimeout(()=>{ const b=pk.querySelector('[data-sk="symaff"][aria-pressed="true"]'); b&&b.focus({preventScroll:true}); },30);
   }
-  function closePick(){ const pk=q(".sk-pick"); if(pk) pk.hidden=true; }
+  function closePick(){ root.querySelectorAll(".sk-pick").forEach(p=>p.hidden=true); }
+  // Map symbol picker: terrain and map features plus NATO control measures, grouped; tap one, then tap or drag on the drawing.
+  const mapSel={k:"hill",lab:""};
+  const mapLab=()=>mapSel.lab||MAPDEF[mapSel.k].lab||"";
+  function mapPreview(c,k){ const dpr=Math.min(3,window.devicePixelRatio||1), D=MAPDEF[k], cv2=c.querySelector("canvas"); cv2.width=120*dpr; cv2.height=84*dpr; const x=cv2.getContext("2d"); x.setTransform(dpr,0,0,dpr,0,0); x.fillStyle="#fff"; x.fillRect(0,0,120,84);
+    const big={hill:34,ridge:30,saddle:30,depr:38,valley:36,scale:28,spot:40}, it=D.m==="pt"?{t:"map",k,x:k==="scale"?60:60,y:k==="north"?52:k==="scale"?38:44,s:big[k]||46,lab:k==="scale"?D.lab:""}:D.m==="ln"?{t:"map",k,w:3,lab:k==="pl"?"PL":"",p:k==="bridge"?[[34,42],[86,42]]:[[12,58],[34,36],[60,48],[86,28],[108,38]]}:{t:"map",k,a:[14,14],b:[106,70],lab:D.lab||""};
+    drawMap(x,it,PAPER.white); }
+  function openMapPick(){
+    const pk=q(".sk-mpick");
+    if(!pk.dataset.built){ pk.dataset.built="1";
+      pk.innerHTML=`<div class="sk-pick-head"><b>Map symbols (NATO style)</b><button class="btn" type="button" data-sk="pickclose">Done</button></div>
+        <label class="ta-f sk-plab">Label (optional) — a name, height or distance<input class="fld" data-sk="maplab" autocomplete="off" placeholder="e.g. Hill 412, PL BLUE, OBJ CAT, 100 m"></label>
+        <div class="muted">Tap a symbol, then <b>tap</b> the drawing to place it, or <b>drag</b> for lines and areas. Thin / Medium / Thick set the size.</div>
+        ${MAPCAT.map(([c,n,d])=>`<div class="ta-sub">${esc(n)}</div><div class="muted sk-pdesc">${esc(d)}</div>
+        <div class="sk-grid">${Object.entries(MAPDEF).filter(([,v])=>v.c===c).map(([k,v])=>`<button class="sk-card" type="button" data-sk="mapic" data-v="${k}"><canvas width="120" height="84" aria-hidden="true"></canvas><b>${esc(v.n)}</b><span>${v.m==="pt"?"Tap":"Drag"} · ${esc(v.d)}</span></button>`).join("")}</div>`).join("")}
+        <div class="sal-hint">Map colors follow military map legends: brown for terrain and contours, blue for water, green for vegetation, black for man-made features. Control measures are simplified from NATO APP-6 / FM 1-02.2 for quick sketches; check the official standard before using them in formal products.</div>`;
+    }
+    q('[data-sk="maplab"]').value=mapSel.lab||"";
+    pk.hidden=false; pk.scrollTop=0;
+    pk.querySelectorAll(".sk-card").forEach(c=>{ mapPreview(c,c.dataset.v); c.classList.toggle("on",c.dataset.v===mapSel.k&&tool==="map"); });
+    setTimeout(()=>{ const b=pk.querySelector('.sk-card.on')||pk.querySelector('[data-sk="maplab"]'); b&&b.focus({preventScroll:true}); },30);
+  }
   function paintPick(){
     const pk=q(".sk-pick"); if(!pk||pk.hidden&&!pk.dataset.built) return;
     pk.querySelectorAll('[data-sk="symaff"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===symSel.a)));
@@ -8444,13 +8698,425 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     if(!root||root.hidden||e.defaultPrevented||document.querySelector(".dd-box")) return;
     if(e.target&&e.target.classList&&e.target.classList.contains("sk-text")) return;
     const inCaption=e.target&&e.target.tagName==="INPUT";
-    if(e.key==="Escape"){ const pk=q(".sk-pick"); if(pk&&!pk.hidden){ closePick(); return; } close(); return; }
+    if(e.key==="Escape"){ if([...root.querySelectorAll(".sk-pick")].some(p=>!p.hidden)){ closePick(); return; } close(); return; }
     if((e.ctrlKey||e.metaKey)&&!inCaption&&e.key.toLowerCase()==="z"){ e.preventDefault(); q(e.shiftKey?'[data-sk="redo"]':'[data-sk="undo"]').click(); return; }
     if((e.ctrlKey||e.metaKey)&&!inCaption&&e.key.toLowerCase()==="y"){ e.preventDefault(); q('[data-sk="redo"]').click(); return; }
-    const pk=q(".sk-pick"), scope=pk&&!pk.hidden?pk:root;   // keep Tab inside the symbol picker while it's open
+    const pk=[...root.querySelectorAll(".sk-pick")].find(p=>!p.hidden), scope=pk||root;   // keep Tab inside the symbol picker while it's open
     if(e.key==="Tab"){ const f=[...scope.querySelectorAll("button,input")].filter(x=>!x.disabled&&!x.hidden&&x.getClientRects().length); if(!f.length) return; const i=f.indexOf(document.activeElement);
       if(e.shiftKey&&i<=0){ e.preventDefault(); f[f.length-1].focus(); } else if(!e.shiftKey&&(i<0||i===f.length-1)){ e.preventDefault(); f[0].focus(); } }
   });
+})();
+</script>
+<script>
+// CAMERA: field photo with a data stamp. Opened from the camera button next to the sketchpad. While the camera is open it
+// reads GPS (position, altitude) and the compass, and the moment the photo is taken it records date/time, DTG, coordinates,
+// MGRS, altitude and the direction the camera faced. That data is printed in a band under the photo, with your notes.
+// Photos stay on this device (IndexedDB); Save image, Send, Copy text and Attach to report are the only ways out.
+(function(){
+  if(document.documentElement.classList.contains("np-mode")) return;
+  const btn=document.getElementById("camBtn"); if(!btn) return;
+  const esc=(s)=>String(s??"").replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const mil=()=>{ try{ return localStorage.getItem("iq.clock")==="mil"; }catch(_){ return false; } };
+  const two=(n)=>String(n).padStart(2,"0");
+  const MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const fmtDT=(d)=>{ const day=d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});
+    const tz=(new Intl.DateTimeFormat("en-US",{timeZoneName:"short"}).formatToParts(d).find(p=>p.type==="timeZoneName")||{}).value||"";
+    const tm=mil()?d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"}):d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",second:"2-digit"});
+    return `${day} ${tm} ${tz}`.trim(); };
+  const dtgZ=(d)=>`${two(d.getUTCDate())}${two(d.getUTCHours())}${two(d.getUTCMinutes())}Z ${MON[d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}`;
+  const C16=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+  const pt16=(deg)=>C16[Math.round(deg/22.5)%16];
+  const deg3=(d)=>String(Math.round(d)%360).padStart(3,"0")+"°";
+  const mils=(d)=>String(Math.round(d*6400/360)%6400).padStart(4,"0")+" mil";
+  // MGRS (WGS84), same method as the coordinate converter.
+  const rd=Math.PI/180;
+  function utmZone(lat,lon){ let z=Math.floor((((lon+180)%360+360)%360)/6)+1;
+    if(lat>=56&&lat<64&&lon>=3&&lon<12) z=32;
+    if(lat>=72&&lat<84){ if(lon>=0&&lon<9) z=31; else if(lon>=9&&lon<21) z=33; else if(lon>=21&&lon<33) z=35; else if(lon>=33&&lon<42) z=37; }
+    return z; }
+  function mgrsOf(lat,lon){
+    if(lat<-80||lat>84) return "outside MGRS coverage";
+    const a=6378137,f=1/298.257223563,k0=.9996,e2=f*(2-f),ep2=e2/(1-e2);
+    const zone=utmZone(lat,lon), lon0=((zone-1)*6-180+3)*rd, la=lat*rd, lo=lon*rd;
+    const N=a/Math.sqrt(1-e2*Math.sin(la)**2),T=Math.tan(la)**2,C=ep2*Math.cos(la)**2,A=Math.cos(la)*(lo-lon0);
+    const M=a*((1-e2/4-3*e2**2/64-5*e2**3/256)*la-(3*e2/8+3*e2**2/32+45*e2**3/1024)*Math.sin(2*la)+(15*e2**2/256+45*e2**3/1024)*Math.sin(4*la)-(35*e2**3/3072)*Math.sin(6*la));
+    const E=k0*N*(A+(1-T+C)*A**3/6+(5-18*T+T*T+72*C-58*ep2)*A**5/120)+500000;
+    let Nn=k0*(M+N*Math.tan(la)*(A*A/2+(5-T+9*C+4*C*C)*A**4/24+(61-58*T+T*T+600*C-330*ep2)*A**6/720)); if(lat<0) Nn+=1e7;
+    const band="CDEFGHJKLMNPQRSTUVWX"[Math.max(0,Math.min(19,Math.floor((lat+80)/8)))];
+    const col="ABCDEFGH JKLMNPQR STUVWXYZ".split(" ")[(zone-1)%3][Math.floor(E/100000)-1];
+    const row="ABCDEFGHJKLMNPQRSTUV"[(Math.floor(Nn/100000)+((zone%2)?0:5))%20];
+    const p5=(n)=>String(Math.floor(n)).padStart(5,"0");
+    return `${zone}${band} ${col}${row} ${p5(E%100000)} ${p5(Nn%100000)}`;
+  }
+
+
+  // Computer or phone? Computers get "Choose a photo…" (no camera-app shortcut) and no Switch camera unless they have two cameras.
+  const DESK=(()=>{ if(/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Macintosh/.test(navigator.userAgent))) return false;
+    try{ if(navigator.userAgentData&&navigator.userAgentData.mobile===true) return false; }catch(_){} return true; })();
+  const FILEBTN=DESK?"Choose a photo…":"Phone camera app";
+  // Read when and where a photo was taken from the data saved inside a JPEG (EXIF): time, GPS position, altitude, direction.
+  async function readExif(file){
+    try{
+      const buf=new DataView(await file.slice(0,262144).arrayBuffer()); if(buf.getUint16(0)!==0xFFD8) return null;
+      let o=2; while(o+4<buf.byteLength){ const mk=buf.getUint16(o), len=buf.getUint16(o+2);
+        if(mk===0xFFE1&&buf.getUint32(o+4)===0x45786966) return parseTiff(buf,o+10);
+        if((mk&0xFF00)!==0xFF00||mk===0xFFDA) break; o+=2+len; }
+    }catch(_){} return null;
+  }
+  function parseTiff(v,t){
+    const le=v.getUint16(t)===0x4949, u16=(p)=>v.getUint16(p,le), u32=(p)=>v.getUint32(p,le);
+    const ifd=(p)=>{ const out={}; if(p<=0||t+p+2>v.byteLength) return out; const n=u16(t+p);
+      for(let i=0;i<n;i++){ const e=t+p+2+i*12; if(e+12>v.byteLength) break; const tag=u16(e), type=u16(e+2), cnt=u32(e+4), sz=[0,1,1,2,4,8,1,1,2,4,8,4,8][type]||1, vo=sz*cnt>4?t+u32(e+8):e+8;
+        try{ if(type===2){ let str=""; for(let k=0;k<cnt-1&&vo+k<v.byteLength;k++) str+=String.fromCharCode(v.getUint8(vo+k)); out[tag]=str.trim(); }
+          else if(type===5||type===10){ const a=[]; for(let k=0;k<cnt;k++){ const nu=type===5?u32(vo+k*8):v.getInt32(vo+k*8,le), de=type===5?u32(vo+k*8+4):v.getInt32(vo+k*8+4,le); a.push(de?nu/de:0); } out[tag]=a; }
+          else if(type===3) out[tag]=u16(vo); else if(type===4) out[tag]=u32(vo); else if(type===1||type===7) out[tag]=v.getUint8(vo); }catch(_){} }
+      return out; };
+    const i0=ifd(u32(t+4)), ex=i0[0x8769]?ifd(i0[0x8769]):{}, g=i0[0x8825]?ifd(i0[0x8825]):{}, r={};
+    const dms=(a)=>Array.isArray(a)&&a.length>=3?a[0]+a[1]/60+a[2]/3600:null;
+    const ts=ex[0x9003]||ex[0x9004]||i0[0x0132], m=ts&&/^(\d{4}):(\d\d):(\d\d) (\d\d):(\d\d):(\d\d)/.exec(ts);
+    if(m){ const off=ex[0x9011]||ex[0x9010]||"", om=/^([+-])(\d\d):(\d\d)$/.exec(off);
+      r.t=om?Date.UTC(+m[1],m[2]-1,+m[3],+m[4],+m[5],+m[6])-(om[1]==="-"?-1:1)*((+om[2])*60+(+om[3]))*60000:new Date(+m[1],m[2]-1,+m[3],+m[4],+m[5],+m[6]).getTime();
+      r.tz=!!om; if(isNaN(r.t)) delete r.t; }
+    const la=dms(g[2]), lo=dms(g[4]);
+    if(la!=null&&lo!=null&&!(la===0&&lo===0)){ r.lat=(g[1]==="S"?-1:1)*la; r.lon=(g[3]==="W"?-1:1)*lo;
+      if(Array.isArray(g[6])) r.alt=(g[5]===1?-1:1)*g[6][0]; if(Array.isArray(g[0x1F])) r.acc=g[0x1F][0]; }
+    if(Array.isArray(g[0x11])&&isFinite(g[0x11][0])){ r.hdg=((g[0x11][0]%360)+360)%360; r.hdgRef=g[0x10]==="T"?"true":"magnetic"; }
+    return r;
+  }
+  // ---- on-device storage ----
+  let dbp=null;
+  const db=()=>dbp||(dbp=new Promise((res,rej)=>{ if(!window.indexedDB){ dbp=null; rej(new Error("no storage")); return; }
+    const r=indexedDB.open("iq-photos",1); r.onupgradeneeded=()=>{ if(!r.result.objectStoreNames.contains("photos")) r.result.createObjectStore("photos",{keyPath:"id"}); };
+    r.onsuccess=()=>res(r.result); r.onerror=()=>{ dbp=null; rej(r.error); }; }));
+  async function op(mode,f){ const d=await db(); return new Promise((res,rej)=>{ const t=d.transaction("photos",mode), s=t.objectStore("photos"); let r; try{ r=f(s); }catch(e){ rej(e); return; }
+    t.oncomplete=()=>res(r&&r.readyState==="done"?r.result:undefined); t.onerror=t.onabort=()=>rej(t.error||new Error("storage error")); }); }
+  const allPhotos=()=>op("readonly",s=>s.getAll()).then(a=>(a||[]).sort((x,y)=>y.t-x.t));
+  const putPhoto=(p)=>op("readwrite",s=>s.put(p));
+  const delPhoto=(id)=>op("readwrite",s=>s.delete(id));
+
+  // ---- sensors: GPS and compass, only while the camera window is open ----
+  let pos=null, posErr="", watch=null, hdg=null, hdgSrc="", hdgAcc=null, hdgFlat=false, oriOn=false;
+  function startGPS(){
+    if(watch!=null) return;
+    if(!navigator.geolocation){ posErr="This browser can't read location."; return; }
+    watch=navigator.geolocation.watchPosition((p)=>{ const c=p.coords; pos={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,altAcc:c.altitudeAccuracy,t:p.timestamp||Date.now()}; posErr=""; hud(); },
+      (e)=>{ posErr=e.code===1?"Location is blocked for this site (allow it in the browser or phone settings).":e.code===3?"Still looking for a GPS fix…":"Location isn't available right now."; hud(); },
+      {enableHighAccuracy:true,maximumAge:3000,timeout:30000});
+  }
+  function stopGPS(){ if(watch!=null){ try{ navigator.geolocation.clearWatch(watch); }catch(_){} watch=null; } }
+  // Direction the back camera faces (W3C Device Orientation spec, "compass heading" of the device's -Z axis).
+  function camHeading(alpha,beta,gamma){
+    const a=alpha*rd, b=beta*rd, g=gamma*rd, cA=Math.cos(a), sA=Math.sin(a), sB=Math.sin(b), cG=Math.cos(g), sG=Math.sin(g);
+    const rA=-cA*sG-sA*sB*cG, rB=-sA*sG+cA*sB*cG;
+    let h=Math.atan(rA/rB); if(rB<0) h+=Math.PI; else if(rA<0) h+=2*Math.PI;
+    return h/rd;
+  }
+  let sx=0, sy=0;   // smoothing (unit-vector average, so 359° and 1° average to 0°)
+  function onOri(e){
+    let d=null, flat=false;
+    if(typeof e.webkitCompassHeading==="number"&&!isNaN(e.webkitCompassHeading)){ d=e.webkitCompassHeading; hdgSrc="ios"; hdgAcc=(typeof e.webkitCompassAccuracy==="number"&&e.webkitCompassAccuracy>=0)?e.webkitCompassAccuracy:null; }
+    else if((e.absolute||e.type==="deviceorientationabsolute")&&e.alpha!=null&&e.beta!=null&&e.gamma!=null){
+      flat=Math.abs(e.beta)<25&&Math.abs(e.gamma)<25;
+      d=flat?(360-e.alpha)%360:camHeading(e.alpha,e.beta,e.gamma); hdgSrc="abs"; hdgAcc=null; }
+    if(d==null||isNaN(d)) return;
+    if(facing==="user") d=(d+180)%360;
+    const k=hdg==null?1:.25; sx=sx*(1-k)+Math.sin(d*rd)*k; sy=sy*(1-k)+Math.cos(d*rd)*k;
+    hdg=(Math.atan2(sx,sy)/rd+360)%360; hdgFlat=flat; hudSoon();
+  }
+  function startCompass(){
+    if(oriOn) return;
+    try{ if(window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==="function"){   // iPhone: must be asked during the tap
+        DeviceOrientationEvent.requestPermission().then(s=>{ if(s!=="granted"){ hdgSrc="denied"; hud(); } }).catch(()=>{}); } }catch(_){}
+    if("ondeviceorientationabsolute" in window) window.addEventListener("deviceorientationabsolute",onOri);
+    else window.addEventListener("deviceorientation",onOri);
+    oriOn=true;
+  }
+  function stopCompass(){ window.removeEventListener("deviceorientationabsolute",onOri); window.removeEventListener("deviceorientation",onOri); oriOn=false; }
+
+  // ---- camera ----
+  let stream=null, facing="environment", starting=false;
+  async function startCam(){
+    if(stream||starting) return; const v=q("video"); if(!v) return;
+    if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){ camOff(`This browser can't show a live camera here. Use “${FILEBTN}” instead.`); return; }
+    starting=true; camOff("Starting camera…",true);
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}}});
+      if(!root||root.hidden||view!=="live"){ stopCam(); return; }
+      try{ const n=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="videoinput").length; q('[data-cm="flip"]').hidden=n<2; }catch(_){}
+      v.srcObject=stream; v.classList.toggle("mirror",facing==="user"); await v.play().catch(()=>{}); q(".cm-off").hidden=true;
+    }catch(err){ stream=null; camOff(err&&err.name==="NotAllowedError"?`Camera is blocked for this site. Allow it in the browser or phone settings, or use “${FILEBTN}”.`:`Couldn't start the camera. Use “${FILEBTN}” instead.`); }
+    finally{ starting=false; }
+  }
+  function stopCam(){ if(stream){ stream.getTracks().forEach(t=>{ try{ t.stop(); }catch(_){} }); stream=null; } const v=q("video"); if(v) v.srcObject=null; }
+  function camOff(t,quiet){ const o=q(".cm-off"); if(!o) return; o.hidden=false; o.textContent=t; o.classList.toggle("quiet",!!quiet); }
+  // Grab the photo: full sensor resolution where the browser supports it, otherwise the current video frame.
+  async function grab(){
+    const v=q("video"), track=stream&&stream.getVideoTracks()[0];
+    if(track&&window.ImageCapture){ try{ const b=await Promise.race([new ImageCapture(track).takePhoto(),new Promise((_,rej)=>setTimeout(()=>rej(new Error("slow")),4000))]); if(b&&b.size) return await shrink(b); }catch(_){} }
+    if(!v||!v.videoWidth) throw new Error("no frame");
+    const k=Math.min(1,MAXS/Math.max(v.videoWidth,v.videoHeight)), c=document.createElement("canvas"); c.width=Math.round(v.videoWidth*k); c.height=Math.round(v.videoHeight*k);
+    const x=c.getContext("2d"); if(facing==="user"){ x.translate(c.width,0); x.scale(-1,1); } x.drawImage(v,0,0,c.width,c.height);
+    return {blob:await toBlob(c,"image/jpeg",.92),w:c.width,h:c.height};
+  }
+  const MAXS=2400;
+  const toBlob=(c,t,qq)=>new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error("encode")),t,qq));
+  function loadImg(blob){ return new Promise((res,rej)=>{ const u=URL.createObjectURL(blob), im=new Image(); im.onload=()=>{ res(im); setTimeout(()=>URL.revokeObjectURL(u),0); }; im.onerror=()=>{ URL.revokeObjectURL(u); rej(new Error("decode")); }; im.src=u; }); }
+  // Re-encode at most 2400 px on the long side (this also drops the original file's hidden data, such as its own GPS tags).
+  async function shrink(blob){ const im=await loadImg(blob), k=Math.min(1,MAXS/Math.max(im.naturalWidth,im.naturalHeight)), c=document.createElement("canvas");
+    c.width=Math.max(1,Math.round(im.naturalWidth*k)); c.height=Math.max(1,Math.round(im.naturalHeight*k)); c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+    return {blob:await toBlob(c,"image/jpeg",.92),w:c.width,h:c.height}; }
+  async function thumbOf(blob){ const im=await loadImg(blob), k=Math.min(1,320/Math.max(im.naturalWidth,im.naturalHeight)), c=document.createElement("canvas");
+    c.width=Math.round(im.naturalWidth*k); c.height=Math.round(im.naturalHeight*k); c.getContext("2d").drawImage(im,0,0,c.width,c.height); return c.toDataURL("image/jpeg",.7); }
+  // What was true at the moment of the shot.
+  function snapshot(src){
+    const t=Date.now(), fresh=pos&&(t-pos.t)<120000;
+    return {t,src,pos:pos?Object.assign({},pos,{age:Math.round((t-pos.t)/1000),stale:!fresh}):null,posErr:pos?"":(posErr||"No GPS fix yet."),
+      hdg:hdg==null?null:Math.round(hdg*10)/10,hdgSrc,hdgAcc,hdgFlat,facing};
+  }
+  async function shoot(){
+    if(busy) return; busy=true; const meta=snapshot("live");
+    try{ flash(); const g=await grab(); await keep(g,meta); }
+    catch(err){ say(`Couldn't take the photo. Try again, or use “${FILEBTN}”.`,true); }
+    finally{ busy=false; }
+  }
+  let busy=false, tapMeta=null;
+  async function fromFile(f){
+    if(!f||!/^image\//.test(f.type||"image/")) return say("That file isn't a photo.",true);
+    const meta=tapMeta||snapshot("file"); meta.src="file"; meta.t=meta.t||Date.now(); tapMeta=null;
+    const x=await readExif(f); meta.from={t:"now",pos:"now",hdg:"now"};
+    if(x&&x.t){ meta.t=x.t; meta.from.t=x.tz?"exif":"exif-local"; } else if(DESK){ meta.t=f.lastModified||meta.t; meta.from.t="filedate"; }
+    if(x&&x.lat!=null){ meta.pos={lat:x.lat,lon:x.lon,acc:x.acc!=null?x.acc:null,alt:x.alt!=null?x.alt:null,altAcc:null,age:0,stale:false}; meta.posErr=""; meta.from.pos="exif"; }
+    else if(DESK){ meta.pos=null; meta.posErr="not saved in the photo file"; meta.from.pos="none"; }
+    if(x&&x.hdg!=null){ meta.hdg=Math.round(x.hdg*10)/10; meta.hdgRef=x.hdgRef; meta.hdgAcc=null; meta.hdgFlat=false; meta.from.hdg="exif"; }
+    else if(DESK){ meta.hdg=null; meta.hdgSrc="none-file"; meta.from.hdg="none"; }
+    try{ const g=await shrink(f); await keep(g,meta); }catch(_){ say("Couldn't open that photo. Try a JPEG or PNG (some browsers can't read HEIC).",true); }
+  }
+  async function keep(g,meta){
+    const rec={id:"p"+meta.t+Math.random().toString(36).slice(2,6),t:meta.t,blob:g.blob,w:g.w,h:g.h,meta,notes:"",loc:true,thumb:await thumbOf(g.blob)};
+    try{ await putPhoto(rec); }catch(_){ say("Couldn't keep the photo on this device (storage full or blocked). Save image before closing.",true); }
+    cur=rec; showReview();
+  }
+
+  // ---- the data stamp ----
+  function lines(rec,forText){
+    const m=rec.meta, d=new Date(m.t), L=[];
+    L.push(["DATE/TIME",fmtDT(d)]); L.push(["DTG",dtgZ(d)]);
+    if(rec.loc){
+      if(m.pos){ const p=m.pos;
+        L.push(["LOCATION",`${p.lat.toFixed(5)}, ${p.lon.toFixed(5)}${p.acc!=null?` (±${Math.round(p.acc)} m)`:""}${p.stale?` · fix ${Math.round(p.age/60)} min old`:""}`]);
+        L.push(["MGRS",mgrsOf(p.lat,p.lon)]);
+        L.push(["ALTITUDE",p.alt!=null&&!isNaN(p.alt)?`${Math.round(p.alt)} m / ${Math.round(p.alt*3.28084)} ft${p.altAcc!=null?` (±${Math.round(p.altAcc)} m)`:""}`:"not available on this device"]);
+      } else L.push(["LOCATION","not available — "+(m.posErr||"no GPS fix")]);
+    }
+    const F=m.from||{};
+    if(m.hdg!=null) L.push(["AZIMUTH",`${deg3(m.hdg)} ${pt16(m.hdg)} · ${mils(m.hdg)} ${m.hdgRef||"magnetic"}${m.hdgAcc!=null?` (±${Math.round(m.hdgAcc)}°)`:""}${m.hdgFlat?" · phone was flat":""}${m.src==="file"&&F.hdg!=="exif"?" · when the camera app opened":""}`]);
+    else L.push(["AZIMUTH",m.hdgSrc==="denied"?"compass access was not allowed":m.hdgSrc==="none-file"?"not saved in the photo file":"not available (no compass on this device)"]);
+    if(m.src==="file"){ const parts=[];
+      if(F.t==="exif") parts.push("time"); if(F.pos==="exif") parts.push("location"); if(F.hdg==="exif") parts.push("direction");
+      let src=parts.length?`photo file — ${parts.join(", ")} read from the file`:(F.t&&F.t!=="now"?"photo file":"phone camera app — data recorded when it opened");
+      if(F.t==="exif-local") src+="; time from the file (camera's own clock, time zone not saved)"; else if(F.t==="filedate") src+="; time is the file's date (no capture time saved)";
+      if(F.t==="exif-local"&&!parts.length) src="photo file — time from the camera's clock (time zone not saved)";
+      if(F.pos==="now"&&F.t&&F.t!=="now") src+="; location is where this device was when stamped";
+      L.push(["SOURCE",src]); }
+    const n=(rec.notes||"").trim(); if(n) L.push(["NOTES",n]);
+    if(forText&&rec.loc&&m.pos) L.push(["MAP",`https://www.google.com/maps/search/?api=1&query=${m.pos.lat.toFixed(6)},${m.pos.lon.toFixed(6)}`]);
+    return L;
+  }
+  const textOf=(rec)=>["FIELD PHOTO",...lines(rec,true).map(([k,v])=>`${(k+":").padEnd(11)}${v}`)].join("\n");
+  const imgCache=new Map();
+  async function stamped(rec,maxSide=MAXS,type="image/jpeg"){
+    let im=imgCache.get(rec.id); if(!im){ im=await loadImg(rec.blob); imgCache.set(rec.id,im); }
+    const k=Math.min(1,maxSide/Math.max(im.naturalWidth,im.naturalHeight)), W=Math.round(im.naturalWidth*k), H=Math.round(im.naturalHeight*k);
+    const fs=Math.max(13,Math.min(40,Math.round(W/46))), lh=Math.round(fs*1.38), pad=Math.round(fs*.8), font=`${fs}px "IBM Plex Mono","Courier New",monospace`, bold=`bold ${font}`;
+    const meas=document.createElement("canvas").getContext("2d"); meas.font=font;
+    const keyW=Math.ceil(meas.measureText("DATE/TIME  ").width), compR=rec.meta.hdg!=null?Math.round(fs*2.1):0, textW=W-pad*2-keyW-(compR?compR*2+pad:0);
+    const rows=[]; lines(rec).forEach(([k,v])=>{ wrap(meas,String(v),Math.max(fs*6,textW)).forEach((ln,i)=>rows.push([i?"":k,ln])); });
+    const band=pad*2+rows.length*lh, c=document.createElement("canvas"); c.width=W; c.height=H+band; const x=c.getContext("2d");
+    x.drawImage(im,0,0,W,H); x.fillStyle="#000"; x.fillRect(0,H,W,band); x.fillStyle="#ffd54a"; x.fillRect(0,H,W,Math.max(2,Math.round(fs/8)));
+    x.textBaseline="top"; rows.forEach(([kk,v],i)=>{ const y=H+pad+i*lh; if(kk){ x.font=bold; x.fillStyle="#ffd54a"; x.fillText(kk,pad,y); } x.font=font; x.fillStyle="#fff"; x.fillText(v,pad+keyW,y); });
+    if(compR){ const cx=W-pad-compR, cy=H+pad+compR+fs*.3, a=rec.meta.hdg*rd;   // small compass rose: arrow = direction the camera faced
+      x.strokeStyle="#fff"; x.lineWidth=Math.max(1.5,fs/10); x.beginPath(); x.arc(cx,cy,compR,0,Math.PI*2); x.stroke();
+      x.fillStyle="#fff"; x.font=`bold ${Math.round(fs*.8)}px Arial, Helvetica, sans-serif`; x.textAlign="center"; x.textBaseline="bottom"; x.fillText("N",cx,cy-compR*.62); x.textAlign="left";
+      x.fillStyle="#ffd54a"; x.beginPath(); x.moveTo(cx+Math.sin(a)*compR*.9,cy-Math.cos(a)*compR*.9); x.lineTo(cx+Math.sin(a+2.6)*compR*.45,cy-Math.cos(a+2.6)*compR*.45); x.lineTo(cx,cy); x.lineTo(cx+Math.sin(a-2.6)*compR*.45,cy-Math.cos(a-2.6)*compR*.45); x.closePath(); x.fill(); }
+    return c;
+  }
+  function wrap(ctx,txt,maxW){ const out=[]; txt.split("\n").forEach(par=>{ let line=""; par.split(/(\s+)/).filter(Boolean).forEach(tok=>{ const nx=line+tok; if(!line.trim()||ctx.measureText(nx.trimEnd()).width<=maxW){ line=nx; return; } out.push(line.trimEnd()); line=tok.trimStart(); });
+      while(ctx.measureText(line).width>maxW&&line.length>1){ let n=line.length; while(n>1&&ctx.measureText(line.slice(0,n)).width>maxW) n--; out.push(line.slice(0,n)); line=line.slice(n); } out.push(line.trimEnd()); }); return out; }
+  const fname=(rec)=>{ const d=new Date(rec.t), n=(rec.notes||"").split("\n")[0].replace(/[^\w-]+/g,"_").slice(0,32).replace(/^_+|_+$/g,""); return `photo_${d.getFullYear()}-${two(d.getMonth()+1)}-${two(d.getDate())}_${two(d.getHours())}${two(d.getMinutes())}${two(d.getSeconds())}${n?"_"+n:""}.jpg`; };
+
+  // ---- window ----
+  let root=null, view="live", cur=null, hudT=0, clockT=0, armDel=0, prevUrl="";
+  const q=(s)=>root&&root.querySelector(s);
+  function say(t,warn){ const m=q(view==="live"?".cm-msg":".cm-msg2"); if(!m) return; m.textContent=t||""; m.classList.toggle("warn",!!warn); clearTimeout(say.t); if(t&&!warn) say.t=setTimeout(()=>{ if(m.textContent===t) m.textContent=""; },6000); }
+  function build(){
+    const r=document.createElement("div"); r.id="cmOverlay"; r.hidden=true; document.body.appendChild(r);
+    r.innerHTML=`<div class="np-win cm-win" role="dialog" aria-label="Camera">
+      <div class="bar np-bar"><span>CAMERA.EXE</span><span class="np-barbtns"><button class="btn" type="button" data-cm="close" aria-label="Close camera">✕</button></span></div>
+      <div class="body cm-body">
+        <div class="cm-live">
+          <div class="cm-view"><video playsinline muted autoplay aria-label="Camera view"></video><div class="cm-cross" aria-hidden="true"></div>
+            <div class="cm-hud" aria-live="off"><div class="cm-az">---°</div><div class="cm-l1"></div><div class="cm-l2"></div><div class="cm-l3"></div></div>
+            <div class="cm-off" hidden></div><div class="cm-flash" aria-hidden="true"></div></div>
+          <div class="cm-ctl">
+            <button class="btn" type="button" data-cm="flip" title="Switch between the back and front cameras">Switch camera</button>
+            <button class="cm-shut" type="button" data-cm="shoot" aria-label="Take photo" title="Take photo"></button>
+            <button class="btn" type="button" data-cm="file" title="${DESK?"Stamp a photo from this computer (its time and location are read from the file when saved there)":"Use the phone's own camera app (data is recorded when it opens)"}">${FILEBTN}</button>
+            <input type="file" data-cm="filein" accept="image/*"${DESK?"":' capture="environment"'} hidden>
+          </div>
+          <div class="cm-msg" aria-live="polite"></div>
+          <div class="sal-hint cm-tip">${DESK?"On a computer there's usually no GPS or compass: location is the browser's estimate (its accuracy is printed), and altitude and azimuth aren't available. Photos you choose keep the time, location and direction saved in the file, when it has them.":"Point the camera at the subject and hold it upright and steady: the azimuth is the direction the camera faces (magnetic). If the compass seems off, move the phone in a figure 8."}</div>
+          <div class="rc-head"><span class="ta-sub">Photos on this device</span><span class="muted cm-count"></span></div>
+          <div class="cm-list"></div>
+          <div class="sal-hint np-foot">Photos and their location stay on this device and are never uploaded. Use Save image or Send to keep a copy elsewhere; clearing your browser data deletes them. The camera and location are used only while this window is open.</div>
+        </div>
+        <div class="cm-rev" hidden>
+          <div class="cm-revtop"><button class="btn" type="button" data-cm="back">◀ Camera</button><span class="muted cm-revtime"></span></div>
+          <div class="cm-imgwrap"><img class="cm-img" alt="Photo with data stamp"></div>
+          <label class="ta-f cm-notes">Notes (printed on the photo)<textarea class="fld" data-cm="notes" rows="3" placeholder="What it shows, who, direction of travel, vehicle, anything else"></textarea></label>
+          <label class="cm-chk"><input type="checkbox" data-cm="loc" checked> Include location (coordinates, MGRS, altitude) on the photo</label>
+          <div class="cm-acts">
+            <button class="btn" type="button" data-cm="save">Save image</button>
+            <button class="btn" type="button" data-cm="send">Send…</button>
+            <button class="btn" type="button" data-cm="copy">Copy text</button>
+            <button class="btn" type="button" data-cm="attach" title="Add to the report open in REPORTS">Attach to report</button>
+            <button class="btn" type="button" data-cm="del">Delete</button>
+          </div>
+          <div class="cm-msg2" aria-live="polite"></div>
+          <pre class="cm-text" aria-label="Photo data"></pre>
+        </div>
+      </div></div>`;
+    root=r;
+    r.addEventListener("click",onClick);
+    r.addEventListener("input",(e)=>{ if(e.target.dataset.cm==="notes"&&cur){ cur.notes=e.target.value; dirty(); } });
+    r.addEventListener("change",(e)=>{ const t=e.target.dataset.cm; if(t==="loc"&&cur){ cur.loc=e.target.checked; dirty(0); } if(t==="filein"){ const f=e.target.files&&e.target.files[0]; e.target.value=""; if(f) fromFile(f); } });
+  }
+  let saveT=0;
+  function dirty(ms=450){ clearTimeout(saveT); saveT=setTimeout(()=>{ saveT=0; if(cur){ putPhoto(cur).catch(()=>{}); preview(); } },ms); }
+  function flushNotes(){ if(saveT){ clearTimeout(saveT); saveT=0; if(cur) putPhoto(cur).catch(()=>{}); } }
+  async function preview(){ if(!cur) return; const id=cur.id; try{ const c=await stamped(cur,1400); if(!cur||cur.id!==id) return; const b=await toBlob(c,"image/jpeg",.85); if(prevUrl) URL.revokeObjectURL(prevUrl); prevUrl=URL.createObjectURL(b); q(".cm-img").src=prevUrl; }catch(_){}
+    q(".cm-text").textContent=textOf(cur); }
+  function showReview(){
+    view="review"; stopCam(); q(".cm-live").hidden=true; q(".cm-rev").hidden=false;
+    q('[data-cm="notes"]').value=cur.notes||""; q('[data-cm="loc"]').checked=cur.loc!==false; q(".cm-revtime").textContent=fmtDT(new Date(cur.t));
+    const del=q('[data-cm="del"]'); del.textContent="Delete"; armDel=0; q(".cm-img").removeAttribute("src");
+    preview(); root.scrollTop=0; q(".cm-win").scrollTop=0;
+  }
+  function showLive(){ flushNotes(); view="live"; cur=null; q(".cm-rev").hidden=true; q(".cm-live").hidden=false; list(); startCam(); hud(); }
+  async function list(){
+    const box=q(".cm-list"); if(!box) return; let all=[]; try{ all=await allPhotos(); }catch(_){}
+    q(".cm-count").textContent=all.length?`${all.length} photo${all.length>1?"s":""}`:"";
+    box.innerHTML=all.length?all.map(p=>`<button class="cm-it" type="button" data-cm="openp" data-id="${esc(p.id)}"><img src="${p.thumb}" alt=""><span><b>${esc(fmtDT(new Date(p.t)))}</b><span class="muted">${esc(p.meta.pos?mgrsOf(p.meta.pos.lat,p.meta.pos.lon):"no location")}${p.meta.hdg!=null?" · "+deg3(p.meta.hdg)+" "+pt16(p.meta.hdg):""}</span>${p.notes?`<span>${esc(p.notes.split("\n")[0].slice(0,80))}</span>`:""}</span></button>`).join(""):`<div class="muted rc-empty">No photos yet.</div>`;
+  }
+  function hudSoon(){ if(!hudT) hudT=requestAnimationFrame(()=>{ hudT=0; hud(); }); }
+  function hud(){
+    if(!root||root.hidden||view!=="live") return;
+    const az=q(".cm-az"); az.textContent=hdg!=null?`${deg3(hdg)} ${pt16(hdg)} · ${mils(hdg)}`:(hdgSrc==="denied"?"Compass not allowed":"Compass: waiting…");
+    az.classList.toggle("dim",hdg==null);
+    q(".cm-l1").textContent=pos?`${pos.lat.toFixed(5)}, ${pos.lon.toFixed(5)} ±${Math.round(pos.acc)} m`:(posErr||"Location: waiting for GPS…");
+    q(".cm-l2").textContent=pos?`MGRS ${mgrsOf(pos.lat,pos.lon)}${pos.alt!=null&&!isNaN(pos.alt)?` · ALT ${Math.round(pos.alt)} m / ${Math.round(pos.alt*3.28084)} ft`:""}`:"";
+    const d=new Date(); q(".cm-l3").textContent=`${dtgZ(d)} · ${mil()?d.toLocaleTimeString("en-GB",{hourCycle:"h23"}):d.toLocaleTimeString("en-US")}`;
+  }
+  function flash(){ const f=q(".cm-flash"); if(!f) return; f.classList.remove("on"); void f.offsetWidth; f.classList.add("on"); }
+  async function onClick(e){
+    const b=e.target.closest("[data-cm]"); if(!b||b.tagName==="INPUT"||b.tagName==="TEXTAREA") return; const a=b.dataset.cm;
+    if(a!=="del"&&armDel){ armDel=0; const d=q('[data-cm="del"]'); if(d) d.textContent="Delete"; }
+    if(a==="close") return close();
+    if(a==="shoot") return shoot();
+    if(a==="flip"){ facing=facing==="environment"?"user":"environment"; hdg=null; stopCam(); startCam(); return; }
+    if(a==="file"){ tapMeta=snapshot("file"); q('[data-cm="filein"]').click(); return; }
+    if(a==="back") return showLive();
+    if(a==="openp"){ try{ const all=await allPhotos(); const p=all.find(x=>x.id===b.dataset.id); if(p){ cur=p; showReview(); } }catch(_){} return; }
+    if(!cur) return;
+    flushNotes();
+    if(a==="save"){ try{ const bl=await toBlob(await stamped(cur),"image/jpeg",.9), u=URL.createObjectURL(bl), x=document.createElement("a"); x.href=u; x.download=fname(cur); document.body.appendChild(x); x.click(); setTimeout(()=>{ URL.revokeObjectURL(u); x.remove(); },1500); say("Saved "+fname(cur)+" to your downloads."); }catch(_){ say("Couldn't save the image.",true); } return; }
+    if(a==="send"){
+      const txt=textOf(cur);
+      try{ const f=new File([await toBlob(await stamped(cur),"image/jpeg",.9)],fname(cur),{type:"image/jpeg"});
+        if(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]})){ await navigator.share({files:[f],text:txt,title:"Field photo"}); return; }
+        if(navigator.share){ await navigator.share({text:txt,title:"Field photo"}); say("Sent the text. This browser can't send the picture — use Save image and attach it."); return; }
+      }catch(err){ if(err&&err.name==="AbortError") return; }
+      location.href=`mailto:?subject=${encodeURIComponent("Field photo "+dtgZ(new Date(cur.t)))}&body=${encodeURIComponent(txt+"\n\n(Photo attached separately — use Save image.)")}`;
+      say("Opened an email with the photo data. Attach the image from Save image."); return; }
+    if(a==="copy"){ const t=textOf(cur); try{ await navigator.clipboard.writeText(t); say("Copied the photo data."); }catch(_){ const r=document.createRange(); r.selectNodeContents(q(".cm-text")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); say("Selected — press Ctrl/Cmd+C."); } return; }
+    if(a==="attach"){ if(!window.__repAtt) return say("Reports aren't available on this page.",true);
+      try{ const c=await stamped(cur,1600), n=window.__repAtt.add({src:c.toDataURL("image/jpeg",.85),w:c.width,h:c.height,cap:(cur.notes||"").split("\n")[0].trim()||"Field photo",time:fmtDT(new Date())});
+        say(`Attached to ${n.nice} (item ${n.n}). It prints at the end of that report. To use a different report, choose it in REPORTS first.`); }catch(_){ say("Couldn't attach the photo.",true); } return; }
+    if(a==="del"){ if(!armDel){ armDel=1; b.textContent="Tap again to delete"; setTimeout(()=>{ if(armDel){ armDel=0; b.textContent="Delete"; } },4000); return; }
+      armDel=0; const id=cur.id; imgCache.delete(id); try{ await delPhoto(id); }catch(_){} cur=null; showLive(); say("Photo deleted."); return; }
+  }
+  function open(){
+    startCompass();   // first, while the tap still counts (iPhone asks for compass permission here)
+    if(!root) build();
+    root.hidden=false; document.documentElement.classList.add("cm-open");
+    try{ navigator.storage&&navigator.storage.persist&&navigator.storage.persist(); }catch(_){}
+    startGPS(); if(view==="live"){ list(); startCam(); } hud(); clearInterval(clockT); clockT=setInterval(hud,1000);
+    setTimeout(()=>{ const s=q(view==="live"?'[data-cm="shoot"]':'[data-cm="notes"]'); s&&s.focus({preventScroll:true}); },60);
+  }
+  function close(){ if(!root||root.hidden) return; flushNotes(); stopCam(); stopGPS(); stopCompass(); clearInterval(clockT); root.hidden=true; document.documentElement.classList.remove("cm-open"); btn.focus({preventScroll:true}); }
+  btn.addEventListener("click",open);
+  document.addEventListener("visibilitychange",()=>{ if(!root||root.hidden) return; if(document.visibilityState==="hidden") { flushNotes(); stopCam(); } else if(view==="live") startCam(); });
+  window.addEventListener("pagehide",flushNotes);
+  document.addEventListener("keydown",(e)=>{
+    if(!root||root.hidden||e.defaultPrevented||document.querySelector(".dd-box")) return;
+    if(e.key==="Escape"){ if(view==="review") showLive(); else close(); return; }
+    if(e.key===" "&&view==="live"&&e.target&&!/^(INPUT|TEXTAREA|BUTTON)$/.test(e.target.tagName)){ e.preventDefault(); shoot(); return; }
+    if(e.key==="Tab"){ const f=[...root.querySelectorAll("button,input,textarea")].filter(x=>!x.disabled&&!x.hidden&&x.getClientRects().length); if(!f.length) return; const i=f.indexOf(document.activeElement);
+      if(e.shiftKey&&i<=0){ e.preventDefault(); f[f.length-1].focus(); } else if(!e.shiftKey&&(i<0||i===f.length-1)){ e.preventDefault(); f[0].focus(); } }
+  });
+  window.__camera={open};
+})();
+</script>
+<script>
+// REPORT SKETCHES: sketches attached from the sketchpad to the report open in REPORTS.EXE. Kept with that report while the
+// page is open, saved inside its report file (encrypted with it when a passphrase is used), and printed on a page at the end.
+(function(){
+  const $=(id)=>document.getElementById(id), sel=$("repSel"), box=$("repAtt"); if(!sel||!box) return;
+  const esc=(s)=>String(s??"").replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const ATT={};
+  const cur=()=>sel.value, nice=()=>{ const o=sel.selectedOptions&&sel.selectedOptions[0]; return o?o.textContent.trim():"current"; };
+  const list=(n)=>ATT[n]||(ATT[n]=[]);
+  let msgT=0; const msg=(t)=>{ const m=$("repAttMsg"); if(!m) return; m.textContent=t; clearTimeout(msgT); msgT=setTimeout(()=>{ if(m.textContent===t) m.textContent=""; },5000); };
+  function paint(){
+    const L=list(cur());
+    box.innerHTML=`<div class="rep-att-h"><b>Attachments${L.length?` (${L.length})`:""}</b>
+      <button class="btn" type="button" data-att="open">Sketchpad</button><button class="btn" type="button" data-att="cam">Camera</button>
+      <span class="muted" id="repAttMsg"></span></div>
+      <div class="rep-att-list">${L.map((a,i)=>`<div class="rep-att-it"><img src="${a.src}" alt="Attachment ${i+1}${a.cap?": "+esc(a.cap):""}">
+        <div class="cap">${i+1}. ${a.cap?esc(a.cap):"<i>No caption</i>"}</div><div class="tm">Attached ${esc(a.time||"")}</div>
+        <div class="toolrow">${i?`<button class="btn" type="button" data-att="up" data-i="${i}" aria-label="Move sketch ${i+1} up">▲ Up</button>`:""}<button class="btn" type="button" data-att="del" data-i="${i}">Remove</button></div></div>`).join("")}</div>
+      <div class="sal-hint" style="margin-top:6px">${L.length?"Attached sketches and photos print on a page at the end of this report and are kept inside the report file when you Save to file. Copy text doesn't include pictures.":"Make a sketch or take a photo, then press <b>Attach to report</b>. It's added to the report shown here."}</div>`;
+  }
+  box.addEventListener("click",(e)=>{ const b=e.target.closest("[data-att]"); if(!b) return; const a=b.dataset.att, L=list(cur()), i=+b.dataset.i;
+    if(a==="open"){ if(window.__sketch) window.__sketch.open(); return; }
+    if(a==="cam"){ const cb=document.getElementById("camBtn"); if(cb) cb.click(); return; }
+    if(a==="up"&&i>0){ [L[i-1],L[i]]=[L[i],L[i-1]]; paint(); return; }
+    if(a==="del"){ if(b.dataset.arm!=="1"){ b.dataset.arm="1"; b.textContent="Tap again to remove"; setTimeout(()=>{ if(b.isConnected){ b.dataset.arm=""; b.textContent="Remove"; } },4000); return; }
+      L.splice(i,1); paint(); msg("Removed from this report."); } });
+  window.__repAtt={
+    add(img){ const L=list(cur()); L.push({src:img.src,w:img.w,h:img.h,cap:img.cap||"",time:img.time||""}); paint(); msg("Attached."); return {nice:nice(),n:L.length}; },
+    get:(n)=>(ATT[n]||[]).slice(),
+    set(n,arr){ ATT[n]=(arr||[]).filter(a=>a&&typeof a.src==="string"&&/^data:image\/(png|jpeg);base64,/.test(a.src)).map(a=>({src:a.src,w:+a.w||0,h:+a.h||0,cap:String(a.cap||""),time:String(a.time||"")})); if(n===cur()) paint(); }
+  };
+  sel.addEventListener("change",paint);
+  const host=$("repHost"); if(host&&window.MutationObserver) new MutationObserver(()=>{ if(box.dataset.for!==cur()){ box.dataset.for=cur(); paint(); } }).observe(host,{attributes:true,subtree:true,attributeFilter:["hidden"]});
+  box.dataset.for=cur(); paint();
+  // Printing: when a report printed from REPORTS.EXE has sketches, add them on a page at the end.
+  let lastRepClick=0, added=null;
+  document.addEventListener("click",(e)=>{ if(e.target.closest&&e.target.closest("#repWin")) lastRepClick=Date.now(); },true);
+  const PRINT={"print-ta":"taPrint","print-sal":"salPrint","print-ics":"icsPrint"};
+  function before(){
+    if(added||Date.now()-lastRepClick>3000) return;
+    const cls=Object.keys(PRINT).find(c=>document.body.classList.contains(c)); if(!cls) return;
+    const L=list(cur()), host=$(PRINT[cls]); if(!L.length||!host) return;
+    const d=document.createElement("div"); d.className="att-print";
+    d.innerHTML=`<h2>Attachment${L.length>1?"s":""}</h2>`+L.map((a,i)=>`<figure><img src="${a.src}" alt=""><figcaption><b>Attachment ${i+1} of ${L.length}</b>${a.cap?" — "+esc(a.cap):""}${a.time?" · attached "+esc(a.time):""}</figcaption></figure>`).join("");
+    const ends=host.querySelectorAll(".pmark.end"), end=ends[ends.length-1];
+    if(end) end.parentNode.insertBefore(d,end); else host.appendChild(d);
+    added=d;
+  }
+  function after(){ if(added){ added.remove(); added=null; } }
+  window.addEventListener("beforeprint",before); window.addEventListener("afterprint",after);
+  if(window.matchMedia){ const mq=matchMedia("print"); const f=(e)=>{ if(e.matches) before(); }; mq.addEventListener?mq.addEventListener("change",f):mq.addListener&&mq.addListener(f); }
 })();
 </script>
 <script>
