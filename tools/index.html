@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>Inter-Q Field Kit</title>
 <link rel="manifest" href="manifest.json">
-<meta name="iq-build" content="2026-10-06 21:00">
+<meta name="iq-build" content="2026-10-06 21:15">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
@@ -324,7 +324,7 @@
   /* Themed dropdown list (replaces the browser's white popup) */
   .cam-row { display:flex; gap:10px; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px dotted var(--rule); }
   .cam-row .cam-t { min-width:0; } .cam-row .cam-t b { font-size:14px; } .cam-row .sal-hint { margin-top:1px; } .cam-row .cam-go { flex:none; text-decoration:none; font-size:13px; padding:3px 10px; }
-  .cam-near { font-size:11px; color:var(--ok); border:1px solid currentColor; padding:0 5px; white-space:nowrap; }
+  .cam-yt { border:1px solid var(--lo); padding:8px 10px; margin:4px 0 6px; } .cam-yt a.btn { text-decoration:none; } .cam-yt .btn { font-size:13px; padding:3px 10px; }
   .dd-back { position:fixed; inset:0; z-index:1999; background:rgba(0,0,0,.45); touch-action:none; }
   .dd-box { position:fixed; z-index:2000; display:flex; flex-direction:column; background:var(--win); border:1px solid var(--edge); box-shadow:0 12px 28px rgba(0,0,0,.85), 0 0 16px rgba(var(--glow),.2); font-family:var(--font-ui); }
   .dd-head { display:none; }
@@ -2278,12 +2278,16 @@ Rule of thumb:  min. 1 gal / 3.8 L per person per day, more in heat or for exert
     },
     cams(){
       // Live cameras: public, owner-published feeds only (agencies, universities, utilities, reputable networks).
-      // 📍 links open at the reporting location (set at the top of the page); the rest open the source's own map or list.
+      // Map links open at the reporting location (set at the top of the page); the rest open the source's own map or list.
       host.innerHTML="";
       const f=(n,d)=>Number(n).toFixed(d);
       const CT=(d,id)=>`https://cwwp2.dot.ca.gov/vm/loc/${d}/${id}.htm`;
       const AC=(lat,lon,z,id)=>`https://cameras.alertcalifornia.org/?pos=${f(lat,4)}_${f(lon,4)}_${z}${id?`&id=Axis-${id}`:""}`;
-      const YT=(q)=>`https://www.youtube.com/results?search_query=${encodeURIComponent(q+" live cam")}&sp=EgJAAQ%253D%253D`;
+      // YouTube search with the "Live" filter (sp=EgJAAQ%3D%3D); "what" sharpens the search.
+      const YTWHAT=[["cam","Live cams","live cam"],["news","Live news","live news"],["traffic","Traffic","traffic live"],["wx","Weather / storm","weather storm live"],["any","Anything live","live"]];
+      const YT=(place,what)=>`https://www.youtube.com/results?search_query=${encodeURIComponent((place+" "+((YTWHAT.find(w=>w[0]===what)||YTWHAT[0])[2])).trim())}&sp=EgJAAQ%253D%253D`;
+      const WATCH=["Washington, DC","New York City","Los Angeles","San Francisco","Sacramento","San Diego","Honolulu","Tijuana","Mexico City","London","Paris","Berlin","Jerusalem","Tel Aviv","Gaza","Beirut","Kyiv","Moscow","Istanbul","Tehran","Taipei","Hong Kong","Beijing","Seoul","Tokyo","Manila"];
+      let recent=[]; try{ recent=JSON.parse(localStorage.getItem("iq.ytPlaces")||"[]").filter(x=>typeof x==="string").slice(0,6); }catch(_){}
       // [name, note, url or (lat,lon,place)=>url, nearYou]
       const G={
         fire:["Fire & smoke",[
@@ -2295,9 +2299,7 @@ Rule of thumb:  min. 1 gal / 3.8 L per person per day, more in heat or for exert
           ["USGS volcano webcams","Hawaii, Alaska, Mount St. Helens and Yellowstone.","https://www.usgs.gov/programs/VHP/multimedia/webcams"]
         ]],
         roads:["Roads, bridges & borders",[
-          ["511 SF Bay traffic map","Bay Area traffic, incidents and transit. Turn on the Cameras layer.",(a,o)=>`https://511.org/realtime/map?action=sharemap&opendialog=false&lng=${f(o,4)}&lat=${f(a,4)}&zoom=12`,1],
-          ["Caltrans camera map","Every California highway camera; each keeps its last 12 images.",(a,o)=>`https://cwwp2.dot.ca.gov/vm/iframemap.htm?long=${f(o,4)}&lat=${f(a,4)}&zoom=11`,1],
-          ["Caltrans QuickMap","Cameras together with closures, incidents and chain controls.","https://quickmap.dot.ca.gov/"],
+          ["511 SF Bay traffic map","Live speeds, incidents and closures, with the highway cameras as a layer (turn on Cameras). For a sharper view of a bridge or freeway during an event, use YouTube live search above.",(a,o)=>`https://511.org/realtime/map?action=sharemap&opendialog=false&lng=${f(o,4)}&lat=${f(a,4)}&zoom=12`,1],
           ["Other states' traffic sites (federal 511 index)","Links every state's road-conditions and camera site.","https://highways.dot.gov/traffic-info"],
           ["Oregon TripCheck cameras","300+ highway cameras, most every 5 minutes.","https://tripcheck.com/DynamicReports/Report/Cameras"],
           ["Nevada 511 (NVRoads)","550+ cameras, many with live video.","https://www.nvroads.com/"],
@@ -2326,7 +2328,6 @@ Rule of thumb:  min. 1 gal / 3.8 L per person per day, more in heat or for exert
           ["Yosemite webcams","Valley, high country and road conditions.","https://www.nps.gov/yose/learn/photosmultimedia/webcams.htm"]
         ]],
         world:["World & events",[
-          ["YouTube live — near this place","Often the fastest view of a breaking event. Searches the place name with the Live filter on.",(a,o,p)=>YT(p),1],
           ["EarthCam — Washington DC","Capitol, Washington Monument, National Mall.","https://earthcam.com/network/?country=US&page=DC"],
           ["EarthCam — California","EarthCam's California cameras.","https://earthcam.com/network/?country=US&page=CA"],
           ["EarthCam — Times Square","New York's Times Square.","https://www.earthcam.com/usa/newyork/timessquare/"],
@@ -2349,45 +2350,52 @@ Rule of thumb:  min. 1 gal / 3.8 L per person per day, more in heat or for exert
         ["San Rafael Hill (fire)","Views toward Tiburon, Sausalito and the bay.",AC(37.9680,-122.4953,13,"SanRafaelHill1")],
         ["Mt Diablo area (fire)","ALERTCalifornia cameras around Mt Diablo.",AC(37.8816,-121.9142,11)],
         ["Napa / Sonoma ridges (fire)","Atlas Peak, Mt St Helena, Hood Mountain.",AC(38.45,-122.45,10)],
-        ["Mt Hamilton — Lick Observatory","Fixed and all-sky cameras over the South Bay and Diablo Range.","https://mthamilton.ucolick.org/hamcam/index.html"],
-        ["Richmond–San Rafael Bridge toll plaza","Caltrans camera.",CT("d4","tvr45i580attollplaza")],
-        ["I-80 Richmond at San Pablo Ave","Caltrans camera.",CT("d4","tvh14i80sanpabloavenue")],
-        ["I-80 at Richmond Pkwy","Caltrans camera.",CT("d4","tvh20i80richmondparkway")],
-        ["I-80 Berkeley at University Ave","Caltrans camera.",CT("d4","tv514i80universityavenue")],
-        ["MacArthur Maze (I-80/580/880)","Caltrans camera.",CT("d4","tv119i880i580i80")],
-        ["Bay Bridge — east span tower","Caltrans camera.",CT("d4","tvd32i80baybridgesastowereast")],
-        ["I-80 Vallejo at SR-29","Caltrans camera.",CT("d4","tv965i80sr29")],
-        ["US-101 Marin at SR-1","Caltrans camera.",CT("d4","tve75us101marinsr1")],
-        ["I-580 / I-680 Dublin","Caltrans camera.",CT("d4","tva35i580i680")]
+        ["Mt Hamilton — Lick Observatory","Fixed and all-sky cameras over the South Bay and Diablo Range.","https://mthamilton.ucolick.org/hamcam/index.html"]
       ]];
       const inBay=()=>HOME.lat>36.9&&HOME.lat<38.9&&HOME.lon>-123.3&&HOME.lon<-121.2;
       const place=()=>String(HOME.name||"").replace(/\s*\(.*\)\s*$/,"");
       const d=el(`<div class="toolpane cams">
         ${howBox("cams-how","How to use live cameras",`<ol class="sal-hint i3-steps" style="margin:6px 0 0 18px;padding:0">
-          <li><b>Set the place</b> in <b>Reporting location</b> at the top of the page (or use GPS). Links marked <b>📍</b> open zoomed to that spot; the rest open the source's own map or list.</li>
-          <li><b>Pick what you're checking</b> — fire, roads, weather, snow, a world event — or leave it on <b>Everything</b>.</li>
+          <li><b>Set the place</b> in <b>Reporting location</b> at the top of the page (or use GPS). Map links (ALERTCalifornia, 511, FAA, Windy) open zoomed to that spot; the rest open the source's own page.</li>
+          <li><b>Pick what you're checking</b> — fire, roads, weather, snow, a world event — or leave it on <b>Everything</b>. For anywhere in the world, use <b>YouTube live search</b>: type a city, choose what you're looking for, and press <b>Search</b>.</li>
           <li>Tap <b>Open ▸</b>. Cameras open in a new tab; nothing here records or stores what you view.</li></ol>
-          <p class="sal-hint"><b>Verify a claim with a camera:</b> (1) note the time of the claim and the camera's time zone; (2) step back with the camera's history — ALERTCalifornia recent images, FAA 6-hour loop, Caltrans last 12 images, Windy and HPWREN time-lapse; (3) match the scene — landmarks, direction, weather, smoke drift, shadows; (4) screenshot with the camera name, time and address showing, and log it as a finding with its source and time.</p>
+          <p class="sal-hint"><b>Verify a claim with a camera:</b> (1) note the time of the claim and the camera's time zone; (2) step back with the camera's history — ALERTCalifornia recent images, FAA 6-hour loop, Windy and HPWREN time-lapse; (3) match the scene — landmarks, direction, weather, smoke drift, shadows; (4) screenshot with the camera name, time and address showing, and log it as a finding with its source and time.</p>
           <p class="sal-hint">Only cameras their owners chose to publish are listed here. Credit the source if you use an image (ALERTCalifornia: "ALERTCalifornia | UC San Diego", non-commercial use).</p>`,"full")}
         <div class="full sal-hint" id="cm_where"></div>
         <label class="f">Show<select id="cm_g" class="fld"><option value="all">Everything</option>${Object.entries(G).map(([k,[n]])=>`<option value="${k}">${esc(n)}</option>`).join("")}<option value="bay">Bay Area spots</option></select></label>
-        <label class="f">YouTube live search for<input id="cm_q" class="fld" autocomplete="off"></label>
+        <div class="full cam-yt">
+          <div class="ta-sub" style="margin-top:0">YouTube live search <span class="muted" style="text-transform:none;letter-spacing:0;font-weight:normal">— often the fastest view of a breaking event</span></div>
+          <div class="ta-grid2">
+            <label class="ta-f">City or place<span class="hint">Type any city, or tap for suggestions.</span><input id="cm_q" class="fld" list="cm_places" autocomplete="off" enterkeyhint="search" placeholder="e.g. Sacramento, Kyiv, Taipei"></label>
+            <label class="ta-f">Looking for<select id="cm_what" class="fld">${YTWHAT.map(([k,n])=>`<option value="${k}">${n}</option>`).join("")}</select></label>
+          </div>
+          <datalist id="cm_places"></datalist>
+          <div class="toolrow" style="margin-top:6px"><a class="btn" id="cm_yt" href="#" target="_blank" rel="noopener">Search YouTube live ▸</a><button class="btn" type="button" id="cm_here">Use my location</button><span class="muted" id="cm_ytmsg"></span></div>
+        </div>
         <div class="full" id="cm_list"></div></div>`);
       host.appendChild(d);
       const q=(s)=>d.querySelector(s);
       q("#cm_q").value=place();
-      const urlOf=(it)=>typeof it[2]==="function"?it[2](HOME.lat,HOME.lon,q("#cm_q").value.trim()||place()):it[2];
-      const row=(it,gi,ii)=>`<div class="cam-row"><div class="cam-t"><b>${esc(it[0])}</b>${it[3]?' <span class="cam-near" title="Opens at your reporting location">📍 near you</span>':""}<div class="sal-hint">${esc(it[1])}</div></div><a class="btn cam-go" href="${esc(urlOf(it))}" target="_blank" rel="noopener" data-g="${gi}" data-i="${ii}">Open ▸</a></div>`;
+      const fillPlaces=()=>{ const seen=new Set(), L=[...recent,place(),...WATCH].filter(x=>x&&!seen.has(x.toLowerCase())&&seen.add(x.toLowerCase())); q("#cm_places").innerHTML=L.map(x=>`<option value="${esc(x)}"></option>`).join(""); };
+      const ytHref=()=>{ const v=q("#cm_q").value.trim(); q("#cm_yt").href=v?YT(v,q("#cm_what").value):"#"; return v; };
+      fillPlaces(); ytHref();
+      const ytGo=(e)=>{ const v=ytHref(); if(!v){ e&&e.preventDefault(); q("#cm_ytmsg").textContent="Type a city or place first."; q("#cm_q").focus(); return false; }
+        q("#cm_ytmsg").textContent=""; recent=[v,...recent.filter(x=>x.toLowerCase()!==v.toLowerCase())].slice(0,6); try{ localStorage.setItem("iq.ytPlaces",JSON.stringify(recent)); }catch(_){} fillPlaces(); return true; };
+      q("#cm_yt").addEventListener("click",(e)=>{ ytGo(e); });
+      q("#cm_q").addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); if(ytGo()) window.open(q("#cm_yt").href,"_blank","noopener"); } });
+      q("#cm_q").addEventListener("input",ytHref); q("#cm_what").addEventListener("change",ytHref);
+      q("#cm_here").addEventListener("click",()=>{ q("#cm_q").value=place(); ytHref(); });
+      const urlOf=(it)=>typeof it[2]==="function"?it[2](HOME.lat,HOME.lon):it[2];
+      const row=(it,gi,ii)=>`<div class="cam-row"><div class="cam-t"><b>${esc(it[0])}</b><div class="sal-hint">${esc(it[1])}</div></div><a class="btn cam-go" href="${esc(urlOf(it))}" target="_blank" rel="noopener" data-g="${gi}" data-i="${ii}">Open ▸</a></div>`;
       const groups=()=>{ const v=q("#cm_g").value; const L=Object.entries(G).map(([k,g])=>[k,g]); const bay=inBay()?[["bay",BAY]]:[];
         if(v==="all") return [...bay,...L]; if(v==="bay") return [["bay",BAY]]; return L.filter(([k])=>k===v); };
       function paint(){
-        q("#cm_where").innerHTML=`📍 links open near <b>${esc(HOME.name||"your location")}</b> (${f(HOME.lat,4)}, ${f(HOME.lon,4)}) — change it in <b>Reporting location</b> at the top.${inBay()?"":" Bay Area spots are hidden because the location is outside the Bay Area (choose them under Show to see them anyway)."}`;
+        q("#cm_where").innerHTML=`Map links open at <b>${esc(HOME.name||"your location")}</b> (${f(HOME.lat,4)}, ${f(HOME.lon,4)}) — change it in <b>Reporting location</b> at the top.${inBay()?"":" Bay Area spots are hidden because the location is outside the Bay Area (choose them under Show to see them anyway)."}`;
         q("#cm_list").innerHTML=groups().map(([k,[n,L]])=>`<div class="ta-sub">${esc(n)}</div>${L.map((it,i)=>row(it,k,i)).join("")}`).join("");
       }
       // Links are rebuilt at tap time so they always use the current reporting location.
       d.addEventListener("click",(e)=>{ const a=e.target.closest(".cam-go"); if(!a) return; const g=a.dataset.g==="bay"?BAY:G[a.dataset.g]; const it=g&&g[1][+a.dataset.i]; if(it) a.href=urlOf(it); });
       q("#cm_g").addEventListener("change",paint);
-      q("#cm_q").addEventListener("input",()=>{ d.querySelectorAll('.cam-go').forEach(a=>{ const g=a.dataset.g==="bay"?BAY:G[a.dataset.g]; const it=g&&g[1][+a.dataset.i]; if(it&&typeof it[2]==="function") a.href=urlOf(it); }); });
       paint();
       window.__camsPaint=paint;
     },
