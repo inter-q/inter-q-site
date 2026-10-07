@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <script>if(/[?&]notepad\b/.test(location.search)){ document.documentElement.classList.add("np-mode"); var t=(location.search.match(/[?&]theme=(green|blue|amber|red)\b/)||[])[1]; if(t) document.documentElement.dataset.theme=t; }</script>
-<meta name="iq-build" content="2026-10-07 11:00">
+<meta name="iq-build" content="2026-10-07 12:00">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
@@ -407,11 +407,10 @@
     .cols { display:grid; grid-template-columns:minmax(0,1fr) 380px; grid-template-rows:auto 1fr; gap:16px 20px; align-items:start; }
     .col-main, .col-side { display:flex; flex-direction:column; gap:16px; min-width:0; }
     .col-main { grid-column:1; grid-row:1 / span 2; }
-    .col-side-top { grid-column:2; grid-row:1; } .col-side-bot { grid-column:2; grid-row:2; }
+    .col-side-top { grid-column:2; grid-row:1; position:sticky; top:16px; max-height:calc(100vh - 32px); overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; }
     .col-side .lamp { font-size:26px; }
     .col-side .cond > div:last-child { flex-direction:row !important; flex:1 1 100%; } .col-side .cond > div:last-child .btn { flex:1; }
     .col-side .manual input { min-width:0; }
-    .col-side .grid { gap:12px; }
     .dirs-wrap { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 20px; align-items:start; }
     .dirs-wrap > .dir.open { grid-column:1 / -1; }
     html.lg .top { flex-wrap:wrap; }
@@ -431,9 +430,23 @@
     html:not(.lg) .np-lbl { display:inline; font-size:12px; letter-spacing:.02em; }
   }
   /* Feed windows that couldn't load (offline): a single compact line instead of a full window body */
-  .grid > .win:has(> .body > .err:only-child) > .body { padding:6px 10px; }
   .grid > .win:has(> .body > .err:only-child) .err { font-size:12px; }
   .toolrow > .hint { font-size:12px; color:var(--ink-dim); align-self:center; }
+  /* Current conditions: the feeds behind the status, folded inside the window */
+  .cc-src { border-top:1px solid var(--rule); padding-top:8px; }
+  .cc-src > summary { cursor:pointer; font-family:var(--font-mono); font-size:13px; color:var(--ink); letter-spacing:.04em; padding:4px 0; list-style-position:inside; }
+  .cc-src > summary:focus-visible { outline:1px dotted var(--ink); outline-offset:2px; }
+  .cc-cnt { color:var(--ink-dim); font-size:12px; }
+  .cc-grid { gap:6px !important; margin-top:8px; }
+  .win.feed { box-shadow:none; border-color:var(--rule); }
+  .win.feed > .bar { cursor:pointer; user-select:none; justify-content:flex-start; font-size:12.5px; padding:5px 8px; }
+  .win.feed > .bar > span:first-child { flex:1; }
+  .win.feed > .bar::before { content:"\25B8"; width:1em; } .win.feed.open > .bar::before { content:"\25BE"; }
+  .win.feed > .bar:focus-visible { outline:2px solid var(--hi); outline-offset:-2px; }
+  .win.feed:not(.open) > .body { display:none; }
+  .win.feed > .body { padding:8px 10px; }
+  html.lg .win.feed > .bar { min-height:52px; font-size:16px; } html.lg .cc-src > summary { min-height:52px; display:flex; align-items:center; gap:8px; font-size:17px; }
+  @media print { .cc-src:not([open]) > .grid, .win.feed:not(.open) > .body { display:block; } }
   /* Sketchpad */
   #skOverlay { position:fixed; inset:0; z-index:1500; background:rgba(0,0,0,.6); display:flex; justify-content:center; align-items:stretch; padding:12px; overflow-y:auto; overscroll-behavior:contain; }
   #skOverlay[hidden] { display:none; }
@@ -896,7 +909,7 @@
 
   <!-- Overall condition -->
   <section class="win" aria-labelledby="t-cond">
-    <div class="bar"><span id="t-cond">Current condition</span><span class="ts" id="ts-all">loading…</span></div>
+    <div class="bar"><span id="t-cond">Current conditions</span><span class="ts" id="ts-all">loading…</span></div>
     <div class="body">
       <div class="cond">
         <div class="lamp green" id="lamp">CHECKING</div>
@@ -906,6 +919,43 @@
           <button class="btn" id="genReport" type="button">Generate SITREP ▸</button>
         </div>
       </div>
+      <details class="cc-src" id="ccSrc">
+        <summary><span class="cc-sum">Sources</span> <span class="cc-cnt" id="ccCnt"></span></summary>
+        <div class="grid cc-grid">
+    <section class="win feed" aria-labelledby="t-events">
+      <div class="bar"><span id="t-events">Active events nearby</span><span class="ts" id="ts-events"></span></div>
+      <div class="body" id="events"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win feed" aria-labelledby="t-wx">
+      <div class="bar"><span id="t-wx">Weather</span><span class="wxu-wrap"><span class="wxu" role="group" aria-label="Temperature units"><button type="button" data-wxu="F" aria-pressed="false">°F</button><button type="button" data-wxu="C" aria-pressed="false">°C</button></span><span class="ts" id="ts-wx"></span></span></div>
+      <div class="body" id="wx"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win feed" aria-labelledby="t-aqi">
+      <div class="bar"><span id="t-aqi">Air quality</span><span class="ts" id="ts-aqi"></span></div>
+      <div class="body" id="aqi"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win feed" aria-labelledby="t-eq">
+      <div class="bar"><span id="t-eq">Earthquakes · 500 km, 7 days</span><span class="ts" id="ts-eq"></span></div>
+      <div class="body" id="eq"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win feed" aria-labelledby="t-sun">
+      <div class="bar"><span id="t-sun">Sunrise &amp; sunset</span><span class="ts" id="ts-sun"></span></div>
+      <div class="body" id="sun"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win feed" id="win-nws" aria-labelledby="t-nws" hidden>
+      <div class="bar"><span id="t-nws">US weather alerts (NWS)</span><span class="ts" id="ts-nws"></span></div>
+      <div class="body" id="nws"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win feed" id="win-fema" aria-labelledby="t-fema" hidden>
+      <div class="bar"><span id="t-fema">FEMA declarations (US)</span><span class="ts" id="ts-fema"></span></div>
+      <div class="body" id="fema"><div class="muted">Loading…</div></div>
+    </section>
+    <section class="win feed" id="win-bart" aria-labelledby="t-bart" hidden>
+      <div class="bar"><span id="t-bart">BART advisories</span><span class="ts" id="ts-bart"></span></div>
+      <div class="body" id="bart"><div class="muted">Loading…</div></div>
+    </section>
+  </div>
+      </details>
     </div>
   </section>
 
@@ -1044,43 +1094,6 @@
       <div id="toolHost" style="margin-top:10px"></div>
     </div>
   </section>
-
-  </div>
-  <div class="col-side col-side-bot">
-  <div class="grid">
-    <section class="win" aria-labelledby="t-events">
-      <div class="bar"><span id="t-events">Active events nearby</span><span class="ts" id="ts-events"></span></div>
-      <div class="body" id="events"><div class="muted">Loading…</div></div>
-    </section>
-    <section class="win" aria-labelledby="t-wx">
-      <div class="bar"><span id="t-wx">Weather</span><span class="wxu-wrap"><span class="wxu" role="group" aria-label="Temperature units"><button type="button" data-wxu="F" aria-pressed="false">°F</button><button type="button" data-wxu="C" aria-pressed="false">°C</button></span><span class="ts" id="ts-wx"></span></span></div>
-      <div class="body" id="wx"><div class="muted">Loading…</div></div>
-    </section>
-    <section class="win" aria-labelledby="t-aqi">
-      <div class="bar"><span id="t-aqi">Air quality</span><span class="ts" id="ts-aqi"></span></div>
-      <div class="body" id="aqi"><div class="muted">Loading…</div></div>
-    </section>
-    <section class="win" aria-labelledby="t-eq">
-      <div class="bar"><span id="t-eq">Earthquakes · 500 km, 7 days</span><span class="ts" id="ts-eq"></span></div>
-      <div class="body" id="eq"><div class="muted">Loading…</div></div>
-    </section>
-    <section class="win" aria-labelledby="t-sun">
-      <div class="bar"><span id="t-sun">Sunrise &amp; sunset</span><span class="ts" id="ts-sun"></span></div>
-      <div class="body" id="sun"><div class="muted">Loading…</div></div>
-    </section>
-    <section class="win" id="win-nws" aria-labelledby="t-nws" hidden>
-      <div class="bar"><span id="t-nws">US weather alerts (NWS)</span><span class="ts" id="ts-nws"></span></div>
-      <div class="body" id="nws"><div class="muted">Loading…</div></div>
-    </section>
-    <section class="win" id="win-fema" aria-labelledby="t-fema" hidden>
-      <div class="bar"><span id="t-fema">FEMA declarations (US)</span><span class="ts" id="ts-fema"></span></div>
-      <div class="body" id="fema"><div class="muted">Loading…</div></div>
-    </section>
-    <section class="win" id="win-bart" aria-labelledby="t-bart" hidden>
-      <div class="bar"><span id="t-bart">BART advisories</span><span class="ts" id="ts-bart"></span></div>
-      <div class="body" id="bart"><div class="muted">Loading…</div></div>
-    </section>
-  </div>
 
   </div>
   </div>
@@ -8438,6 +8451,22 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     if(e.key==="Tab"){ const f=[...scope.querySelectorAll("button,input")].filter(x=>!x.disabled&&!x.hidden&&x.getClientRects().length); if(!f.length) return; const i=f.indexOf(document.activeElement);
       if(e.shiftKey&&i<=0){ e.preventDefault(); f[f.length-1].focus(); } else if(!e.shiftKey&&(i<0||i===f.length-1)){ e.preventDefault(); f[0].focus(); } }
   });
+})();
+</script>
+<script>
+// Current conditions: each feed folds to its title bar (closed by default); the group summary shows how many are live.
+(function(){
+  const box=document.getElementById("ccSrc"); if(!box) return;
+  const feeds=[...box.querySelectorAll("section.feed")];
+  const set=(s,open)=>{ s.classList.toggle("open",open); const b=s.querySelector(":scope > .bar"); if(b) b.setAttribute("aria-expanded",String(open)); };
+  feeds.forEach(s=>{ const b=s.querySelector(":scope > .bar"); if(!b) return; b.setAttribute("role","button"); b.setAttribute("tabindex","0"); b.title="Show or hide this feed"; set(s,false);
+    b.addEventListener("click",(e)=>{ if(e.target.closest("button,a,input,select")) return; set(s,!s.classList.contains("open")); });   // the °F/°C switch stays usable
+    b.addEventListener("keydown",(e)=>{ if(e.target!==b) return; if(e.key==="Enter"||e.key===" "){ e.preventDefault(); set(s,!s.classList.contains("open")); } }); });
+  const cnt=document.getElementById("ccCnt");
+  const count=()=>{ const shown=feeds.filter(s=>!s.hidden), off=shown.filter(s=>/offline/i.test((s.querySelector(".ts")||{}).textContent||"")||s.querySelector(":scope > .body > .err:only-child"));
+    cnt.textContent=`(${shown.length} feed${shown.length===1?"":"s"}${off.length?` · ${off.length} offline`:""})`; };
+  let t=0; new MutationObserver(()=>{ clearTimeout(t); t=setTimeout(count,200); }).observe(box,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["hidden"]});
+  count();
 })();
 </script>
 </body>
