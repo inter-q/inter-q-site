@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>Inter-Q Field Kit</title>
 <link rel="manifest" href="manifest.json">
+<script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <script>if(/[?&]notepad\b/.test(location.search)){ document.documentElement.classList.add("np-mode"); var t=(location.search.match(/[?&]theme=(green|blue|amber|red)\b/)||[])[1]; if(t) document.documentElement.dataset.theme=t; }</script>
-<meta name="iq-build" content="2026-10-06 22:20">
+<meta name="iq-build" content="2026-10-07 08:45">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
@@ -121,6 +122,9 @@
   .theme-sw button + button:nth-child(even) { border-left:1px solid var(--lo); } .theme-sw button:nth-child(n+3) { border-top:1px solid var(--lo); }
   .theme-sw .sw { width:10px; height:10px; border:1px solid rgba(255,255,255,.35); flex:none; }
   .theme-sw button[aria-pressed="true"] { background:var(--ink); color:var(--on-ink); font-weight:bold; text-shadow:none; }
+  /* Selected color: a dark box with a check mark, so it stands out from the button's own color */
+  .theme-sw button[aria-pressed="true"] .sw { position:relative; background:var(--on-ink) !important; border:1px solid var(--on-ink); }
+  .theme-sw button[aria-pressed="true"] .sw::after { content:""; position:absolute; left:2.5px; top:-0.5px; width:3px; height:6px; border:solid var(--ink); border-width:0 2px 2px 0; transform:rotate(45deg); }
   * { box-sizing:border-box; }
   /* Hold the page steady on phones: no rubber-band bounce, no sideways drift, no double-tap zoom.
      (maximum-scale=1 in the viewport stops iPhone zooming in when you tap a typing box.) */
@@ -355,6 +359,81 @@
     .np-head .ta-f:last-child { grid-column:1/-1; } .np-head .fld { font-size:16px; height:36px; } .np-sec textarea { font-size:16px; }
     .np-tools { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; } .np-tools .btn { padding:6px 4px; } .np-tools .np-msg { grid-column:1/-1; } .np-tools .np-msg:empty { display:none; }
     .np-body { padding-bottom:calc(12px + env(safe-area-inset-bottom,0px)); } }
+  /* Large mode (glove-friendly): bigger tap targets, text and spacing. Toggled by the glove button; remembered on this device. */
+  .lg-aa { display:inline-flex; align-items:baseline; gap:1px; font-family:var(--font-mono); font-weight:700; line-height:1; text-shadow:none; }
+  .lg-aa span:first-child { font-size:12px; } .lg-aa span:last-child { font-size:21px; }
+  html.lg .lg-aa span:first-child { font-size:17px; } html.lg .lg-aa span:last-child { font-size:30px; }
+  .lg-btn[aria-pressed="true"] { background:var(--ink); color:var(--on-ink); border-color:var(--ink); }
+  :root[data-theme="blue"] .lg-btn[aria-pressed="true"] { background:#000080; color:#fff; border-color:#000 #fff #fff #000; }
+  html.lg body { font-size:19px; }
+  html.lg .np-btn { width:56px; height:56px; } html.lg .np-btn svg { width:28px; height:28px; }
+  html.lg .iq-btns { gap:10px; }
+  html.lg .iq-brand { font-size:30px; }
+  html.lg .btn, html.lg .theme-sw button, html.lg .wxu button, html.lg .clock, html.lg .dd-x { min-height:56px !important; font-size:18px !important; padding:10px 16px !important; line-height:1.25 !important; }
+  html.lg .btn { min-width:56px; }
+  html.lg .theme-sw button { padding:8px 12px !important; } html.lg .theme-sw .sw { width:16px; height:16px; }
+  html.lg .theme-sw button[aria-pressed="true"] .sw::after { left:4.5px; top:0.5px; width:4px; height:8px; }
+  html.lg .fld, html.lg select, html.lg input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]) { min-height:56px !important; font-size:19px !important; padding:8px 10px !important; box-sizing:border-box; }
+  html.lg textarea, html.lg textarea.fld { font-size:19px !important; line-height:1.45 !important; padding:10px !important; min-height:112px !important; }
+  html.lg input[type=checkbox], html.lg input[type=radio] { width:30px !important; height:30px !important; min-width:30px; flex:none; }
+  html.lg input[type=range] { height:52px; width:100%; }
+  html.lg .foot a { display:inline-block; padding:14px 8px; }
+  html.lg label, html.lg .ta-f, html.lg .toolbar label, html.lg .toolpane label.f { font-size:16px !important; }
+  html.lg label:has(> input[type=checkbox]), html.lg label:has(> input[type=radio]) { min-height:52px; display:inline-flex; align-items:center; gap:12px; padding:4px 0; }
+  html.lg .toolrow, html.lg .rc-ctl, html.lg .rc-acts, html.lg .rc-marks, html.lg .np-tools, html.lg .ta-row, html.lg .ta-nav, html.lg .ta-steps { gap:10px !important; flex-wrap:wrap; }
+  html.lg .ta-steps .btn { flex:1 1 140px; }
+  html.lg .muted, html.lg .sal-hint, html.lg .hint, html.lg small, html.lg .rc-meta, html.lg th, html.lg td, html.lg .foot, html.lg .fs { font-size:16px !important; }
+  html.lg summary { min-height:56px; box-sizing:border-box; padding-top:14px !important; padding-bottom:14px !important; font-size:18px !important; cursor:pointer; }
+  html.lg a.reflink { display:inline-flex; align-items:center; min-height:52px; font-size:18px !important; padding:2px 0; }
+  html.lg .finder-res a { min-height:60px; padding:10px 12px !important; font-size:18px !important; display:block; }
+  html.lg .finder-res a .fs { font-size:13px !important; }
+  html.lg .dd-o { min-height:56px; display:flex; align-items:center; font-size:19px !important; padding:8px 14px !important; }
+  html.lg .dd-g { font-size:14px !important; padding-top:10px !important; }
+  html.lg .rc-time { font-size:56px; }
+  html.lg .rc-item audio { height:56px; }
+  html.lg .bar { font-size:17px; }
+  html.lg .bar .btn { min-height:48px !important; }
+  html.lg .top .theme-sw { flex:1 1 100%; } html.lg .top .clock { flex:1 1 100%; }
+  html.lg .drt-f { grid-template-columns:1fr !important; } html.lg .drt-f > * { grid-column:auto !important; } html.lg .drt-d { font-size:15px; }
+  html.lg input[type=date], html.lg input[type=time], html.lg input[type=datetime-local] { width:100%; min-width:0; }
+  /* Sound recorder */
+  .iq-btns { display:flex; gap:8px; flex:none; }
+  .rc-btn { position:relative; }
+  .rc-btn.rc-on { color:var(--crit); border-color:var(--crit); }
+  .rc-btn.rc-on::after { content:""; position:absolute; top:3px; right:3px; width:7px; height:7px; border-radius:50%; background:var(--crit); animation:rcBlink 1s steps(1) infinite; }
+  .rc-btn.rc-paused::after { animation:none; background:var(--warn); }
+  @keyframes rcBlink { 50% { opacity:0; } }
+  #rcOverlay { position:fixed; inset:0; z-index:1500; background:rgba(0,0,0,.6); display:flex; justify-content:center; align-items:flex-start; padding:16px; overflow:auto; }
+  #rcOverlay[hidden] { display:none; }
+  html.rc-open body { overflow:hidden; }
+  .np-win.rc-win { max-width:620px; min-height:0; }
+  .rc-deck { border:1px solid var(--lo); background:var(--well); padding:14px; display:flex; flex-direction:column; gap:10px; }
+  .rc-top { display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .rc-time { font-family:var(--font-mono); font-size:44px; line-height:1; font-variant-numeric:tabular-nums; color:var(--bright); }
+  .rc-state { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-dim); }
+  .rc-deck.live .rc-state { color:var(--crit); } .rc-deck.live .rc-state::before { content:"\25CF "; }
+  .rc-meter { height:10px; border:1px solid var(--lo); background:var(--win); overflow:hidden; }
+  .rc-meter span { display:block; height:100%; width:0; background:var(--ink); transition:width .08s linear; } .rc-meter span.hot { background:var(--warn); }
+  .rc-deck .ta-f { display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--ink-dim); }
+  .rc-deck .fld { width:100%; box-sizing:border-box; font-size:15px; height:34px; }
+  .rc-ctl { display:flex; flex-wrap:wrap; gap:6px; } .rc-ctl .btn { flex:1 1 auto; min-height:42px; font-size:15px; }
+  .rc-ctl .rc-rec { color:var(--crit); border-color:var(--crit); }
+  .rc-msg { min-height:1.3em; font-size:13px; color:var(--ink-dim); } .rc-msg.warn { color:var(--warn); }
+  .rc-head { display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin:16px 0 6px; } .rc-head .ta-sub { margin:0; }
+  .rc-list { display:flex; flex-direction:column; gap:10px; }
+  .rc-item { border:1px solid var(--lo); padding:10px; display:flex; flex-direction:column; gap:6px; }
+  .rc-item .fld { width:100%; box-sizing:border-box; font-size:15px; height:32px; }
+  .rc-meta { font-size:12px; color:var(--ink-dim); } .rc-warn { color:var(--warn); }
+  .rc-item audio { width:100%; height:40px; }
+  .rc-marks, .rc-acts { display:flex; flex-wrap:wrap; gap:5px; }
+  .rc-marks .btn, .rc-acts .btn { font-size:12px; padding:3px 9px; text-transform:none; letter-spacing:0; }
+  .rc-empty { padding:6px 0; }
+  @media (max-width:700px) {
+    #rcOverlay { padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px); align-items:stretch; }
+    .np-win.rc-win { border:0; min-height:100%; } .rc-ctl .btn { min-height:48px; } .rc-deck .fld, .rc-item .fld { font-size:16px; }
+    .rc-marks .btn, .rc-acts .btn { font-size:14px; padding:6px 12px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .rc-btn.rc-on::after { animation:none; } .rc-meter span { transition:none; } }
   #npPrint { display:none; }
   @media print {
     body.print-np > *:not(#npPrint) { display:none !important; } body.print-np #npPrint { display:block !important; }
@@ -644,10 +723,12 @@
 
   <div class="top">
     <div class="iq-brand" role="img" aria-label="IQ Kit">IQ:<span class="iq-cur" aria-hidden="true">_</span></div>
-    <button type="button" class="np-btn" id="npBtn" title="Notepad — class and meeting notes" aria-label="Open notepad"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><rect x="4.5" y="4.5" width="15" height="17"/><path d="M8 2.5v4M12 2.5v4M16 2.5v4M7.5 10.5h9M7.5 13.5h9M7.5 16.5h6"/></svg></button>
+    <div class="iq-btns"><button type="button" class="np-btn" id="npBtn" title="Notepad — class and meeting notes" aria-label="Open notepad"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><rect x="4.5" y="4.5" width="15" height="17"/><path d="M8 2.5v4M12 2.5v4M16 2.5v4M7.5 10.5h9M7.5 13.5h9M7.5 16.5h6"/></svg></button>
+      <button type="button" class="np-btn rc-btn" id="recBtn" title="Sound recorder" aria-label="Open sound recorder"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5.5 10.5v1a6.5 6.5 0 0 0 13 0v-1M12 18v3.5M8.5 21.5h7"/></svg></button>
+      <button type="button" class="np-btn lg-btn" id="lgBtn" aria-pressed="false" aria-label="Large text and buttons" title="Large mode — bigger buttons and text (good with gloves)"><span class="lg-aa" aria-hidden="true"><span>A</span><span>A</span></span></button></div>
     <div class="finder" role="search">
-      <label class="sr" for="finderIn">Find a site in the directory</label>
-      <input class="fld" id="finderIn" type="search" placeholder="Find a site (court, whois…)" autocomplete="off" spellcheck="false" aria-controls="finderRes" aria-expanded="false">
+      <label class="sr" for="finderIn">Search reports, tools and sites</label>
+      <input class="fld" id="finderIn" type="search" placeholder="Search reports, tools, sites…" autocomplete="off" spellcheck="false" aria-controls="finderRes" aria-expanded="false">
       <div class="finder-res" id="finderRes" role="listbox" hidden></div>
     </div>
     <div class="theme-sw" role="group" aria-label="Display color">
@@ -7049,7 +7130,8 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
 })();
 </script>
 <script>
-// Site finder: searches every link in the directories on this page (name, section, group and address).
+// Finder: searches the built-in reports and tools (REPORTS.EXE, TOOLS.EXE) and every link in the directories
+// on this page (name, section, group and address). Picking a report or tool opens it in place.
 (function(){
   const inp=document.getElementById("finderIn"), box=document.getElementById("finderRes");
   if(!inp||!box) return;
@@ -7070,8 +7152,52 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
       map.set(k,{name,href,host,where,hay:norm(name+" "+g+" "+sec+" "+host)});
     });
     items=[...map.values()];
-    // In-page tools, so searching "cam", "webcam", "traffic camera" etc. still finds the cameras.
-    items.push({name:"Live cameras (tool)",href:"#cams",host:"",where:"TOOLS.EXE",hay:norm("live cameras webcams webcam cams cctv traffic fire smoke weather road bridge border youtube live earthcam alertcalifornia caltrans windy faa")});
+    // Built-in reports and tools, read from the REPORTS.EXE and TOOLS.EXE menus so new ones are found automatically.
+    // Extra words let common terms find them (e.g. "gas" finds the receipt stamper, "grid" the coordinate converter).
+    const KW={
+      osint:"open source research report checklist identifiers findings social media",
+      ta:"threat assessment behavioral worksheet violence concern protocol",
+      opsec:"operations security privacy exposure footprint",
+      drt:"data removal broker opt out delete personal information people search",
+      cplan:"collection plan intelligence requirements questions",
+      debrief:"debrief interview five phase questioning",
+      lcr:"liaison contact meeting guided",
+      spot:"suspicious activity spot report sar",
+      opord:"opord warno order five paragraph operations mission plan",
+      aar:"after action review lessons learned",
+      salute:"salute spot report size activity location unit time equipment",
+      ics213:"ics 213 ics213 general message incident command",
+      ics214:"ics 214 ics214 activity log unit log incident command",
+      fos:"first on scene checklist log emergency responder",
+      search:"search builder google dork operators presets",
+      ai:"ai prompts assistants chatgpt claude templates",
+      stamp:"logstat fuel receipt stamper stamp gas",
+      describe:"description builder person vehicle object suspect",
+      cams:"live cameras webcams webcam cams cctv traffic fire smoke weather road bridge border youtube earthcam alertcalifornia caltrans windy faa",
+      unit:"unit converter metric imperial miles kilometers",
+      dtg:"time date dtg zulu utc time zone converter",
+      coord:"coordinate converter mgrs grid latitude longitude lat long utm",
+      ration:"water ration planner food supplies",
+      dist:"distance bearing azimuth",
+      feels:"heat index wind chill beaufort",
+      enc:"encode decode base64 url hex",
+      hash:"hash sha 256 sha1 checksum",
+      pw:"password strength checker",
+      gen:"password generator random",
+      morse:"morse phonetic alphabet nato",
+      qr:"qr code generator"
+    };
+    items.push({name:"Notepad",href:"#",go:"btn:npBtn",host:"",where:"Toolbar button",hay:norm("notepad notes note taking class meeting cornell outline duty log journal tool")});
+    items.push({name:"Large mode (gloves)",href:"#",go:"btn:lgBtn",host:"",where:"Toolbar button",hay:norm("large mode glove gloves big buttons bigger text font size accessibility zoom")});
+    items.push({name:"Sound recorder",href:"#",go:"btn:recBtn",host:"",where:"Toolbar button",hay:norm("sound recorder audio voice memo record recording microphone mic dictation meeting lecture tool")});
+    [["repSel","REPORTS.EXE","report"],["toolSel","TOOLS.EXE","tool"]].forEach(([id,win,kind])=>{
+      const s=document.getElementById(id); if(!s) return;
+      [...s.options].forEach(o=>{
+        const og=o.parentElement&&o.parentElement.tagName==="OPTGROUP"?o.parentElement.label:"";
+        const name=o.textContent.trim(); if(!name) return;
+        items.push({name,href:"#",go:id+":"+o.value,host:"",where:win+(og?" · "+og:""),hay:norm(name+" "+kind+" "+(KW[o.value]||""))});
+      });
+    });
   }
   function score(it,q,words){
     const n=norm(it.name);
@@ -7080,6 +7206,13 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     return words.every(w=>it.hay.includes(w))?20:0;
   }
   function close(){ box.hidden=true; inp.setAttribute("aria-expanded","false"); sel=-1; }
+  function openBuiltin(go){   // same as choosing it from the REPORTS.EXE / TOOLS.EXE menu, then scroll to it
+    if(go.startsWith("btn:")){ inp.value=""; close(); const b=document.getElementById(go.slice(4)); if(b) b.click(); return; }   // toolbar buttons (notepad, recorder)
+    const i=go.indexOf(":"), s=document.getElementById(go.slice(0,i)), v=go.slice(i+1); if(!s) return;
+    if(s.value!==v){ s.value=v; s.dispatchEvent(new Event("change",{bubbles:true})); }
+    inp.value=""; close();
+    const sec=s.closest("section"); if(sec) setTimeout(()=>sec.scrollIntoView({block:"start"}),60);
+  }
   function paint(){
     box.querySelectorAll("a").forEach((a,i)=>{ a.classList.toggle("on",i===sel); a.setAttribute("aria-selected",i===sel?"true":"false"); });
     const on=box.querySelector("a.on"); on&&on.scrollIntoView({block:"nearest"});
@@ -7087,10 +7220,10 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
   function search(){
     const q=norm(inp.value.trim()); if(!q){ close(); return; }
     index(); const words=q.split(/\s+/).filter(Boolean);
-    const hits=items.map(it=>({it,s:score(it,q,words)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||a.it.name.localeCompare(b.it.name));
+    const hits=items.map(it=>({it,s:score(it,q,words)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||(b.it.go?1:0)-(a.it.go?1:0)||a.it.name.localeCompare(b.it.name));
     shown=hits.slice(0,15).map(x=>x.it); sel=shown.length?0:-1;
-    box.innerHTML=shown.length?shown.map((it,i)=>`<a role="option" id="fr${i}" href="${esc(it.href)}"${it.href.startsWith("#")?"":' target="_blank" rel="noopener"'}>${esc(it.name)}<span class="fs">${esc(it.where||it.host)}</span></a>`).join("")+(hits.length>15?`<div class="fnone">${hits.length-15} more — keep typing to narrow it down.</div>`:"")
-      :`<div class="fnone">No site matches "${esc(inp.value.trim())}".</div>`;
+    box.innerHTML=shown.length?shown.map((it,i)=>`<a role="option" id="fr${i}" href="${esc(it.href)}"${it.go?` data-go="${esc(it.go)}"`:it.href.startsWith("#")?"":' target="_blank" rel="noopener"'}>${esc(it.name)}<span class="fs">${esc(it.where||it.host)}</span></a>`).join("")+(hits.length>15?`<div class="fnone">${hits.length-15} more — keep typing to narrow it down.</div>`:"")
+      :`<div class="fnone">Nothing matches "${esc(inp.value.trim())}".</div>`;
     box.hidden=false; inp.setAttribute("aria-expanded","true"); paint();
   }
   inp.addEventListener("input",search);
@@ -7100,10 +7233,10 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
     if(box.hidden||!shown.length) return;
     if(e.key==="ArrowDown"){ e.preventDefault(); sel=(sel+1)%shown.length; paint(); }
     else if(e.key==="ArrowUp"){ e.preventDefault(); sel=(sel-1+shown.length)%shown.length; paint(); }
-    else if(e.key==="Enter"){ e.preventDefault(); const a=box.querySelectorAll("a")[sel]; if(a){ const h=a.getAttribute("href"); if(h.startsWith("#")){ close(); location.hash=h; } else window.open(a.href,"_blank","noopener"); } }
+    else if(e.key==="Enter"){ e.preventDefault(); const a=box.querySelectorAll("a")[sel]; if(a){ if(a.dataset.go){ openBuiltin(a.dataset.go); return; } const h=a.getAttribute("href"); if(h.startsWith("#")){ close(); location.hash=h; } else window.open(a.href,"_blank","noopener"); } }
   });
   document.addEventListener("click",(e)=>{ if(!e.target.closest(".finder")) close(); });
-  box.addEventListener("click",(e)=>{ if(e.target.closest("a")) setTimeout(close,0); });
+  box.addEventListener("click",(e)=>{ const a=e.target.closest("a"); if(!a) return; if(a.dataset.go){ e.preventDefault(); openBuiltin(a.dataset.go); return; } setTimeout(close,0); });
 })();
 </script>
 <script>
@@ -7493,5 +7626,265 @@ ${tips.length?"\nTo improve:\n- "+tips.slice(0,4).join("\n- "):"\nSolid. Use a p
 })();
 </script>
 
+<script>
+// RECORDER: sound recorder, opened from the microphone button next to the notepad. Records with this device's microphone
+// and keeps recordings on this device only (IndexedDB); nothing is uploaded. Audio is also written to the device every
+// second while recording, so a recording cut off by a crash or a closed tab is recovered the next time the recorder opens.
+// Closing the recorder window does not stop a recording: the microphone button blinks red until you press Stop & save.
+(function(){
+  if(document.documentElement.classList.contains("np-mode")) return;   // notepad pop-out window
+  const btn=document.getElementById("recBtn"); if(!btn) return;
+  const esc=(s)=>String(s??"").replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const mil=()=>{ try{ return localStorage.getItem("iq.clock")==="mil"; }catch(_){ return false; } };
+  const fmtDate=(d)=>d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});
+  const fmtTime=(d)=>mil()?d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).replace(":",""):d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+  const two=(n)=>String(n).padStart(2,"0");
+  const clock=(ms)=>{ const s=Math.floor((ms||0)/1000), h=Math.floor(s/3600), m=Math.floor(s/60)%60; return (h?h+":"+two(m):two(m))+":"+two(s%60); };
+  const size=(b)=>b>=1048576?(b/1048576).toFixed(1)+" MB":Math.max(1,Math.round((b||0)/1024))+" KB";
+  const ext=(m)=>/mp4|m4a|aac/.test(m||"")?"m4a":/ogg/.test(m||"")?"ogg":/mpeg/.test(m||"")?"mp3":/wav/.test(m||"")?"wav":"webm";
+
+  // ---- on-device storage (IndexedDB): "recs" = finished recordings, "chunks" = audio saved while recording ----
+  let dbp=null;
+  const db=()=>dbp||(dbp=new Promise((res,rej)=>{
+    if(!window.indexedDB){ dbp=null; rej(new Error("no storage")); return; }
+    const r=indexedDB.open("iq-recorder",1);
+    r.onupgradeneeded=()=>{ const d=r.result; if(!d.objectStoreNames.contains("recs")) d.createObjectStore("recs",{keyPath:"id"}); if(!d.objectStoreNames.contains("chunks")) d.createObjectStore("chunks",{autoIncrement:true}).createIndex("rid","rid"); };
+    r.onsuccess=()=>res(r.result); r.onerror=()=>{ dbp=null; rej(r.error); };
+  }));
+  async function op(store,mode,f){ const d=await db(); return new Promise((res,rej)=>{ const t=d.transaction(store,mode), s=t.objectStore(store); let r; try{ r=f(s); }catch(e){ rej(e); return; }
+    t.oncomplete=()=>res(r&&r.readyState==="done"?r.result:undefined); t.onerror=t.onabort=()=>rej(t.error||new Error("storage error")); }); }
+  const getAll=(s)=>op(s,"readonly",st=>st.getAll());
+  const putRec=(rec)=>op("recs","readwrite",st=>st.put(rec));
+  const delRec=(id)=>op("recs","readwrite",st=>st.delete(id));
+  const dropChunks=(rid)=>op("chunks","readwrite",st=>{ const c=st.index("rid").openCursor(IDBKeyRange.only(rid)); c.onsuccess=()=>{ const k=c.result; if(k){ k.delete(); k.continue(); } }; return c; });
+  const persist=()=>{ try{ navigator.storage&&navigator.storage.persist&&navigator.storage.persist(); }catch(_){} };
+
+  // ---- recording ----
+  let R=null, tickT=0, wake=null;
+  const unsaved=[];   // recordings this device couldn't store: kept in memory until saved to a file
+  const elapsed=(S)=>S.acc+(S.paused?0:performance.now()-S.since);
+  const defName=(d)=>`Recording ${fmtTime(d)}`;
+  async function start(){
+    if(R) return;
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){ say("This browser can't record audio. Use an up-to-date Chrome, Edge, Firefox or Safari.",true); return; }
+    say("Starting the microphone…");
+    let stream;
+    try{ stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}}); }
+    catch(e){ const n=e&&e.name;
+      say(n==="NotAllowedError"||n==="SecurityError"?"Microphone access is blocked. Allow the microphone for this site in your browser or phone settings, then press Record again."
+        :n==="NotFoundError"?"No microphone was found on this device.":n==="NotReadableError"?"The microphone is being used by another app. Close it and try again."
+        :"Couldn't start the microphone: "+((e&&e.message)||e),true); return; }
+    if(R){ stream.getTracks().forEach(t=>t.stop()); return; }
+    const type=["audio/webm;codecs=opus","audio/mp4","audio/ogg;codecs=opus","audio/webm"].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t));
+    let mr; try{ mr=new MediaRecorder(stream,type?{mimeType:type,audioBitsPerSecond:64000}:{}); }catch(_){ mr=new MediaRecorder(stream); }
+    const now=new Date(), nm=q('[data-rc="name"]');
+    const S=R={mr,stream,rid:"r"+now.getTime().toString(36)+Math.random().toString(36).slice(2,6),seq:0,chunks:[],mime:"",start:now.getTime(),acc:0,since:performance.now(),paused:false,marks:[],name:(nm&&nm.value.trim())||defName(now),stored:true,ctx:null,an:null};
+    mr.ondataavailable=(e)=>{ if(!e.data||!e.data.size) return; S.mime=S.mime||e.data.type||mr.mimeType||""; S.chunks.push(e.data); const seq=S.seq++;
+      op("chunks","readwrite",st=>st.add({rid:S.rid,seq,blob:e.data,mime:S.mime,name:S.name,start:S.start,ms:Math.round(elapsed(S)),marks:S.marks.slice(),at:Date.now()}))
+        .catch(()=>{ if(S.stored){ S.stored=false; say("This device isn't saving the audio as it goes. Keep IQ Kit open and press Stop & save when you're done.",true); } }); };
+    mr.onstop=()=>finish(S);
+    mr.onerror=(e)=>{ say("Recording stopped: "+((e&&e.error&&e.error.message)||"device error")+". What was recorded has been saved.",true); if(R===S) stop(); };
+    stream.getAudioTracks().forEach(t=>{ t.onended=()=>{ if(R===S){ say("The microphone was disconnected. The recording was saved up to that point.",true); stop(); } }; });
+    try{ mr.start(1000); }catch(e){ R=null; stream.getTracks().forEach(t=>t.stop()); say("Couldn't start recording: "+(e.message||e),true); return; }
+    persist(); meter(S); lock();
+    clearInterval(tickT); tickT=setInterval(tick,250);
+    say(""); ui();
+  }
+  function pause(){
+    const S=R; if(!S||typeof S.mr.pause!=="function") return;
+    if(!S.paused){ S.mr.pause(); S.acc+=performance.now()-S.since; S.paused=true; say("Paused. Press Resume to continue the same recording."); }
+    else { S.mr.resume(); S.since=performance.now(); S.paused=false; say(""); }
+    ui();
+  }
+  function mark(){ const S=R; if(!S) return; const t=Math.round(elapsed(S)); S.marks.push(t); say(`Mark ${S.marks.length} at ${clock(t)}.`); ui(); }
+  function stop(){
+    const S=R; if(!S) return;
+    S.ms=Math.round(elapsed(S)); S.acc=S.ms; S.paused=true; R=null;
+    const nm=q('[data-rc="name"]'); if(nm&&nm.value.trim()) S.name=nm.value.trim();
+    try{ if(S.mr.state!=="inactive") S.mr.stop(); else finish(S); }catch(_){ finish(S); }
+    S.stream.getTracks().forEach(t=>t.stop()); if(S.ctx) S.ctx.close().catch(()=>{});
+    clearInterval(tickT); unlock(); say("Saving…"); ui();
+  }
+  async function finish(S){
+    if(S.done) return; S.done=true;
+    const blob=new Blob(S.chunks,{type:(S.mime||S.mr.mimeType||"audio/webm").split(";")[0]});
+    if(!blob.size){ say("Nothing was recorded.",true); dropChunks(S.rid).catch(()=>{}); return; }
+    const rec={id:S.rid,name:S.name,start:S.start,ms:S.ms,mime:blob.type,size:blob.size,blob,marks:S.marks};
+    try{ await putRec(rec); dropChunks(S.rid).catch(()=>{}); say(`Saved “${rec.name}” (${clock(rec.ms)}).`); }
+    catch(_){ unsaved.push(rec); say("Couldn't keep this recording on the device. Press Save file now so it isn't lost.",true); }
+    const nm=q('[data-rc="name"]'); if(nm) nm.value="";
+    list();
+  }
+  // Audio saved while recording but never finished (tab closed, crash, phone killed the page) becomes a saved recording.
+  async function recover(){
+    if(R) return;
+    let ch, have; try{ ch=await getAll("chunks"); if(!ch.length) return; have=new Set((await getAll("recs")).map(r=>r.id)); }catch(_){ return; }
+    const by={}; ch.forEach(c=>{ (by[c.rid]=by[c.rid]||[]).push(c); });
+    let n=0;
+    for(const rid in by){
+      if(R&&R.rid===rid) continue;
+      const L=by[rid].sort((a,b)=>a.seq-b.seq), last=L[L.length-1];
+      if(Date.now()-last.at<15000) continue;   // another open copy of IQ Kit may still be recording
+      if(have.has(rid)){ dropChunks(rid).catch(()=>{}); continue; }
+      const blob=new Blob(L.map(c=>c.blob),{type:(last.mime||"audio/webm").split(";")[0]});
+      try{ await putRec({id:rid,name:(last.name||"Recording")+" (recovered)",start:last.start,ms:last.ms,mime:blob.type,size:blob.size,blob,marks:last.marks||[]}); await dropChunks(rid); n++; }catch(_){}
+    }
+    if(n){ say(n===1?"Recovered a recording that was cut off.":`Recovered ${n} recordings that were cut off.`); list(); }
+  }
+  // Input level bar (only drawn while the recorder window is open).
+  function meter(S){
+    try{ const C=window.AudioContext||window.webkitAudioContext; if(!C) return;
+      S.ctx=new C(); if(S.ctx.state==="suspended") S.ctx.resume().catch(()=>{});
+      const src=S.ctx.createMediaStreamSource(S.stream); S.an=S.ctx.createAnalyser(); S.an.fftSize=1024; src.connect(S.an);
+      const buf=new Uint8Array(S.an.fftSize);
+      const draw=()=>{ if(R!==S){ level(0); return; }
+        if(root&&!root.hidden){ let pk=0; if(!S.paused){ S.an.getByteTimeDomainData(buf); for(let i=0;i<buf.length;i++){ const v=Math.abs(buf[i]-128); if(v>pk) pk=v; } } level(pk/128); }
+        requestAnimationFrame(draw); };
+      requestAnimationFrame(draw);
+    }catch(_){}
+  }
+  function level(v){ const s=root&&root.querySelector(".rc-meter span"); if(!s) return; s.style.width=Math.min(100,Math.round(Math.sqrt(v)*100))+"%"; s.classList.toggle("hot",v>.92); }
+  // Keep the screen awake while recording (a sleeping phone can stop the microphone).
+  async function lock(){ try{ if(navigator.wakeLock&&R&&!wake){ wake=await navigator.wakeLock.request("screen"); wake.addEventListener("release",()=>{ wake=null; }); } }catch(_){} }
+  function unlock(){ try{ wake&&wake.release(); }catch(_){} wake=null; }
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&R) lock(); });
+  window.addEventListener("beforeunload",(e)=>{ if(R){ e.preventDefault(); e.returnValue=""; } });
+
+  // ---- window ----
+  let root=null, cache=new Map(), urls=[], armDel=null, armT=0, shareOK=null;
+  const q=(s)=>root&&root.querySelector(s);
+  function say(t,warn){ const m=q(".rc-msg"); if(!m){ say.pending=t?{t,warn}:null; return; } m.textContent=t||""; m.classList.toggle("warn",!!warn); clearTimeout(say.t); if(t&&!warn) say.t=setTimeout(()=>{ if(m.textContent===t) m.textContent=""; },6000); }
+  function build(){
+    const r=document.createElement("div"); r.id="rcOverlay"; r.hidden=true; document.body.appendChild(r);
+    r.innerHTML=`<div class="np-win rc-win" role="dialog" aria-label="Sound recorder">
+      <div class="bar np-bar"><span>RECORDER.EXE</span><span class="np-barbtns"><button class="btn" type="button" data-rc="close" aria-label="Close recorder">✕</button></span></div>
+      <div class="body np-body">
+        <div class="rc-deck">
+          <div class="rc-top"><div class="rc-time" role="timer" aria-label="Recording time">00:00</div><div class="rc-state" aria-live="polite">Ready</div></div>
+          <div class="rc-meter" aria-hidden="true"><span></span></div>
+          <label class="ta-f">Name (optional)<input class="fld" data-rc="name" autocomplete="off" placeholder="e.g. Staff meeting, Module 3 lecture"></label>
+          <div class="rc-ctl">
+            <button class="btn rc-rec" type="button" data-rc="rec">&#9679; Record</button>
+            <button class="btn" type="button" data-rc="pause" hidden>Pause</button>
+            <button class="btn" type="button" data-rc="mark" hidden title="Mark this moment so you can jump back to it later">Mark</button>
+            <button class="btn" type="button" data-rc="stop" hidden>&#9632; Stop &amp; save</button>
+          </div>
+          <div class="rc-msg" aria-live="polite"></div>
+        </div>
+        <div class="rc-head"><span class="ta-sub">Saved recordings</span><span class="muted rc-count"></span></div>
+        <div class="rc-list"></div>
+        <div class="sal-hint np-foot">Recordings stay on this device and are never uploaded. Use <b>Save file</b> to keep a copy elsewhere; clearing your browser data deletes them.
+          Closing this window keeps recording; the microphone button blinks until you press Stop &amp; save. On phones, keep IQ Kit open and the screen on while recording.
+          Ask permission before recording people: California and several other states require everyone's consent to record a private conversation.</div>
+      </div></div>`;
+    r.addEventListener("click",onClick);
+    r.addEventListener("input",(e)=>{ if(e.target.dataset.rc==="name"&&R){ R.name=e.target.value.trim()||R.name; } });
+    r.addEventListener("change",onRename);
+    root=r;
+    if(say.pending){ say(say.pending.t,say.pending.warn); say.pending=null; }
+    return r;
+  }
+  function open(){
+    if(!root) build();
+    root.hidden=false; document.documentElement.classList.add("rc-open");
+    ui(); list(); recover();
+    setTimeout(()=>{ const b=q(R?'[data-rc="stop"]':'[data-rc="rec"]'); b&&b.focus({preventScroll:true}); },50);
+  }
+  function close(){
+    if(!root||root.hidden) return;
+    root.querySelectorAll("audio").forEach(a=>{ try{ a.pause(); }catch(_){} });
+    root.hidden=true; document.documentElement.classList.remove("rc-open"); level(0);
+    btn.focus({preventScroll:true}); ui();
+  }
+  function tick(){ if(!R) return; const t=clock(elapsed(R)); const el=q(".rc-time"); if(el) el.textContent=t; btn.title=(R.paused?"Recording paused":"Recording")+` — ${t} — open the recorder`; }
+  function ui(){
+    const on=!!R;
+    btn.classList.toggle("rc-on",on); btn.classList.toggle("rc-paused",on&&R.paused);
+    btn.setAttribute("aria-label",on?(R.paused?"Recording paused — open sound recorder":"Recording in progress — open sound recorder"):"Open sound recorder");
+    if(on) tick(); else btn.title="Sound recorder";
+    if(!root) return;
+    q('[data-rc="rec"]').hidden=on;
+    ["pause","mark","stop"].forEach(k=>{ q(`[data-rc="${k}"]`).hidden=!on; });
+    if(on){ const p=q('[data-rc="pause"]'); p.textContent=R.paused?"Resume":"Pause"; p.disabled=typeof R.mr.pause!=="function"; q('[data-rc="mark"]').textContent=R.marks.length?`Mark (${R.marks.length})`:"Mark"; }
+    q(".rc-state").textContent=on?(R.paused?"Paused":"Recording"):"Ready";
+    q(".rc-deck").classList.toggle("live",on&&!R.paused);
+    if(!on) q(".rc-time").textContent="00:00";
+  }
+  async function list(){
+    if(!root) return;
+    let recs=[]; try{ recs=await getAll("recs"); }catch(_){}
+    unsaved.forEach(u=>{ if(!recs.some(r=>r.id===u.id)) recs.push(u); });
+    recs.sort((a,b)=>b.start-a.start);
+    cache=new Map(recs.map(r=>[r.id,r]));
+    urls.forEach(u=>URL.revokeObjectURL(u)); urls=[];
+    if(shareOK===null){ try{ shareOK=!!(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([new Uint8Array(1)],"t.m4a",{type:"audio/mp4"})]})); }catch(_){ shareOK=false; } }
+    const box=q(".rc-list");
+    box.innerHTML=recs.length?recs.map(r=>{ const u=URL.createObjectURL(r.blob); urls.push(u); const d=new Date(r.start);
+      return `<div class="rc-item" data-id="${esc(r.id)}">
+        <input class="fld" data-rc="rename" value="${esc(r.name)}" aria-label="Recording name" autocomplete="off">
+        <div class="rc-meta">${esc(fmtDate(d))} · ${esc(fmtTime(d))} · ${clock(r.ms)} · ${size(r.size||r.blob.size)}${unsaved.includes(r)?' · <b class="rc-warn">not kept on this device — save it</b>':""}</div>
+        <audio controls preload="metadata" src="${u}"></audio>
+        ${r.marks&&r.marks.length?`<div class="rc-marks">${r.marks.map((m,i)=>`<button class="btn" type="button" data-rc="seek" data-t="${m}">Mark ${i+1} · ${clock(m)}</button>`).join("")}</div>`:""}
+        <div class="rc-acts"><button class="btn" type="button" data-rc="save">Save file</button>${shareOK?'<button class="btn" type="button" data-rc="share">Share</button>':""}<button class="btn" type="button" data-rc="del">Delete</button></div>
+      </div>`; }).join(""):`<div class="muted rc-empty">No recordings yet. Press Record to start.</div>`;
+    box.querySelectorAll("audio").forEach(fixDur);
+    const tot=recs.reduce((s,r)=>s+(r.size||0),0);
+    q(".rc-count").textContent=recs.length?`${recs.length} · ${size(tot)}`:"";
+  }
+  // Chrome doesn't record a length in WebM files; jump to the end once so the player can show it and seek.
+  function fixDur(a){ a.addEventListener("loadedmetadata",()=>{ if(a.duration===Infinity){ const back=()=>{ a.removeEventListener("timeupdate",back); a.currentTime=0; }; a.addEventListener("timeupdate",back); a.currentTime=1e101; } },{once:true}); }
+  const fname=(r)=>{ const d=new Date(r.start), n=String(r.name||"").replace(/[^\w-]+/g,"_").replace(/^_+|_+$/g,"").slice(0,40);
+    return `recording_${d.getFullYear()}-${two(d.getMonth()+1)}-${two(d.getDate())}_${two(d.getHours())}${two(d.getMinutes())}${n?"_"+n:""}.${ext(r.mime||r.blob.type)}`; };
+  function download(r){ const a=document.createElement("a"); a.href=URL.createObjectURL(r.blob); a.download=fname(r); document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000); }
+  async function onRename(e){
+    const t=e.target; if(t.dataset.rc!=="rename") return;
+    const r=cache.get(t.closest(".rc-item").dataset.id); if(!r) return;
+    const v=t.value.trim(); if(!v){ t.value=r.name; return; } if(v===r.name) return;
+    r.name=v; if(!unsaved.includes(r)){ try{ await putRec(r); }catch(_){ say("Couldn't rename it on this device.",true); return; } }
+    say("Renamed.");
+  }
+  async function onClick(e){
+    const b=e.target.closest("[data-rc]"); if(!b||b.tagName==="INPUT") return;
+    const a=b.dataset.rc, item=b.closest(".rc-item"), r=item&&cache.get(item.dataset.id);
+    if(a==="close") return close();
+    if(a==="rec") return start();
+    if(a==="pause") return pause();
+    if(a==="mark") return mark();
+    if(a==="stop") return stop();
+    if(!r) return;
+    if(a==="seek"){ const au=item.querySelector("audio"); au.currentTime=(+b.dataset.t||0)/1000; au.play().catch(()=>{}); return; }
+    if(a==="save"){ download(r); say("Saved "+fname(r)+" to your downloads."); return; }
+    if(a==="share"){ try{ const f=new File([r.blob],fname(r),{type:r.mime||r.blob.type}); if(navigator.canShare&&!navigator.canShare({files:[f]})){ download(r); return; } await navigator.share({files:[f],title:r.name}); }catch(err){ if(err&&err.name!=="AbortError") say("Couldn't share — use Save file instead.",true); } return; }
+    if(a==="del"){
+      if(armDel!==r.id){ armDel=r.id; root.querySelectorAll('[data-rc="del"]').forEach(x=>x.textContent="Delete"); b.textContent="Tap again to delete"; clearTimeout(armT); armT=setTimeout(()=>{ armDel=null; b.textContent="Delete"; },4000); return; }
+      armDel=null; clearTimeout(armT);
+      const i=unsaved.indexOf(r); if(i>=0) unsaved.splice(i,1); else { try{ await delRec(r.id); }catch(_){ say("Couldn't delete it.",true); return; } }
+      say(`Deleted “${r.name}”.`); list(); return;
+    }
+  }
+  btn.addEventListener("click",open);
+  document.addEventListener("keydown",(e)=>{ if(!root||root.hidden||e.defaultPrevented||document.querySelector(".dd-box")) return;
+    if(e.key==="Escape"){ close(); return; }
+    if(e.key==="Tab"){ const f=[...root.querySelectorAll("button,input,audio")].filter(x=>!x.disabled&&!x.hidden&&x.getClientRects().length); if(!f.length) return; const i=f.indexOf(document.activeElement);
+      if(e.shiftKey&&i<=0){ e.preventDefault(); f[f.length-1].focus(); } else if(!e.shiftKey&&(i<0||i===f.length-1)){ e.preventDefault(); f[0].focus(); } }
+  });
+  // Finish any recording that was cut off last time (quietly, a moment after the page loads).
+  setTimeout(()=>{ recover().catch(()=>{}); },3000);
+})();
+</script>
+<script>
+// LARGE MODE (glove-friendly): the glove button makes every button, field and line of text larger. Remembered on this device.
+(function(){
+  const b=document.getElementById("lgBtn"); if(!b) return;
+  const root=document.documentElement;
+  const paint=()=>{ const on=root.classList.contains("lg"); b.setAttribute("aria-pressed",String(on)); b.title=on?"Large mode is on — tap for normal size":"Large mode — bigger buttons and text (good with gloves)"; };
+  b.addEventListener("click",()=>{ const on=!root.classList.contains("lg"); root.classList.toggle("lg",on); try{ localStorage.setItem("iq.large",on?"1":"0"); }catch(_){} paint(); b.scrollIntoView({block:"nearest"}); });
+  window.addEventListener("storage",(e)=>{ if(e.key==="iq.large"){ root.classList.toggle("lg",e.newValue==="1"); paint(); } });
+  // In large mode, text boxes grow as you type instead of scrolling inside (hard to do with gloves). The notepad sizes its own.
+  document.addEventListener("input",(e)=>{ const t=e.target; if(!root.classList.contains("lg")||t.tagName!=="TEXTAREA"||t.closest(".np-win")) return;
+    t.style.height="auto"; t.style.height=Math.min(t.scrollHeight+4,Math.round(innerHeight*.6))+"px"; });
+  paint();
+})();
+</script>
 </body>
 </html>
