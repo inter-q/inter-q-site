@@ -12,7 +12,7 @@
 var IQ_GPS=false; if(!IQ_GPS) document.documentElement.classList.add("no-gps");</script>
 <script>if(/[?&]notepad\b/.test(location.search)){ document.documentElement.classList.add("np-mode"); var t=(location.search.match(/[?&]theme=(green|blue|amber|red)\b/)||[])[1]; if(t) document.documentElement.dataset.theme=t; }</script>
 <meta name="referrer" content="no-referrer">
-<meta name="iq-build" content="2026-10-08 15:30">
+<meta name="iq-build" content="2026-10-09 07:55">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
@@ -1781,6 +1781,10 @@ var IQ_GPS=false; if(!IQ_GPS) document.documentElement.classList.add("no-gps");<
     <div class="bar"><span id="t-toolbox">TOOLBOX</span></div>
     <div class="body">
       <div class="refgroups">
+        <fieldset class="grp"><legend>Partner portals (sign-in)</legend><ul>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://infragard-kms.fbi.gov/@@secure-login" target="_blank" rel="noopener">InfraGard (FBI)</a></li>
+          <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://hsin.dhs.gov/mipstatic/auth/" target="_blank" rel="noopener">HSIN Home (DHS)</a></li>
+        </ul></fieldset>
         <fieldset class="grp"><legend>Recon &amp; lookup</legend><ul>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://osintframework.com/" target="_blank" rel="noopener">OSINT Framework</a></li>
           <li><span class="mk" aria-hidden="true">&gt;</span><a class="reflink" href="https://www.forensicosint.com/osint-guide" target="_blank" rel="noopener">Forensic OSINT guide</a></li>
