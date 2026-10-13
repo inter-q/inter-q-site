@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-A6t4uDBzpAdslKG/aacsCjvYoEk1bC85TnWNfn8r6Yc=' 'sha256-Fe+EJTfSrkGMGpeLnmgscuiFLxtWTnvvt3BcvPrnk5U=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-pW03XpYLka+/MQ0J6PMkDchzsTtKyzSUZt0bGjpqbKg=' 'sha256-s3D3pJj1BF0QBvAad9+GzEoOJaXlQHpecbqiXqZ0T68='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-A6t4uDBzpAdslKG/aacsCjvYoEk1bC85TnWNfn8r6Yc=' 'sha256-Fe+EJTfSrkGMGpeLnmgscuiFLxtWTnvvt3BcvPrnk5U=' 'sha256-O4sFY29iTyelXbGevbGa3bLfIqHuayKxbC8lSvoK1uQ=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-pW03XpYLka+/MQ0J6PMkDchzsTtKyzSUZt0bGjpqbKg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-13 09:46">
+<meta name="logstat-build" content="2026-10-13 10:37">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=1">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=1">
@@ -1648,6 +1648,8 @@ function route(){
   document.documentElement.classList.toggle("practice",PRACTICE);
   ["qbStamp","qbBoard","qbEvents"].forEach((id,i)=>{ const a=$(id); if(a) a.setAttribute("href",href(["stamp","board","events"][i])); });
   VIEWS.forEach(n=>{ const s=$("v-"+n); if(s) s.hidden=n!==v; });
+  // The home screen keeps a clean address (inter-q.com/logstat), never ".../logstat/#home".
+  if(v==="home"&&location.hash){ try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} }
   const changed=v!==CUR; CUR=v;
   try{ (RENDER[v]||RENDER.home)(); }catch(e){ console.error(e); $("b-"+v).innerHTML=`<div class="w bad">Something went wrong drawing this screen: ${esc(e.message)}. Try Check for update, or reload.</div>`; }
   if(changed) window.scrollTo({top:0,behavior:"auto"});
@@ -2728,7 +2730,7 @@ function openInstall(){
   show(standalone?"iqHowDone":ios?"iqHowIOS":macSafari?"iqHowMac":INSTALL_EV?"iqHowGo":chromium?"iqHowWait":"iqHowOther");
   how.hidden=false; const q=$("icardQR"); if(q&&!q.firstChild){ try{ new QRCode(q,{text:"https://inter-q.com/logstat/install",width:150,height:150,correctLevel:QRCode.CorrectLevel.M}); }catch(e){ q.textContent="inter-q.com/logstat/install"; } }
   openInstall.show=show;
-  if(location.hash==="#install"){ try{ history.replaceState(null,"",location.pathname+"#home"); }catch(_){} INSTALL_KEEP=true; route(); }
+  if(location.hash==="#install"){ try{ history.replaceState(null,"",location.pathname); }catch(_){} INSTALL_KEEP=true; route(); }
   setTimeout(()=>how.scrollIntoView({block:"start"}),50);
 }
 (function(){
