@@ -10,16 +10,16 @@
   "background_color": "#03140a",
   "theme_color": "#03140a",
   "icons": [
-    {"src": "logstat-32.png?v=1", "sizes": "32x32", "type": "image/png", "purpose": "any"},
-    {"src": "logstat-48.png?v=1", "sizes": "48x48", "type": "image/png", "purpose": "any"},
-    {"src": "logstat-192.png?v=1", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "logstat-512.png?v=1", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "logstat-maskable-512.png?v=1", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    {"src": "logstat-32.png?v=2", "sizes": "32x32", "type": "image/png", "purpose": "any"},
+    {"src": "logstat-48.png?v=2", "sizes": "48x48", "type": "image/png", "purpose": "any"},
+    {"src": "logstat-192.png?v=2", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "logstat-512.png?v=2", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "logstat-maskable-512.png?v=2", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
   ],
   "shortcuts": [
-    {"name": "Stamp a receipt", "short_name": "Stamp", "url": "./#stamp", "icons": [{"src": "logstat-192.png?v=1", "sizes": "192x192", "type": "image/png"}]},
-    {"name": "Check a receipt", "short_name": "Check", "url": "./#check", "icons": [{"src": "logstat-192.png?v=1", "sizes": "192x192", "type": "image/png"}]},
-    {"name": "Fleet whiteboard", "short_name": "Board", "url": "./#board", "icons": [{"src": "logstat-192.png?v=1", "sizes": "192x192", "type": "image/png"}]},
-    {"name": "Unusual events", "short_name": "Events", "url": "./#events", "icons": [{"src": "logstat-192.png?v=1", "sizes": "192x192", "type": "image/png"}]}
+    {"name": "Stamp a receipt", "short_name": "Stamp", "url": "./#stamp", "icons": [{"src": "logstat-192.png?v=2", "sizes": "192x192", "type": "image/png"}]},
+    {"name": "Check a receipt", "short_name": "Check", "url": "./#check", "icons": [{"src": "logstat-192.png?v=2", "sizes": "192x192", "type": "image/png"}]},
+    {"name": "Fleet whiteboard", "short_name": "Board", "url": "./#board", "icons": [{"src": "logstat-192.png?v=2", "sizes": "192x192", "type": "image/png"}]},
+    {"name": "Unusual events", "short_name": "Events", "url": "./#events", "icons": [{"src": "logstat-192.png?v=2", "sizes": "192x192", "type": "image/png"}]}
   ]
 }
