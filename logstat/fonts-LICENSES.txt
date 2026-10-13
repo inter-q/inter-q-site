@@ -1,0 +1,3 @@
+Signature fonts, served with LOGSTAT for drawing typed signatures on this device.
+Dancing Script, Great Vibes, Caveat: SIL Open Font License 1.1 (https://openfontlicense.org). Files from @fontsource 5.3.0.
+Homemade Apple: Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0). Files from @fontsource 5.3.0.
