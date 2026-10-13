@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Rewrites the Content-Security-Policy <meta> tag in index.html and tools/index.html.
+"""Rewrites the Content-Security-Policy <meta> tag in index.html, tools/index.html and logstat/index.html.
 
-Run from the repo folder after editing ANY inline <script> in either page:  python3 csp-hashes.py
+Run from the repo folder after editing ANY inline <script> in any of these pages:  python3 csp-hashes.py
 The policy only lets the page run its own inline scripts (matched by SHA-256 hash) and scripts from this site,
 so an edited script is blocked until this is re-run. Injected code (e.g. from a crafted report file) can't run.
 """
@@ -20,6 +20,10 @@ POLICY = {
                         "img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; "
                         "connect-src 'self' " + FEEDS + "; worker-src 'self'; manifest-src 'self'; "
                         "object-src 'none'; base-uri 'none'; form-action 'none'",
+    # LOGSTAT talks to nothing but inter-q.com itself: no feeds, no outside fonts or scripts.
+    "logstat/index.html": "default-src 'self'; script-src 'self' {h}; style-src 'self' 'unsafe-inline'; "
+                          "img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; "
+                          "manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'",
 }
 META = re.compile(r'<meta http-equiv="Content-Security-Policy" content="[^"]*">\n?')
 SCRIPT = re.compile(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', re.S)
