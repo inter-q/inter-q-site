@@ -2,7 +2,7 @@
   "id": "./",
   "name": "LOGSTAT Aid",
   "short_name": "LOGSTAT",
-  "description": "Receipt stamper, receipt check, fleet board, daily checklist, unusual events, trainer and quiz for ARRO LOGSTAT. Works offline. Aid only: ARRO is the system of record.",
+  "description": "Receipt stamper, receipt check, fleet board, daily checklist and unusual events for ARRO LOGSTAT. Works offline. Aid only: ARRO is the system of record.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
