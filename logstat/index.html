@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-0624M+x2tTdcQr4GoWKaMueMAl6TW30fjxdtqh1Yuf8=' 'sha256-fmtRY/Ht4xK3nSYBK0mBNgGXQqXKTl95qCuCpXxakBg=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-pW03XpYLka+/MQ0J6PMkDchzsTtKyzSUZt0bGjpqbKg=' 'sha256-sxjCFNsZwiNeSk/n/YhjBj58KRvHFslYkFVKhV8e3xA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-0624M+x2tTdcQr4GoWKaMueMAl6TW30fjxdtqh1Yuf8=' 'sha256-b5aOaI7ZDij4rit4oEKxcgAQau3u0GZhANwEdpFikXw=' 'sha256-fmtRY/Ht4xK3nSYBK0mBNgGXQqXKTl95qCuCpXxakBg=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-pW03XpYLka+/MQ0J6PMkDchzsTtKyzSUZt0bGjpqbKg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-14 08:36">
+<meta name="logstat-build" content="2026-10-14 10:47">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1163,6 +1163,9 @@
   .rs .rs-top, .rs .rs-cam { display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; }
   .rs .rs-top .f { flex:1; min-width:0; }
   .rs-big { font-size:16px !important; padding:10px 16px !important; font-weight:bold; }
+  .rs .rs-crop canvas { display:block; max-width:100%; max-height:70vh; margin:0 auto; touch-action:none; cursor:crosshair; border:1px solid currentColor; background:#fff; }
+  .rs .rs-prev canvas.tall { max-height:none; }
+  .rs .rs-parts .toolrow { margin-top:6px; } .rs .rs-parts label.btn { cursor:pointer; display:inline-flex; align-items:center; }
   .rs .rs-cam label.btn { cursor:pointer; display:inline-flex; align-items:center; }
   .rs .rs-prev { display:flex; justify-content:center; }
   .rs .rs-prev canvas { max-width:100%; max-height:70vh; border:1px solid currentColor; background:#fff; }
@@ -1814,7 +1817,7 @@ window.addEventListener("hashchange",route);
 // Screen state belongs to one space (real or practice): moving between them starts each screen clean,
 // so nothing typed or loaded in practice can be saved into real data, or the reverse.
 let INSTALL_KEEP=false;
-function resetViewState(){ VIEWDATE=""; CHK={load:null,res:null,inp:null}; BOARD.open={}; BOARD.act=null; BOARD.pendingCard=null; BOARD.pendingImport=null; EVS.vals={}; EVS.open=""; RS={img:null,rot:0,q:null,veh:"",pre:{},f:null}; TODAY.tab=""; FRM.sel=null; FRM.up=null; FRM.ready=null; FRM.edit=null; FRM.org=""; }
+function resetViewState(){ VIEWDATE=""; CHK={load:null,res:null,inp:null}; BOARD.open={}; BOARD.act=null; BOARD.pendingCard=null; BOARD.pendingImport=null; EVS.vals={}; EVS.open=""; RS.parts.forEach(rsFree); try{ if(RS.comp){ RS.comp.width=0; RS.comp.height=0; } }catch(_){} RS={parts:[],comp:null,crop:-1,veh:"",pre:{},f:null}; TODAY.tab=""; FRM.sel=null; FRM.up=null; FRM.ready=null; FRM.edit=null; FRM.org=""; }
 const go=(name,extra)=>{ const h=href(name,extra); if(location.hash===h) route(); else location.hash=h; };
 
 // ---------- shared pieces ----------
@@ -1965,7 +1968,7 @@ RENDER.help=function(){
     <li>Leadership update: <a href="#report">Mission report</a> → <b>Print</b>, <b>Save PDF</b> or <b>Save Word</b>. The Board's <b>Fleet dashboard</b> shows the same numbers and charts.</li>
     <li>Something unusual (damaged vehicle, transfer, personal funds, toll, lost card)? Open <a href="#events">Unusual events</a>.</li>
     <li>Last day: <a href="#today">Today's checklist</a> → <b>End of mission</b>.</li></ol>
-  <h3>Stamp a receipt (field)</h3><ul><li>Photograph the receipt on a white background, one receipt per photo.</li><li>Fill gallons, amount, odometer and card. Tick the three pre-checks. Share sends the stamped copy with its file name.</li><li><b>Copy for operator</b> gives one text line per receipt. Text it with the photo.</li><li>The stamp goes below the receipt, never over it, and the photo's location data is removed. Keep the paper original for turn-in.</li></ul>
+  <h3>Stamp a receipt (field)</h3><ul><li>Photograph the receipt on a white background, one receipt per photo.</li><li>Fill gallons, amount, odometer and card. Tick the three pre-checks. Share sends the stamped copy with its file name.</li><li><b>Copy for operator</b> gives one text line per receipt. Text it with the photo.</li><li>The photo is cropped to the receipt automatically; tap <b>Adjust crop</b> if anything is cut off. A receipt too long for one photo can be taken in up to three parts with <b>＋ Add next part</b>: top first, overlapping a line or two.</li><li>The stamp goes below the receipt (beside it on a very long receipt), never over it, and the photo's location data is removed. Keep the paper original for turn-in.</li></ul>
   <h3>Check a receipt (operator)</h3><ul><li>Paste the driver's text lines, or type the receipt in. Mark anything wrong with the photo, tick "I checked the photo", then Check.</li><li>Accept shows exactly what to enter in ARRO. Reject gives the ARRO note and the message to the field. Do not enter covers Voyager and personal funds.</li></ul>
   <h3>Who uses this phone</h3><ul><li>Pick <b>Driver</b>, <b>ARRO operator</b> or <b>Certifier / JLOC</b> on Home (or in Setup), and Home shows only those tools. <b>Show everything</b> brings all of them back. A phone set up from an operator's QR link starts as a driver's phone.</li></ul>
   <h3>Two operators, one task org</h3><ul><li>Board → <b>Save board file</b>, send it to the other phone, and there tap <b>Merge in a board file</b>. The newest copy of every entry wins on both phones; nothing is lost unless the other phone changed or removed it later. The same serial is treated as the same vehicle and the same receipt is counted once.</li><li>Entries changed before this version have no time on them; if both phones changed one, you choose whose copy to keep.</li></ul>
@@ -1987,9 +1990,10 @@ RENDER.help=function(){
 
 // ================= MODULE 1: RECEIPT PRE-CHECK AND STAMPER =================
 // Moved from IQ Kit. Photos never leave the phone and are never stored; the stamped copy is re-encoded through a canvas,
-// which also strips EXIF (including GPS). The stamp goes below the receipt, never over it.
+// which also strips EXIF (including GPS). The stamp goes below the receipt (beside it when the receipt is very tall),
+// never over it. A long receipt can be cropped to the paper and taken in up to three photos that are joined in order.
 const RS_CARDS=["WEX","Voyager","Personal funds","Unclear / other"];
-let RS={img:null,rot:0,q:null,veh:"",pre:{},f:null};   // f = what's typed, kept so a redraw doesn't lose it
+let RS={parts:[],comp:null,crop:-1,veh:"",pre:{},f:null};   // parts = the photos of this receipt, comp = them joined, crop = part being cropped (-1 none), f = what's typed
 function setupLinkFrom(org,vehs){ return location.origin+location.pathname.replace(/[^/]*$/,"")+"#stamp&rs="+b64e({mrt:org.mrt,to:org.to,digits:digitsOf(org),veh:vehs.map(v=>({label:v.label,sn:v.sn,kind:v.cat,sub:v.sub,unit:v.unit||""}))}); }
 function cleanSetup(o){
   o=o&&typeof o==="object"?o:{}; const s=(v,n=60)=>typeof v==="string"?v.slice(0,n):"";
@@ -2013,6 +2017,99 @@ async function photoQuality(cv){
     const varL=n?sq/n-(sum/n)**2:0; let bs=0,bn=0; const m=Math.round(Math.min(w,h)*.06); for(let yy=0;yy<h;yy++) for(let xx=0;xx<w;xx++){ if(xx<m||yy<m||xx>=w-m||yy>=h-m){ bs+=g[yy*w+xx]; bn++; } }
     return {blurry:varL<55,dark:bn?bs/bn<135:false}; }catch(e){ return {blurry:false,dark:false}; }
 }
+// ----- Long receipts -----
+// Each photo is a "part": the photo itself (up to 12 MP, already upright) and a crop box (fractions of the photo).
+// Parts are cropped, scaled to one width and joined top to bottom into one receipt image. The stamp goes below that
+// image, or beside it when the receipt is very tall, so it never covers the receipt and stays near the top.
+const RS_SRC_PX=12e6, RS_OUT_PX=4.5e6, RS_MAXW=1800, RS_MINW=900, RS_MAXH=8000, RS_MAXPARTS=3, RS_SIDE=2.2;
+async function rsLoadSrc(f){
+  let bm, url=""; try{ bm=await createImageBitmap(f,{imageOrientation:"from-image"}); }
+  catch(e){ url=URL.createObjectURL(f); bm=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=url; }); }
+  try{ const w=bm.naturalWidth||bm.width, h=bm.naturalHeight||bm.height; if(!w||!h) throw new Error("empty");
+    const s=Math.min(1,Math.sqrt(RS_SRC_PX/(w*h))), cv=document.createElement("canvas"); cv.width=Math.max(1,Math.round(w*s)); cv.height=Math.max(1,Math.round(h*s));
+    const g=cv.getContext("2d"); g.fillStyle="#fff"; g.fillRect(0,0,cv.width,cv.height); g.drawImage(bm,0,0,cv.width,cv.height); return cv; }   // white behind see-through PNGs
+  finally{ try{ if(bm&&bm.close) bm.close(); }catch(e){} if(url) URL.revokeObjectURL(url); }
+}
+function rsTurn(cv){ const o=document.createElement("canvas"); o.width=cv.height; o.height=cv.width; const g=o.getContext("2d"); g.translate(o.width,0); g.rotate(Math.PI/2); g.drawImage(cv,0,0); return o; }
+function rsFree(pt){ try{ if(pt&&pt.src){ pt.src.width=0; pt.src.height=0; } }catch(e){} }
+function rsOtsu(hist,n){ let sum=0; for(let i=0;i<256;i++) sum+=i*hist[i]; let sB=0,wB=0,best=-1,T=128;
+  for(let i=0;i<256;i++){ wB+=hist[i]; if(!wB) continue; const wF=n-wB; if(!wF) break; sB+=i*hist[i]; const mB=sB/wB, mF=(sum-sB)/wF, v=wB*wF*(mB-mF)*(mB-mF); if(v>best){ best=v; T=i; } } return T; }
+// Ink runs along one axis: [start,end] of the printed area. Runs touching the edge of the paper (shadows, the sheet's
+// edge) and hairline specks are dropped; everything else is kept, however far apart, so no printed line is cut off.
+function rsSpan(cnt,min,len){
+  const runs=[]; let s=-1; for(let i=0;i<=cnt.length;i++){ const on=i<cnt.length&&cnt[i]>=min; if(on&&s<0) s=i; if(!on&&s>=0){ runs.push([s,i-1]); s=-1; } }
+  const keep=runs.filter(([a,b])=>!(a<=1||b>=cnt.length-2)&&b-a+1>=Math.max(1,len*.004));
+  const use=keep.length?keep:runs; if(!use.length) return null; return [use[0][0],use[use.length-1][1]];
+}
+// A suggested crop: the printed area plus a margin, kept inside the paper. null = use the whole photo.
+function rsAutoCrop(cv){
+  try{
+    const S=360, s=Math.min(1,S/Math.max(cv.width,cv.height)), w=Math.max(8,Math.round(cv.width*s)), h=Math.max(8,Math.round(cv.height*s));
+    const c=document.createElement("canvas"); c.width=w; c.height=h; const x=c.getContext("2d",{willReadFrequently:true}); x.drawImage(cv,0,0,w,h);
+    const p=x.getImageData(0,0,w,h).data, N=w*h, L=new Uint8Array(N), hist=new Uint32Array(256);
+    for(let i=0;i<N;i++){ const v=(.299*p[i*4]+.587*p[i*4+1]+.114*p[i*4+2])|0; L[i]=v; hist[v]++; }
+    const T=rsOtsu(hist,N);
+    // 1) the paper: the largest bright area (the receipt itself, or the white sheet it lies on)
+    const lab=new Uint8Array(N), st=new Int32Array(N); let bigN=0, big=null;
+    for(let i=0;i<N;i++){ if(lab[i]||L[i]<=T) continue; let sp=0,n=0,x0=w,x1=-1,y0=h,y1=-1; st[sp++]=i; lab[i]=1;
+      while(sp){ const k=st[--sp], kx=k%w, ky=(k-kx)/w; n++; if(kx<x0)x0=kx; if(kx>x1)x1=kx; if(ky<y0)y0=ky; if(ky>y1)y1=ky;
+        if(kx>0&&!lab[k-1]&&L[k-1]>T){lab[k-1]=1;st[sp++]=k-1;} if(kx<w-1&&!lab[k+1]&&L[k+1]>T){lab[k+1]=1;st[sp++]=k+1;}
+        if(ky>0&&!lab[k-w]&&L[k-w]>T){lab[k-w]=1;st[sp++]=k-w;} if(ky<h-1&&!lab[k+w]&&L[k+w]>T){lab[k+w]=1;st[sp++]=k+w;} }
+      if(n>bigN){ bigN=n; big={x0,x1,y0,y1}; } }
+    if(!big||bigN<N*.04) return null;
+    const mx=Math.round((big.x1-big.x0)*.015)+1, my=Math.round((big.y1-big.y0)*.015)+1, X0=big.x0+mx, X1=big.x1-mx, Y0=big.y0+my, Y1=big.y1-my;
+    if(X1-X0<8||Y1-Y0<8) return null;
+    // 2) the print on that paper, with its own threshold (faint thermal print is lighter than a dark table)
+    const h2=new Uint32Array(256); let n2=0; for(let yy=Y0;yy<=Y1;yy++) for(let xx=X0;xx<=X1;xx++){ h2[L[yy*w+xx]]++; n2++; }
+    const T2=rsOtsu(h2,n2); let pc=0,ps=0; for(let i=T2+1;i<256;i++){ pc+=h2[i]; ps+=i*h2[i]; } const paper=pc?ps/pc:255, cut=Math.min(T2,paper-35);
+    if(cut<=0) return null;
+    const rw=X1-X0+1, rh=Y1-Y0+1, rows=new Uint32Array(rh), cols=new Uint32Array(rw); let ink=0;
+    for(let yy=Y0;yy<=Y1;yy++) for(let xx=X0;xx<=X1;xx++){ if(L[yy*w+xx]<cut){ rows[yy-Y0]++; cols[xx-X0]++; ink++; } }
+    if(ink<n2*.002) return null;
+    const ry=rsSpan(rows,Math.max(2,rw*.01),rh); if(!ry) return null;
+    // columns only over the printed rows
+    cols.fill(0); for(let yy=Y0+ry[0];yy<=Y0+ry[1];yy++) for(let xx=X0;xx<=X1;xx++){ if(L[yy*w+xx]<cut) cols[xx-X0]++; }
+    const rx=rsSpan(cols,Math.max(2,(ry[1]-ry[0]+1)*.004),rw); if(!rx) return null;
+    const iw=rx[1]-rx[0]+1, ih=ry[1]-ry[0]+1, px=Math.max(3,iw*.08), py=Math.max(3,ih*.05);
+    const ex=(big.x1-big.x0)*.02+2, ey=(big.y1-big.y0)*.02+2;   // may reach a little past the paper's edge, never further
+    let l=Math.max(X0+rx[0]-px,big.x0-ex,0), r=Math.min(X0+rx[1]+1+px,big.x1+1+ex,w), t=Math.max(Y0+ry[0]-py,big.y0-ey,0), b=Math.min(Y0+ry[1]+1+py,big.y1+1+ey,h);
+    const box={l:l/w,t:t/h,r:r/w,b:b/h};
+    if(box.r-box.l<.08||box.b-box.t<.08) return null;
+    if(box.r-box.l>.94&&box.b-box.t>.94) return null;
+    return box;
+  }catch(e){ return null; }
+}
+// Crop and join the parts: one width for all, a labelled gap between parts (never drawn over the receipt).
+function rsJoin(parts){
+  const cr=parts.map(pt=>{ const c=pt.crop||{l:0,t:0,r:1,b:1}, W=pt.src.width, H=pt.src.height, sx=Math.round(c.l*W), sy=Math.round(c.t*H);
+    return {pt,sx,sy,sw:Math.max(1,Math.min(W-sx,Math.round((c.r-c.l)*W))),sh:Math.max(1,Math.min(H-sy,Math.round((c.b-c.t)*H)))}; });
+  const nat=Math.max(...cr.map(c=>c.sw)), tall=cr.reduce((a,c)=>a+c.sh/c.sw,0), gapF=.07*(cr.length-1);   // height per unit of width
+  let w=Math.min(RS_MAXW,Math.max(RS_MINW,nat));
+  const fitPx=Math.floor(Math.sqrt(RS_OUT_PX/(tall+gapF))), fitH=Math.floor(RS_MAXH/(tall+gapF));
+  w=Math.max(1,Math.min(w,fitPx,fitH));   // the size caps win over the preferred width
+  // join label: shrink the type until it fits the width; the gap is always taller than the label's white box
+  const mono=`"IBM Plex Mono", "Courier New", Courier, monospace`, lab=(i)=>` ▼ PART ${i+1} OF ${cr.length} · CONTINUES ▼ `, mx=document.createElement("canvas").getContext("2d");
+  let fs=Math.max(14,Math.round(w/30)); mx.font=`bold ${fs}px ${mono}`; const lw=mx.measureText(lab(cr.length-1)).width; if(lw>w*.94) fs=Math.max(6,Math.floor(fs*w*.94/lw));
+  const gap=cr.length>1?Math.max(Math.round(w*.07),Math.ceil(fs*1.8)):0, hs=cr.map(c=>Math.max(1,Math.round(c.sh*w/c.sw))), H=hs.reduce((a,b)=>a+b,0)+gap*(cr.length-1);
+  const o=document.createElement("canvas"); o.width=w; o.height=H; const g=o.getContext("2d"); g.fillStyle="#fff"; g.fillRect(0,0,w,H);
+  g.imageSmoothingQuality="high"; let y=0;
+  cr.forEach((c,i)=>{
+    if(i){ g.save(); g.strokeStyle="#000"; g.lineWidth=Math.max(2,Math.round(w/400)); g.setLineDash([Math.round(w/60),Math.round(w/90)]);
+      g.beginPath(); g.moveTo(0,y+gap/2); g.lineTo(w,y+gap/2); g.stroke(); g.setLineDash([]);
+      g.font=`bold ${fs}px ${mono}`; g.textBaseline="middle"; const t=lab(i), tw=Math.min(w,g.measureText(t).width);
+      g.fillStyle="#fff"; g.fillRect((w-tw)/2,y+gap/2-fs*.7,tw,fs*1.4); g.fillStyle="#000"; g.fillText(t,(w-tw)/2,y+gap/2); g.restore(); y+=gap; }
+    g.drawImage(c.pt.src,c.sx,c.sy,c.sw,c.sh,0,y,w,hs[i]); y+=hs[i]; });
+  return o;
+}
+// Word-wrap for the stamp: keeps "  ·  " groups together where it can.
+function rsWrap(x,parts,maxW){ const rows=[]; let line=""; parts.forEach(pp=>{ const t=line?line+"  ·  "+pp:pp; if(line&&x.measureText(t).width>maxW){ rows.push(line); line=pp; } else line=t; });
+  if(line) rows.push(line);
+  // a single group still too wide: break it on spaces, then by characters
+  const out=[]; rows.forEach(r=>{ if(x.measureText(r).width<=maxW){ out.push(r); return; } let cur="";
+    r.split(" ").forEach(wd=>{ const t=cur?cur+" "+wd:wd; if(cur&&x.measureText(t).width>maxW){ out.push(cur); cur=wd; } else cur=t;
+      let ch=Array.from(cur); while(ch.length>1&&x.measureText(cur).width>maxW){ let k=ch.length-1; while(k>1&&x.measureText(ch.slice(0,k).join("")).width>maxW) k--; out.push(ch.slice(0,k).join("")); ch=ch.slice(k); cur=ch.join(""); } });
+    if(cur) out.push(cur); });
+  return out; }
 RENDER.stamp=function(){
   const b=$("b-stamp"), d=db(), p=PARAMS;
   // Setup link opened this page?
@@ -2029,6 +2126,7 @@ RENDER.stamp=function(){
       <label class="btn">Choose photo<input type="file" accept="image/*" id="rsPick" hidden></label>
       <button class="btn" type="button" id="rsRot" aria-label="Rotate photo">&#8635; Rotate</button>
     </div>
+    <div id="rsParts"></div>
     <div class="toolpane">
       <label class="f">Date<input type="date" id="rsDate" class="fld" value="${esc(todayYMD())}"></label>
       <label class="f">Type<select id="rsType" class="fld">${R.types.map(t=>`<option>${t}</option>`).join("")}</select></label>
@@ -2047,7 +2145,10 @@ RENDER.stamp=function(){
       <div class="auto" id="rsAutoOdo"></div><div class="auto" id="rsAutoCard"></div>
     </div>
     <div id="rsWarn"></div>
-    <div class="rs-prev"><canvas id="rsCanvas" aria-label="Stamped receipt preview" hidden></canvas><div class="muted" id="rsEmpty">Take a photo of the receipt on a plain white background.</div></div>
+    <div class="rs-crop" id="rsCropBox" hidden><div class="lbl" id="rsCropLbl">Crop</div><p class="muted" style="margin:2px 0 6px">Drag the yellow edges so the whole receipt is inside the box, from the station name at the top to the totals at the bottom.</p>
+      <canvas id="rsCropCv" aria-label="Crop the receipt photo"></canvas>
+      <div class="toolrow" style="margin-top:6px"><button class="btn rs-big" type="button" id="rsCropOk">Done</button><button class="btn" type="button" id="rsCropAuto">Auto</button><button class="btn" type="button" id="rsCropAll">Whole photo</button><button class="btn" type="button" id="rsCropNo">Cancel</button></div></div>
+    <div class="rs-prev" id="rsPrev"><canvas id="rsCanvas" aria-label="Stamped receipt preview" hidden></canvas><div class="muted" id="rsEmpty">Take a photo of the receipt on a plain white background. Long receipt? Photograph the top first; you can add the rest as a second part.</div></div>
     <div><div class="rs-fname" id="rsFile"></div>
       <div class="toolrow"><button class="btn rs-big" type="button" id="rsShare">Share</button><button class="btn" type="button" id="rsDl">Save</button><button class="btn" type="button" id="rsNext">Next receipt</button><button class="btn" type="button" id="rsVoy" hidden>Save a copy anyway (not for LOGSTAT)</button></div>
       <div class="msg" id="rsMsg" role="status"></div></div>
@@ -2081,8 +2182,10 @@ RENDER.stamp=function(){
     if(type==="FUEL"&&(num(q("#rsGal").value)===null||num(q("#rsAmt").value)===null)) W.push(["warn","Enter gallons and amount so they're on the stamp."]);
     if(type==="TOLL"&&(!q("#rsLoc").value.trim()||num(q("#rsAmt").value)===null)) W.push(["bad","Enter the toll amount and location."]);
     if(type==="TOLL") W.push(["info","Tolls: write the amount, location and date on your 1970, and file a TEC."]);
-    if(RS.q&&RS.q.blurry) W.push(["warn","Photo looks blurry. Retake it if anything is hard to read."]);
-    if(RS.q&&RS.q.dark) W.push(["warn","The edges look dark. Put the receipt on a plain white background."]);
+    const many=RS.parts.length>1;
+    if(RS.parts.some(pt=>pt.q&&pt.q.blurry)) W.push(["warn",many?"A part looks blurry. Retake it if anything is hard to read.":"Photo looks blurry. Retake it if anything is hard to read."]);
+    if(RS.parts.some(pt=>pt.q&&pt.q.dark)) W.push(["warn","The edges look dark. Put the receipt on a plain white background."]);
+    if(many) W.push(["info",`${RS.parts.length} photos will be joined top to bottom as one receipt. Check each join in the preview so no line is missing.`]);
     q("#rsWarn").innerHTML=W.map(([k,t])=>`<div class="w ${k}">${k==="bad"?"✖︎":k==="info"?"ℹ︎":"⚠︎"} ${esc(t)}</div>`).join("");
     // automatic pre-check lines
     const needOdo=v&&i.tracks!=="none"&&type==="FUEL";
@@ -2103,34 +2206,92 @@ RENDER.stamp=function(){
     const note=q("#rsNote").value.trim(); if(note) L.push([note]);
     return L;
   }
-  function draw(){
-    const c=q("#rsCanvas"); warnings(); q("#rsFile").textContent=fileName();
-    const ok=preOK(), W=warnings(), blocked=W.some(w=>w[0]==="bad");
-    q("#rsShare").disabled=!RS.img||!ok||blocked; q("#rsDl").disabled=q("#rsShare").disabled;
-    if(!RS.img){ c.hidden=true; q("#rsEmpty").hidden=false; return; }
+  let paintT=0;
+  function draw(later){
+    const c=q("#rsCanvas"); q("#rsFile").textContent=fileName();
+    const ok=preOK(), W=warnings(), blocked=W.some(w=>w[0]==="bad"), editing=RS.crop>=0&&!!RS.parts[RS.crop];
+    if(RS.parts.length&&!RS.comp) rebuild();
+    q("#rsShare").disabled=!RS.comp||!ok||blocked||editing; q("#rsDl").disabled=q("#rsShare").disabled;
+    q("#rsPrev").hidden=editing;
+    if(!RS.comp){ c.hidden=true; q("#rsEmpty").hidden=false; return; }
     c.hidden=false; q("#rsEmpty").hidden=true;
-    const img=RS.img, rot=RS.rot, rw=rot%180?img.height:img.width, rh=rot%180?img.width:img.height, Wd=Math.max(rw,900), sc=Wd/rw;
-    const fs=Math.round(Wd/30), lh=Math.round(fs*1.32), pd=Math.round(fs*.7), x=c.getContext("2d");
-    x.font=`bold ${fs}px "IBM Plex Mono", "Courier New", Courier, monospace`;
-    const rows=[]; lines().forEach(parts=>{ let line=""; parts.forEach(pp=>{ const t=line?line+"  ·  "+pp:pp; if(line&&x.measureText(t).width>Wd-2*pd){ rows.push(line); line=pp; } else line=t; }); rows.push(line); });
-    const now=new Date(), foot=`Stamped digitally ${plain(E.ymdOf(now))} ${E.pad(now.getHours())}:${E.pad(now.getMinutes())} · receipt photo above, not edited`;
-    const band=pd*2+rows.length*lh+Math.round(lh*.8), H=Math.round(rh*sc)+band;
-    c.width=Wd; c.height=H; const g=c.getContext("2d");
-    g.fillStyle="#fff"; g.fillRect(0,0,Wd,H);
-    g.save(); g.translate(Wd/2,(H-band)/2); g.rotate(rot*Math.PI/180); g.scale(sc,sc); g.drawImage(img,-img.width/2,-img.height/2); g.restore();
-    g.fillStyle="#000"; g.fillRect(0,H-band,Wd,Math.max(3,Math.round(fs/8)));
-    g.font=`bold ${fs}px "IBM Plex Mono", "Courier New", Courier, monospace`; g.textBaseline="top";
-    rows.forEach((t,i)=>g.fillText(t,pd,H-band+pd+i*lh));
-    g.font=`${Math.max(14,Math.round(fs*.62))}px "IBM Plex Mono", "Courier New", Courier, monospace`; g.fillStyle="#333"; g.fillText(foot,pd,H-band+pd+rows.length*lh+Math.round(lh*.1));
+    clearTimeout(paintT); if(later){ paintT=setTimeout(()=>{ if(b.isConnected) draw(); },150); return; }
+    // Normal receipt: stamp below. Very tall receipt: stamp in a column beside it, starting at the top.
+    const img=RS.comp, rw=img.width, rh=img.height, side=rh/rw>RS_SIDE, n=RS.parts.length, cropped=RS.parts.some(pt=>!!pt.crop), now=new Date();
+    const foot=`Stamped digitally ${plain(E.ymdOf(now))} ${E.pad(now.getHours())}:${E.pad(now.getMinutes())} · receipt photo ${side?"at left":"above"}${n>1?` (${n} photos of one receipt, joined top to bottom at the marked lines)`:""}${cropped?", cropped to the receipt, not otherwise edited":", not edited"}`;
+    const mono=`"IBM Plex Mono", "Courier New", Courier, monospace`, x=c.getContext("2d");
+    let Wd,sc,colX,colW,fs;
+    if(side){ colW=Math.round(Math.max(rw*.85,560)); Wd=rw+colW; sc=1; colX=rw; fs=Math.round(colW/21); }
+    else { Wd=Math.max(rw,RS_MINW); sc=Wd/rw; colX=0; colW=Wd; fs=Math.round(Wd/30); }
+    const lh=Math.round(fs*1.32), pd=Math.round(fs*.7), rule=Math.max(3,Math.round(fs/8)), ffs=Math.max(14,Math.round(fs*.62)), flh=Math.round(ffs*1.3), inner=colW-2*pd-(side?rule:0);
+    x.font=`bold ${fs}px ${mono}`; const rows=[]; lines().forEach(parts=>rsWrap(x,parts,inner).forEach(r=>rows.push(r)));
+    x.font=`${ffs}px ${mono}`; const frows=rsWrap(x,[foot],inner);
+    const imgW=Math.round(rw*sc), imgH=Math.round(rh*sc), textH=pd*2+rows.length*lh+Math.round(lh*.1)+frows.length*flh, H=side?Math.max(imgH,textH):imgH+textH;
+    c.width=Wd; c.height=H; c.classList.toggle("tall",H/Wd>1.6); const g=c.getContext("2d");
+    g.fillStyle="#fff"; g.fillRect(0,0,Wd,H); g.imageSmoothingQuality="high"; g.drawImage(img,0,0,imgW,imgH);
+    const ty=side?0:imgH, tx=colX+pd+(side?rule:0);
+    g.fillStyle="#000"; if(side) g.fillRect(colX,0,rule,H); else g.fillRect(0,ty,Wd,rule);
+    g.font=`bold ${fs}px ${mono}`; g.textBaseline="top"; rows.forEach((t,i)=>g.fillText(t,tx,ty+pd+i*lh));
+    g.font=`${ffs}px ${mono}`; g.fillStyle="#333"; frows.forEach((t,i)=>g.fillText(t,tx,ty+pd+rows.length*lh+Math.round(lh*.1)+i*flh));
   }
-  async function loadPhoto(f){
-    if(!f) return; msg("Loading photo…");
+  function rebuild(){
+    const old=RS.comp; RS.comp=null; try{ if(old){ old.width=0; old.height=0; } }catch(e){}
+    if(!RS.parts.length) return;
+    try{ RS.comp=rsJoin(RS.parts); }catch(e){ RS.comp=null; msg("This phone couldn't put the photo together. Remove a part or retake the photo."); }
+  }
+  function resetRead(){ RS.pre.read=false; const r=b.querySelector('[data-pre="read"]'); if(r) r.checked=false; }
+  function partsUI(){
+    const box=q("#rsParts"), n=RS.parts.length; q("#rsRot").textContent=n>1?`↻ Rotate part ${n}`:"↻ Rotate"; q("#rsRot").setAttribute("aria-label",n>1?`Rotate part ${n}`:"Rotate photo");
+    if(!n){ box.innerHTML=""; return; }
+    const how=pt=>pt.crop?(pt.how==="hand"?"cropped by hand":"cropped automatically"):"whole photo";
+    box.innerHTML=`<div class="rs-parts"><div class="muted">${n===1?(RS.parts[0].crop?`Photo ${how(RS.parts[0])}.`:"Using the whole photo."):RS.parts.map((pt,i)=>`Part ${i+1}: ${how(pt)}`).join(" · ")}</div>
+      <div class="toolrow">${RS.parts.map((pt,i)=>`<button class="btn" type="button" data-crop="${i}"><span aria-hidden="true">✂︎</span> ${n>1?`Crop part ${i+1}`:"Adjust crop"}</button>`).join("")}${n<RS_MAXPARTS?`<label class="btn" tabindex="0" role="button" id="rsAddL"><span aria-hidden="true">＋</span> Add next part<input type="file" accept="image/*" id="rsAdd" hidden></label>`:""}${n>1?`<button class="btn" type="button" id="rsDelPart">Remove part ${n}</button>`:""}</div>
+      <p class="muted" style="margin:4px 0 0">${n<RS_MAXPARTS?"Receipt too long for one photo? Photograph the top first, then tap <b>＋ Add next part</b> for the rest. Overlap a line or two so nothing is skipped.":`That's the most parts for one receipt (${RS_MAXPARTS}).`}</p></div>`;
+  }
+  // Photos load one at a time, in the order chosen. A load that finishes after the receipt was cleared (Next receipt,
+  // a new first photo, practice/real switch) is thrown away, so a slow photo can never land on the wrong receipt.
+  function loadPhoto(f,add){ if(!f) return; const S=RS; if(!add) S.gen=(S.gen||0)+1; const gen=S.gen||0;
+    S.chain=(S.chain||Promise.resolve()).then(()=>loadOne(S,gen,f,add)).catch(()=>{}); }
+  async function loadOne(S,gen,f,add){
+    const stale=()=>RS!==S||(S.gen||0)!==gen, say=(t)=>{ const m=$("rsMsg"); if(m&&RS===S) m.textContent=t; };
+    if(stale()) return; if(add&&S.parts.length>=RS_MAXPARTS){ say(`Up to ${RS_MAXPARTS} parts per receipt.`); return; }
+    say(add?"Adding part…":"Loading photo…"); let src=null;
     try{
-      let bm; try{ bm=await createImageBitmap(f,{imageOrientation:"from-image"}); }catch(e){ bm=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=URL.createObjectURL(f); }); }
-      const max=2000, s=Math.min(1,max/Math.max(bm.width,bm.height)), cv=document.createElement("canvas"); cv.width=Math.round(bm.width*s); cv.height=Math.round(bm.height*s);
-      cv.getContext("2d").drawImage(bm,0,0,cv.width,cv.height); RS.img=cv; RS.rot=0; RS.pre={}; b.querySelectorAll("[data-pre]").forEach(x=>x.checked=false); RS.q=await photoQuality(cv); msg(""); draw();
-      q("#rsGal").focus({preventScroll:true});
-    }catch(e){ msg("Couldn't open that photo. Try again or choose a JPEG or PNG."); }
+      src=await rsLoadSrc(f); if(stale()){ rsFree({src}); return; }
+      const auto=rsAutoCrop(src), qq=await photoQuality(src); if(stale()){ rsFree({src}); return; }
+      if(add&&S.parts.length>=RS_MAXPARTS){ rsFree({src}); say(`Up to ${RS_MAXPARTS} parts per receipt.`); return; }
+      if(!add){ S.parts.forEach(rsFree); S.parts=[]; }
+      S.parts.push({src,auto,crop:auto,how:auto?"auto":"whole",q:qq}); S.crop=-1; S.pre={};
+      if(!b.isConnected){ try{ if(S.comp){ S.comp.width=0; S.comp.height=0; } }catch(_){} S.comp=null; const v=$("v-stamp"); if(v&&!v.hidden) route(); say(add?`Added part ${S.parts.length}. Check the join in the preview.`:""); return; }
+      b.querySelectorAll("[data-pre]").forEach(x=>x.checked=false);
+      rebuild(); msg(add?`Added part ${S.parts.length}. Check the join in the preview.`:""); partsUI(); cropUI(); draw();
+      if(!add) q("#rsGal").focus({preventScroll:true});
+    }catch(e){ if(src) rsFree({src}); if(!stale()) say("Couldn't open that photo. Try again or choose a JPEG or PNG."); }
+  }
+  // Crop editor: drag the edges (or the whole box). Nothing changes until Done.
+  function cropUI(){
+    const box=q("#rsCropBox"), pt=RS.crop>=0?RS.parts[RS.crop]:null; box.hidden=!pt; if(!pt){ RS.crop=-1; return; }
+    if(!pt.edit) pt.edit=Object.assign({},pt.crop||{l:0,t:0,r:1,b:1});
+    const n=RS.parts.length, cv=q("#rsCropCv"), S=pt.src, k=Math.min(1,1200/Math.max(S.width,S.height));
+    q("#rsCropLbl").textContent=n>1?`Crop part ${RS.crop+1} of ${n}`:"Crop the receipt"; q("#rsCropAuto").disabled=!pt.auto;
+    cv.width=Math.max(1,Math.round(S.width*k)); cv.height=Math.max(1,Math.round(S.height*k)); paintCrop();
+  }
+  function paintCrop(){
+    const pt=RS.parts[RS.crop]; if(!pt||!pt.edit) return; const cv=q("#rsCropCv"), g=cv.getContext("2d"), W=cv.width, H=cv.height, c=pt.edit;
+    g.fillStyle="#fff"; g.fillRect(0,0,W,H); g.drawImage(pt.src,0,0,W,H); const l=c.l*W, t=c.t*H, r=c.r*W, bt=c.b*H;
+    g.fillStyle="rgba(0,0,0,.55)"; g.fillRect(0,0,W,t); g.fillRect(0,bt,W,H-bt); g.fillRect(0,t,l,bt-t); g.fillRect(r,t,W-r,bt-t);
+    const lw=Math.max(2,Math.round(Math.max(W,H)/300)), hs=Math.max(12,Math.round(Math.max(W,H)/45)), mx=(l+r)/2, my=(t+bt)/2;
+    g.strokeStyle="#ffd400"; g.lineWidth=lw; g.strokeRect(l,t,r-l,bt-t); g.fillStyle="#ffd400";
+    [[l,t],[r,t],[l,bt],[r,bt]].forEach(([a,z])=>g.fillRect(a-hs/2,z-hs/2,hs,hs));
+    g.fillRect(mx-hs,t-lw*1.5,hs*2,lw*3); g.fillRect(mx-hs,bt-lw*1.5,hs*2,lw*3); g.fillRect(l-lw*1.5,my-hs,lw*3,hs*2); g.fillRect(r-lw*1.5,my-hs,lw*3,hs*2);
+  }
+  function startCrop(i){ const pt=RS.parts[i]; if(!pt) return; RS.crop=i; pt.edit=Object.assign({},pt.crop||{l:0,t:0,r:1,b:1}); cropUI(); draw(); q("#rsCropOk").focus({preventScroll:true}); q("#rsCropBox").scrollIntoView({block:"start",behavior:"smooth"}); }
+  function endCrop(apply){
+    const pt=RS.parts[RS.crop];
+    if(pt&&apply){ const e=pt.edit, all=e.l<=.001&&e.t<=.001&&e.r>=.999&&e.b>=.999, same=pt.auto&&["l","t","r","b"].every(k=>Math.abs(pt.auto[k]-e[k])<1e-6);
+      pt.crop=all?null:{l:e.l,t:e.t,r:e.r,b:e.b}; pt.how=all?"whole":same?"auto":"hand"; resetRead(); rebuild(); }
+    const at=RS.crop; if(pt) pt.edit=null; RS.crop=-1; partsUI(); cropUI(); draw();
+    const back=q(`[data-crop="${at}"]`); if(back) back.focus({preventScroll:true});
   }
   const blob=()=>new Promise(res=>{ draw(); q("#rsCanvas").toBlob(x=>res(x),"image/jpeg",0.85); });
   function record(name){
@@ -2139,13 +2300,13 @@ RENDER.stamp=function(){
     if(v&&q("#rsOdo").value.trim()){ v.lastOdo=q("#rsOdo").value.trim(); }
     save(); fillLog();
   }
-  function ready(){ const W=warnings(); if(!RS.img){ msg("Take a photo of the receipt first."); return false; } if(!preOK()){ msg("Tick the three pre-check boxes first."); return false; } if(W.some(w=>w[0]==="bad")){ msg("Fix the items marked ✖︎ first."); return false; } return true; }
+  function ready(){ const W=warnings(); if(RS.crop>=0){ msg("Tap Done on the crop first."); return false; } if(!RS.comp){ msg("Take a photo of the receipt first."); return false; } if(!preOK()){ msg("Tick the three pre-check boxes first."); return false; } if(W.some(w=>w[0]==="bad")){ msg("Fix the items marked ✖︎ first."); return false; } return true; }
   // "Today's" = stamped today (by when it was stamped), so a receipt backdated to yesterday still reaches the operator.
   function todays(){ const t=todayYMD(); return d.rc.filter(r=>r.src==="field"&&(r.t?E.ymdOf(new Date(r.t))===t:r.date===t)&&(!org||r.org===org.id)); }
   function fillLog(){ const L=todays(); q("#rsCount").textContent=L.length?`(${L.length})`:"";
     q("#rsLog").innerHTML=L.length?`<ul class="ihelp">${L.map(x=>{ const v=vehById(x.veh); return `<li><b>${esc(x.file)}</b><br><span class="muted">${esc(v?vname(v,org):"")} · ${esc(x.type)}${x.gal?` · ${esc(x.gal)} gal`:""}${x.amt?` · $${esc(x.amt)}`:""}${x.odo?` · ${esc(x.odo)}`:""} · ${esc(x.card)}</span></li>`; }).join("")}</ul>`:`<div class="muted">None yet today.</div>`; }
   async function shareNow(force){
-    if(!force&&!ready()) return; if(force&&(!RS.img||!preOK())){ msg(!RS.img?"Take a photo first.":"Tick the three pre-check boxes first."); return; }
+    if(!force&&!ready()) return; if(force&&(RS.crop>=0||!RS.comp||!preOK())){ msg(RS.crop>=0?"Tap Done on the crop first.":!RS.comp?"Take a photo first.":"Tick the three pre-check boxes first."); return; }
     const bl=await blob(), name=fileName(), file=new File([bl],name,{type:"image/jpeg"});
     if(navigator.canShare&&navigator.canShare({files:[file]})){
       try{ await navigator.share({files:[file],title:name}); record(name); msg(`Shared ${name}. The paper original goes in the binder sleeve; turn it in at end of mission.`); }
@@ -2176,7 +2337,32 @@ RENDER.stamp=function(){
   // events
   q("#rsCam").addEventListener("change",(e)=>{ loadPhoto(e.target.files[0]); e.target.value=""; });
   q("#rsPick").addEventListener("change",(e)=>{ loadPhoto(e.target.files[0]); e.target.value=""; });
-  q("#rsRot").addEventListener("click",()=>{ RS.rot=(RS.rot+90)%360; draw(); });
+  q("#rsRot").addEventListener("click",()=>{ const pt=RS.parts[RS.parts.length-1]; if(!pt){ msg("Take a photo first."); return; } if(RS.crop>=0) endCrop(false);
+    const old=pt.src; pt.src=rsTurn(old); rsFree({src:old}); pt.auto=rsAutoCrop(pt.src); pt.crop=pt.auto; pt.how=pt.auto?"auto":"whole"; resetRead(); rebuild(); partsUI(); draw(); });
+  q("#rsParts").addEventListener("click",(e)=>{ const c=e.target.closest("[data-crop]"); if(c){ startCrop(+c.dataset.crop); return; }
+    if(e.target.closest("#rsDelPart")&&RS.parts.length>1){ if(RS.crop>=0) endCrop(false); rsFree(RS.parts.pop()); resetRead(); rebuild(); msg(""); partsUI(); draw(); } });
+  q("#rsParts").addEventListener("keydown",(e)=>{ if(e.target.id==="rsAddL"&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); q("#rsAdd").click(); } });
+  q("#rsParts").addEventListener("change",(e)=>{ if(e.target.id==="rsAdd"){ loadPhoto(e.target.files[0],true); e.target.value=""; } });
+  q("#rsCropOk").addEventListener("click",()=>endCrop(true));
+  q("#rsCropNo").addEventListener("click",()=>endCrop(false));
+  q("#rsCropAuto").addEventListener("click",()=>{ const pt=RS.parts[RS.crop]; if(pt&&pt.auto){ pt.edit=Object.assign({},pt.auto); paintCrop(); } });
+  q("#rsCropAll").addEventListener("click",()=>{ const pt=RS.parts[RS.crop]; if(pt){ pt.edit={l:0,t:0,r:1,b:1}; paintCrop(); } });
+  (function(){ const cv=q("#rsCropCv"); let drag=null; const MIN=.04, cl=(v)=>Math.min(1,Math.max(0,v));
+    const at=(e)=>{ const rc=cv.getBoundingClientRect(); return [cl((e.clientX-rc.left)/rc.width),cl((e.clientY-rc.top)/rc.height),rc]; };
+    cv.addEventListener("pointerdown",(e)=>{ const pt=RS.parts[RS.crop]; if(!pt||!pt.edit) return; const [fx,fy,rc]=at(e), c=pt.edit, tx=Math.min(32/rc.width,(c.r-c.l)*.25), ty=Math.min(32/rc.height,(c.b-c.t)*.25);
+      let ex=null, ey=null; const inY=fy>c.t-ty&&fy<c.b+ty, inX=fx>c.l-tx&&fx<c.r+tx;
+      if(inY){ const dl=Math.abs(fx-c.l), dr=Math.abs(fx-c.r); if(Math.min(dl,dr)<tx) ex=dl<=dr?"l":"r"; }
+      if(inX){ const dt=Math.abs(fy-c.t), dbt=Math.abs(fy-c.b); if(Math.min(dt,dbt)<ty) ey=dt<=dbt?"t":"b"; }
+      if(!ex&&!ey){ if(fx>c.l&&fx<c.r&&fy>c.t&&fy<c.b) drag={move:true,fx,fy,c0:Object.assign({},c)}; else drag={ex:fx<c.l?"l":fx>c.r?"r":null,ey:fy<c.t?"t":fy>c.b?"b":null}; }
+      else drag={ex,ey};
+      try{ cv.setPointerCapture(e.pointerId); }catch(_){} e.preventDefault(); move(e); });
+    function move(e){ const pt=RS.parts[RS.crop]; if(!drag||!pt||!pt.edit) return; const [fx,fy]=at(e), c=pt.edit;
+      if(drag.move){ const c0=drag.c0, w=c0.r-c0.l, h=c0.b-c0.t, l=Math.min(Math.max(0,c0.l+fx-drag.fx),1-w), t=Math.min(Math.max(0,c0.t+fy-drag.fy),1-h); c.l=l; c.r=l+w; c.t=t; c.b=t+h; }
+      else { if(drag.ex==="l") c.l=Math.min(fx,c.r-MIN); if(drag.ex==="r") c.r=Math.max(fx,c.l+MIN); if(drag.ey==="t") c.t=Math.min(fy,c.b-MIN); if(drag.ey==="b") c.b=Math.max(fy,c.t+MIN); }
+      paintCrop(); }
+    cv.addEventListener("pointermove",(e)=>{ if(drag){ e.preventDefault(); move(e); } });
+    ["pointerup","pointercancel","lostpointercapture"].forEach(t=>cv.addEventListener(t,()=>{ drag=null; }));
+  })();
   const paintType=()=>{ const t=q("#rsType").value, v=cur(), i=v?E.info(R,v):null; b.querySelectorAll("[data-toll]").forEach(x=>x.hidden=t!=="TOLL"); b.querySelectorAll("[data-fuel]").forEach(x=>x.hidden=t==="TOLL"||(i&&i.tracks==="none"));
     b.querySelectorAll("[data-odo]").forEach(x=>x.hidden=!!(i&&i.tracks==="none"));
     q("#rsOdoLbl").textContent=i&&i.tracks==="hrs"?"Hours at the pump":"Odometer at the pump"; q("#rsSodoLbl").textContent=i&&i.tracks==="hrs"?"This morning's start hours":"This morning's start reading";
@@ -2186,17 +2372,17 @@ RENDER.stamp=function(){
   if(RS.f&&RS.f.org===(org&&org.id)) FIELDS.forEach(s=>{ if(RS.f[s]!==undefined&&(s!=="#rsDate"||RS.f.dateSet)) q(s).value=RS.f[s]; }); else RS.f=null;
   b.querySelectorAll("[data-pre]").forEach(x=>{ x.checked=!!RS.pre[x.dataset.pre]; });
   const keep=(dateSet)=>{ const ds=dateSet||!!(RS.f&&RS.f.dateSet); RS.f={org:org&&org.id,dateSet:ds}; FIELDS.forEach(s=>{ RS.f[s]=q(s).value; }); };
-  FIELDS.forEach(s=>q(s).addEventListener("input",()=>{ keep(s==="#rsDate"); if(s==="#rsType"||s==="#rsDate") paintType(); draw(); }));
+  FIELDS.forEach(s=>q(s).addEventListener("input",()=>{ keep(s==="#rsDate"); if(s==="#rsType"||s==="#rsDate") paintType(); draw(true); }));
   q("#rsSodo").addEventListener("change",(e)=>{ const v=cur(); if(!v) return; dayRec(v.id,dateV()).sodo=e.target.value.replace(/[^\d.]/g,"").slice(0,12); save(); draw(); });
   q("#rsVeh").addEventListener("change",(e)=>{ RS.veh=e.target.value; paintType(); draw(); });
   b.querySelector("#rsPre").addEventListener("change",(e)=>{ const k=e.target.dataset.pre; if(k){ RS.pre[k]=e.target.checked; draw(); } });
   q("#rsShare").addEventListener("click",()=>shareNow(false));
   q("#rsVoy").addEventListener("click",()=>shareNow(true));
   q("#rsDl").addEventListener("click",async()=>{ if(!ready()) return; const name=fileName(); dl(await blob(),name); record(name); msg(`Saved ${name} to your downloads. The paper original goes in the binder sleeve.`); });
-  q("#rsNext").addEventListener("click",()=>{ RS.img=null; RS.rot=0; RS.q=null; RS.pre={}; RS.f=null; b.querySelectorAll("[data-pre]").forEach(x=>x.checked=false); ["#rsGal","#rsAmt","#rsOdo","#rsNote","#rsLoc"].forEach(s=>q(s).value=""); q("#rsCard").value="WEX"; q("#rsType").value="FUEL"; msg(""); paintType(); draw(); });
+  q("#rsNext").addEventListener("click",()=>{ RS.gen=(RS.gen||0)+1; RS.parts.forEach(rsFree); RS.parts=[]; RS.crop=-1; rebuild(); partsUI(); cropUI(); RS.pre={}; RS.f=null; b.querySelectorAll("[data-pre]").forEach(x=>x.checked=false); ["#rsGal","#rsAmt","#rsOdo","#rsNote","#rsLoc"].forEach(s=>q(s).value=""); q("#rsCard").value="WEX"; q("#rsType").value="FUEL"; msg(""); paintType(); draw(); });
   q("#rsCopyLS").addEventListener("click",()=>{ const L=todays(); if(!L.length){ toast("No receipts sent today yet."); return; } copyText(L.map(r=>E.makeLS1(r,org,vehById(r.veh))).join("\n"),`Copied ${L.length} line${L.length>1?"s":""}. Text them to your operator with the photos.`); });
   q("#rsCopyList").addEventListener("click",()=>{ const L=todays(); copyText([`RECEIPTS ${plain(todayYMD())} — ${org?org.to:""} — MRT# ${org?org.mrt:""}`,...L.map(x=>`${x.file}  ${x.type}${x.gal?`  ${x.gal} gal`:""}${x.amt?`  $${x.amt}`:""}${x.odo?`  odo ${x.odo}`:""}  ${x.card}`)].join("\n")); });
-  paintType(); fillLog(); draw();
+  paintType(); fillLog(); partsUI(); cropUI(); draw();
   if(!org&&!RS.pendingSetup) q("#rsSetup").open=true;
 };
 
