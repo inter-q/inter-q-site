@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-0624M+x2tTdcQr4GoWKaMueMAl6TW30fjxdtqh1Yuf8=' 'sha256-fl6ng+2J2ekxqb24MfkTOslpUISh0bFihp0nNA+rt2U=' 'sha256-fmtRY/Ht4xK3nSYBK0mBNgGXQqXKTl95qCuCpXxakBg=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-pW03XpYLka+/MQ0J6PMkDchzsTtKyzSUZt0bGjpqbKg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-0624M+x2tTdcQr4GoWKaMueMAl6TW30fjxdtqh1Yuf8=' 'sha256-fmtRY/Ht4xK3nSYBK0mBNgGXQqXKTl95qCuCpXxakBg=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-pW03XpYLka+/MQ0J6PMkDchzsTtKyzSUZt0bGjpqbKg=' 'sha256-sxjCFNsZwiNeSk/n/YhjBj58KRvHFslYkFVKhV8e3xA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-13 13:32">
+<meta name="logstat-build" content="2026-10-14 08:36">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1299,6 +1299,8 @@
   .report .rp-l { margin:0; padding-left:18px; } .report .rp-f { color:#5f6368; font-size:11px; margin-top:14px; }
   @media print { #printArea .report { font-size:11px; } #printArea .report .rp-charts { grid-template-columns:1fr 1fr; } #printArea .report th { background:#eef0f2 !important; } #printArea .rp-kv th { background:#eef0f2 !important; } }
   .report th { text-transform:none; letter-spacing:normal; font-size:inherit; }
+  .rolepick { border-color:var(--bright); } .rolebar { font-size:13px; margin-top:4px; } .rolebar a { color:var(--link); }
+  .merge .mlist { margin:4px 0; padding-left:18px; } .merge .mlist li { margin:2px 0; }
 
 </style>
 </head>
@@ -1692,12 +1694,12 @@ const copyBtn=(label,getText,msg)=>{ const b=el(`<button class="btn" type="butto
 // ---------- saved data ----------
 const KEY="iq.logstat.v1", PKEY="iq.logstat.practice.v1", OLD="iq.logstat.stamper.v1";
 const CATS=["tac","ntv","rent","nstd"], SUBS=Object.keys(R.subs);
-function fresh(){ return {v:1,me:{opr:"",cert:"",contacts:""},orgs:[],org:"",veh:[],days:{},rc:[],chk:{},f1970:{},forms:{hdr:{},plate:{},all:false,day:{},sig:{}},quiz:{miss:{},rev:{},hist:[]},train:{},mig:0}; }
+function fresh(){ return {v:1,me:{opr:"",cert:"",contacts:""},orgs:[],org:"",veh:[],days:{},rc:[],chk:{},f1970:{},forms:{hdr:{},plate:{},all:false,day:{},sig:{}},stamp:{},tomb:{},alias:{},hlc:"",quiz:{miss:{},rev:{},hist:[]},train:{},mig:0}; }
 // Repaired field by field, so an older or damaged copy can't stop the app from opening.
 function repair(o){
   const D=fresh(); if(!o||typeof o!=="object"||o.v!==1) return D;
   const s=(v,n=80)=>typeof v==="string"?v.slice(0,n):(typeof v==="number"?String(v):""), ymd=(v)=>E.isYMD(v)?v:"", b=(v)=>v===true;
-  const me=o.me||{}; D.me={opr:s(me.opr,60),cert:s(me.cert,60),contacts:s(me.contacts,600),bk:ymd(me.bk)};
+  const me=o.me||{}; D.me={opr:s(me.opr,60),cert:s(me.cert,60),contacts:s(me.contacts,600),bk:ymd(me.bk),role:["driver","operator","lead","all"].includes(me.role)?me.role:""};
   D.orgs=(Array.isArray(o.orgs)?o.orgs:[]).filter(x=>x&&typeof x==="object"&&s(x.id)).slice(0,30).map(x=>({id:s(x.id,20),to:s(x.to,40),mrt:s(x.mrt,40),digits:x.digits===6?6:8,start:ymd(x.start),jumpMi:s(x.jumpMi,6),jumpHr:s(x.jumpHr,6)}));
   D.org=D.orgs.some(x=>x.id===o.org)?o.org:(D.orgs[0]?D.orgs[0].id:"");
   const orgIds=new Set(D.orgs.map(x=>x.id));
@@ -1721,14 +1723,38 @@ function repair(o){
   const q=o.quiz||{}; ["miss","rev"].forEach(k=>{ if(q[k]&&typeof q[k]==="object") Object.keys(q[k]).slice(0,200).forEach(i=>{ const n=+q[k][i]; if(n>0) D.quiz[k][s(i,10)]=Math.min(n,99); }); });
   D.quiz.hist=(Array.isArray(q.hist)?q.hist:[]).slice(-30).map(h=>({d:ymd(h&&h.d),sc:+(h&&h.sc)||0,n:+(h&&h.n)||0}));
   if(o.train&&typeof o.train==="object") Object.keys(o.train).slice(0,20).forEach(k=>{ const t=o.train[k]; if(t&&typeof t==="object") D.train[s(k,10)]={sc:+t.sc||0,n:+t.n||0,d:ymd(t.d)}; });
+  ["stamp","tomb"].forEach(k=>{ const m=o[k]; if(m&&typeof m==="object") Object.keys(m).slice(0,60000).forEach(i=>{ if(/^[ovdrcfhp]:/.test(i)&&typeof m[i]==="string"&&/^[0-9a-z]{1,12}$/.test(m[i])) D[k][i.slice(0,80)]=m[i]; }); });
+  if(o.alias&&typeof o.alias==="object") Object.keys(o.alias).slice(-4000).forEach(i=>{ const v=o.alias[i]; if(/^[vr]:[0-9a-z]{1,24}$/.test(i)&&typeof v==="string"&&/^[0-9a-z]{1,24}$/.test(v)) D.alias[i]=v; });
+  if(typeof o.hlc==="string"&&/^[0-9a-z]{1,12}$/.test(o.hlc)) D.hlc=o.hlc;
   D.mig=o.mig===1?1:0;
   return D;
 }
 function loadKey(k){ try{ return repair(JSON.parse(localStorage.getItem(k)||"null")); }catch(e){ return fresh(); } }
+// ---------- change stamps (so two phones' board files can be merged, newest entry winning) ----------
+// At every save, each record is compared with its last saved copy; a changed one gets the time (d.stamp[key], base-36 ms),
+// a removed one leaves a tombstone (d.tomb[key]). No screen has to remember to do it. Data saved before this has no stamp (0).
+const STAMPC=new WeakMap();
+function recEntries(d){ const out=[], F=d.forms||{};
+  d.orgs.forEach(o=>out.push(["o:"+o.id,o])); d.veh.forEach(v=>out.push(["v:"+v.id,v])); Object.keys(d.days).forEach(k=>out.push(["d:"+k,d.days[k]]));
+  d.rc.forEach(r=>out.push(["r:"+r.id,r])); Object.keys(d.chk).forEach(k=>out.push(["c:"+k,d.chk[k]]));
+  Object.keys(F.day||{}).forEach(k=>out.push(["f:"+k,F.day[k]])); Object.keys(F.hdr||{}).forEach(k=>out.push(["h:"+k,F.hdr[k]])); Object.keys(F.plate||{}).forEach(k=>out.push(["p:"+k,F.plate[k]]));
+  return out; }
+function stampScan(d,quiet){
+  let c=STAMPC.get(d); const first=!c; if(first){ c=new Map(); STAMPC.set(d,c); }
+  // The time used is never earlier than the newest stamp this phone has seen (its own or from a merged file), so a phone
+  // whose clock runs a little slow still marks its new edits as newer than what it just merged.
+  d.stamp=d.stamp||{}; d.tomb=d.tomb||{}; const hl=parseInt(d.hlc||"0",36)||0, now=Math.max(Date.now(),hl+1).toString(36), seen=new Set(), mark=!first&&!quiet; let hit=false;
+  recEntries(d).forEach(([k,r])=>{ seen.add(k); const s=JSON.stringify(r); if(mark&&c.get(k)!==s){ d.stamp[k]=now; delete d.tomb[k]; hit=true; } c.set(k,s); });
+  [...c.keys()].forEach(k=>{ if(!seen.has(k)){ c.delete(k); if(mark){ d.tomb[k]=now; delete d.stamp[k]; hit=true; } } });
+  if(hit) d.hlc=now;
+  Object.keys(d.stamp).forEach(k=>{ if(!seen.has(k)) delete d.stamp[k]; });
+  const old=Math.max(Date.now(),hl)-120*864e5; Object.keys(d.tomb).forEach(k=>{ if(parseInt(d.tomb[k],36)<old||seen.has(k)) delete d.tomb[k]; });
+}
 let DB=loadKey(KEY), PDB=loadKey(PKEY), PRACTICE=false;
+stampScan(DB,true); stampScan(PDB,true);
 const db=()=>PRACTICE?PDB:DB;
-function save(){ try{ localStorage.setItem(PRACTICE?PKEY:KEY,JSON.stringify(db())); return true; }catch(e){ toast("Couldn't save on this phone (private browsing or storage full). It works, but won't be remembered."); return false; } }
-function saveReal(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){} }
+function save(){ try{ stampScan(db()); localStorage.setItem(PRACTICE?PKEY:KEY,JSON.stringify(db())); return true; }catch(e){ toast("Couldn't save on this phone (private browsing or storage full). It works, but won't be remembered."); return false; } }
+function saveReal(){ try{ stampScan(DB); localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){} }
 try{ navigator.storage&&navigator.storage.persist&&navigator.storage.persist(); }catch(e){}
 // One-time carry-over from the IQ Kit stamper (same site, so a browser shares its storage).
 (function migrate(){
@@ -1761,6 +1787,8 @@ let VIEWDATE="";   // the date the operator views (board, check, today) — foll
 const viewDate=()=>VIEWDATE||todayYMD();
 function addNote(v,text,date){ v.notes=v.notes||[]; v.notes.push({d:date||viewDate(),t:String(text).slice(0,400)}); }
 
+// ---------- who uses this phone (Home shows that role's tools) ----------
+function applyRole(){ const r=DB.me.role||""; const qb=$("qbBoard"); if(qb) qb.hidden=r==="driver"; document.documentElement.dataset.role=r||"all"; }
 // ---------- routing ----------
 const VIEWS=["home","stamp","check","board","today","forms","report","events","train","quiz","setup","help"];
 const RENDER={};
@@ -1774,7 +1802,7 @@ function route(){
   if(wantP!==PRACTICE){ PRACTICE=wantP; resetViewState(); }
   if(!INSTALL_KEEP&&!$("iqHowto").hidden) $("iqHowto").hidden=true; INSTALL_KEEP=false;
   document.documentElement.classList.toggle("practice",PRACTICE);
-  ["qbStamp","qbBoard","qbEvents"].forEach((id,i)=>{ const a=$(id); if(a) a.setAttribute("href",href(["stamp","board","events"][i])); });
+  ["qbStamp","qbBoard","qbEvents"].forEach((id,i)=>{ const a=$(id); if(a) a.setAttribute("href",href(["stamp","board","events"][i])); }); applyRole();
   VIEWS.forEach(n=>{ const s=$("v-"+n); if(s) s.hidden=n!==v; });
   // The home screen keeps a clean address (inter-q.com/logstat), never ".../logstat/#home".
   if(v==="home"&&location.hash){ try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} }
@@ -1786,7 +1814,7 @@ window.addEventListener("hashchange",route);
 // Screen state belongs to one space (real or practice): moving between them starts each screen clean,
 // so nothing typed or loaded in practice can be saved into real data, or the reverse.
 let INSTALL_KEEP=false;
-function resetViewState(){ VIEWDATE=""; CHK={load:null,res:null,inp:null}; BOARD.open={}; BOARD.act=null; BOARD.pendingCard=null; EVS.vals={}; EVS.open=""; RS={img:null,rot:0,q:null,veh:"",pre:{},f:null}; TODAY.tab=""; FRM.sel=null; FRM.up=null; FRM.ready=null; FRM.edit=null; FRM.org=""; }
+function resetViewState(){ VIEWDATE=""; CHK={load:null,res:null,inp:null}; BOARD.open={}; BOARD.act=null; BOARD.pendingCard=null; BOARD.pendingImport=null; EVS.vals={}; EVS.open=""; RS={img:null,rot:0,q:null,veh:"",pre:{},f:null}; TODAY.tab=""; FRM.sel=null; FRM.up=null; FRM.ready=null; FRM.edit=null; FRM.org=""; }
 const go=(name,extra)=>{ const h=href(name,extra); if(location.hash===h) route(); else location.hash=h; };
 
 // ---------- shared pieces ----------
@@ -1879,24 +1907,33 @@ RENDER.home=function(){
     const open=[]; if(E.isYMD(org.start)) for(let i=1;i<=30;i++){ const dd=E.addDays(t,-i); if(dd<org.start) break; const c=d.chk[org.id+"|"+dd]; if(!c||c.cal!=="green") open.push(dd); }
     alerts=`<div class="status"><span>Task org <b>${esc(org.to||"—")}</b></span><span>MRT <b>${esc(org.mrt||"—")}</b></span>${E.dplus(org,t)?`<span>Mission day <b>${esc(E.dplus(org,t))}</b></span>`:""}<span>Vehicles <b>${V.length}</b></span>${fl?`<a href="#board" class="pill p-warn">${fl} board flag${fl>1?"s":""}</a>`:`<span class="pill p-ok">board clear</span>`}${open.length?`<a href="#today" class="pill p-crit" title="${esc(open.map(plain).join(", "))}">${open.length} past day${open.length>1?"s":""} not certified</a>`:""}</div>`;
   }
-  b.innerHTML=`${org?alerts:`<div class="w warn">Start with <a href="#setup">Setup</a>: add your task org and MRT, or scan the setup QR code from your ARRO operator.</div>`}
-    <div class="lbl">Field</div>
-    <div class="tiles"><a class="tile" href="#stamp"><span class="tg">STAMP.EXE</span><b>Stamp a receipt</b><span>Pre-check, stamp the MRT and VIN digits, name the file, share.</span></a></div>
-    <div class="lbl">Operator</div>
-    <div class="tiles">
-      <a class="tile" href="#board"><span class="tg">BOARD.EXE</span><b>Fleet whiteboard</b><span>Vehicles, mileage, FMC/NMC, 1970s, receipts and flags.</span></a>
-      <a class="tile" href="#check"><span class="tg">CHECK.EXE</span><b>Check a receipt</b><span>Accept, reject or do not enter, with the ARRO note.</span></a>
-      <a class="tile" href="#report"><span class="tg">REPORT.EXE</span><b>Mission report</b><span>Fleet numbers and charts for leadership. Print, PDF or Word.</span></a>
-      <a class="tile" href="#forms"><span class="tg">FORMS.EXE</span><b>Forms and the 1970</b><span>Fill every vehicle's ESAD Form 1970 from the Board. Blank forms to download.</span></a>
-      <a class="tile" href="#today"><span class="tg">TODAY.EXE</span><b>Today's checklist</b><span>Day 1, the daily cycle and end of mission, then the Certifier message.</span></a>
-    </div>
-    <div class="lbl">Everyone</div>
-    <div class="tiles">
-      <a class="tile" href="#events"><span class="tg">EVENTS.EXE</span><b>Unusual events</b><span>NMC, transfers, personal funds, tolls, fuel cards, travel requests and more.</span></a>
-      <a class="tile" href="#train"><span class="tg">TRAIN.EXE</span><b>Scenario trainer</b><span>The lesson plan's drills, graded, on a practice mission.</span></a>
-      <a class="tile" href="#quiz"><span class="tg">QUIZ.EXE</span><b>Quiz</b><span>10-question check, travel check, study cards, review what you missed.</span></a>
-    </div>
+  const role=d.me.role||"";
+  const T={
+    stamp:`<a class="tile" href="#stamp"><span class="tg">STAMP.EXE</span><b>Stamp a receipt</b><span>Pre-check, stamp the MRT and VIN digits, name the file, share.</span></a>`,
+    board:`<a class="tile" href="#board"><span class="tg">BOARD.EXE</span><b>Fleet whiteboard</b><span>Vehicles, mileage, FMC/NMC, 1970s, receipts, flags and the fleet dashboard.</span></a>`,
+    check:`<a class="tile" href="#check"><span class="tg">CHECK.EXE</span><b>Check a receipt</b><span>Accept, reject or do not enter, with the ARRO note.</span></a>`,
+    report:`<a class="tile" href="#report"><span class="tg">REPORT.EXE</span><b>Mission report</b><span>Fleet numbers and charts for leadership. Print, PDF or Word.</span></a>`,
+    forms:`<a class="tile" href="#forms"><span class="tg">FORMS.EXE</span><b>Forms and the 1970</b><span>Fill every vehicle's ESAD Form 1970 from the Board. Blank forms to download.</span></a>`,
+    today:`<a class="tile" href="#today"><span class="tg">TODAY.EXE</span><b>Today's checklist</b><span>Day 1, the daily cycle and end of mission, then the Certifier message.</span></a>`,
+    events:`<a class="tile" href="#events"><span class="tg">EVENTS.EXE</span><b>Unusual events</b><span>NMC, transfers, personal funds, tolls, fuel cards, travel requests and more.</span></a>`,
+    train:`<a class="tile" href="#train"><span class="tg">TRAIN.EXE</span><b>Scenario trainer</b><span>The lesson plan's drills, graded, on a practice mission.</span></a>`,
+    quiz:`<a class="tile" href="#quiz"><span class="tg">QUIZ.EXE</span><b>Quiz</b><span>10-question check, travel check, study cards, review what you missed.</span></a>`};
+  const grp=(label,keys)=>`<div class="lbl">${esc(label)}</div><div class="tiles">${keys.map(k=>T[k]).join("")}</div>`;
+  const LAYOUT={
+    driver:[["Every receipt",["stamp"]],["If something goes wrong",["events"]],["Learn",["quiz","train"]]],
+    operator:[["Every day",["board","check","today","forms"]],["Leadership and field",["report","stamp","events"]],["Learn",["train","quiz"]]],
+    lead:[["Mission picture",["report","board"]],["Certify and review",["today","check","forms"]],["Reference",["events","quiz","train"]]],
+    all:[["Field",["stamp"]],["Operator",["board","check","report","forms","today"]],["Everyone",["events","train","quiz"]]]};
+  const ROLES=[["driver","Driver"],["operator","ARRO operator"],["lead","Certifier / JLOC"],["all","Show everything"]];
+  const pick=`<div class="vform rolepick"><div class="lbl">Who uses this phone?</div><p class="muted" style="margin:0">Home then shows only the tools you need. Search and the other screens still reach everything.</p><div class="chips">${ROLES.map(([k,l])=>`<button type="button" class="chip" data-role="${k}">${esc(l)}</button>`).join("")}</div></div>`;
+  const status=org&&role==="driver"?`<div class="status"><span>Task org <b>${esc(org.to||"—")}</b></span><span>MRT <b>${esc(org.mrt||"—")}</b></span>${E.dplus(org,t)?`<span>Mission day <b>${esc(E.dplus(org,t))}</b></span>`:""}</div>`:alerts;
+  b.innerHTML=`${org?status:`<div class="w warn">Start with <a href="#setup">Setup</a>: add your task org and MRT, or scan the setup QR code from your ARRO operator.</div>`}
+    ${role?"":pick}
+    ${(LAYOUT[role]||LAYOUT.all).map(([l,k])=>grp(l,k)).join("")}
+    ${role?`<div class="rolebar muted">This phone: <b>${esc((ROLES.find(r=>r[0]===role)||["",""])[1])}</b> · <a href="#" data-role-change>change</a></div>`:""}
     <div class="toolrow"><a class="btn" href="#setup">⚙︎ Setup</a><a class="btn" href="#help">? How to use</a><a class="btn" href="#install">⬇︎ Install on this phone</a></div>`;
+  b.querySelectorAll("[data-role]").forEach(x=>x.addEventListener("click",()=>{ DB.me.role=x.dataset.role; saveReal(); applyRole(); RENDER.home(); }));
+  const ch=b.querySelector("[data-role-change]"); if(ch) ch.addEventListener("click",(e)=>{ e.preventDefault(); DB.me.role=""; saveReal(); applyRole(); RENDER.home(); });
 };
 
 // ---------- help ----------
@@ -1930,10 +1967,13 @@ RENDER.help=function(){
     <li>Last day: <a href="#today">Today's checklist</a> → <b>End of mission</b>.</li></ol>
   <h3>Stamp a receipt (field)</h3><ul><li>Photograph the receipt on a white background, one receipt per photo.</li><li>Fill gallons, amount, odometer and card. Tick the three pre-checks. Share sends the stamped copy with its file name.</li><li><b>Copy for operator</b> gives one text line per receipt. Text it with the photo.</li><li>The stamp goes below the receipt, never over it, and the photo's location data is removed. Keep the paper original for turn-in.</li></ul>
   <h3>Check a receipt (operator)</h3><ul><li>Paste the driver's text lines, or type the receipt in. Mark anything wrong with the photo, tick "I checked the photo", then Check.</li><li>Accept shows exactly what to enter in ARRO. Reject gives the ARRO note and the message to the field. Do not enter covers Voyager and personal funds.</li></ul>
+  <h3>Who uses this phone</h3><ul><li>Pick <b>Driver</b>, <b>ARRO operator</b> or <b>Certifier / JLOC</b> on Home (or in Setup), and Home shows only those tools. <b>Show everything</b> brings all of them back. A phone set up from an operator's QR link starts as a driver's phone.</li></ul>
+  <h3>Two operators, one task org</h3><ul><li>Board → <b>Save board file</b>, send it to the other phone, and there tap <b>Merge in a board file</b>. The newest copy of every entry wins on both phones; nothing is lost unless the other phone changed or removed it later. The same serial is treated as the same vehicle and the same receipt is counted once.</li><li>Entries changed before this version have no time on them; if both phones changed one, you choose whose copy to keep.</li></ul>
   <h3>Board, checklist, events</h3><ul><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li>Today's checklist ticks itself where the Board knows the answer and builds the message to the Certifier.</li><li>Events cards give the steps, what not to enter, who to tell and a fill-in note. Damaged and transfer cards can apply the change to the Board.</li></ul>
   <h3>The 1970: from the Board, edited, or opened</h3><ul><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup (tap to place text, ✓, ✗, the date or a signature), then save it as a PDF.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
   <h3>Signatures</h3><ul><li><b>Type</b> your name and pick a handwriting style, or <b>Draw</b> it with a finger. You confirm it's your own signature; it's saved on this phone for next time.</li><li>Only the person named signs. Anyone can type a printed name, but not someone else's signature. Check with J4 that e-signatures are accepted on the 1970.</li></ul>
   <h3>Fleet dashboard and mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, receipts by status, days certified, open flags and 1970s done. Every chart has a <b>Show as a table</b> view.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
+  <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and Forms screens) saves one ZIP: every vehicle's 1970 for the mission, print-ready with day edits and signatures, plus a PDF summary of the dashboard and the vehicle list as a spreadsheet (CSV).</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
   <h3>Trainer and quiz</h3><ul><li>The trainer runs on a separate practice mission (TF REDHAWK from the lesson plan). Your real data is never touched. Practice screens carry a yellow PRACTICE band.</li><li>The quiz has a 10-question check, study cards and review of missed questions.</li></ul>
   <h3 id="h-roles">Who does what</h3>${R.roles.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><ul>${x.d.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3 id="h-paths">ARRO path maps</h3><p class="muted" style="margin:0 0 6px">Where things are in ARRO, click by click, from the LOGSTAT Quick Reference.</p>${R.paths.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><div class="path">${x.p.map(t=>`<span>${esc(t)}</span>`).join('<b aria-hidden="true">›</b>')}</div>${x.n?`<p class="muted" style="margin:6px 0 0">${esc(x.n)}</p>`:""}${x.link?`<div class="src"><a href="${esc(x.link.u)}" target="_blank" rel="noopener noreferrer">${esc(x.link.l)} ↗</a></div>`:""}<div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
@@ -2020,7 +2060,7 @@ RENDER.stamp=function(){
       <li>Personal-funds fuel is not entered in LOGSTAT; the member files a TEC. Voyager receipts aren't entered either.</li></ul></details>
   </div>`;
   const q=(s)=>b.querySelector(s), msg=(t)=>{ q("#rsMsg").textContent=t; };
-  if(q("#rsDoImp")) q("#rsDoImp").addEventListener("click",()=>{ const o=mergeSetup(RS.pendingSetup); RS.pendingSetup=undefined; route(); toast(`Loaded ${o.to||"setup"}.${db().me.opr?"":" Add your rank & name under My setup once."}`); if(!db().me.opr) setTimeout(()=>{ const s=$("rsSetup"); if(s) s.open=true; },50); });
+  if(q("#rsDoImp")) q("#rsDoImp").addEventListener("click",()=>{ const o=mergeSetup(RS.pendingSetup); if(!PRACTICE&&!DB.me.role){ DB.me.role="driver"; saveReal(); applyRole(); } RS.pendingSetup=undefined; route(); toast(`Loaded ${o.to||"setup"}.${db().me.opr?"":" Add your rank & name under My setup once."}`); if(!db().me.opr) setTimeout(()=>{ const s=$("rsSetup"); if(s) s.open=true; },50); });
   if(q("#rsNoImp")) q("#rsNoImp").addEventListener("click",()=>{ RS.pendingSetup=undefined; q("#rsImport").innerHTML=""; });
   if(q("#rsAddMe")) q("#rsAddMe").addEventListener("click",(e)=>{ e.preventDefault(); q("#rsSetup").open=true; q("#rsSetup").scrollIntoView({block:"start"}); });
   const cur=()=>vehById(RS.veh);
@@ -2298,6 +2338,27 @@ function printBoard(org,date){
   pa.innerHTML=printWrap(`<h1>LOGSTAT board — ${esc(org.to||"")} — MRT ${esc(org.mrt||"")} — ${esc(plain(date))}${E.dplus(org,date)?" ("+esc(E.dplus(org,date))+")":""}</h1><p class="pm">Printed ${esc(plain(todayYMD()))} ${esc(nowHHMM())} · build ${esc(b?b.content:"")} · ${esc(R.disclaimer)}</p>${boardTable(org,date,todayYMD(),false)}`);
   window.print();
 }
+// Loads a board file or a vehicle card. A task org this phone already has is merged (BOARD.pendingImport shows the preview).
+async function boardImport(f){ const d=db(); try{ const o=JSON.parse(await f.text());
+      if(o&&o.type==="inter-q-logstat-vehicle"){ importVehicleCard(o); RENDER.board(); toast("Vehicle added."); return; }
+      if(!o||typeof o!=="object"||o.type!=="inter-q-logstat-board"||!o.org||typeof o.org.to!=="string"||!o.org.to.trim()||!Array.isArray(o.veh)) throw new Error("That isn't a complete LOGSTAT board or vehicle file.");
+      const tmp=repair({v:1,orgs:[o.org],org:o.org&&o.org.id,veh:o.veh,days:o.days,rc:o.rc,chk:o.chk,forms:o.forms,stamp:o.stamp,tomb:o.tomb,alias:o.alias}); const io=tmp.orgs[0]; if(!io) throw new Error("No task org in that file.");
+      const replace=()=>{ const oldIds=new Set(d.veh.filter(v=>v.org===io.id).map(v=>v.id)); Object.keys(d.days).forEach(x=>{ if(oldIds.has(x.split("|")[0])) delete d.days[x]; });
+        Object.keys(d.chk).forEach(x=>{ if(x.startsWith(io.id+"|")) delete d.chk[x]; });
+        d.veh=d.veh.filter(v=>v.org!==io.id); d.rc=d.rc.filter(r=>r.org!==io.id); mergeForms(d,io,oldIds,tmp.forms);
+        const ex=d.orgs.findIndex(x=>x.id===io.id); if(ex>=0) d.orgs[ex]=io; else d.orgs.push(io); d.org=io.id; d.veh.push(...tmp.veh); Object.assign(d.days,tmp.days); d.rc.push(...tmp.rc); Object.assign(d.chk,tmp.chk);
+        // the loaded entries keep the file's stamps (not the time of loading), and the file's removals come along
+        d.stamp=d.stamp||{}; d.tomb=d.tomb||{}; Object.assign(d.stamp,tmp.stamp||{}); Object.keys(tmp.tomb||{}).forEach(k=>{ if(!d.tomb[k]||t36(tmp.tomb[k])>t36(d.tomb[k])) d.tomb[k]=tmp.tomb[k]; });
+        let hi=parseInt(d.hlc||"0",36)||0; Object.values(tmp.stamp||{}).concat(Object.values(tmp.tomb||{})).forEach(s=>{ const n=t36(s); if(n>hi&&n<Date.now()+3650*864e5) hi=n; }); if(hi) d.hlc=hi.toString(36);
+        stampScan(d,true); save(); RENDER.board(); toast("Board loaded."); };
+      const have=d.orgs.find(x=>x.id===io.id)||d.orgs.find(x=>E.normTO(x.to)===E.normTO(io.to)&&E.normSN(x.mrt)===E.normSN(io.mrt));
+      if(!have){ if(!confirm(`Add the board for ${io.to||"this task org"} (${tmp.veh.length} vehicles) to this phone?`)) return; replace(); return; }
+      if(have.id!==io.id){ // same task org set up separately on each phone: line the file up with this phone's copy
+        tmp.orgs[0]=Object.assign({},io,{id:have.id}); const fix=(k)=>k.startsWith(io.id+"|")?have.id+k.slice(io.id.length):k;
+        tmp.veh.forEach(v=>{ v.org=have.id; }); tmp.rc.forEach(r=>{ r.org=have.id; }); tmp.chk=Object.fromEntries(Object.entries(tmp.chk).map(([k,v])=>[fix(k),v]));
+        if(tmp.forms&&tmp.forms.hdr&&tmp.forms.hdr[io.id]){ tmp.forms.hdr[have.id]=tmp.forms.hdr[io.id]; delete tmp.forms.hdr[io.id]; }
+        const rk=(k)=>k.replace("o:"+io.id,"o:"+have.id).replace("h:"+io.id,"h:"+have.id).replace("c:"+io.id+"|","c:"+have.id+"|"); ["stamp","tomb"].forEach(m=>{ tmp[m]=Object.fromEntries(Object.entries(tmp[m]||{}).map(([k,v])=>[rk(k),v])); }); }
+      BOARD.pendingImport={tmp,plan:planMerge(d,tmp,have.id),replace:()=>{ if(have.id!==io.id){ io.id=have.id; } replace(); }}; d.org=have.id; save(); RENDER.board(); window.scrollTo({top:0}); }catch(err){ console.error(err); toast(err.message||"Couldn't read that file."); } }
 RENDER.board=function(){
   const b=$("b-board"), d=db(), p=PARAMS;
   if(typeof p.vc==="string"){ const vc=p.vc; delete PARAMS.vc; try{ const o=b64d(vc); if(o&&o.type==="inter-q-logstat-vehicle"){ BOARD.pendingCard=o; } }catch(e){ toast("That vehicle card link is damaged."); } try{ history.replaceState(null,"",location.pathname+location.search+href("board")); }catch(e){} }
@@ -2307,30 +2368,25 @@ RENDER.board=function(){
   if(BOARD.pendingCard){ const o=BOARD.pendingCard, w=el(`<div class="w ok"><b>Vehicle card:</b> ${esc(o.veh&&o.veh.label||"")} ${esc(o.veh&&o.veh.sn||"")} from ${esc(o.from||"another unit")}, starts ${esc(plain(o.start))}${o.odo?` at ${esc(o.odo)}`:""}. <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" data-y>Add to ${esc(org?org.to:"my board")}</button><button class="btn" type="button" data-n>Ignore</button></div></div>`);
     w.querySelector("[data-y]").addEventListener("click",()=>{ try{ importVehicleCard(o); BOARD.pendingCard=null; RENDER.board(); toast("Vehicle added. It starts the day after the transfer."); }catch(e){ toast(e.message); } });
     w.querySelector("[data-n]").addEventListener("click",()=>{ BOARD.pendingCard=null; RENDER.board(); }); b.appendChild(w); }
-  if(!org) return;
+  if(!org){ const t=el(`<div class="toolrow"><label class="btn">Load a board file from another phone<input type="file" accept=".json,application/json" hidden></label></div>`); t.querySelector("input").addEventListener("change",(e)=>{ const f=e.target.files[0]; e.target.value=""; if(f) boardImport(f); }); b.appendChild(t); return; }
   const V=orgVeh(org), shown=V.filter(v=>E.active(v,date)||v.eom===date||(v.startDate&&v.startDate>date&&E.diffDays(date,v.startDate)<=1)), hidden=V.length-shown.length;
   const allF=shown.flatMap(v=>E.flags(R,d,v,date,org,today)).filter(f=>f.lvl!=="info"), fuel=d.rc.filter(r=>r.org===org.id&&r.date===date&&r.status==="accepted"&&r.type==="FUEL").reduce((s,r)=>s+(num(r.amt)||0),0);
   const missing=shown.filter(v=>E.active(v,date)&&E.info(R,v).tracks!=="none"&&E.endOfDay(d,v,date)===null).length;
   b.appendChild(el(`<div class="sumline"><span>Active <b>${shown.filter(v=>E.active(v,date)).length}</b></span><span>Mileage missing <b>${missing}</b></span><span>Flags <b>${allF.length}</b></span><span>Fuel <b>${fuel?esc(money(fuel)):"$0.00"}</b></span>${hidden?`<span class="muted">${hidden} closed or not started</span>`:""}</div>`));
+  if(BOARD.pendingImport&&org) b.appendChild(mergePanel(d,org));
   if(org) b.appendChild(dashPanel(org,date));
-  const tools=el(`<div class="toolrow"><button class="btn" type="button" data-t="add">+ Add vehicle</button><button class="btn" type="button" data-t="big">Big screen</button><button class="btn" type="button" data-t="print">Print</button><a class="btn" href="${href("forms")}">Fill 1970s</a><button class="btn" type="button" data-t="exp">Export board</button><label class="btn">Import board or vehicle card<input type="file" accept=".json,application/json" hidden data-t="imp"></label></div>`);
+  const tools=el(`<div class="toolrow"><button class="btn" type="button" data-t="add">+ Add vehicle</button><button class="btn" type="button" data-t="big">Big screen</button><button class="btn" type="button" data-t="print">Print</button><a class="btn" href="${href("forms")}">Fill 1970s</a><button class="btn" type="button" data-t="exp">Save board file</button><button class="btn" type="button" data-t="mexp">Mission export</button><label class="btn">Merge in a board file or vehicle card<input type="file" accept=".json,application/json" hidden data-t="imp"></label></div>`);
   b.appendChild(tools); const addSlot=el(`<div></div>`); b.appendChild(addSlot);
   tools.addEventListener("click",(e)=>{ const t=e.target.closest("[data-t]"); if(!t) return; const k=t.dataset.t;
     if(k==="add"){ addSlot.innerHTML=""; const vf=vehicleForm({startDate:date},{}); addSlot.appendChild(vf); const r=el(`<div class="toolrow"><button class="btn" type="button">Add to board</button><button class="btn" type="button">Cancel</button></div>`); addSlot.appendChild(r);
       r.children[0].addEventListener("click",()=>{ const x=vf.vals(), P=vf.problems(); if(P.some(p=>p[0]==="bad")){ toast(P.find(p=>p[0]==="bad")[1]); return; } if(d.veh.some(v=>v.org===org.id&&v.sn===x.sn&&!v.eom)){ toast("That vehicle is already on the board."); return; } d.veh.push(newVehicle(x,org)); save(); RENDER.board(); toast(`Added ${x.label||x.sn}.`); });
       r.children[1].addEventListener("click",()=>{ addSlot.innerHTML=""; }); vf.querySelector("input").focus(); }
+    if(k==="mexp"){ addSlot.innerHTML=""; addSlot.appendChild(missionExportBox(org,date)); addSlot.scrollIntoView({block:"nearest"}); }
     if(k==="big") openBig();
     if(k==="print") printBoard(org,date);
     if(k==="exp"){ const days={}; Object.keys(d.days).forEach(x=>{ if(V.some(v=>x.startsWith(v.id+"|"))) days[x]=d.days[x]; });
-      dl(new Blob([JSON.stringify({type:"inter-q-logstat-board",v:1,org,veh:V,days,rc:d.rc.filter(r=>r.org===org.id),chk:Object.fromEntries(Object.entries(d.chk).filter(([x])=>x.startsWith(org.id+"|"))),forms:formsPart(d,org,V.map(v=>v.id))},null,1)],{type:"application/json"}),`logstat-board-${E.normTO(org.to)||"unit"}-${date}.json`); toast("Board saved to a file. Hand it to the next shift."); } });
-  tools.querySelector('[data-t="imp"]').addEventListener("change",async(e)=>{ const f=e.target.files[0]; e.target.value=""; if(!f) return; try{ const o=JSON.parse(await f.text());
-      if(o&&o.type==="inter-q-logstat-vehicle"){ importVehicleCard(o); RENDER.board(); toast("Vehicle added."); return; }
-      if(!o||typeof o!=="object"||o.type!=="inter-q-logstat-board"||!o.org||typeof o.org.to!=="string"||!o.org.to.trim()||!Array.isArray(o.veh)) throw new Error("That isn't a complete LOGSTAT board or vehicle file.");
-      const tmp=repair({v:1,orgs:[o.org],org:o.org&&o.org.id,veh:o.veh,days:o.days,rc:o.rc,chk:o.chk,forms:o.forms}); const io=tmp.orgs[0]; if(!io) throw new Error("No task org in that file.");
-      if(!confirm(`Load the board for ${io.to||"this task org"} (${tmp.veh.length} vehicles)? It replaces what this phone has for that task org.`)) return;
-      const oldIds=new Set(d.veh.filter(v=>v.org===io.id).map(v=>v.id)); Object.keys(d.days).forEach(x=>{ if(oldIds.has(x.split("|")[0])) delete d.days[x]; });
-      d.veh=d.veh.filter(v=>v.org!==io.id); d.rc=d.rc.filter(r=>r.org!==io.id); mergeForms(d,io,oldIds,tmp.forms);
-      const ex=d.orgs.findIndex(x=>x.id===io.id); if(ex>=0) d.orgs[ex]=io; else d.orgs.push(io); d.org=io.id; d.veh.push(...tmp.veh); Object.assign(d.days,tmp.days); d.rc.push(...tmp.rc); Object.assign(d.chk,tmp.chk); save(); RENDER.board(); toast("Board loaded."); }catch(err){ toast(err.message||"Couldn't read that file."); } });
+      dl(new Blob([JSON.stringify({type:"inter-q-logstat-board",v:1,org,veh:V,days,rc:d.rc.filter(r=>r.org===org.id),chk:Object.fromEntries(Object.entries(d.chk).filter(([x])=>x.startsWith(org.id+"|"))),forms:formsPart(d,org,V.map(v=>v.id)),...(()=>{ stampScan(d); const sl=orgSlice(d,org.id).out, st={}, tb={}; Object.keys(sl).forEach(k=>{ if(d.stamp[k]) st[k]=d.stamp[k]; }); Object.keys(d.tomb||{}).forEach(k=>{ const t=k[0], r=k.slice(2); if((t==="o"||t==="h")&&r!==org.id) return; if(t==="c"&&!r.startsWith(org.id+"|")) return; tb[k]=d.tomb[k]; }); return {stamp:st,tomb:tb,alias:d.alias||{}}; })()},null,1)],{type:"application/json"}),`logstat-board-${E.normTO(org.to)||"unit"}-${date}.json`); toast("Board saved to a file. The other phone loads it with Import, and the boards merge."); } });
+  tools.querySelector('[data-t="imp"]').addEventListener("change",(e)=>{ const f=e.target.files[0]; e.target.value=""; if(f) boardImport(f); });
   if(!V.length){ b.appendChild(el(`<div class="muted">No vehicles yet. Tap <b>+ Add vehicle</b>.</div>`)); return; }
   GROUPS.forEach(([cat,label])=>{ const G=shown.filter(v=>v.cat===cat); if(!G.length) return; b.appendChild(el(`<div class="grp-h">${esc(label)} (${G.length})</div>`));
     G.forEach(v=>{ const c=vehicleCard(v,org,date,today); b.appendChild(c); const slot=c.querySelector("[data-slot]"), st=BOARD.open[v.id];
@@ -2760,6 +2816,7 @@ RENDER.setup=function(){
   b.innerHTML=`<details class="sec" open><summary>You</summary>
       <div class="row"><label class="f">Your rank &amp; name<input class="fld" id="suMe" value="${esc(d.me.opr)}" placeholder="SGT LOPEZ" autocomplete="off"></label><label class="f">Certifier's rank &amp; name (operators)<input class="fld" id="suCert" value="${esc(d.me.cert)}" placeholder="SFC SMITH" autocomplete="off"></label></div>
       <p class="muted">The Certifier must have ARRO access and can't be the person who verifies. Names stay on this phone; setup links never carry them.</p>
+      <label class="f">This phone is used by<select class="fld" id="suRole">${[["","Not chosen (Home shows everything)"],["driver","Driver"],["operator","ARRO operator"],["lead","Certifier / JLOC"],["all","Show everything"]].map(([k,l])=>`<option value="${k}"${(DB.me.role||"")===k?" selected":""}>${l}</option>`).join("")}</select></label>
       <label class="f">Contacts for this mission (optional; shown on the Events cards)<textarea class="fld" id="suContacts" maxlength="600" placeholder="JLOC: (email or phone from your OPORD)">${esc(d.me.contacts)}</textarea></label></details>
     <details class="sec" open><summary>Task orgs and missions</summary><div id="suOrgs" style="display:flex;flex-direction:column;gap:8px"></div><div class="toolrow" style="margin-top:8px"><button class="btn" type="button" id="suAddOrg">+ Add task org</button></div></details>
     <details class="sec" id="suShare"><summary>Share setup with drivers (ARRO operator)</summary><div id="suShareB"></div></details>
@@ -2768,6 +2825,7 @@ RENDER.setup=function(){
       <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" id="suExp">Save everything to a file</button><label class="btn">Load a saved file<input type="file" accept=".json,application/json" id="suImp" hidden></label></div>
       <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" id="suClose">Close out mission…</button><button class="btn" type="button" id="suWipe">Clear everything on this phone</button></div>
       <p class="muted">Close out saves the current task org to a file, then clears its vehicles, receipts and checklists from this phone. Practice data and quiz history are kept separately.</p></details>`;
+  $("suRole").addEventListener("change",(e)=>{ DB.me.role=e.target.value; saveReal(); applyRole(); toast("Home updated for this phone."); });
   const saveMe=()=>{ d.me.opr=$("suMe").value.trim().toUpperCase().slice(0,60); d.me.cert=$("suCert").value.trim().toUpperCase().slice(0,60); d.me.contacts=$("suContacts").value.slice(0,600); saveReal(); };
   ["suMe","suCert","suContacts"].forEach(id=>$(id).addEventListener("change",saveMe));
   const ob=$("suOrgs");
@@ -3193,6 +3251,7 @@ RENDER.forms=function(){
       catch(e){ console.error(e); st.textContent=""; toast("Couldn't build the 1970: "+(e&&e.message||e)); }
       FRM.busy=false; }));
     b.appendChild(list);
+    b.appendChild(missionExportBox(org,through));
   }
   const fl=el(`<div class="vform"><div class="lbl">Blank forms to download</div><div class="flist">${R.forms.map(x=>`<div class="fitem"><div><b>${esc(x.t)}</b> <span class="muted">PDF · ${esc(x.size)}</span><div class="muted">${esc(x.note)}</div></div><a class="btn" href="${esc(x.file)}" download="${esc(x.file)}">Download</a></div>`).join("")}</div>
     <div class="src"><a href="${esc(R.links.ddt.u)}" target="_blank" rel="noopener noreferrer">${esc(R.links.ddt.l)} ↗</a></div></div>`);
@@ -3560,9 +3619,10 @@ async function reportPdf(B,org){
     else if(b.k==="list"){ for(const it of b.items){ const ls=wrap(it,F,9,CW-14); need(ls.length*12+3); txt("•",M+2,y-11,F,9); ls.forEach((l,i)=>txt(l,M+14,y-11-i*12,F,9)); y-=ls.length*12+3; } }
     else if(b.k==="foot"){ need(24); y-=10; wrap(b.t,F,8.5,CW).forEach(l=>{ txt(l,M,y-10,F,8.5,mut); y-=12; }); }
   }
-  pages.forEach((p,i)=>p.drawText(pdfText(`Mission status report · ${org.to||""} · page ${i+1} of ${pages.length}`),{x:M,y:22,size:8,font:F,color:mut}));
+  const ttl=(B.find(b=>b.k==="title")||{}).t||"Mission status report";
+  pages.forEach((p,i)=>p.drawText(pdfText(`${ttl} · ${org.to||""} · page ${i+1} of ${pages.length}`),{x:M,y:22,size:8,font:F,color:mut}));
   if(PRACTICE) pages.forEach(p=>p.drawText("PRACTICE - NOT FOR ARRO",{x:W*0.14,y:H*0.3,size:42,font:F,color:PL.rgb(0.75,0.1,0.1),opacity:0.18,rotate:PL.degrees(38)}));
-  doc.setTitle(pdfText(`Mission status report - ${org.to||""}`)); doc.setProducer("LOGSTAT"); doc.setCreator("LOGSTAT");
+  doc.setTitle(pdfText(`${ttl} - ${org.to||""}`)); doc.setProducer("LOGSTAT"); doc.setCreator("LOGSTAT");
   return new Blob([await savePdf(doc)],{type:"application/pdf"});
 }
 // ---------- Word (.docx), built by hand: document.xml + pictures, in a ZIP ----------
@@ -3618,8 +3678,185 @@ RENDER.report=function(){
     RPT.busy=false; });
   bar.addEventListener("change",(e)=>{ if(e.target.hasAttribute("data-roster")){ RPT.roster=e.target.checked; RENDER.report(); } });
   b.appendChild(bar);
+  b.appendChild(missionExportBox(org,date));
   b.appendChild(el(`<div class="paper"><div class="report">${reportHtml(B)}</div></div>`));
 };
+
+// ================= MISSION EXPORT: every 1970 on the mission plus a summary of the dashboard, in one ZIP =================
+// For the binder, turn-in, or the people closing out the mission. Built on the phone, offline, from the Board.
+//   <date>_<TO>_MISSION_SUMMARY.pdf   key numbers, charts (whole mission, up to 31 days), vehicle list, 1970 list, open items
+//   <date>_<TO>_VEHICLES.csv          the vehicle list, for a spreadsheet
+//   1970s/<file name>_PRINT.pdf       one print-ready 1970 per vehicle (every sheet, day edits and signatures)
+let MEXP={busy:false};
+function csvText(rows){ return "﻿"+rows.map(r=>r.map(c=>{ const s=String(c??"").replace(/[\u0000-\u001F]/g," "); return /[",\n]/.test(s)||/^[=+\-@]/.test(s)?`"${(/^[=+\-@]/.test(s)?"'":"")+s.replace(/"/g,'""')}"`:s; }).join(",")).join("\r\n")+"\r\n"; }
+async function missionExport(org,through,st){
+  const d=db(), F=formsDB(), H=F.hdr[org.id]||{}, pre=PRACTICE?"PRACTICE_":"", base=`${pre}${E.mmddyyyy(through)}_${E.normTO(org.to)||"TASKORG"}`;
+  const onMission=orgVeh(org).filter(v=>!v.startDate||v.startDate<=through), need=onMission.filter(v=>E.info(R,v).f1970), skipped=onMission.filter(v=>!E.info(R,v).f1970);
+  const jobs=need.map(v=>({v,rows:rows1970(d,org,v,through,F.all,H)})).filter(j=>j.rows.length), sheets=jobs.reduce((a,j)=>a+Math.ceil(j.rows.length/29),0);
+  if(sheets>60&&!confirm(`This builds ${sheets} 1970 sheets for ${jobs.length} vehicles. On a phone it can take a few minutes; keep the app open. Build the export?`)) return null;
+  const files=[], idx=[], names={};
+  if(jobs.length){
+    const PL=await loadPdfLib(), tpl=await template1970(); let n=0;
+    for(const j of jobs){ const S=Math.ceil(j.rows.length/29), out=await PL.PDFDocument.create();
+      for(let s=1;s<=S;s++){
+        const doc=await fill1970(PL,await loadPdf(PL,tpl),modelFromBoard(org,j.v,j.rows.slice((s-1)*29,s*29),H,F.plate[j.v.id]||""),{practice:PRACTICE,title:`ESAD Form 1970 ${j.v.label||""} ${E.lastN(j.v.sn,digitsOf(org))}${S>1?" sheet "+s:""}`});
+        flatten1970(PL,doc); (await out.copyPages(doc,doc.getPageIndices())).forEach(p=>out.addPage(p));
+        n++; if(st) st.textContent=`Building 1970s: ${n} of ${sheets} sheet${sheets>1?"s":""}…`; await tick(); }
+      out.setTitle(pdfText(`ESAD Form 1970 - ${j.v.label||""} ${E.lastN(j.v.sn,digitsOf(org))} - through ${plain(through)}`)); out.setProducer("LOGSTAT"); out.setCreator("LOGSTAT");
+      let nm=pre+E.fileName(through,org.to,j.v.sn,digitsOf(org),"1970");
+      if(names[nm]){ nm+="_"+(E.normTO(j.v.label).slice(0,12)||"V"+(idx.length+1)); let k=2; const b0=nm; while(names[nm]) nm=b0+"_"+(k++); }
+      names[nm]=1; files.push({name:`1970s/${nm}_PRINT.pdf`,data:await savePdf(out)});
+      const signed=j.rows.filter(r=>r.s1||r.s2).length;
+      idx.push([j.v.label||"—",E.lastN(j.v.sn,8),String(j.rows.length),String(S),`${signed} of ${j.rows.length}`,j.v.eom?mmdd(j.v.eom):"—"]); }
+  }
+  if(st) st.textContent="Building the summary…";
+  const span=E.isYMD(org.start)&&org.start<=through?E.diffDays(org.start,through)+1:14, B=reportBlocks(org,through,{days:Math.min(31,Math.max(7,span)),roster:true});
+  B[0]={k:"title",t:"Mission summary"};
+  const at=B.findIndex(b=>b.k==="h"&&b.t==="Open items"), add=[{k:"h",t:"1970s in this export"}];
+  if(idx.length) add.push({k:"table",w:[30,14,10,10,20,12],rows:[["Vehicle","Last 8","Days","Sheets","Days signed","EOM"],...idx]});
+  else add.push({k:"list",items:["No vehicle on this mission needs a 1970 yet."]});
+  const notes=[`${idx.length} vehicle${idx.length===1?"":"s"}, ${sheets} sheet${sheets===1?"":"s"}, through ${plain(through)}. Each file in the 1970s folder is print-ready, with the day edits and signatures made in LOGSTAT.`];
+  if(skipped.length) notes.push(`No 1970 needed per the course: ${skipped.map(v=>`${v.label||"vehicle"} ${E.lastN(v.sn,8)}`).join(", ")}.`);
+  const unsigned=idx.filter(r=>!r[4].startsWith(r[2]+" ")).length; if(unsigned) notes.push(`${unsigned} vehicle${unsigned>1?"s have":" has"} days without a signature.`);
+  add.push({k:"list",items:notes});
+  B.splice(at<0?B.length-1:at,0,...add);
+  const sum=await reportPdf(B,org), roster=B.find(b=>b.k==="table"&&b.rows[0][0]==="Vehicle"&&b.rows[0][1]==="Last 8"&&b.rows[0].includes("Status"));
+  files.unshift({name:`${base}_MISSION_SUMMARY.pdf`,data:new Uint8Array(await sum.arrayBuffer())});
+  if(roster) files.splice(1,0,{name:`${base}_VEHICLES.csv`,data:new TextEncoder().encode(csvText(roster.rows))});
+  return {blob:zipFiles(files),name:`${base}_MISSION_EXPORT.zip`,count:idx.length,sheets};
+}
+async function runMissionExport(org,through,slot){
+  if(MEXP.busy) return; MEXP.busy=true; slot.innerHTML=""; const st=el(`<div class="muted">Building…</div>`); slot.appendChild(st);
+  try{ const r=await missionExport(org,through,st); st.remove();
+    if(r){ const coarse=window.matchMedia&&matchMedia("(pointer:coarse)").matches; if(!coarse) dl(r.blob,r.name);
+      const rb=readyBox(r,(w)=>w.remove()); if(rb) slot.appendChild(rb); toast(`Mission export ready: ${r.count} vehicle 1970${r.count===1?"":"s"} and the summary.`); } }
+  catch(e){ console.error(e); st.remove(); toast("Couldn't build the mission export: "+(e&&e.message||e)); }
+  MEXP.busy=false;
+}
+function missionExportBox(org,through){
+  const w=el(`<div class="vform mexp"><div class="lbl">Mission export</div>
+    <p style="margin:0">One ZIP file: every vehicle's 1970 for this mission (print-ready, with day edits and signatures) and a PDF summary of the dashboard (key numbers, charts, vehicle list, open items), through ${esc(plain(through))}. Works offline.</p>
+    <div class="toolrow"><button class="btn rs-big" type="button" data-mx>Save mission export</button></div><div data-slot></div></div>`);
+  w.querySelector("[data-mx]").addEventListener("click",()=>runMissionExport(org,through,w.querySelector("[data-slot]")));
+  return w;
+}
+
+// ================= MERGE: bring another phone's board file into this one, keeping the newest of each entry =================
+// Each entry (task org settings, vehicle, daily entry, receipt, checklist day, 1970 day edit, 1970 header, plate) carries the
+// time it last changed (stamp) and removals leave a tombstone. Newest wins; deletions travel; the same serial is the same
+// vehicle and the same receipt is counted once, even if each phone added its own copy. Ties (no stamps on both, or the same
+// moment) are conflicts: this phone's copy is kept unless the person chooses the file's.
+const KIND_LABEL={o:"task org settings",v:"vehicle",d:"daily entry",r:"receipt",c:"checklist day",f:"1970 day edit",h:"1970 header",p:"plate number"};
+function orgSlice(d,orgId){
+  const out={}, F=d.forms||{}, org=d.orgs.find(o=>o.id===orgId); if(org) out["o:"+orgId]=org;
+  const vids=new Set(d.veh.filter(v=>v.org===orgId).map(v=>v.id));
+  d.veh.forEach(v=>{ if(vids.has(v.id)) out["v:"+v.id]=v; });
+  Object.keys(d.days).forEach(k=>{ if(vids.has(k.split("|")[0])) out["d:"+k]=d.days[k]; });
+  d.rc.forEach(r=>{ if(r.org===orgId) out["r:"+r.id]=r; });
+  Object.keys(d.chk).forEach(k=>{ if(k.startsWith(orgId+"|")) out["c:"+k]=d.chk[k]; });
+  Object.keys(F.day||{}).forEach(k=>{ if(vids.has(k.split("|")[0])) out["f:"+k]=F.day[k]; });
+  if(F.hdr&&F.hdr[orgId]) out["h:"+orgId]=F.hdr[orgId];
+  Object.keys(F.plate||{}).forEach(k=>{ if(vids.has(k)) out["p:"+k]=F.plate[k]; });
+  return {out,vids};
+}
+// The file's data as entries keyed like ours, after matching its vehicles (by serial) and receipts (by content) to ours.
+// Matching is one to one and remembered (d.alias: the other phone's id -> this phone's id). The board file carries the
+// alias list too, so a phone can line up ids the other phone matched, and a removal of a matched vehicle or receipt travels.
+function fileSlice(d,tmp,orgId,mine){
+  const AL=d.alias||{}, FA=tmp.alias||{}, inv={}; Object.keys(FA).forEach(k=>{ inv[k[0]+":"+FA[k]]=k.slice(2); });
+  const myVeh=d.veh.filter(v=>v.org===orgId), myV=new Set(myVeh.map(v=>v.id)), fV=new Set(tmp.veh.map(v=>v.id)), usedV=new Set();
+  const known=(t,id,mineSet,fileSet)=>{ if(mineSet.has(id)) return id; const a=AL[t+":"+id]; if(a&&mineSet.has(a)&&!fileSet.has(a)) return a; const b=inv[t+":"+id]; if(b&&mineSet.has(b)&&!fileSet.has(b)) return b; return null; };
+  const vmap={}, newAl={};
+  tmp.veh.forEach(v=>{ const k=known("v",v.id,myV,fV); if(k){ vmap[v.id]=k; usedV.add(k); } });
+  tmp.veh.forEach(v=>{ if(vmap[v.id]) return; const sn=E.normSN(v.sn), c=myVeh.filter(m=>E.normSN(m.sn)===sn&&!fV.has(m.id)&&!usedV.has(m.id));
+    const m=c.find(x=>!x.eom===!v.eom)||c[0]; if(m&&sn){ vmap[v.id]=m.id; usedV.add(m.id); newAl["v:"+v.id]=m.id; } else vmap[v.id]=v.id; });
+  const mapV=(id)=>vmap[id]||known("v",id,myV,fV)||id;
+  const myRc=d.rc.filter(r=>r.org===orgId), myR=new Set(myRc.map(r=>r.id)), fR=new Set(tmp.rc.map(r=>r.id)), usedR=new Set(), rmap={};
+  const rkey=(r)=>[r.veh,r.date,r.type,String(num(r.amt)),r.file||""].join("|");
+  tmp.rc.forEach(r=>{ const k=known("r",r.id,myR,fR); if(k){ rmap[r.id]=k; usedR.add(k); } });
+  tmp.rc.forEach(r=>{ if(rmap[r.id]) return; const want=rkey(Object.assign({},r,{veh:mapV(r.veh)})), m=myRc.find(x=>!fR.has(x.id)&&!usedR.has(x.id)&&rkey(x)===want);
+    if(m){ rmap[r.id]=m.id; usedR.add(m.id); newAl["r:"+r.id]=m.id; } else rmap[r.id]=r.id; });
+  const mapR=(id)=>rmap[id]||known("r",id,myR,fR)||id;
+  const out={}, F=tmp.forms||{}, rv=(k)=>{ const [a,b]=k.split("|"); return mapV(a)+"|"+b; };
+  tmp.orgs.forEach(o=>{ if(o.id===orgId) out["o:"+orgId]=o; });
+  tmp.veh.forEach(v=>{ out["v:"+vmap[v.id]]=Object.assign({},v,{id:vmap[v.id],org:orgId}); });
+  Object.keys(tmp.days).forEach(k=>{ out["d:"+rv(k)]=tmp.days[k]; });
+  tmp.rc.forEach(r=>{ out["r:"+rmap[r.id]]=Object.assign({},r,{id:rmap[r.id],org:orgId,veh:mapV(r.veh)}); });
+  Object.keys(tmp.chk).forEach(k=>{ if(k.startsWith(orgId+"|")) out["c:"+k]=tmp.chk[k]; });
+  Object.keys(F.day||{}).forEach(k=>{ out["f:"+rv(k)]=F.day[k]; });
+  if(F.hdr&&F.hdr[orgId]) out["h:"+orgId]=F.hdr[orgId];
+  Object.keys(F.plate||{}).forEach(k=>{ out["p:"+mapV(k)]=F.plate[k]; });
+  // stamps and tombstones follow the renamed keys
+  const re=(key)=>{ const i=key.indexOf(":"), t=key.slice(0,i), rest=key.slice(i+1);
+    if(t==="v"||t==="p") return t+":"+mapV(rest); if(t==="d"||t==="f") return t+":"+rv(rest); if(t==="r") return "r:"+mapR(rest); return key; };
+  const st={}, tb={}; Object.keys(tmp.stamp||{}).forEach(k=>{ st[re(k)]=tmp.stamp[k]; }); Object.keys(tmp.tomb||{}).forEach(k=>{ tb[re(k)]=tmp.tomb[k]; });
+  return {out,st,tb,alias:newAl,matched:Object.keys(newAl).length};
+}
+const t36=(s)=>s?parseInt(s,36)||0:0;
+function planMerge(d,tmp,orgId){
+  const mine=orgSlice(d,orgId).out, f=fileSlice(d,tmp,orgId,mine), theirs=f.out, ms=d.stamp||{}, mt=d.tomb||{};
+  const keys=new Set([...Object.keys(mine),...Object.keys(theirs)]), P={take:[],keep:[],add:[],del:[],skip:[],conflict:[],vnotes:[],same:0,matched:f.matched,alias:f.alias,theirs,st:f.st,tb:f.tb};
+  const noNotes=(v)=>JSON.stringify(Object.assign({},v,{notes:0}));
+  keys.forEach(k=>{ const a=mine[k], b=theirs[k], ua=t36(ms[k]), ub=t36(f.st[k]);
+    if(a!==undefined&&b!==undefined){ if(JSON.stringify(a)===JSON.stringify(b)){ P.same++; return; } if(k[0]==="v"&&noNotes(a)===noNotes(b)){ P.same++; P.vnotes.push(k); return; } if(ub>ua) P.take.push(k); else if(ua>ub) P.keep.push(k); else P.conflict.push(k); return; }
+    if(b!==undefined){ if(t36(mt[k])>ub) P.skip.push(k); else P.add.push(k); return; }
+    if(t36(f.tb[k])>ua) P.del.push(k); });
+  return P;
+}
+function applyMerge(d,tmp,orgId,P,takeConflicts){
+  const F=(d.forms=d.forms||{}); ["hdr","plate","day","sig"].forEach(k=>{ F[k]=F[k]||{}; }); d.stamp=d.stamp||{}; d.tomb=d.tomb||{};
+  const theirs=P.theirs, put=(k,val)=>{ const i=k.indexOf(":"), t=k.slice(0,i), rest=k.slice(i+1);
+    if(t==="o"){ const ix=d.orgs.findIndex(o=>o.id===rest); const v=Object.assign({},val,{id:rest}); if(ix>=0) d.orgs[ix]=v; else d.orgs.push(v); }
+    else if(t==="v"){ const ix=d.veh.findIndex(v=>v.id===rest), old=ix>=0?d.veh[ix]:null, v=Object.assign({},val,{id:rest,org:orgId});
+      if(old){ const seen=new Set(), notes=[...(old.notes||[]),...(val.notes||[])].filter(n=>{ const s=n.d+"|"+n.t; if(seen.has(s)) return false; seen.add(s); return true; }).sort((x,y)=>(x.d||"").localeCompare(y.d||"")); v.notes=notes.slice(-60); d.veh[ix]=v; } else d.veh.push(v); }
+    else if(t==="d") d.days[rest]=val; else if(t==="c") d.chk[rest]=val; else if(t==="f") F.day[rest]=val; else if(t==="h") F.hdr[rest]=val; else if(t==="p") F.plate[rest]=val;
+    else if(t==="r"){ const ix=d.rc.findIndex(r=>r.id===rest); const v=Object.assign({},val,{id:rest,org:orgId}); if(ix>=0) d.rc[ix]=v; else d.rc.push(v); } };
+  const drop=(k)=>{ const i=k.indexOf(":"), t=k.slice(0,i), rest=k.slice(i+1);
+    if(t==="v") d.veh=d.veh.filter(v=>v.id!==rest); else if(t==="d") delete d.days[rest]; else if(t==="c") delete d.chk[rest]; else if(t==="f") delete F.day[rest];
+    else if(t==="h") delete F.hdr[rest]; else if(t==="p") delete F.plate[rest]; else if(t==="r") d.rc=d.rc.filter(r=>r.id!==rest); };
+  const win=[...P.take,...P.add,...(takeConflicts?P.conflict:[])];
+  // the task org first, then vehicles, so everything else has somewhere to land
+  win.sort((a,b)=>"ov".indexOf(b[0])-"ov".indexOf(a[0])).forEach(k=>{ put(k,theirs[k]); if(P.st[k]) d.stamp[k]=P.st[k]; else delete d.stamp[k]; });
+  // a vehicle kept on both sides still gets the other phone's notes
+  P.keep.concat(P.vnotes,takeConflicts?[]:P.conflict).forEach(k=>{ if(k[0]==="v"){ const mine=d.veh.find(v=>"v:"+v.id===k), th=theirs[k]; if(mine&&th){ const seen=new Set(); mine.notes=[...(mine.notes||[]),...(th.notes||[])].filter(n=>{ const s=n.d+"|"+n.t; if(seen.has(s)) return false; seen.add(s); return true; }).sort((x,y)=>(x.d||"").localeCompare(y.d||"")).slice(-60); } } });
+  P.del.forEach(k=>{ drop(k); d.tomb[k]=P.tb[k]; delete d.stamp[k]; });
+  Object.keys(P.tb).forEach(k=>{ if(t36(P.tb[k])>t36(d.tomb[k])&&!theirs[k]) d.tomb[k]=P.tb[k]; });
+  d.alias=d.alias||{}; Object.assign(d.alias,P.alias||{});
+  // this phone's clock never stamps earlier than what it just took in
+  let hi=parseInt(d.hlc||"0",36)||0; [P.st,P.tb].forEach(m=>Object.values(m).forEach(s=>{ const n=t36(s); if(n>hi&&n<Date.now()+3650*864e5) hi=n; })); if(hi) d.hlc=hi.toString(36);
+  Object.entries((tmp.forms&&tmp.forms.sig)||{}).forEach(([k,v])=>{ if(!F.sig[k]) F.sig[k]=v; });
+  stampScan(d,true);   // the merged copies keep the stamps they came with
+}
+function mergeLabel(d,k){
+  const i=k.indexOf(":"), t=k.slice(0,i), rest=k.slice(i+1), vn=(vid)=>{ const v=d.veh.find(x=>x.id===vid); return v?`${v.label||""} ${E.lastN(v.sn,8)}`.trim():"a vehicle"; };
+  if(t==="d"||t==="f"){ const [vid,dt]=rest.split("|"); return `${vn(vid)}: ${KIND_LABEL[t]} ${plain(dt)}`; }
+  if(t==="v"||t==="p") return `${vn(rest)}: ${KIND_LABEL[t]}`;
+  if(t==="c") return `${KIND_LABEL.c} ${plain(rest.split("|")[1])}`;
+  if(t==="r"){ const r=d.rc.find(x=>x.id===rest); return r?`receipt ${vn(r.veh)} ${plain(r.date)} ${money(r.amt)}`:"a receipt"; }
+  return KIND_LABEL[t]||k;
+}
+// The panel on the Board that previews a merge and asks how to finish it.
+function mergePanel(d,org){
+  const M=BOARD.pendingImport, P=M.plan, n=(a)=>a.length;
+  const w=el(`<div class="vform merge"><div class="lbl">Board file from another phone: ${esc(M.tmp.orgs[0].to||"task org")}</div>
+    <p style="margin:0">Merging keeps the newest copy of every entry from both phones. Nothing from this phone is lost unless the other phone changed or removed it later.</p>
+    <ul class="mlist">
+      <li><b>${n(P.add)}</b> new from the file</li><li><b>${n(P.take)}</b> updated from the file (it changed them later)</li>
+      <li><b>${n(P.keep)}</b> kept from this phone (changed here later)</li><li><b>${P.same}</b> already the same</li>
+      ${n(P.del)?`<li><b>${n(P.del)}</b> removed here because the other phone removed them later</li>`:""}
+      ${n(P.skip)?`<li><b>${n(P.skip)}</b> not brought back because they were removed here later</li>`:""}
+      ${P.matched?`<li><b>${P.matched}</b> vehicles or receipts matched to this phone's copies (same serial or same receipt)</li>`:""}
+    </ul>
+    ${n(P.conflict)?`<div class="w warn"><b>${n(P.conflict)} entr${n(P.conflict)>1?"ies differ":"y differs"} with no way to tell which is newer</b> (changed before this version, or at the same moment).
+      <details><summary>Show them</summary><ul>${P.conflict.slice(0,40).map(k=>`<li>${esc(mergeLabel(d,k))}</li>`).join("")}${n(P.conflict)>40?`<li>…and ${n(P.conflict)-40} more</li>`:""}</ul></details>
+      <label class="chk"><input type="radio" name="mc" value="mine" checked><span>Keep this phone's copies</span></label><label class="chk"><input type="radio" name="mc" value="file"><span>Take the file's copies</span></label></div>`:""}
+    <div class="toolrow"><button class="btn rs-big" type="button" data-mg>Merge</button><button class="btn" type="button" data-rp>Replace this phone's board instead</button><button class="btn" type="button" data-cx>Cancel</button></div></div>`);
+  w.querySelector("[data-mg]").addEventListener("click",()=>{ const take=!!w.querySelector('input[name="mc"][value="file"]:checked'); applyMerge(d,M.tmp,org.id,P,take); d.org=org.id; BOARD.pendingImport=null; save(); RENDER.board();
+    toast(`Merged: ${n(P.add)} new, ${n(P.take)+(take?n(P.conflict):0)} updated from the file, ${n(P.keep)+(take?0:n(P.conflict))} kept from this phone.`); });
+  w.querySelector("[data-rp]").addEventListener("click",()=>{ if(!confirm(`Replace everything this phone has for ${org.to||"this task org"} with the file? Changes made only on this phone will be lost.`)) return; M.replace(); BOARD.pendingImport=null; });
+  w.querySelector("[data-cx]").addEventListener("click",()=>{ BOARD.pendingImport=null; RENDER.board(); });
+  return w;
+}
 
 // ================= SHELL: the IQ Kit top bar, colors, clock, Large mode, search, install, update =================
 // Copied in behavior from IQ Kit (tools/index.html build 2026-10-09 09:45) so both apps look and work alike.
@@ -3682,6 +3919,7 @@ RENDER.report=function(){
     {n:"Fleet whiteboard",w:"BOARD.EXE",h:"#board",k:"board whiteboard vehicles mileage fleet flags print big screen"},
     {n:"Today's checklist",w:"TODAY.EXE",h:"#today",k:"checklist daily day 1 verify certify certifier calendar end of mission eom"},
     {n:"Mission report",w:"REPORT.EXE",h:"#report",k:"report mission status sitrep situational awareness leadership print pdf word docx charts graphs dashboard metrics"},
+    {n:"Mission export (all 1970s + summary)",w:"REPORT.EXE",h:"#report",k:"mission export zip all 1970s summary close out turn in binder cost recovery save every 1970 dashboard pdf csv"},
     {n:"Fleet dashboard",w:"BOARD.EXE",h:"#board",k:"dashboard metrics graphs charts kpi fleet status miles fuel"},
     {n:"Forms and the 1970",w:"FORMS.EXE",h:"#forms",k:"forms 1970 esad form fill pdf print sign signature photo upload std 270 accident workflow download"},
     {n:"Unusual events guide",w:"EVENTS.EXE",h:"#events",k:"events unusual exceptions"},
