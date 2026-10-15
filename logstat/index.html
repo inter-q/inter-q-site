@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-DMPCV/CTszijofrvnQce7LLfUS+cP/gkObb9cgE15Z8=' 'sha256-OkbM/MLQLUDPZXpiiGoX2BgEn2nzmfrdOsy/yECCL9o=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-pdbaeaS5XUpPtsOMuUELTp4fKHNyEUDhp3FA7EyEzME='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-DMPCV/CTszijofrvnQce7LLfUS+cP/gkObb9cgE15Z8=' 'sha256-PRpJIjvJ+LP4NokqBpQjihpjh769TZWltdKyB6V/OPY=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-wWnCPRaMIo4Xw5la4IftUaK2WGSWdlUiuaOHb1mjvhY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-15 09:20">
+<meta name="logstat-build" content="2026-10-15 09:40">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1083,7 +1083,8 @@
   .orgbar .f { flex:1 1 160px; }
   .orgbar .f.dt { flex:0 1 190px; } .orgbar .f.dt > span { display:block; } .calbtn { text-align:left; cursor:pointer; width:100%; white-space:nowrap; }
   .lg-days { display:flex; flex-direction:column; gap:6px; margin-top:8px; }
-  .lg-head, .lg-row { display:grid; grid-template-columns:7.5em minmax(5.5em,1fr) minmax(5.5em,1fr) 6.5em minmax(7em,1.4fr) minmax(7em,1.4fr) 5.5em minmax(4.5em,.8fr) minmax(4.5em,.8fr); gap:4px 8px; align-items:end; }
+  .lg-head, .lg-row { display:grid; grid-template-columns:7.5em minmax(5.5em,1fr) minmax(5.5em,1fr) 6.5em minmax(7em,1.4fr) minmax(7em,1.4fr) 5.5em minmax(10em,1.8fr); gap:4px 8px; align-items:end; }
+  .lg-fuel { display:flex; flex-direction:column; gap:3px; min-width:0; } .lg-fe { display:flex; gap:4px; } .lg-fe .fld { flex:1 1 0; min-width:0; } .lg-delf, .lg-addf { font-size:11px; padding:2px 6px; min-height:0; } .lg-addf { align-self:flex-start; } .lg-ft { font-size:11px; } .lg-fl { display:none; }
   .lg-head { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-dim); border-bottom:1px solid var(--lo); padding-bottom:3px; }
   .lg-row { border-bottom:1px dotted var(--rule); padding:6px 4px; } .lg-row.crit { background:var(--crit-bg); } .lg-row.warn { background:var(--warn-bg); } .lg-row.today { box-shadow:inset 3px 0 0 var(--bright); }
   .lg-row label > span, .lg-mi > span { display:none; } .lg-row .fld { width:100%; min-width:0; }
@@ -1094,10 +1095,10 @@
   .f70p th { background:#262e37; font-size:11px; } .f70h th { width:13%; } .f70r td:nth-child(4) { font-size:11px; }
   @media (max-width:760px){
     .lg-head { display:none; }
-    .lg-row { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-areas:"date mi" "s e" "op co" "st st" "fg fc" "w w"; }
-    .lg-date { grid-area:date; } .lg-s { grid-area:s; } .lg-e { grid-area:e; } .lg-mi { grid-area:mi; align-items:flex-end; } .lg-op { grid-area:op; } .lg-co { grid-area:co; } .lg-st { grid-area:st; } .lg-fg { grid-area:fg; } .lg-fc { grid-area:fc; } .lg-w { grid-area:w; }
+    .lg-row { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-areas:"date mi" "s e" "op co" "st st" "fuel fuel" "w w"; }
+    .lg-date { grid-area:date; } .lg-s { grid-area:s; } .lg-e { grid-area:e; } .lg-mi { grid-area:mi; align-items:flex-end; } .lg-op { grid-area:op; } .lg-co { grid-area:co; } .lg-st { grid-area:st; } .lg-fuel { grid-area:fuel; } .lg-fl { display:block; font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.05em; } .lg-w { grid-area:w; }
     .lg-row label > span, .lg-mi > span { display:block; font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.05em; } .lg-na { display:none; }
-    .lg-row:not(:has(.lg-co label, label.lg-co)) { grid-template-areas:"date mi" "s e" "op op" "st st" "fg fc" "w w"; }
+    .lg-row:not(:has(.lg-co label, label.lg-co)) { grid-template-areas:"date mi" "s e" "op op" "st st" "fuel fuel" "w w"; }
   }
   .cal2 { flex:1 1 100%; border:1px solid var(--lo); padding:8px; display:flex; flex-direction:column; gap:6px; }
   .cal2-h { display:flex; flex-wrap:wrap; gap:6px; align-items:center; } .cal2-h b { flex:1 1 auto; text-align:center; color:var(--bright); }
@@ -1545,10 +1546,12 @@
   // not entered on an older version of the app.
   const counted=(r)=>!!r&&r.status!=="rejected"&&r.status!=="noenter"&&r.status!=="annotate";
   // A day's fuel: gallons and cost typed in the vehicle log win; otherwise the receipts stamped for that day.
-  function dayFuel(db,v,date){ const dr=dayRec(db,v.id,date), g=num(dr.fg), c=num(dr.fc);
+  function fuelList(dr){ if(!dr) return []; if(Array.isArray(dr.fx)) return dr.fx.filter(f=>f&&(num(f.g)!==null||num(f.c)!==null)).map(f=>({g:String(f.g??""),c:String(f.c??"")}));
+    return num(dr.fg)!==null||num(dr.fc)!==null?[{g:String(dr.fg??""),c:String(dr.fc??"")}]:[]; }
+  function dayFuel(db,v,date){ const dr=dayRec(db,v.id,date), FL=fuelList(dr), g=FL.length?FL.reduce((a,f)=>a+(num(f.g)||0),0):null, c=FL.length?FL.reduce((a,f)=>a+(num(f.c)||0),0):null;
     const rc=(db.rc||[]).filter(r=>r.veh===v.id&&r.date===date&&counted(r)&&r.type==="FUEL");
     const rg=rc.reduce((a,r)=>a+(num(r.gal)||0),0), ra=rc.reduce((a,r)=>a+(num(r.amt)||0),0);
-    if(g!==null||c!==null) return {gal:g||0,amt:c||0,n:rc.length,manual:true,rgal:rg,ramt:ra};
+    if(FL.length) return {gal:g||0,amt:c||0,n:rc.length,manual:true,fills:FL.length,rgal:rg,ramt:ra};
     return {gal:rg,amt:ra,n:rc.length,manual:false,rgal:rg,ramt:ra}; }
   function flags(R,db,v,date,org,today){
     const F=[], i=info(R,v), dr=dayRec(db,v.id,date), lo=startOfDay(db,v,date), e=num(dr.e), u=unitWord(i.tracks);
@@ -1715,7 +1718,7 @@
     const rc=(db.rc||[]).filter(r=>r.org===(org&&org.id)&&isYMD(r.date)&&r.date<=date), fuelRc=rc.filter(r=>r.type==="FUEL");
     // fuel typed in a vehicle's log for a day stands in for that day's receipts
     const vids=new Set(V.map(v=>v.id)), man=[]; Object.keys(db.days||{}).forEach(k=>{ const p=k.split("|"), dr=db.days[k]; if(!vids.has(p[0])||!isYMD(p[1])||p[1]>date||!dr) return;
-      if(num(dr.fg)===null&&num(dr.fc)===null) return; man.push({veh:p[0],date:p[1],gal:String(num(dr.fg)||0),amt:String(num(dr.fc)||0),card:"WEX",type:"FUEL",status:"sent"}); });
+      fuelList(dr).forEach(f=>man.push({veh:p[0],date:p[1],gal:String(num(f.g)||0),amt:String(num(f.c)||0),card:"WEX",type:"FUEL",status:"sent"})); });
     const manK=new Set(man.map(r=>r.veh+"|"+r.date));
     const ent=fuelRc.filter(counted).filter(r=>!manK.has(r.veh+"|"+r.date)).concat(man), wait=[], ne=fuelRc.filter(r=>r.status==="noenter");
     const sum=(a,k)=>Math.round(a.reduce((x,r)=>x+(num(r[k])||0),0)*100)/100;
@@ -1748,7 +1751,7 @@
 
   const API={ pad, isYMD, ymdOf, addDays, diffDays, plainDate, mmddyyyy, normSN, normTO, lastN, isVIN, looksNSN, num, fmtN, money,
     ascii, nmcDay, info, unitWord, active, idProblems, dk, dayRec, startOfDay, baseStart, endOfDay, lastReading, nmcOn, flags, fileName, PROB, checkReceipt,
-    missionStats, usedOn, counted, dayFuel, makeLS1, parseLS1, fillNote, gradeNote, dplus, orgVeh, autoChecks, certMessage };
+    missionStats, usedOn, counted, dayFuel, fuelList, makeLS1, parseLS1, fillNote, gradeNote, dplus, orgVeh, autoChecks, certMessage };
   if(typeof module!=="undefined"&&module.exports) module.exports=API; else root.LSE=API;
 })(typeof window!=="undefined"?window:globalThis);
 </script>
@@ -1800,7 +1803,7 @@ function repair(o){
   if(o.coy&&typeof o.coy==="object") Object.keys(o.coy).slice(0,6000).forEach(k=>{ const c=normCoy(typeof o.coy[k]==="string"?o.coy[k]:""); if(vids.has(k)&&c) D.coy[k]=c; });
   (Array.isArray(o.veh)?o.veh:[]).forEach(x=>{ if(x&&typeof x.coy==="string"&&vids.has(x.id)&&!D.coy[x.id]){ const c=normCoy(x.coy); if(c) D.coy[x.id]=c; } });
   // newest days first, so a device that hits the limit keeps the current mission
-  if(o.days&&typeof o.days==="object") Object.keys(o.days).sort((x,y)=>(y.split("|")[1]||"").localeCompare(x.split("|")[1]||"")).slice(0,150000).forEach(k=>{ const [vid,d]=k.split("|"); const r=o.days[k]; if(vids.has(vid)&&E.isYMD(d)&&r&&typeof r==="object") D.days[k]={e:s(r.e,12),op:s(r.op,60),co:s(r.co,60),f1970:b(r.f1970),sodo:s(r.sodo,12),...(r.so?{so:s(r.so,12)}:{}),...(r.fg?{fg:s(r.fg,12)}:{}),...(r.fc?{fc:s(r.fc,12)}:{})}; });
+  if(o.days&&typeof o.days==="object") Object.keys(o.days).sort((x,y)=>(y.split("|")[1]||"").localeCompare(x.split("|")[1]||"")).slice(0,150000).forEach(k=>{ const [vid,d]=k.split("|"); const r=o.days[k]; if(vids.has(vid)&&E.isYMD(d)&&r&&typeof r==="object") D.days[k]={e:s(r.e,12),op:s(r.op,60),co:s(r.co,60),f1970:b(r.f1970),sodo:s(r.sodo,12),...(r.so?{so:s(r.so,12)}:{}),...(r.fg?{fg:s(r.fg,12)}:{}),...(r.fc?{fc:s(r.fc,12)}:{}),...(Array.isArray(r.fx)&&r.fx.length?{fx:r.fx.slice(0,12).filter(f=>f&&typeof f==="object").map(f=>({g:s(f.g,12),c:s(f.c,12)}))}:{})}; });
   D.rc=(Array.isArray(o.rc)?o.rc:[]).filter(x=>x&&typeof x==="object"&&s(x.id)).slice(-20000).map(x=>({id:s(x.id,24),org:s(x.org,20),veh:s(x.veh,20),date:ymd(x.date),type:["FUEL","TOLL","OTHER"].includes(x.type)?x.type:"FUEL",gal:s(x.gal,12),amt:s(x.amt,12),odo:s(x.odo,12),card:s(x.card,20),file:s(x.file,90),loc:s(x.loc,80),
     status:["sent","pending","accepted","rejected","noenter","annotate"].includes(x.status)?x.status:"pending",reasons:(Array.isArray(x.reasons)?x.reasons:[]).map(r=>s(r,60)).slice(0,20),note:s(x.note,600),src:s(x.src,10),last:s(x.last,20),mrtW:s(x.mrtW,40),t:typeof x.t==="number"?x.t:0}));
   if(o.chk&&typeof o.chk==="object") Object.keys(o.chk).slice(0,20000).forEach(k=>{ const c=o.chk[k]; if(!c||typeof c!=="object") return; const st={}; if(c.st&&typeof c.st==="object") Object.keys(c.st).slice(0,40).forEach(i=>{ st[s(i,20)]=c.st[i]===true; }); D.chk[k]={st,cal:["red","yellow","green"].includes(c.cal)?c.cal:"red",ver:s(c.ver,8),notified:s(c.notified,20),issues:s(c.issues,600)}; });
@@ -2032,7 +2035,7 @@ RENDER.help=function(){
     <li>Last day: EOM each vehicle on the <a href="#board">Board</a>, then <b>Mission export</b> for every 1970.</li></ol>
   <h3>Stamp a receipt</h3><ul><li>Photograph the receipt on a white background, one receipt per photo.</li><li>Fill gallons, amount and odometer. Every receipt here is fuel on the WEX card. Tick the three pre-checks. Share sends the stamped copy with its file name.</li><li>The photo is cropped to the receipt automatically; tap <b>Adjust crop</b> if anything is cut off. A receipt too long for one photo can be taken in up to three parts with <b>＋ Add next part</b>: top first, overlapping a line or two.</li><li>The stamp goes on a tan band below the receipt (beside it on a very long receipt), never over it, and the photo's location data is removed. Keep the paper original for turn-in.</li></ul>
   <h3>Two operators, one task org</h3><ul><li>Board → <b>Save board file</b>, send it to the other device, and there tap <b>Merge in a board file</b>. The newest copy of every entry wins on both devices; nothing is lost unless the other device changed or removed it later. The same serial is treated as the same vehicle and the same receipt is counted once.</li><li>Entries changed before this version have no time on them; if both devices changed one, you choose whose copy to keep.</li></ul>
-  <h3>Manage your Fleet (Board)</h3><ul><li>Tap the <b>Date</b> to open the mission calendar: days with vehicles on mission are highlighted with how many, the mission start is marked START, today is outlined. Tap a day to see it.</li><li><b>Open log</b> on a vehicle shows every day: Start, End, miles, operators, FMC/NMC and fuel. Fix any day the field reported wrong; the next day's Start follows. <b>Didn't move</b> sets End to Start. Typed fuel for a day is used instead of that day's stamped receipts. The log has <b>Preview 1970</b>, <b>Fillable 1970</b> and <b>Print-ready 1970</b>.</li><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li><b>Big missions:</b> task orgs with the same MRT make one mission. Tap the mission line at the top of the Board to see every task force, a task force to see its companies, a company to see its vehicles. Set up companies with <b>Set up companies</b>; each company has its own vehicle count, miles, missing mileage and flags.</li><li><b>Tactical vehicles need a second driver</b> (co-operator) every day. It goes on the second name line of block 16 on the 1970, and that driver signs there. The Board flags a tactical vehicle with no second driver, or with the operator entered twice.</li><li><b>Day sheet</b> enters a whole company's end mileage, operators and second drivers for one day on one screen. </li><li><b>Big screen</b> shows the Board large on a TV or second screen.</li><li><b>Print</b> prints the level you're on: mission summary, task force (companies and their vehicles) or one company. <b>1970s for</b> a company ticks just its vehicles on the 1970 screen.</li><li><b>NMC</b> (damaged, can't be driven): set the day's status to NMC in the vehicle's log. It stays NMC until you set a later day back to FMC. <b>EOM</b> is separate (More… → EOM): do it when the vehicle is done, then finalize its 1970. EOM'd vehicles still count in the task force and company totals.</li></ul>
+  <h3>Manage your Fleet (Board)</h3><ul><li>Tap the <b>Date</b> to open the mission calendar: days with vehicles on mission are highlighted with how many, the mission start is marked START, today is outlined. Tap a day to see it.</li><li><b>Open log</b> on a vehicle shows every day: Start, End, miles, operators, FMC/NMC and fuel. Fix any day the field reported wrong; the next day's Start follows. Same Start and End means it didn't move. <b>+ fill-up</b> adds another refuel for the same day; the 1970 shows the day's total gallons and cost. Typed fill-ups for a day are used instead of that day's stamped receipts. The log has <b>Preview 1970</b>, <b>Fillable 1970</b> and <b>Print-ready 1970</b>.</li><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li><b>Big missions:</b> task orgs with the same MRT make one mission. Tap the mission line at the top of the Board to see every task force, a task force to see its companies, a company to see its vehicles. Set up companies with <b>Set up companies</b>; each company has its own vehicle count, miles, missing mileage and flags.</li><li><b>Tactical vehicles need a second driver</b> (co-operator) every day. It goes on the second name line of block 16 on the 1970, and that driver signs there. The Board flags a tactical vehicle with no second driver, or with the operator entered twice.</li><li><b>Day sheet</b> enters a whole company's end mileage, operators and second drivers for one day on one screen. </li><li><b>Big screen</b> shows the Board large on a TV or second screen.</li><li><b>Print</b> prints the level you're on: mission summary, task force (companies and their vehicles) or one company. <b>1970s for</b> a company ticks just its vehicles on the 1970 screen.</li><li><b>NMC</b> (damaged, can't be driven): set the day's status to NMC in the vehicle's log. It stays NMC until you set a later day back to FMC. <b>EOM</b> is separate (More… → EOM): do it when the vehicle is done, then finalize its 1970. EOM'd vehicles still count in the task force and company totals.</li></ul>
   <h3>The 1970: from the Board, edited, or opened</h3><ul><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup (tap to place text, ✓, ✗, the date or a signature), then save it as a PDF.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
   <h3>Signatures</h3><ul><li><b>Type</b> your name and pick a handwriting style, or <b>Draw</b> it with a finger. You confirm it's your own signature; it's saved on this device for next time.</li><li>Only the person named signs. Anyone can type a printed name, but not someone else's signature. Check with J4 that e-signatures are accepted on the 1970.</li></ul>
   <h3>Mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, and the open items for the day. Every chart has a <b>Show as a table</b> view.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
@@ -2749,8 +2752,8 @@ function setNmcDay(v,x,on){
   v.nmcHist=H.sort((a,b)=>a.from<b.from?-1:1).slice(-40);
 }
 // ---------- vehicle log: every day for one vehicle, entered in one place ----------
-let LOG={add:{},prev:false,busy:false};
-const logHas=(dr)=>!!dr&&["e","op","co","so","fg","fc"].some(k=>String(dr[k]??"").trim()!=="");
+let LOG={add:{},prev:false,busy:false,addf:""};
+const logHas=(dr)=>!!dr&&(["e","op","co","so","fg","fc"].some(k=>String(dr[k]??"").trim()!=="")||E.fuelList(dr).length>0);
 function logDays(v,org){
   const d=db(), today=todayYMD(), startD=E.isYMD(v.startDate)?v.startDate:(org&&E.isYMD(org.start)?org.start:"");
   const have=Object.keys(d.days).filter(k=>k.startsWith(v.id+"|")).map(k=>k.split("|")[1]).filter(x=>E.isYMD(x)&&logHas(d.days[v.id+"|"+x]))
@@ -2773,7 +2776,7 @@ function vehicleLog(b,v){
   const top=el(`<div class="vform lg-top"><div class="toolrow"><a class="btn" href="#board">◀ All vehicles</a></div>
     <div class="vc-h"><span><b>${esc(v.label||i.cat.short)}</b> <code>${esc(v.sn)}</code></span><span><span class="pill">${esc(status)}</span> <span class="pill p-dim">${esc(i.cat.short)}</span></span></div>
     <div class="status"><span>Start <b>${esc(startD?plain(startD):"—")}</b>${v.startOdo?` at <b>${esc(fmtN(num(v.startOdo)))}</b>`:""}</span>${u==="none"?"":`<span>This mission <b>${esc(fmtN(Math.round(tot*10)/10))} ${U}</b></span>`}<span>Fuel <b>${esc(money(fuel))}</b> (${esc(String(Math.round(gal*1000)/1000))} gal)</span><span>Days entered <b>${n}</b> of ${days.length}</span></div>
-    <p class="muted" style="margin:0">Add a day for each day the vehicle is on the mission. Start fills in from the day before's End; fix any number the field reported wrong. Didn't move? End = Start. Everything here updates the Board, the report and this vehicle's 1970.</p></div>`);
+    <p class="muted" style="margin:0">Add a day for each day the vehicle is on the mission. Start fills in from the day before's End; fix any number the field reported wrong. Same Start and End means it didn't move. More than one fill-up in a day? Tap + fill-up. Everything here updates the Board, the report and this vehicle's 1970.</p></div>`);
   b.appendChild(top);
   // the 1970
   const f70=el(`<details class="sec lg-1970" open><summary>1970 for this vehicle</summary><div class="toolrow"><button class="btn" type="button" data-prev aria-pressed="${LOG.prev}">${LOG.prev?"Hide preview":"Preview 1970"}</button><button class="btn" type="button" data-go="fill">Fillable 1970 (PDF)</button><button class="btn rs-big" type="button" data-go="flat">Print-ready 1970 (PDF)</button><a class="btn" href="${esc(href("forms","v="+encodeURIComponent(v.id)))}">Locations &amp; signatures</a></div><div class="muted" data-st></div><div data-rb></div><div data-pv></div></details>`);
@@ -2806,29 +2809,34 @@ function vehicleLog(b,v){
       <div class="lg-date"><b>${esc(mmdd(x))}</b> <span class="muted">${esc(plain(x).replace(/ \d{4}$/,""))}</span>${E.dplus(org,x)?` <span class="muted">${esc(E.dplus(org,x))}</span>`:""}</div>
       <label class="lg-s"><span>Start${u==="hrs"?" hrs":""}</span><input class="fld" data-k="s" inputmode="decimal" autocomplete="off" value="${none||st===null?"":esc(String(st))}"${none?" disabled placeholder=\"no mileage\"":""}></label>
       <label class="lg-e"><span>End${u==="hrs"?" hrs":""}</span><input class="fld" data-k="e" inputmode="decimal" autocomplete="off" value="${en===null?"":esc(String(en))}"${none?" disabled":""}></label>
-      <div class="lg-mi"><span>${esc(U)}</span><b>${mi===null?"—":esc(fmtN(mi))}</b>${none||st===null?"":`<button type="button" class="btn lg-still" data-still title="Didn't move: End = Start">Didn't move</button>`}</div>
+      <div class="lg-mi"><span>${esc(U)}</span><b>${mi===null?"—":esc(fmtN(mi))}</b></div>
       <label class="lg-op"><span>Operator</span><input class="fld" data-k="op" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="rank &amp; name" value="${esc(dr.op||"")}"></label>
       ${coop?`<label class="lg-co"><span>2nd driver</span><input class="fld" data-k="co" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="rank &amp; name" value="${esc(dr.co||"")}"></label>`:`<div class="lg-co lg-na"></div>`}
       <label class="lg-st"><span>Status</span><select class="fld" data-k="st"><option${nmc?"":" selected"}>FMC</option><option${nmc?" selected":""}>NMC</option></select></label>
-      <label class="lg-fg"><span>Fuel gal</span><input class="fld" data-k="fg" inputmode="decimal" autocomplete="off" value="${f.manual&&num(dr.fg)!==null?esc(String(dr.fg)):""}" placeholder="${!f.manual&&f.n?esc(String(Math.round(f.gal*1000)/1000)):"—"}"></label>
-      <label class="lg-fc"><span>Fuel $</span><input class="fld" data-k="fc" inputmode="decimal" autocomplete="off" value="${f.manual&&num(dr.fc)!==null?esc(String(dr.fc)):""}" placeholder="${!f.manual&&f.n?esc(f.amt.toFixed(2)):"—"}"></label>
+      <div class="lg-fuel"><span class="lg-fl">Fuel (gal · $)</span>${(()=>{ const FL=E.fuelList(dr), L=FL.length?FL.slice():[{g:"",c:""}]; if(LOG.addf===v.id+"|"+x&&FL.length) L.push({g:"",c:""});
+        return L.map((q,j)=>`<div class="lg-fe"><input class="fld" data-k="fg" data-j="${j}" inputmode="decimal" autocomplete="off" aria-label="Fuel gallons, fill-up ${j+1}" value="${esc(q.g)}" placeholder="${j===0&&!f.manual&&f.n?esc(String(Math.round(f.gal*1000)/1000)):"gal"}"><input class="fld" data-k="fc" data-j="${j}" inputmode="decimal" autocomplete="off" aria-label="Fuel cost, fill-up ${j+1}" value="${esc(q.c)}" placeholder="${j===0&&!f.manual&&f.n?esc(f.amt.toFixed(2)):"$"}">${L.length>1?`<button type="button" class="btn lg-delf" data-delf="${j}" aria-label="Remove fill-up ${j+1}">✕</button>`:""}</div>`).join(""); })()}
+        <button type="button" class="btn lg-addf" data-addf>+ fill-up</button>${f.manual&&f.fills>1?`<span class="muted lg-ft">${f.fills} fill-ups: ${esc(String(Math.round(f.gal*1000)/1000))} gal · ${esc(money(f.amt))}</span>`:""}</div>
       ${W.length?`<div class="lg-w">${W.map(w=>`<span class="w ${w[0]}">${esc(w[1])}</span>`).join("")}</div>`:""}
     </div>`; };
-  const box=el(`<div class="lg-days"><div class="lg-head" aria-hidden="true"><span>Date</span><span>Start</span><span>End</span><span>${esc(U)}</span><span>Operator</span><span>${coop?"2nd driver":""}</span><span>Status</span><span>Fuel gal</span><span>Fuel $</span></div>${days.map(rowHtml).join("")}
+  const box=el(`<div class="lg-days"><div class="lg-head" aria-hidden="true"><span>Date</span><span>Start</span><span>End</span><span>${esc(U)}</span><span>Operator</span><span>${coop?"2nd driver":""}</span><span>Status</span><span>Fuel (gal · $)</span></div>${days.map(rowHtml).join("")}
     <div class="toolrow">${closed?`<span class="muted">Closed out (EOM ${esc(plain(v.eom))}).</span>`:future?`<span class="muted">Every day through today is on the log.</span>`:`<button class="btn rs-big" type="button" data-add>+ Add day (${esc(plain(next))})</button>`}</div></div>`);
   const redraw=(keep)=>{ RENDER.board(); if(keep){ const f=document.querySelector(`.lg-row[data-d="${keep[0]}"] [data-k="${keep[1]}"]`); if(f) f.focus({preventScroll:true}); } };
   const later=()=>setTimeout(()=>{ const a=document.activeElement, r=a&&a.closest?a.closest(".lg-row"):null; redraw(r&&a.dataset.k?[r.dataset.d,a.dataset.k]:null); },0);
   box.addEventListener("change",(e)=>{ const t=e.target, row=t.closest(".lg-row"); if(!row||!t.dataset.k) return; const x=row.dataset.d, k=t.dataset.k, rec=dayRec(v.id,x);
     if(["s","e","fg","fc"].includes(k)){ const p=parseNum(t.value); if(p===null){ toast(NUMMSG); redraw(); return; }
       if(k==="s"){ if(p===""){ delete rec.so; } else { rec.so=p; if(E.baseStart(d,v,x)===num(p)) delete rec.so; } }
-      else if(p==="") delete rec[k]; else rec[k]=p;
+      else if(k==="e"){ if(p==="") delete rec.e; else rec.e=p; }
+      else { const L=E.fuelList(rec), j=+t.dataset.j||0; while(L.length<=j) L.push({g:"",c:""}); L[j][k==="fg"?"g":"c"]=p; const keep=L.filter(q=>num(q.g)!==null||num(q.c)!==null);
+        delete rec.fg; delete rec.fc; if(keep.length) rec.fx=keep; else delete rec.fx; if(LOG.addf===v.id+"|"+x) LOG.addf=""; }
       // remarks typed over on the 1970 for this day rebuild from the new numbers
       const FD=formsDB().day, o=FD[v.id+"|"+x]; if(o&&(typeof o.r1==="string"||typeof o.r2==="string")){ delete o.r1; delete o.r2; if(!Object.keys(o).length) delete FD[v.id+"|"+x]; toast("The 1970 remarks for this day now follow these numbers."); } }
     else if(k==="op"||k==="co"){ t.value=setName(v.id,x,k,t.value); }
     else if(k==="st"){ setNmcDay(v,x,t.value==="NMC"); toast(t.value==="NMC"?`NMC from ${plain(x)} until you set a day back to FMC.`:`FMC on ${plain(x)}.`); }
     save(); later(); });
   box.addEventListener("click",(e)=>{ if(e.target.closest("[data-add]")){ LOG.add[v.id]=next; RENDER.board(); const f=document.querySelector(`.lg-row[data-d="${next}"] [data-k="${none?"op":"e"}"]`); if(f) f.focus(); return; }
-    const sb=e.target.closest("[data-still]"); if(sb){ const x=sb.closest(".lg-row").dataset.d, st=E.startOfDay(d,v,x); if(st===null){ toast("Type the start first."); return; } dayRec(v.id,x).e=String(st); { const FD=formsDB().day, o=FD[v.id+"|"+x]; if(o){ delete o.r1; delete o.r2; if(!Object.keys(o).length) delete FD[v.id+"|"+x]; } } save(); toast(`${plain(x)}: didn't move. End = Start.`); redraw([x,"op"]); } });
+    const af=e.target.closest("[data-addf]"); if(af){ const x=af.closest(".lg-row").dataset.d; LOG.addf=v.id+"|"+x; RENDER.board(); const ins=document.querySelectorAll(`.lg-row[data-d="${x}"] [data-k="fg"]`); if(ins.length) ins[ins.length-1].focus(); return; }
+    const df=e.target.closest("[data-delf]"); if(df){ const x=df.closest(".lg-row").dataset.d, rec=dayRec(v.id,x), L=E.fuelList(rec), j=+df.dataset.delf;
+      if(j<L.length){ L.splice(j,1); delete rec.fg; delete rec.fc; if(L.length) rec.fx=L; else delete rec.fx; save(); toast("Fill-up removed."); } else LOG.addf=""; RENDER.board(); } });
   b.appendChild(box);
 }
 RENDER.board=function(){
@@ -2977,7 +2985,7 @@ function rows1970(d,org,v,through,all,H){
   const out=[], unit=E.info(R,v).tracks; H=H||{};
   for(let dt=s; dt<=end; dt=E.addDays(dt,1)){
     const dr=d.days[E.dk(v.id,dt)]||{}, rc=recs.filter(r=>r.date===dt), o=DAY[v.id+"|"+dt];
-    const has=!!(String(dr.e||"").trim()||String(dr.op||"").trim()||String(dr.co||"").trim()||num(dr.fg)!==null||num(dr.fc)!==null||rc.length||o||dt===v.startDate);
+    const has=!!(String(dr.e||"").trim()||String(dr.op||"").trim()||String(dr.co||"").trim()||E.fuelList(dr).length>0||rc.length||o||dt===v.startDate);
     if(!has&&!all) continue;
     const fuel=rc.filter(r=>r.type==="FUEL"), toll=rc.filter(r=>r.type==="TOLL");
     const DF=E.dayFuel(d,v,dt), gal=DF.gal, amt=DF.amt, hasFuel=DF.manual||fuel.length>0, tamt=toll.reduce((a,r)=>a+(num(r.amt)||0),0);
