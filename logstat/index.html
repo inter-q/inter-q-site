@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-1fd/EAfJvSwlk+nYuYaIOvUHnE6CFtcm6nxDetKCsww=' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-GiRa30kGXm1ca//BE7ay7ExS6bwSaS9bqhl8mWEsgTw=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-1fd/EAfJvSwlk+nYuYaIOvUHnE6CFtcm6nxDetKCsww=' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-9R/F+NwyPgDVr0xMszktalzKUxmHW7R+H9OeY1rMMP4=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-15 12:30">
+<meta name="logstat-build" content="2026-10-15 14:10">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1307,6 +1307,8 @@
   .frow .chk { flex:1 1 220px; min-width:0; }
   .frow .fplate { flex:0 1 150px; }
   .flist { display:flex; flex-direction:column; gap:8px; }
+  .f70tf { border:2px solid var(--bright); background:rgba(var(--glow),.07); box-shadow:0 0 0 1px rgba(var(--glow),.25), 0 0 14px rgba(var(--glow),.18); padding:10px 12px; display:flex; flex-direction:column; gap:10px; margin:6px 0; }
+  .f70tf-h h3 { margin:0 0 4px; font-family:var(--font-mono); font-size:18px; color:var(--bright); letter-spacing:.02em; } html.lg .f70tf-h h3 { font-size:22px; }
   .fitem { display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid rgba(var(--glow),.3); padding:6px 8px; }
   .fitem > div { min-width:0; overflow-wrap:anywhere; }
   .fitem .btn { flex:0 0 auto; }
@@ -3391,7 +3393,7 @@ RENDER.forms=function(){
   opn.querySelectorAll("[data-open]").forEach(i=>i.addEventListener("change",(e)=>{ const f=e.target.files[0]; e.target.value=""; openFile(f); }));
   b.appendChild(opn);
   const blanks=el(`<div data-blanks></div>`); b.appendChild(blanks);
-  b.appendChild(el(`<div class="lbl" style="margin-top:6px">Print 1970s for a task force or company</div>`));
+  b.appendChild(el(`<div class="f70tf-h" data-tfh><h3>Print 1970s for a task force or company</h3><p class="muted" style="margin:0">Every vehicle's 1970, built from its log: pick the task force and date, tick the vehicles (or one company), then Fillable or Print-ready.</p></div>`));
   b.appendChild(orgBar(()=>RENDER.forms()));
   const org=curOrg();
   if(org){
@@ -3440,8 +3442,10 @@ RENDER.forms=function(){
     b.appendChild(missionExportBox(org,through));
   }
   const fl=el(`<div class="vform"><div class="lbl">Blank forms to download and print</div><div class="flist">${R.forms.map(x=>`<div class="fitem"><div><b>${esc(x.t)}</b> <span class="muted">PDF · ${esc(x.size)}</span><div class="muted">${esc(x.note)}</div></div><a class="btn" href="${esc(x.file)}" download="${esc(x.file)}">Download</a></div>`).join("")}</div>
-    <div class="src"><a href="${esc(R.links.ddt.u)}" target="_blank" rel="noopener noreferrer">${esc(R.links.ddt.l)} ↗</a></div></div>`);
-  const bl=b.querySelector("[data-blanks]"); if(bl) bl.replaceWith(fl); else b.appendChild(fl);
+    <div class="fitem"><div><b>Defensive Driver Training (DGS)</b> <span class="muted">Website · CalLearns</span><div class="muted">Required before driving a state vehicle (about two hours, official state email). Give the certificate and a signed STD 261 to your ARRO operator.</div></div><a class="btn" href="${esc(R.links.ddt.u)}" target="_blank" rel="noopener noreferrer">Open ↗</a></div></div>`);
+  // the task force section becomes one highlighted panel; blank forms go at the bottom
+  const th=b.querySelector("[data-tfh]"); if(th){ const panel=el(`<section class="f70tf" aria-label="Print 1970s for a task force or company"></section>`); th.before(panel); let n=th; while(n){ const nx=n.nextSibling; panel.appendChild(n); n=nx; } }
+  const bl=b.querySelector("[data-blanks]"); if(bl) bl.remove(); b.appendChild(fl);
 };
 
 // ================= SIGNATURES: adopt (type in a handwriting style, or draw), then place =================
