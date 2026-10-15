@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-EFyQKUVhSeKNOlzpGNvbESucZsfYZcHfzCpYETxJrSQ=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-PRpJIjvJ+LP4NokqBpQjihpjh769TZWltdKyB6V/OPY=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-1fd/EAfJvSwlk+nYuYaIOvUHnE6CFtcm6nxDetKCsww=' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-GiRa30kGXm1ca//BE7ay7ExS6bwSaS9bqhl8mWEsgTw=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-15 11:20">
+<meta name="logstat-build" content="2026-10-15 12:30">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1534,6 +1534,7 @@
   }
   function endOfDay(db,v,date){ return num(dayRec(db,v.id,date).e); }
   function lastReading(db,v,upto){
+    if(isYMD(v.eom)&&v.eom<upto) upto=v.eom;
     for(let i=0;i<=180;i++){ const d=addDays(upto,-i); if(v.startDate&&d<v.startDate) break; const e=num(dayRec(db,v.id,d).e); if(e!==null) return {d,e}; }
     return num(v.startOdo)!==null?{d:v.startDate||"",e:num(v.startOdo)}:null;
   }
@@ -1705,7 +1706,7 @@
     const out={}, so=num(v.startOdo); let last=null, lastD="";
     const pre=addDays(from,-180); for(let d=pre; d<from; d=addDays(d,1)){ if(isYMD(v.startDate)&&d<v.startDate) continue; const e=num(dayRec(db,v.id,d).e); if(e!==null){ last=e; lastD=d; } }
     for(let d=from; d<=to; d=addDays(d,1)){
-      let st=(isYMD(v.startDate)&&d<=v.startDate)?so:(last!==null&&diffDays(lastD,d)<=180?last:so);
+      let st=(isYMD(v.startDate)&&d<=v.startDate)?so:(last!==null&&diffDays(lastD,d)<=180?last:so); const ov=num(dayRec(db,v.id,d).so); if(ov!==null) st=ov;
       const e=num(dayRec(db,v.id,d).e), pre=isYMD(v.startDate)&&d<v.startDate; out[d]=!pre&&st!==null&&e!==null&&e>=st?e-st:0; if(e!==null&&!pre){ last=e; lastD=d; } }
     return out;
   }
@@ -1719,8 +1720,9 @@
     // fuel typed in a vehicle's log for a day stands in for that day's receipts
     const vids=new Set(V.map(v=>v.id)), man=[]; Object.keys(db.days||{}).forEach(k=>{ const p=k.split("|"), dr=db.days[k]; if(!vids.has(p[0])||!isYMD(p[1])||p[1]>date||!dr) return;
       fuelList(dr).forEach(f=>man.push({veh:p[0],date:p[1],gal:String(num(f.g)||0),amt:String(num(f.c)||0),card:"WEX",type:"FUEL",status:"sent"})); });
+    const VB=Object.fromEntries(V.map(v=>[v.id,v])), onDay=(r)=>{ const v=VB[r.veh]; return !v||active(v,r.date); };   // fuel after an EOM (or before the start) doesn't count
     const manK=new Set(man.map(r=>r.veh+"|"+r.date));
-    const ent=fuelRc.filter(counted).filter(r=>!manK.has(r.veh+"|"+r.date)).concat(man), wait=[], ne=fuelRc.filter(r=>r.status==="noenter");
+    const ent=fuelRc.filter(counted).filter(r=>!manK.has(r.veh+"|"+r.date)).concat(man).filter(onDay), wait=[], ne=fuelRc.filter(r=>r.status==="noenter");
     const sum=(a,k)=>Math.round(a.reduce((x,r)=>x+(num(r[k])||0),0)*100)/100;
     const used={}; V.forEach(v=>{ used[v.id]=tr(v)==="none"?{}:usedSeries(db,v,from,date); });
     const per=V.map(v=>{ const t=tr(v), u=used[v.id]; let tot=0; for(let d=first; d<=date; d=addDays(d,1)) if(active(v,d)) tot+=u[d]||0;
@@ -1786,16 +1788,17 @@ const CATS=["tac","ntv","rent","nstd"], SUBS=Object.keys(R.subs);
 function fresh(){ return {v:1,me:{opr:"",cert:"",contacts:""},orgs:[],org:"",veh:[],days:{},rc:[],chk:{},f1970:{},forms:{hdr:{},plate:{},all:false,day:{},sig:{}},stamp:{},tomb:{},alias:{},coy:{},fst:{},hlc:"",quiz:{miss:{},rev:{},hist:[]},train:{},mig:0}; }
 const normCoy=(s)=>{ const r=Array.from(String(s||"").replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g,"").replace(/\s+/g," ").trim().toUpperCase()).slice(0,30).join("").trim(); return r==="-"||r==="*"?"":r; };
 // Repaired field by field, so an older or damaged copy can't stop the app from opening.
+const okId=(i)=>typeof i==="string"&&/^[\w-]{1,24}$/.test(i)&&!["__proto__","constructor","prototype"].includes(i);
 function repair(o){
   const D=fresh(); if(!o||typeof o!=="object"||o.v!==1) return D;
   const strip=(x,dep)=>{ if(!x||typeof x!=="object"||dep>5) return; if(Object.prototype.hasOwnProperty.call(x,"__proto__")) delete x["__proto__"]; for(const k in x) if(Object.prototype.hasOwnProperty.call(x,k)) strip(x[k],dep+1); }; strip(o,0);
   const s=(v,n=80)=>typeof v==="string"?v.slice(0,n):(typeof v==="number"?String(v):""), ymd=(v)=>E.isYMD(v)?v:"", b=(v)=>v===true;
   const me=o.me||{}; D.me={opr:s(me.opr,60),cert:s(me.cert,60),contacts:s(me.contacts,600),bk:ymd(me.bk),role:["driver","operator","lead","all"].includes(me.role)?me.role:""};
-  D.orgs=(Array.isArray(o.orgs)?o.orgs:[]).filter(x=>x&&typeof x==="object"&&s(x.id)).slice(0,120).map(x=>({id:s(x.id,20),to:s(x.to,40),mrt:s(x.mrt,40),digits:x.digits===6?6:8,start:ymd(x.start),jumpMi:s(x.jumpMi,6),jumpHr:s(x.jumpHr,6),
+  D.orgs=(Array.isArray(o.orgs)?o.orgs:[]).filter(x=>x&&typeof x==="object"&&okId(x.id)).slice(0,120).map(x=>({id:s(x.id,20),to:s(x.to,40),mrt:s(x.mrt,40),digits:x.digits===6?6:8,start:ymd(x.start),jumpMi:s(x.jumpMi,6),jumpHr:s(x.jumpHr,6),
     coys:(Array.isArray(x.coys)?x.coys:[]).map(c=>normCoy(typeof c==="string"?c:"")).filter((c,i,a)=>c&&a.indexOf(c)===i).slice(0,60)}));
   D.org=D.orgs.some(x=>x.id===o.org)?o.org:(D.orgs[0]?D.orgs[0].id:"");
   const orgIds=new Set(D.orgs.map(x=>x.id));
-  D.veh=(Array.isArray(o.veh)?o.veh:[]).filter(x=>x&&typeof x==="object"&&s(x.id)&&s(x.sn)).slice(0,3000).map(x=>({id:s(x.id,20),org:orgIds.has(x.org)?x.org:(D.orgs[0]?D.orgs[0].id:""),label:s(x.label,40),sn:E.normSN(x.sn).slice(0,30)||"NOSERIAL",
+  D.veh=(Array.isArray(o.veh)?o.veh:[]).filter(x=>x&&typeof x==="object"&&okId(x.id)&&s(x.sn)).slice(0,3000).map(x=>({id:s(x.id,20),org:orgIds.has(x.org)?x.org:(D.orgs[0]?D.orgs[0].id:""),label:s(x.label,40),sn:E.normSN(x.sn).slice(0,30)||"NOSERIAL",
     cat:CATS.includes(x.cat)?x.cat:"tac",sub:SUBS.includes(x.sub)?x.sub:"",unit:["mi","hrs","none"].includes(x.unit)?x.unit:"",startDate:ymd(x.startDate),startOdo:s(x.startOdo,12),rental:b(x.rental),
     nmc:ymd(x.nmc),eom:ymd(x.eom),eomOdo:s(x.eomOdo,12),repBy:s(x.repBy,20),repFor:s(x.repFor,20),xfer:s(x.xfer,40),nmcHist:(Array.isArray(x.nmcHist)?x.nmcHist:[]).slice(-40).map(h=>({from:ymd(h&&h.from),to:ymd(h&&h.to)})).filter(h=>h.from&&h.to&&h.from<=h.to),notes:(Array.isArray(x.notes)?x.notes:[]).slice(-60).map(n=>({d:ymd(n&&n.d),t:s(n&&n.t,400)})).filter(n=>n.t),lastOdo:s(x.lastOdo,12)}));
   const vids=new Set(D.veh.map(v=>v.id));
@@ -1821,12 +1824,16 @@ function repair(o){
   if(o.train&&typeof o.train==="object") Object.keys(o.train).slice(0,20).forEach(k=>{ const t=o.train[k]; if(t&&typeof t==="object") D.train[s(k,10)]={sc:+t.sc||0,n:+t.n||0,d:ymd(t.d)}; });
   ["stamp","tomb"].forEach(k=>{ const m=o[k]; if(m&&typeof m==="object") Object.keys(m).slice(0,400000).forEach(i=>{ if(/^[ovdrcfhpy]:/.test(i)&&typeof m[i]==="string"&&/^[0-9a-z]{1,12}$/.test(m[i])) D[k][i.slice(0,80)]=m[i]; }); });
   if(o.alias&&typeof o.alias==="object") Object.keys(o.alias).slice(-4000).forEach(i=>{ const v=o.alias[i]; if(/^[vr]:[0-9a-z]{1,24}$/.test(i)&&typeof v==="string"&&/^[0-9a-z]{1,24}$/.test(v)) D.alias[i]=v; });
-  if(o.fst&&typeof o.fst==="object") Object.keys(o.fst).slice(0,200000).forEach(k=>{ const m=o.fst[k]; if(!/^[dv]:/.test(k)||k.length>80||!m||typeof m!=="object") return; const x={}; Object.keys(m).slice(0,40).forEach(f=>{ if(typeof m[f]==="string"&&/^[0-9a-z]{1,12}$/.test(m[f])&&/^[a-zA-Z0-9]{1,20}$/.test(f)) x[f]=m[f]; }); if(Object.keys(x).length) D.fst[k]=x; });
+  if(o.fst&&typeof o.fst==="object") Object.keys(o.fst).slice(0,200000).forEach(k=>{ const m=o.fst[k]; if(!/^[dvh]:/.test(k)||k.length>80||!m||typeof m!=="object") return; const x={}; Object.keys(m).slice(0,40).forEach(f=>{ if(typeof m[f]==="string"&&/^[0-9a-z]{1,12}$/.test(m[f])&&/^[a-zA-Z0-9]{1,20}$/.test(f)) x[f]=m[f]; }); if(Object.keys(x).length) D.fst[k]=x; });
   if(typeof o.hlc==="string"&&/^[0-9a-z]{1,12}$/.test(o.hlc)) D.hlc=o.hlc;
   D.mig=o.mig===1?1:0;
   return D;
 }
-function loadKey(k){ try{ return repair(JSON.parse(localStorage.getItem(k)||"null")); }catch(e){ return fresh(); } }
+let LOADBAD=false;
+function loadKey(k){ let raw=null; try{ raw=localStorage.getItem(k); }catch(e){ return fresh(); }
+  let o=null; try{ o=JSON.parse(raw||"null"); }catch(e){ o=undefined; }
+  if(raw&&raw.length>2&&!(o&&typeof o==="object"&&o.v===1)){ try{ localStorage.setItem(k+".unreadable."+Date.now(),raw); }catch(e){} LOADBAD=true; return fresh(); }
+  return repair(o); }
 // ---------- change stamps (so two devices' board files can be merged, newest entry winning) ----------
 // At every save, each record is compared with its last saved copy; a changed one gets the time (d.stamp[key], base-36 ms),
 // a removed one leaves a tombstone (d.tomb[key]). No screen has to remember to do it. Data saved before this has no stamp (0).
@@ -1846,7 +1853,7 @@ function stampScan(d,quiet){
   d.fst=d.fst||{};
   recEntries(d).forEach(([k,r])=>{ seen.add(k); const s=JSON.stringify(r); if(mark&&c.get(k)!==s){ d.stamp[k]=now; delete d.tomb[k]; hit=true;
       // vehicles and days: which fields changed (so a merge can take each field from the device that changed it last)
-      if(k[0]==="d"||k[0]==="v"){ const old=c.get(k), o=old?JSON.parse(old):null, fs=(d.fst[k]=d.fst[k]||{}); new Set([...Object.keys(r||{}),...Object.keys(o||{})]).forEach(f=>{ if(f!=="notes"&&(!o||!sameV(r[f],o[f]))) fs[f]=now; }); } }
+      if(k[0]==="d"||k[0]==="v"||k[0]==="h"){ const old=c.get(k), o=old?JSON.parse(old):null, fs=(d.fst[k]=d.fst[k]||{}); new Set([...Object.keys(r||{}),...Object.keys(o||{})]).forEach(f=>{ if(f!=="notes"&&(!o||!sameV(r[f],o[f]))) fs[f]=now; }); } }
     c.set(k,s); });
   [...c.keys()].forEach(k=>{ if(!seen.has(k)){ c.delete(k); if(mark){ d.tomb[k]=now; delete d.stamp[k]; hit=true; } } });
   if(hit) d.hlc=now;
@@ -1860,6 +1867,9 @@ function save(){ try{ stampScan(db()); localStorage.setItem(PRACTICE?PKEY:KEY,JS
 function saveReal(){ try{ stampScan(DB); localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){ try{ toast("Couldn't save on this device (private browsing or storage full). It works, but won't be remembered."); }catch(_){} } }
 try{ navigator.storage&&navigator.storage.persist&&navigator.storage.persist(); }catch(e){}
 // One-time carry-over from the IQ Kit stamper (same site, so a browser shares its storage).
+if(LOADBAD) setTimeout(()=>toast("The data saved on this device couldn't be read, so the app started empty. A copy was kept; load a saved file in Setup Mission."),800);
+// another tab or window changed the data: pick it up instead of overwriting it
+window.addEventListener("storage",(e)=>{ if(e.key!==KEY||!e.newValue) return; try{ const o=JSON.parse(e.newValue); if(!(o&&o.v===1)) return; DB=repair(o); DB.mig=1; route(); toast("Updated with changes made in another window."); }catch(_){} });
 (function migrate(){
   if(DB.mig===1) return; let s=null; try{ s=JSON.parse(localStorage.getItem(OLD)||"null"); }catch(e){}
   DB.mig=1;
@@ -2172,7 +2182,7 @@ RENDER.stamp=function(){
   const b=$("b-stamp"), d=db(), p=PARAMS;
   // An old driver setup link (#stamp&rs=…) just opens the Stamp screen.
   if(typeof p.rs==="string"){ delete PARAMS.rs; try{ history.replaceState(null,"",location.pathname+location.search+href("stamp")); }catch(e){} }
-  const org=curOrg(), V=orgVeh(org).filter(v=>!v.eom||v.eom>=todayYMD()); if(!V.some(v=>v.id===RS.veh)) RS.veh=V[0]?V[0].id:"";
+  const org=curOrg(), V=orgVeh(org).filter(v=>!v.eom||v.eom>=E.addDays(todayYMD(),-60)); if(!V.some(v=>v.id===RS.veh)) RS.veh=V[0]?V[0].id:"";
   b.innerHTML=`<div class="rs" style="display:flex;flex-direction:column;gap:10px">
     ${!org?`<div class="w warn">No mission yet. Add your task org in <a href="#setup">Setup</a> and vehicles on the <a href="#board">Board</a>.</div>`:`<div class="status"><span><b>${esc(org.to||"—")}</b></span><span>MRT <b>${esc(org.mrt||"—")}</b></span><span>Last <b>${digitsOf(org)}</b></span>${d.me.opr?`<span>${esc(d.me.opr)}</span>`:`<a href="#setup" class="pill p-warn">add your rank &amp; name</a>`}</div>`}
     <div class="rs-top"><label class="f">Vehicle<select id="rsVeh" class="fld">${V.length?V.map(v=>`<option value="${esc(v.id)}"${v.id===RS.veh?" selected":""}>${esc(vname(v,org))} · ${esc(E.info(R,v).cat.short)}</option>`).join(""):`<option value="">Add vehicles on the Board first</option>`}</select></label></div>
@@ -2211,15 +2221,21 @@ RENDER.stamp=function(){
   const q=(s)=>b.querySelector(s), msg=(t)=>{ q("#rsMsg").textContent=t; };
   const cur=()=>vehById(RS.veh);
   const dateV=()=>q("#rsDate").value||todayYMD();
-  function fileName(){ if(RS.rec&&RS.rec.gen===(RS.gen||0)) return RS.rec.name; const v=cur(); const base=E.fileName(dateV(),org&&org.to,v?v.sn:"",digitsOf(org),RS_TYPE);
-    const used=new Set(d.rc.filter(r=>r.date===dateV()).map(r=>r.file)); let n=base+".jpg", i=2; while(used.has(n)) n=`${base}_${i++}.jpg`; return n; }
+  const sameRec=()=>RS.rec&&RS.rec.gen===(RS.gen||0)&&RS.rec.org===(org?org.id:"");
+  function fileName(){ const v=cur(); const base=E.fileName(dateV(),org&&org.to,v?v.sn:"",digitsOf(org),RS_TYPE);
+    if(sameRec()&&(RS.rec.name===base+".jpg"||RS.rec.name.startsWith(base+"_"))) return RS.rec.name;
+    const own=sameRec()?RS.rec.id:"", used=new Set(d.rc.filter(r=>r.date===dateV()&&r.id!==own).map(r=>r.file)); let n=base+".jpg", i=2; while(used.has(n)) n=`${base}_${i++}.jpg`; return n; }
   function warnings(){
     const W=[], v=cur(), i=v?E.info(R,v):null, odo=num(q("#rsOdo").value), sodo=v?E.startOfDay(d,v,dateV()):null, type=RS_TYPE;   // start reading comes from the Board, if entered there
     if(!org||!org.mrt) W.push(["bad","Add the MRT / mission # in Setup Mission."]); if(!org||!org.to) W.push(["bad","Add the task org in Setup Mission."]); if(!v) W.push(["bad","Add a vehicle on the Board first."]);
+    { const dt=dateV(), t0=todayYMD(); if(dt>t0) W.push(["warn","The receipt date is in the future. Check it."]);
+      else if(v&&E.isYMD(v.startDate)&&dt<v.startDate) W.push(["warn",`The receipt date is before this vehicle started (${plain(v.startDate)}).`]);
+      else if(v&&E.isYMD(v.eom)&&dt>v.eom) W.push(["warn",`This vehicle was EOM'd on ${plain(v.eom)}, before the receipt date.`]); }
     if(v&&i.tracks==="none"&&type==="FUEL") W.push(["warn","This vehicle is a trailer: no fuel or mileage. Check you picked the right vehicle."]);
     if(v&&odo!==null){ const last=num(v.lastOdo); const jump=i.tracks==="hrs"?(num(org&&org.jumpHr)||R.jumpHr):(num(org&&org.jumpMi)||R.jumpMi);
       if(sodo!==null&&odo<sodo) W.push(["bad",`${i.tracks==="hrs"?"Hours":"Odometer"} ${fmtN(odo)} is lower than this morning's start (${fmtN(sodo)}). Check it.`]);
       else if(sodo!==null&&odo-sodo>jump) W.push(["warn",`${fmtN(odo-sodo)} since this morning's start. Double-check the reading.`]);
+      else if(v&&E.endOfDay(d,v,dateV())!==null&&odo>E.endOfDay(d,v,dateV())) W.push(["warn",`${i.tracks==="hrs"?"Hours":"Odometer"} ${fmtN(odo)} is above the day's end reading on the Board (${fmtN(E.endOfDay(d,v,dateV()))}). Check one of them.`]);
       else if(last!==null&&odo<last&&sodo===null) W.push(["bad",`${i.tracks==="hrs"?"Hours":"Odometer"} ${fmtN(odo)} is lower than the last reading (${fmtN(last)}). Check it.`]); }
     if(type==="FUEL"&&(num(q("#rsGal").value)===null||num(q("#rsAmt").value)===null)) W.push(["warn","Enter gallons and amount so they're on the stamp."]);
     const many=RS.parts.length>1;
@@ -2332,8 +2348,8 @@ RENDER.stamp=function(){
   const blob=()=>new Promise(res=>{ draw(); q("#rsCanvas").toBlob(x=>res(x),"image/jpeg",0.85); });
   function record(name){
     const v=cur(), dt=dateV();
-    if(RS.rec&&RS.rec.gen===(RS.gen||0)){ const r=d.rc.find(x=>x.id===RS.rec.id); if(r){ Object.assign(r,{veh:v?v.id:"",date:dt,gal:q("#rsGal").value.trim(),amt:q("#rsAmt").value.trim(),odo:q("#rsOdo").value.trim(),last:v?E.lastN(v.sn,digitsOf(org)):""}); if(v&&r.odo) v.lastOdo=r.odo; save(); return; } }
-    const rid=uid(); RS.rec={gen:RS.gen||0,id:rid,name};
+    if(sameRec()){ const r=d.rc.find(x=>x.id===RS.rec.id); if(r){ RS.rec.name=name; Object.assign(r,{file:name,veh:v?v.id:"",date:dt,gal:q("#rsGal").value.trim(),amt:q("#rsAmt").value.trim(),odo:q("#rsOdo").value.trim(),last:v?E.lastN(v.sn,digitsOf(org)):""}); if(v&&r.odo) v.lastOdo=r.odo; save(); return; } }
+    const rid=uid(); RS.rec={gen:RS.gen||0,id:rid,name,org:org?org.id:""};
     d.rc.push({id:rid,org:org?org.id:"",veh:v?v.id:"",date:dt,type:RS_TYPE,gal:q("#rsGal").value.trim(),amt:q("#rsAmt").value.trim(),odo:q("#rsOdo").value.trim(),card:RS_CARD,file:name,loc:"",status:"sent",reasons:[],note:"",src:"field",last:v?E.lastN(v.sn,digitsOf(org)):"",t:Date.now()});
     if(v&&q("#rsOdo").value.trim()){ v.lastOdo=q("#rsOdo").value.trim(); }
     save();
@@ -2402,7 +2418,7 @@ function vehicleCard(v,org,date,today){
   const F=E.flags(R,db(),v,date,org,today), worst=F.some(f=>f.lvl==="crit")?"crit":F.some(f=>f.lvl==="warn")?"warn":"";
   const rc=db().rc.filter(r=>r.veh===v.id&&r.date===date), fuel=E.dayFuel(db(),v,date).amt, nrc=rc.filter(E.counted).length;
   const closed=v.eom&&v.eom<date, notYet=v.startDate&&v.startDate>date;
-  const status=closed?`<span class="pill p-dim">EOM ${esc(plain(v.eom))}</span>`:E.nmcOn(v,date)?`<span class="pill p-crit">NMC</span>${v.eom?` <span class="pill p-dim">EOM ${esc(plain(v.eom))}</span>`:""}`:notYet?`<span class="pill p-dim">starts ${esc(plain(v.startDate))}</span>`:`<span class="pill p-ok">FMC</span>`;
+  const status=closed?`<span class="pill p-dim">EOM ${esc(plain(v.eom))}</span>`:E.nmcDay(v,date)?`<span class="pill p-crit">NMC</span>${v.eom?` <span class="pill p-dim">EOM ${esc(plain(v.eom))}</span>`:""}`:notYet?`<span class="pill p-dim">starts ${esc(plain(v.startDate))}</span>`:`<span class="pill p-ok">FMC</span>`;
   const c=el(`<div class="vc ${worst} ${closed||notYet?"closed":""}" data-vid="${esc(v.id)}">
     <div class="vc-h"><span><b>${esc(v.label||i.cat.short)}</b> <code title="Full ${i.idKind==="vin"?"VIN":"serial"}; the last ${digitsOf(org)} are underlined">${esc(E.normSN(v.sn).slice(0,-digitsOf(org)))}<u>${esc(E.lastN(v.sn,digitsOf(org)))}</u></code></span><span>${status} <span class="pill p-dim">${esc(i.short)}</span></span></div>
     <div class="vgrid">
@@ -2446,7 +2462,7 @@ function moreMenu(v,org,date){
   const sub=m.querySelector("[data-sub]");
   m.addEventListener("click",(e)=>{ const a=e.target.closest("[data-m]"); if(!a) return; const k=a.dataset.m;
     if(k==="x"){ BOARD.open={}; RENDER.board(); return; }
-    if(k==="del"){ if(!confirm(`Remove ${v.label||v.sn} and its daily records from this device? This can't be undone.`)) return; const d=db(); d.veh=d.veh.filter(x=>x!==v); if(d.coy) delete d.coy[v.id]; Object.keys(d.days).forEach(x=>{ if(x.startsWith(v.id+"|")) delete d.days[x]; }); save(); BOARD.open={}; RENDER.board(); return; }
+    if(k==="del"){ if(!confirm(`Remove ${v.label||v.sn} with its daily records and stamped receipts from this device? This can't be undone.`)) return; const d=db(); d.veh=d.veh.filter(x=>x!==v); if(d.coy) delete d.coy[v.id]; Object.keys(d.days).forEach(x=>{ if(x.startsWith(v.id+"|")) delete d.days[x]; }); d.rc=d.rc.filter(r=>r.veh!==v.id); { const F=formsDB(); delete F.plate[v.id]; Object.keys(F.day).forEach(x=>{ if(x.startsWith(v.id+"|")) delete F.day[x]; }); } save(); BOARD.open={}; RENDER.board(); return; }
     if(k==="uneom"){ v.eom=""; v.eomOdo=""; v.xfer=""; addNote(v,`EOM undone on ${plain(date)}.`,date); save(); RENDER.board(); toast("EOM undone."); return; }
     if(k==="unnmc"){ if(E.isYMD(v.nmc)){ const to=E.addDays(date,-1); if(to>=v.nmc) v.nmcHist=(v.nmcHist||[]).concat({from:v.nmc,to}).slice(-40); addNote(v,`Back to FMC on ${plain(date)} (NMC since ${plain(v.nmc)}).`,date); } v.nmc=""; save(); RENDER.board(); return; }
     sub.innerHTML=""; sub.appendChild(actionForm(k,v,org,date)); });
@@ -2459,12 +2475,14 @@ function actionForm(k,v,org,date){
   if(k==="edit"){ const vf=vehicleForm(v,{coys:coyList(org)}); const f=el(`<div></div>`); f.appendChild(vf);
     const pl=el(`<label class="f">6. License plate / GSA plate / bumper # (for the 1970)<input class="fld" data-plate maxlength="13" autocapitalize="characters" autocomplete="off" value="${esc(formsDB().plate[v.id]||"")}"></label>`); f.appendChild(pl);
     const s=el(`<div class="toolrow"><button class="btn" type="button">Save changes</button></div>`); f.appendChild(s);
-    s.querySelector("button").addEventListener("click",()=>{ const x=vf.vals(), P=vf.problems(); if(P.some(p=>p[0]==="bad")){ toast(P.find(p=>p[0]==="bad")[1]); return; } const kindChanged=x.cat!==v.cat||x.sub!==(v.sub||""); Object.assign(v,{label:x.label,sn:x.sn,cat:x.cat,sub:x.sub,unit:kindChanged?"":v.unit,startDate:x.startDate,startOdo:x.startOdo,rental:x.rental}); if(x.coy!==undefined) setCoy(v,x.coy);
+    s.querySelector("button").addEventListener("click",()=>{ const x=vf.vals(), P=vf.problems(); if(P.some(p=>p[0]==="bad")){ toast(P.find(p=>p[0]==="bad")[1]); return; } const kindChanged=x.cat!==v.cat||x.sub!==(v.sub||"");
+      if(E.isYMD(x.startDate)&&(!E.isYMD(v.startDate)||x.startDate>v.startDate)){ const before=Object.keys(db().days).filter(k=>k.startsWith(v.id+"|")).map(k=>k.split("|")[1]).filter(y=>E.isYMD(y)&&y<x.startDate&&logHas(db().days[v.id+"|"+y])); if(before.length&&!confirm(`${before.length} entered day${before.length>1?"s are":" is"} before ${plain(x.startDate)}. Starting the vehicle then drops ${before.length>1?"them":"it"} from the log, the totals and the 1970. Change the start date?`)) return; }
+      if(kindChanged&&E.info(R,x).tracks!==E.info(R,v).tracks&&!confirm(`This changes what the vehicle tracks (${E.unitWord(E.info(R,v).tracks)||"nothing"} → ${E.unitWord(E.info(R,x).tracks)||"nothing"}). Readings already entered stay as typed. Continue?`)) return; Object.assign(v,{label:x.label,sn:x.sn,cat:x.cat,sub:x.sub,unit:kindChanged?"":v.unit,startDate:x.startDate,startOdo:x.startOdo,rental:x.rental}); if(x.coy!==undefined) setCoy(v,x.coy);
       const pv=pl.querySelector("input").value.trim().toUpperCase().slice(0,13), FP=formsDB().plate; if(pv) FP[v.id]=pv; else delete FP[v.id]; done("Vehicle updated."); }); return f; }
   if(k==="nmc"){ const f=el(`<div class="vform"><div class="w warn">Damaged and can't be driven? Mark it NMC from ${esc(plain(date))}. It stays on the Board, and its 1970 shows NMC each day until you set it back to FMC. EOM is separate: do it when the vehicle is done for the mission.</div><label class="f">What happened<input class="fld" data-why maxlength="120" placeholder="suspension damage"></label><div class="toolrow"><button class="btn" type="button">Mark NMC</button></div></div>`);
     f.querySelector("button").addEventListener("click",()=>{ v.nmc=date; const why=f.querySelector("[data-why]").value.trim();
       addNote(v,`Vehicle ${E.lastN(v.sn,digitsOf(org))} declared NMC on ${plain(date)}${why?` due to ${why}`:""}.${v.eom?" EOM completed today.":""}`,date); done("Marked NMC. Set it back to FMC when it's fixed."); }); return f; }
-  if(k==="eom"){ const f=el(`<div class="vform"><label class="f">Final ${u}<input class="fld" data-odo inputmode="numeric" value="${esc(lr?lr.e:"")}"></label><div class="muted">Upload the final 1970 and any pending receipts in ARRO.</div><div class="toolrow"><button class="btn" type="button">EOM ${esc(plain(date))}</button></div></div>`);
+  if(k==="eom"){ const f=el(`<div class="vform"><label class="f"${i.tracks==="none"?" hidden":""}>Final ${u}<input class="fld" data-odo inputmode="numeric" value="${esc(lr&&i.tracks!=="none"?lr.e:"")}"></label><div class="muted">Upload the final 1970 and any pending receipts in ARRO.</div><div class="toolrow"><button class="btn" type="button">EOM ${esc(plain(date))}</button></div></div>`);
     f.querySelector("button").addEventListener("click",()=>{ const later=Object.keys(db().days).filter(k=>k.startsWith(v.id+"|")).map(k=>k.split("|")[1]).filter(x=>E.isYMD(x)&&x>date&&logHas(db().days[v.id+"|"+x])).sort();
       if(later.length&&!confirm(`${v.label||v.sn} has entries after ${plain(date)} (${later.length} day${later.length>1?"s":""}, through ${plain(later[later.length-1])}). An EOM on ${plain(date)} hides them and drops them from the totals. EOM anyway?`)) return;
       v.eom=date; v.eomOdo=f.querySelector("[data-odo]").value.replace(/[^\d.]/g,""); if(v.eomOdo&&i.tracks!=="none") dayRec(v.id,date).e=v.eomOdo; addNote(v,`EOM ${plain(date)}${v.eomOdo?` at ${v.eomOdo}`:""}.`,date); done("EOM recorded."); }); return f; }
@@ -2474,7 +2492,7 @@ function boardTable(org,date,today,big,list){
   const V=(list||orgVeh(org)).filter(v=>E.active(v,date)||(v.eom===date));
   return `<div class="tw"><table><thead><tr><th>Vehicle</th><th>Cat</th><th>Status</th><th>Start</th><th>End</th><th>Today</th><th>Operator / 2nd driver</th><th>Fuel</th><th>Flags</th></tr></thead><tbody>${V.map(v=>{ const i=E.info(R,v), dr=peekDay(v.id,date), lo=E.startOfDay(db(),v,date), e=num(dr.e), F=E.flags(R,db(),v,date,org,today).filter(f=>f.lvl!=="info");
     const fuel=E.dayFuel(db(),v,date).amt;
-    return `<tr><td><b>${esc(v.label||"")}</b> ${esc(E.lastN(v.sn,digitsOf(org)))}</td><td>${esc(i.short)}</td><td>${v.eom?"EOM":E.nmcOn(v,date)?"NMC":"FMC"}</td><td class="n">${i.tracks==="none"?"—":esc(lo===null?"—":fmtN(lo))}</td><td class="n">${i.tracks==="none"?"—":esc(e===null?"—":fmtN(e))}</td><td class="n">${e!==null&&lo!==null?esc(fmtN(e-lo)):"—"}</td><td>${esc(dr.op||"—")}${i.coop&&dr.co?" / "+esc(dr.co):""}</td><td class="n">${fuel?esc(money(fuel)):"—"}</td><td>${F.length?F.map(f=>big?`<span class="w ${f.lvl}">${esc(f.t)}</span>`:esc(f.t)).join(big?"":"; "):"✔︎"}</td></tr>`; }).join("")||`<tr><td colspan="10" class="muted">No vehicles.</td></tr>`}</tbody></table></div>`;
+    return `<tr><td><b>${esc(v.label||"")}</b> ${esc(E.lastN(v.sn,digitsOf(org)))}</td><td>${esc(i.short)}</td><td>${v.eom&&v.eom<=date?"EOM":E.nmcDay(v,date)?"NMC":"FMC"}</td><td class="n">${i.tracks==="none"?"—":esc(lo===null?"—":fmtN(lo))}</td><td class="n">${i.tracks==="none"?"—":esc(e===null?"—":fmtN(e))}</td><td class="n">${e!==null&&lo!==null?esc(fmtN(e-lo)):"—"}</td><td>${esc(dr.op||"—")}${i.coop&&dr.co?" / "+esc(dr.co):""}</td><td class="n">${fuel?esc(money(fuel)):"—"}</td><td>${F.length?F.map(f=>big?`<span class="w ${f.lvl}">${esc(f.t)}</span>`:esc(f.t)).join(big?"":"; "):"✔︎"}</td></tr>`; }).join("")||`<tr><td colspan="10" class="muted">No vehicles.</td></tr>`}</tbody></table></div>`;
 }
 function openBig(){
   const box=$("bigScreen"), d=db(); let pin=BOARD.bigPin||"", idx=0, timer=0;
@@ -2632,14 +2650,14 @@ function daySheet(org,V,date,today,co){
     <p class="muted" style="margin:0">Type each vehicle's end ${act.some(v=>E.info(R,v).tracks==="hrs")?"reading (miles or hours)":"mileage"} and operator for the day${act.some(v=>E.info(R,v).coop)?", plus the second driver on tactical vehicles":""}. Each entry saves on this device as you go; the 1970s use it. Enter moves across the row, then to the next vehicle.</p></div>
     <div class="ds-head" aria-hidden="true"><span>Vehicle</span><span>Start</span><span>End</span><span>Today</span><span>Operator</span><span>2nd driver</span></div>
     <div data-rows>${act.map(v=>{ const i=E.info(R,v), dr=peekDay(v.id,date), lo=E.startOfDay(d,v,date), none=i.tracks==="none", u=E.unitWord(i.tracks);
-      return `<div class="ds-row" data-vid="${esc(v.id)}"><div class="ds-veh"><b>${esc(v.label||i.cat.short)}</b> <code>${esc(E.lastN(v.sn,digitsOf(org)))}</code>${E.nmcOn(v,date)?` <span class="pill p-crit">NMC</span>`:""}<small class="muted ds-st">start ${none?"—":esc(lo===null?"not set":fmtN(lo))}</small></div>
+      return `<div class="ds-row" data-vid="${esc(v.id)}"><div class="ds-veh"><b>${esc(v.label||i.cat.short)}</b> <code>${esc(E.lastN(v.sn,digitsOf(org)))}</code>${E.nmcDay(v,date)?` <span class="pill p-crit">NMC</span>`:""}<small class="muted ds-st">start ${none?"—":esc(lo===null?"not set":fmtN(lo))}</small></div>
         <div class="ds-start n">${none?"—":esc(lo===null?"—":fmtN(lo))}</div>
         <label class="ds-end"><span class="ds-l">End ${esc(u||"")}</span><input class="fld" data-k="e" inputmode="decimal" enterkeyhint="next" autocomplete="off" value="${esc(dr.e||"")}" ${none?"disabled placeholder=\"no mileage\"":`placeholder="${lo!==null?"≥ "+esc(fmtN(lo)):"end"}"`} aria-label="End reading for ${esc(v.label||v.sn)}"></label>
         <div class="ds-mi n" data-mi></div>
         <label class="ds-op"><span class="ds-l">Operator</span><input class="fld" data-k="op" maxlength="40" autocomplete="off" autocapitalize="characters" enterkeyhint="next" value="${esc(dr.op||"")}" placeholder="rank &amp; name" aria-label="Operator for ${esc(v.label||v.sn)}"></label>
         ${i.coop?`<label class="ds-co"><span class="ds-l">2nd driver</span><input class="fld" data-k="co" maxlength="40" autocomplete="off" autocapitalize="characters" enterkeyhint="next" value="${esc(dr.co||"")}" placeholder="rank &amp; name" aria-label="Second driver for ${esc(v.label||v.sn)}"></label>`:`<div class="ds-co ds-na muted" aria-hidden="true">—</div>`}
         <div class="ds-w" data-w></div></div>`; }).join("")||`<div class="muted">No vehicles on this day.</div>`}</div>
-    <div class="toolrow"><a class="btn rs-big" href="${esc(hasCoys(org)?boardHref(org,co):boardHref(org))}">Done</a><span class="muted" data-saved></span></div></div>`);
+    <div class="toolrow"><a class="btn rs-big" href="${esc(hasCoys(org)&&co!==CO_ALL?boardHref(org,co):boardHref(org))}">Done</a><span class="muted" data-saved></span></div></div>`);
   const paint=(row)=>{ const v=vehById(row.dataset.vid); if(!v) return; const i=E.info(R,v), lo=E.startOfDay(d,v,date), ev=num(row.querySelector('[data-k="e"]').value), mi=row.querySelector("[data-mi]"), W=row.querySelector("[data-w]");
     let msg="", cls=""; if(i.tracks!=="none"&&ev!==null&&lo!==null){ const n=ev-lo; mi.textContent=fmtN(+n.toFixed(Math.max(decs(ev),decs(lo))))+" "+E.unitWord(i.tracks); if(n<0){ msg=`Lower than the start (${fmtN(lo)}).`; cls="crit"; } else if(n>jump(i)){ msg=`${fmtN(n)} in one day. Check it.`; cls="warn"; } } else mi.textContent=i.tracks==="none"?"—":"";
     // tactical: the second driver
@@ -2730,7 +2748,7 @@ function cardFilter(box){
 function tagCard(c,v,org,date,today){
   const F=E.flags(R,db(),v,date,org,today).filter(x=>x.lvl!=="info"), i=E.info(R,v), dr=peekDay(v.id,date);
   c.dataset.miss=E.active(v,date)&&!(v.eom&&v.eom<date)&&i.tracks!=="none"&&E.endOfDay(db(),v,date)===null&&date<=today?"1":"0";
-  c.dataset.nmc=E.nmcOn(v,date)?"1":"0"; c.dataset.flag=F.length?"1":"0";
+  c.dataset.nmc=E.nmcDay(v,date)?"1":"0"; c.dataset.flag=F.length?"1":"0";
   c.dataset.q=[v.label,coyOf(v),dr.op,dr.co,i.cat.short].join(" ").toUpperCase(); c.dataset.sn=E.normSN(v.sn);
 }
 // ---- printing ----
@@ -2752,13 +2770,15 @@ function printCompany(org,co,date){
 }
 // NMC by day: v.nmc is an open spell (NMC from that day on), v.nmcHist holds closed spells. EOM is separate.
 function setNmcDay(v,x,on){
-  const H=(v.nmcHist||[]).filter(h=>h&&E.isYMD(h.from)&&E.isYMD(h.to));
-  if(on){ if(E.nmcDay(v,x)) return; if(!v.nmc||x<v.nmc){ if(v.nmc) H.push({from:x,to:E.addDays(v.nmc,-1)}); else v.nmc=x; } addNote(v,`NMC from ${plain(x)}.`,x); }
-  else { if(!E.nmcDay(v,x)) return;
-    if(v.nmc&&v.nmc<=x){ if(x>v.nmc) H.push({from:v.nmc,to:E.addDays(x,-1)}); v.nmc=""; }
-    else { const i=H.findIndex(h=>h.from<=x&&x<=h.to); if(i>=0){ const h=H.splice(i,1)[0]; if(h.from<x) H.push({from:h.from,to:E.addDays(x,-1)}); if(x<h.to) H.push({from:E.addDays(x,1),to:h.to}); } }
-    addNote(v,`Back to FMC on ${plain(x)}.`,x); }
-  v.nmcHist=H.sort((a,b)=>a.from<b.from?-1:1).slice(-40);
+  // spells: closed {from,to} in v.nmcHist; open (to "") in v.nmc. NMC on a day runs until a later day is set back to FMC.
+  let S=(v.nmcHist||[]).filter(h=>h&&E.isYMD(h.from)&&E.isYMD(h.to)).map(h=>({from:h.from,to:h.to})); if(E.isYMD(v.nmc)) S.push({from:v.nmc,to:""});
+  const covers=(h)=>h.from<=x&&(!h.to||x<=h.to);
+  if(on){ if(S.some(covers)) return;
+    const nx=S.filter(h=>h.from>x).sort((a,b)=>a.from<b.from?-1:1)[0], pv=S.find(h=>h.to&&h.to===E.addDays(x,-1));
+    let ns={from:x,to:nx?nx.to:""}; if(nx) S=S.filter(h=>h!==nx); if(pv){ ns.from=pv.from; S=S.filter(h=>h!==pv); } S.push(ns); addNote(v,`NMC from ${plain(x)}.`,x); }
+  else { const h=S.find(covers); if(!h) return; if(h.from===x) S=S.filter(q=>q!==h); else h.to=E.addDays(x,-1); addNote(v,`Back to FMC on ${plain(x)}.`,x); }
+  const open=S.filter(h=>!h.to).sort((a,b)=>a.from<b.from?-1:1); v.nmc=open.length?open[0].from:""; open.slice(1).forEach(h=>{ h.to=h.from; });
+  v.nmcHist=S.filter(h=>h.to).sort((a,b)=>a.from<b.from?-1:1).slice(-40);
 }
 // ---------- vehicle log: every day for one vehicle, entered in one place ----------
 let LOG={add:{},prev:false,busy:false,addf:""};
@@ -2770,13 +2790,14 @@ function logDays(v,org){
   if(LOG.add[v.id]) have.push(LOG.add[v.id]);
   let first=startD||have[0]||"", last=have.length?have.reduce((a,x)=>x>a?x:a,""):"";
   if(!first) return [];
-  if(have.length&&have[0]<first) first=have[0];
+  if(!E.isYMD(v.startDate)&&have.length&&have[0]<first) first=have[0];
   if(!last) last=first===startD&&LOG.add[v.id]===first?first:"";
   if(!last) return [];
   if(E.isYMD(v.eom)&&last>v.eom) last=v.eom; if(last>today) last=today;
   const out=[]; for(let x=first; x<=last&&out.length<400; x=E.addDays(x,1)) out.push(x); return out;
 }
 function vehicleLog(b,v){
+  if(!db().orgs.some(o=>o.id===v.org)&&!curOrg()){ b.appendChild(el(`<div class="w warn">This vehicle has no task org. Add one in <a href="#setup">Setup Mission</a>.</div>`)); return; }
   const d=db(), org=d.orgs.find(o=>o.id===v.org)||curOrg(), i=E.info(R,v), u=i.tracks, today=todayYMD(), U=u==="hrs"?"hrs":"mi";
   const days=logDays(v,org), startD=E.isYMD(v.startDate)?v.startDate:(E.isYMD(org.start)?org.start:"");
   const next=days.length?E.addDays(days[days.length-1],1):(startD||today), closed=E.isYMD(v.eom)&&next>v.eom, future=next>today;
@@ -2835,10 +2856,10 @@ function vehicleLog(b,v){
   const redraw=(keep)=>{ RENDER.board(); if(keep){ const f=document.querySelector(`.lg-row[data-d="${keep[0]}"] [data-k="${keep[1]}"]`); if(f) f.focus({preventScroll:true}); } };
   const later=()=>setTimeout(()=>{ const a=document.activeElement, r=a&&a.closest?a.closest(".lg-row"):null; redraw(r&&a.dataset.k?[r.dataset.d,a.dataset.k]:null); },0);
   box.addEventListener("change",(e)=>{ const t=e.target, row=t.closest(".lg-row"); if(!row||!t.dataset.k) return; const x=row.dataset.d, k=t.dataset.k, rec=dayRec(v.id,x);
-    if(["s","e","fg","fc"].includes(k)){ const p=parseNum(t.value); if(p===null){ toast(NUMMSG); redraw(); return; }
+    if(["s","e","fg","fc"].includes(k)){ const p=parseNum(k==="fc"?t.value.replace(/^\s*\$/,""):t.value); if(p===null){ toast(NUMMSG); redraw(); return; }
       if(k==="s"){ if(p===""){ delete rec.so; } else { rec.so=p; if(E.baseStart(d,v,x)===num(p)) delete rec.so; } }
       else if(k==="e"){ if(p==="") delete rec.e; else rec.e=p; }
-      else { const L=E.fuelList(rec), j=+t.dataset.j||0; while(L.length<=j) L.push({g:"",c:""}); L[j][k==="fg"?"g":"c"]=p; const keep=L.filter(q=>num(q.g)!==null||num(q.c)!==null);
+      else { let L=E.fuelList(rec); const j=+t.dataset.j||0; if(!L.length){ L=d.rc.filter(r=>r.veh===v.id&&r.date===x&&E.counted(r)&&r.type==="FUEL").map(r=>({g:String(r.gal||""),c:String(r.amt||"")})); } while(L.length<=j) L.push({g:"",c:""}); L[j][k==="fg"?"g":"c"]=p; const keep=L.filter(q=>num(q.g)!==null||num(q.c)!==null);
         delete rec.fg; delete rec.fc; if(keep.length) rec.fx=keep; else delete rec.fx; if(LOG.addf===v.id+"|"+x) LOG.addf=""; }
       // remarks typed over on the 1970 for this day rebuild from the new numbers
       const FD=formsDB().day, o=FD[v.id+"|"+x]; if(o&&(typeof o.r1==="string"||typeof o.r2==="string")){ delete o.r1; delete o.r2; if(!Object.keys(o).length) delete FD[v.id+"|"+x]; toast("The 1970 remarks for this day now follow these numbers."); } }
@@ -2849,7 +2870,7 @@ function vehicleLog(b,v){
       if(ok){ if(E.isYMD(v.startDate)) addNote(v,`Start date moved from ${plain(v.startDate)} to ${plain(earlier)}.`,earlier); v.startDate=earlier; }
       LOG.add[v.id]=LOG.add[v.id]&&LOG.add[v.id]>earlier?LOG.add[v.id]:(days.length?days[days.length-1]:earlier); save(); RENDER.board(); const f=document.querySelector(`.lg-row[data-d="${earlier}"] [data-k="${none?"op":"e"}"]`); if(f) f.focus(); toast(`${plain(earlier)} added. Start is now ${plain(v.startDate)}.`); return; }
     if(e.target.closest("[data-add]")){ LOG.add[v.id]=next; RENDER.board(); const f=document.querySelector(`.lg-row[data-d="${next}"] [data-k="${none?"op":"e"}"]`); if(f) f.focus(); return; }
-    const af=e.target.closest("[data-addf]"); if(af){ const x=af.closest(".lg-row").dataset.d; LOG.addf=v.id+"|"+x; RENDER.board(); const ins=document.querySelectorAll(`.lg-row[data-d="${x}"] [data-k="fg"]`); if(ins.length) ins[ins.length-1].focus(); return; }
+    const af=e.target.closest("[data-addf]"); if(af){ const x=af.closest(".lg-row").dataset.d; { const rec=dayRec(v.id,x); if(!E.fuelList(rec).length){ const L=d.rc.filter(r=>r.veh===v.id&&r.date===x&&E.counted(r)&&r.type==="FUEL").map(r=>({g:String(r.gal||""),c:String(r.amt||"")})); if(L.length){ delete rec.fg; delete rec.fc; rec.fx=L; save(); } } } LOG.addf=v.id+"|"+x; RENDER.board(); const ins=document.querySelectorAll(`.lg-row[data-d="${x}"] [data-k="fg"]`); if(ins.length) ins[ins.length-1].focus(); return; }
     const df=e.target.closest("[data-delf]"); if(df){ const x=df.closest(".lg-row").dataset.d, rec=dayRec(v.id,x), L=E.fuelList(rec), j=+df.dataset.delf;
       if(j<L.length){ L.splice(j,1); delete rec.fg; delete rec.fc; if(L.length) rec.fx=L; else delete rec.fx; save(); toast("Fill-up removed."); } else LOG.addf=""; RENDER.board(); } });
   b.appendChild(box);
@@ -2870,7 +2891,7 @@ RENDER.board=function(){
   if(mission){ missionView(b,org,date,today); return; }
   const coys=hasCoys(org), all=orgVeh(org), V=cur!=null?all.filter(v=>inCoy(v,cur)):all, tfLevel=coys&&cur==null;
   const usual=(v)=>E.active(v,date)||v.eom===date||(v.startDate&&v.startDate>date&&E.diffDays(date,v.startDate)<=1), shown=BOARD.showClosed?V:V.filter(usual), hidden=V.filter(v=>!usual(v)).length;
-  const allF=shown.flatMap(v=>E.flags(R,d,v,date,org,today)).filter(f=>f.lvl!=="info"), ids=new Set(V.map(v=>v.id)), fuel=V.reduce((a,v)=>a+E.dayFuel(d,v,date).amt,0);
+  const allF=shown.flatMap(v=>E.flags(R,d,v,date,org,today)).filter(f=>f.lvl!=="info"), ids=new Set(V.map(v=>v.id)), fuel=V.filter(v=>E.active(v,date)).reduce((a,v)=>a+E.dayFuel(d,v,date).amt,0);
   const missing=shown.filter(v=>E.active(v,date)&&E.info(R,v).tracks!=="none"&&E.endOfDay(d,v,date)===null).length;
   b.appendChild(el(`<div class="sumline">${cur!=null?`<span><b>${esc(coyName(cur))}</b></span>`:""}<span>Active <b>${shown.filter(v=>E.active(v,date)).length}</b></span><span>Mileage missing <b>${missing}</b></span><span>Flags <b>${allF.length}</b></span><span>Fuel <b>${fuel?esc(money(fuel)):"$0.00"}</b></span>${hidden?`<button class="btn" type="button" data-showclosed aria-pressed="${!!BOARD.showClosed}">${BOARD.showClosed?"Hide":"Show"} ${hidden} closed or not started</button>`:""}</div>`));
   { const sc=b.querySelector("[data-showclosed]"); if(sc) sc.addEventListener("click",()=>{ BOARD.showClosed=!BOARD.showClosed; RENDER.board(); }); }
@@ -2962,14 +2983,14 @@ RENDER.setup=function(){
   $("suAddOrg").addEventListener("click",()=>{ const o={id:uid(),to:"",mrt:"",digits:R.digitsDefault===6?6:8,start:todayYMD(),jumpMi:"",jumpHr:""}; d.orgs.push(o); d.org=o.id; saveReal(); RENDER.setup(); const i=document.querySelector("#suOrgs .vc:last-child [data-k=to]"); if(i) i.focus(); });
   $("suExp").addEventListener("click",async()=>{ const pass=$("suPass").value; try{ const f=await packBackup(DB,pass); DB.me.bk=todayYMD(); saveReal(); dl(new Blob([JSON.stringify(f)],{type:"application/json"}),`logstat-backup-${todayYMD()}${pass?"-locked":""}.json`); toast(pass?"Saved, locked with your passphrase.":"Saved. Keep the file somewhere safe."); }catch(e){ toast("Couldn't save the file on this device."); } });
   $("suImp").addEventListener("change",async(e)=>{ const f=e.target.files[0]; e.target.value=""; if(!f) return; try{ const o=JSON.parse(await f.text()); const data=await unpackBackup(o,()=>$("suPass").value||prompt("Passphrase for this file:"));
-      const D2=repair(data);
+      const D2=repair(data); if(!D2.orgs.length){ toast("That file has no task orgs in it."); return; }
       if(!DB.orgs.length){ D2.mig=1; DB=D2; saveReal(); RENDER.setup(); toast("Loaded."); return; }
       const names=D2.orgs.map(o=>o.to||"(no name)").join(", ")||"no task orgs", same=D2.orgs.filter(o=>DB.orgs.some(x=>x.id===o.id)).map(o=>o.to||"(no name)");
       const w=el(`<div class="w info" data-loadask><b>Load ${esc(f.name)}</b>: ${esc(names)} (${D2.veh.length} vehicles).${same.length?` <br>Already on this device: ${esc(same.join(", "))}; adding replaces those with the file's copy.`:""}
         <div class="toolrow" style="margin-top:6px"><button class="btn rs-big" type="button" data-la="add">Add to this device</button><button class="btn" type="button" data-la="rep">Replace everything</button><button class="btn" type="button" data-la="no">Cancel</button></div></div>`);
       const old=document.querySelector("[data-loadask]"); if(old) old.remove(); $("suImp").closest(".toolrow").after(w);
       w.addEventListener("click",(ev)=>{ const k=ev.target.closest("[data-la]"); if(!k) return; const a=k.dataset.la;
-        if(a==="add"){ addBackup(D2); saveReal(); RENDER.setup(); toast(`Added ${names}.`); }
+        if(a==="add"){ if(same.length&&!confirm(`${same.join(", ")} ${same.length>1?"are":"is"} already on this device. Adding replaces ${same.length>1?"them":"it"} with the file's copy, so anything entered here since that file was saved is lost. To combine two copies, use Board → Merge in a board file instead. Replace?`)) return; addBackup(D2); saveReal(); RENDER.setup(); toast(`Added ${names}.`); }
         else if(a==="rep"){ if(!confirm(`Replace everything on this device with this file (${D2.orgs.length} task orgs, ${D2.veh.length} vehicles)?`)) return; D2.mig=1; DB=D2; saveReal(); RENDER.setup(); toast("Loaded."); }
         else w.remove(); });
     }catch(err){ toast(err.message||"Couldn't read that file."); } });
@@ -2993,6 +3014,7 @@ function addBackup(D2){ const d=DB, F=d.forms, F2=D2.forms||{};
     d.veh.push(...D2.veh.filter(v=>v.org===o.id)); d.rc.push(...D2.rc.filter(r=>r.org===o.id));
     Object.keys(D2.days).forEach(k=>{ if(vids.has(k.split("|")[0])) d.days[k]=D2.days[k]; });
     if(F2.hdr&&F2.hdr[o.id]) F.hdr[o.id]=F2.hdr[o.id];
+    Object.keys(d.chk||{}).forEach(k=>{ if(k.startsWith(o.id+"|")) delete d.chk[k]; }); Object.keys(D2.chk||{}).forEach(k=>{ if(k.startsWith(o.id+"|")){ d.chk=d.chk||{}; d.chk[k]=D2.chk[k]; } });
     vids.forEach(id=>{ if(F2.plate&&F2.plate[id]) F.plate[id]=F2.plate[id]; if(D2.coy&&D2.coy[id]){ d.coy=d.coy||{}; d.coy[id]=D2.coy[id]; } });
     Object.keys(F2.day||{}).forEach(k=>{ if(vids.has(k.split("|")[0])) F.day[k]=F2.day[k]; });
     if(Array.isArray(o.coys)) o.coys=o.coys.slice(); });
@@ -3024,7 +3046,7 @@ const OVK=["sl","el","op","co","r1","r2","st","card","s1","s2"];
 
 // ---------- rows: the Board's days for one vehicle, with the operator's daily changes on top ----------
 function rows1970(d,org,v,through,all,H){
-  const F=d.forms||{}, DAY=F.day||{}, recs=(d.rc||[]).filter(r=>r.veh===v.id&&r.status!=="rejected"&&E.isYMD(r.date));
+  const F=d.forms||{}, DAY=F.day||{}, recs=(d.rc||[]).filter(r=>r.veh===v.id&&E.counted(r)&&E.isYMD(r.date));
   const own=Object.keys(d.days).filter(k=>k.startsWith(v.id+"|")).map(k=>k.split("|")[1]).concat(recs.map(r=>r.date),Object.keys(DAY).filter(k=>k.startsWith(v.id+"|")).map(k=>k.split("|")[1])).filter(E.isYMD).sort();
   let s=E.isYMD(v.startDate)?v.startDate:(own[0]||(E.isYMD(org.start)?org.start:through));
   let end=through; if(E.isYMD(v.eom)&&v.eom<end) end=v.eom;
@@ -3049,7 +3071,7 @@ function rows1970(d,org,v,through,all,H){
     const base={sl:H.sl||"",el:H.el||"",op:String(dr.op||""),co:E.info(R,v).coop?String(dr.co||""):"",r1,r2,
       card:cardStr({p:!DF.manual&&fuel.some(r=>r.card==="Personal funds"),w:DF.manual||fuel.some(r=>r.card==="WEX"),v:!DF.manual&&fuel.some(r=>r.card==="Voyager")}),st:E.nmcDay(v,dt)?"NMC":"FMC",s1:"",s2:""};
     const row={date:dt,base,edited:false};
-    OVK.forEach(k=>{ const x=o&&typeof o[k]==="string"?o[k]:null; row[k]=x!==null?x:base[k]; if(x!==null&&x!==base[k]) row.edited=true; });
+    OVK.forEach(k=>{ const x=o&&typeof o[k]==="string"?o[k]:null; row[k]=x!==null?x:base[k]; if(x!==null&&x!==base[k]&&!["sl","el","s1","s2"].includes(k)) row.edited=true; });
     if(row.s1&&sigKey(row.op)!==row.s1){ row.lost1=sigName(row.s1)||"someone"; row.s1=""; }
     if(row.s2&&sigKey(row.co)!==row.s2){ row.lost2=sigName(row.s2)||"someone"; row.s2=""; }
     out.push(row);
@@ -3061,7 +3083,7 @@ function setDay(vid,row,k,val){
   const F=formsDB(), key=vid+"|"+row.date, o=F.day[key]||{};
   if(val===row.base[k]) delete o[k]; else o[k]=val;
   if(Object.keys(o).length) F.day[key]=o; else delete F.day[key];
-  row[k]=val; row.edited=OVK.some(x=>typeof o[x]==="string"&&o[x]!==row.base[x]); save();
+  row[k]=val; row.edited=OVK.some(x=>!["sl","el","s1","s2"].includes(x)&&typeof o[x]==="string"&&o[x]!==row.base[x]); save();
 }
 function modelFromBoard(org,v,rows,H,plate){
   const i=E.info(R,v);
@@ -3201,7 +3223,7 @@ async function buildBoard1970s(org,pick,through,flat,st){
   if(jobs.length>60&&!confirm(`This builds ${jobs.length} sheets. On some devices it can take a few minutes; keep the app open. Build them?`)){ if(st) st.textContent=""; return; }
   const names={}, out=[], PART=40; let merged=null, parts=[], inPart=0;
   for(let i=0;i<jobs.length;i++){ const j=jobs[i];
-    const doc=await fill1970(PL,await loadPdf(PL,tpl),modelFromBoard(org,j.v,j.rows,H,F.plate[j.v.id]||""),{practice:PRACTICE,title:`ESAD Form 1970 ${j.v.label||""} ${E.lastN(j.v.sn,digitsOf(org))}${j.n>1?" sheet "+j.s:""}`});
+    const doc=await fill1970(PL,await loadPdf(PL,tpl),modelFromBoard(org,j.v,j.rows,H,F.plate[j.v.id]||""),{clear:true,practice:PRACTICE,title:`ESAD Form 1970 ${j.v.label||""} ${E.lastN(j.v.sn,digitsOf(org))}${j.n>1?" sheet "+j.s:""}`});
     if(flat){ flatten1970(PL,doc); if(!merged){ merged=await PL.PDFDocument.create(); inPart=0; } (await merged.copyPages(doc,doc.getPageIndices())).forEach(p=>merged.addPage(p)); inPart++;
       if(inPart>=PART||i===jobs.length-1){ merged.setTitle(pdfText(`ESAD Form 1970 - ${org.to} - ${plain(through)}`)); merged.setProducer("LOGSTAT"); merged.setCreator("LOGSTAT"); parts.push(await savePdf(merged)); merged=null; } }
     else { let nm=pre+E.fileName(through,org.to,j.v.sn,digitsOf(org),"1970")+(j.n>1?`_SHEET${j.s}`:"");
@@ -3222,12 +3244,12 @@ function dayCards(rows,on){
       if(key==="@file") return `<span class="sigfile">✔ Signed in this file by ${esc(j?r.f2:r.f1)}</span><button class="btn" type="button" data-unsign="${j}">Remove</button>`;
       if(key&&sigImg(key)) return `<span class="sigthumb" title="Signed by ${esc(sigName(key))}"><${"img"} alt="Signature of ${esc(sigName(key))}" src="${esc(sigImg(key))}"></span><button class="btn" type="button" data-unsign="${j}">Remove</button>`;
       return `<button class="btn" type="button" data-sign="${j}">✍ Sign</button>${lost?`<span class="muted"> ${esc(lost)}'s signature was dropped: the name changed.</span>`:""}`; };
-    const head=()=>`<b>${esc(r.label||r.date||"(no date)")}</b>${r.co&&E.normTO(r.co)===E.normTO(r.op)?`<span class="tag" style="color:var(--crit);border-color:var(--crit)">same person on both name lines</span>`:""}${r.edited&&on.reset?`<span class="tag">changed here</span><button class="btn" type="button" data-reset>Use Board values</button>`:""}`;
+    const head=()=>`<b>${esc(r.label||r.date||"(no date)")}</b>${r.co&&E.normTO(r.co)===E.normTO(r.op)?`<span class="tag" style="color:var(--crit);border-color:var(--crit)">same person on both name lines</span>`:""}${r.edited&&on.reset?`<span class="tag">changed here</span><button class="btn" type="button" data-reset>Use the log's values</button>`:""}`;
     const c=el(`<div class="dcard" data-i="${i}"><div class="dc-h">${head()}</div>
       ${on.dateEditable?`<label class="f">13. Date (MM/DD)<input class="fld" data-k="date" maxlength="10" value="${esc(r.date)}"></label>`:""}
       <div class="row"><label class="f">14. Start location<input class="fld" data-k="sl" maxlength="40" value="${esc(r.sl)}"></label><label class="f">15. End location<input class="fld" data-k="el" maxlength="40" value="${esc(r.el)}"></label></div>
       <div class="row"><label class="f">16. Operator<input class="fld" data-k="op" maxlength="40" value="${esc(r.op)}"></label><div class="sigcell" data-sc="0">${sig(0)}</div></div>
-      <div class="row"><label class="f">Second driver (co-operator)<input class="fld" data-k="co" maxlength="40" value="${esc(r.co)}"></label><div class="sigcell" data-sc="1">${sig(1)}</div></div>
+      ${on.coop===false?"":`<div class="row"><label class="f">Second driver (co-operator)<input class="fld" data-k="co" maxlength="40" value="${esc(r.co)}"></label><div class="sigcell" data-sc="1">${sig(1)}</div></div>`}
       ${on.miles&&on.miles(i)?(()=>{ const m=on.miles(i), u=m.unit==="hrs"?"hours":"mileage";
         return `<div class="row dc-mi"><label class="f">Start ${u}<input class="fld" data-m="s" inputmode="decimal" autocomplete="off" value="${esc(m.start===null?"":String(m.start))}"></label><label class="f">End ${u}<input class="fld" data-m="e" inputmode="decimal" autocomplete="off" value="${esc(m.end===null?"":String(m.end))}"></label><button class="btn" type="button" data-still title="End = Start">Didn't move</button></div>
         <div class="muted dc-mis">${m.start!==null&&m.end!==null?`${esc(fmtN(Math.round((m.end-m.start)*10)/10))} ${m.unit==="hrs"?"hrs":"mi"} this day`:""}${m.typedStart?` · start typed here (the day before ended at ${esc(m.base===null?"—":fmtN(m.base))})`:""}</div>`; })():""}
@@ -3254,7 +3276,7 @@ function dayCards(rows,on){
 }
 function renderBoardEditor(b,org){
   const d=db(), F=formsDB(), v=vehById(FRM.edit.vid); if(!v||v.org!==org.id){ FRM.edit=null; return false; }
-  const through=viewDate(), H=hdrOf(org), all=rows1970(d,org,v,through,F.all,H), sheets=Math.max(1,Math.ceil(all.length/29));
+  const through=viewDate(), H=hdrOf(org), all=rows1970(d,org,v,through>todayYMD()?through:todayYMD(),F.all,H), sheets=Math.max(1,Math.ceil(all.length/29));
   if(FRM.edit.sheet>sheets) FRM.edit.sheet=sheets;
   const sh=FRM.edit.sheet||1, rows=all.slice((sh-1)*29,sh*29).map(r=>Object.assign(r,{label:`${mmdd(r.date)} · ${plain(r.date)}${E.dplus(org,r.date)?" · "+E.dplus(org,r.date):""}`}));
   const top=el(`<div class="vform"><div class="toolrow"><button class="btn" type="button" data-back>◀ Back to the log</button></div>
@@ -3277,7 +3299,7 @@ function renderBoardEditor(b,org){
     save(); const nxt=k==="s"?"e":null; RENDER.forms();
     if(nxt){ const f=document.querySelector(`#b-forms .dcard[data-i="${i}"] [data-m="${nxt}"]`); if(f) f.focus(); }
     toast(k==="still"?`${plain(dt)}: didn't move. End = start.`:`Saved. ${had?"Remarks rebuilt from the new numbers. ":""}The next day starts from this end unless you type its start.`); };
-  b.appendChild(dayCards(rows,{id:v.id,set:(i,k,val)=>setDay(v.id,rows[i],k,val),reset:(i)=>{ delete F.day[v.id+"|"+rows[i].date]; save(); },redraw:()=>RENDER.forms()}));
+  b.appendChild(dayCards(rows,{id:v.id,set:(i,k,val)=>setDay(v.id,rows[i],k,val),reset:(i)=>{ const key=v.id+"|"+rows[i].date, o=F.day[key]; if(o){ ["op","co","r1","r2","card","st","date"].forEach(x=>delete o[x]); if(!Object.keys(o).length) delete F.day[key]; } save(); },coop:E.info(R,v).coop,redraw:()=>RENDER.forms()}));
   const go=el(`<div class="vform"><div class="toolrow"><button class="btn rs-big" type="button" data-go="fill">Fillable 1970</button><button class="btn" type="button" data-go="flat">Print-ready PDF</button></div><div class="muted" data-st></div></div>`);
   go.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click",async()=>{ if(FRM.busy) return; FRM.busy=true; const st=go.querySelector("[data-st]"); st.textContent="Building…";
     try{ await buildBoard1970s(org,[v],through,x.dataset.go==="flat",st); }catch(e){ console.error(e); st.textContent=""; toast("Couldn't build the 1970: "+(e&&e.message||e)); } FRM.busy=false; }));
@@ -3404,7 +3426,7 @@ RENDER.forms=function(){
       if(t.hasAttribute("data-all")){ F.all=t.checked; save(); RENDER.forms(); } });
     list.addEventListener("input",(e)=>{ const p=e.target.dataset.p; if(p){ const st=e.target.selectionStart; e.target.value=e.target.value.toUpperCase(); try{ e.target.setSelectionRange(st,st); }catch(_){} F.plate[p]=e.target.value.slice(0,13); save(); } });
     list.addEventListener("click",(e)=>{ const x=e.target.closest("[data-ed]"); if(x){ FRM.edit={vid:x.dataset.ed,sheet:1}; RENDER.forms(); window.scrollTo({top:0}); } });
-    list.querySelector("[data-sa]").addEventListener("click",()=>{ FRM.sel=new Set(V.map(v=>v.id)); RENDER.forms(); });
+    list.querySelector("[data-sa]").addEventListener("click",()=>{ FRM.sel=new Set(V.filter(want).map(v=>v.id)); RENDER.forms(); });
     list.querySelector("[data-sn]").addEventListener("click",()=>{ FRM.sel=new Set(); RENDER.forms(); });
     list.querySelectorAll("[data-sc]").forEach(x=>x.addEventListener("click",()=>{ const c=x.dataset.sc; FRM.sel=new Set(V.filter(v=>inCoy(v,c)&&want(v)).map(v=>v.id)); RENDER.forms(); }));
     const st=list.querySelector("[data-st]");
@@ -3528,8 +3550,9 @@ function renderMarkup(b){
   const at=(e)=>{ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)*P.w/r.width,(e.clientY-r.top)*P.h/r.height]; };
   const base=()=>Math.max(14,Math.round(P.w/60));
   cv.addEventListener("pointerdown",(e)=>{ const [px,py]=at(e);
-    if(U.tool){ const t=U.tool, s=base(); if(t!=="sig") mkSnap(P);
-      if(t==="text"){ const v=w.querySelector("[data-txt]").value.trim(); if(!v){ toast("Type the text to place first."); return; } P.items.push({t,x:px,y:py,s,v}); }
+    if(U.tool){ const t=U.tool, s=base(); if(t==="text"&&!w.querySelector("[data-txt]").value.trim()){ toast("Type the text to place first."); return; }
+      if(t!=="sig") mkSnap(P);
+      if(t==="text"){ const v=w.querySelector("[data-txt]").value.trim(); P.items.push({t,x:px,y:py,s,v}); }
       else if(t==="date") P.items.push({t,x:px,y:py,s,v:mmdd(todayYMD())});
       else if(t==="chk"||t==="x") P.items.push({t,x:px,y:py,s:Math.round(s*1.3)});
       else if(t==="wo"){ const ww=Math.round(P.w/7), hh=Math.round(s*1.6); P.items.unshift({t,x:Math.max(0,px-ww/2),y:Math.max(0,py-hh/2),w:ww,h:hh}); U.sel=0; U.tool=""; RENDER.forms(); return; }
@@ -3946,6 +3969,9 @@ function fieldMerge(k,a,b,fa,fb,ua,ub){
   new Set([...Object.keys(a),...Object.keys(b)]).forEach(f=>{
     if(k[0]==="v"&&f==="notes"){ out.notes=joinNotes(a.notes,b.notes); return; }
     const va=a[f], vb=b[f], ta=t36(fa[f]), tb=t36(fb[f]);
+    // fill-ups typed on two devices for the same day: keep both lists' entries (unless one list is just the other with entries removed)
+    if(k[0]==="d"&&f==="fx"&&Array.isArray(va)&&Array.isArray(vb)&&!sameV(va,vb)){ const key=(q)=>JSON.stringify([q&&q.g,q&&q.c]), A=va.map(key), Bk=vb.map(key);
+      if(!A.every(x=>Bk.includes(x))&&!Bk.every(x=>A.includes(x))){ const U=va.slice(); vb.forEach((q,i)=>{ if(!A.includes(Bk[i])) U.push(q); }); out[f]=U; const t=Math.max(ta,tb); if(t) fs[f]=t.toString(36); mine=true; theirs=true; return; } }
     if(sameV(va,vb)){ out[f]=va!==undefined?va:vb; const t=Math.max(ta,tb); if(t) fs[f]=t.toString(36); return; }
     const w=(ta||tb)?(ta>tb?"a":tb>ta?"b":"c"):(ua>ub?"a":ub>ua?"b":"c");
     if(w==="a"){ out[f]=va; if(ta) fs[f]=fa[f]; mine=true; }
@@ -3958,7 +3984,7 @@ function planMerge(d,tmp,orgId){
   const keys=new Set([...Object.keys(mine),...Object.keys(theirs)]), P={take:[],keep:[],add:[],del:[],skip:[],conflict:[],vnotes:[],same:0,matched:f.matched,alias:f.alias,theirs,st:f.st,tb:f.tb,fs:FF,mrg:{}};
   keys.forEach(k=>{ const a=mine[k], b=theirs[k], ua=t36(ms[k]), ub=t36(f.st[k]);
     if(a!==undefined&&b!==undefined){
-      if(k[0]==="d"||k[0]==="v"){ const m=fieldMerge(k,a,b,MF[k]||{},FF[k]||{},ua,ub);
+      if(k[0]==="d"||k[0]==="v"||k[0]==="h"){ const m=fieldMerge(k,a,b,MF[k]||{},FF[k]||{},ua,ub);
         if(m.conf.length){ P.mrg[k]=m; P.conflict.push(k); return; }
         if(m.theirs){ P.mrg[k]=m; P.take.push(k); return; }
         if(m.mine){ P.keep.push(k); return; }

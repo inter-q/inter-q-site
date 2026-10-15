@@ -2,7 +2,7 @@
 // Network first for the page itself, so a new upload to GitHub shows up the next time the app opens online.
 // The app makes no other network requests: nothing is sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "logstat-v8";
+const CACHE = "logstat-v9";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
   "./manifest.json", "./qrcode.min.js", "./pdf-lib.min.js",
   "./esad-form-1970.pdf", "./std-270-vehicle-accident-report.pdf", "./logstat-workflow.pdf",
@@ -47,7 +47,7 @@ self.addEventListener("fetch", (e) => {
       const saved = isAppPage(u) ? ((await caches.match("./index.html")) || (await caches.match("./"))) : null;
       if (!saved) { try { return await net; } catch (_) { return Response.error(); } }
       const slow = new Promise((res) => setTimeout(() => res(saved), 3000));
-      try { return await Promise.race([net, slow]); } catch (_) { return saved; }
+      try { const res = await Promise.race([net, slow]); return res && (res.ok || res.type === "opaqueredirect" || res.status === 304) ? res : saved; } catch (_) { return saved; }
     })());
     return;
   }
