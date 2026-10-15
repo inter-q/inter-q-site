@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-PRpJIjvJ+LP4NokqBpQjihpjh769TZWltdKyB6V/OPY=' 'sha256-kGPZkgQi0H6fDXeHo7HZTqDC3chFV3bPysQohQcVVMg=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-EFyQKUVhSeKNOlzpGNvbESucZsfYZcHfzCpYETxJrSQ=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-PRpJIjvJ+LP4NokqBpQjihpjh769TZWltdKyB6V/OPY=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-15 10:00">
+<meta name="logstat-build" content="2026-10-15 11:20">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1452,7 +1452,7 @@
     <section class="win view" id="v-board" hidden aria-labelledby="t-board"><div class="bar"><span id="t-board">BOARD.EXE<span class="bsub"> — Manage your Fleet</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-board"></div></section>
     <section class="win view" id="v-forms" hidden aria-labelledby="t-forms"><div class="bar"><span id="t-forms">1970.EXE<span class="bsub"> — Manage your 1970</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-forms"></div></section>
     <section class="win view" id="v-report" hidden aria-labelledby="t-report"><div class="bar"><span id="t-report">REPORT.EXE<span class="bsub"> — Mission status report</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-report"></div></section>
-    <section class="win view" id="v-setup" hidden aria-labelledby="t-setup"><div class="bar"><span id="t-setup">SETUP.EXE<span class="bsub"> — Mission, people, data</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-setup"></div></section>
+    <section class="win view" id="v-setup" hidden aria-labelledby="t-setup"><div class="bar"><span id="t-setup">SETUP.EXE<span class="bsub"> — Setup Mission</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-setup"></div></section>
     <section class="win view" id="v-help" hidden aria-labelledby="t-help"><div class="bar"><span id="t-help">HELP.EXE<span class="bsub"> — How to use LOGSTAT</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body help" id="b-help"></div></section>
   </main>
 
@@ -1986,9 +1986,10 @@ function vehicleForm(v,opts){
   const paint=()=>{ const x=vals(), i=E.info(R,x); f.querySelector("[data-sub]").hidden=x.cat!=="nstd"; f.querySelector("[data-rent]").hidden=x.cat!=="rent";
     const ol=f.querySelector("[data-odol]"); if(ol){ ol.textContent=i.tracks==="hrs"?"Start hours":"Start mileage"; f.querySelector("[data-odo]").hidden=i.tracks==="none"; }
     f.querySelector("[data-hint]").textContent=`${i.cat.hint}. Tracks ${i.tracks==="hrs"?"hours":i.tracks==="none"?"nothing (no mileage)":"miles"}; ${i.f1970?"needs a 1970":"no 1970"}${i.coop?"; needs a second driver (co-operator) every day":""}.${i.confirm?" (Rule to confirm with J4.)":""}`;
-    const P=x.sn?E.idProblems(R,{sn:q("sn").value,cat:x.cat}):[]; f.querySelector("[data-probs]").innerHTML=P.map(([k,t])=>`<div class="w ${k}">${k==="bad"?"✖︎":"⚠︎"} ${esc(t)}</div>`).join(""); };
+    const P=x.sn?E.idProblems(R,{sn:q("sn").value,cat:x.cat}):[]; { const og=curOrg(); if(og&&E.isYMD(og.start)&&E.isYMD(x.startDate)&&x.startDate<og.start) P.push(["warn",`Start date is before the mission start (${plain(og.start)}).`]); } f.querySelector("[data-probs]").innerHTML=P.map(([k,t])=>`<div class="w ${k}">${k==="bad"?"✖︎":"⚠︎"} ${esc(t)}</div>`).join(""); };
   f.addEventListener("input",paint); f.addEventListener("change",paint); paint();
-  f.vals=vals; f.problems=()=>{ const x=vals(); const P=E.idProblems(R,{sn:q("sn").value,cat:x.cat}); if(!opts.field&&E.info(R,x).tracks!=="none"&&x.startOdo===""&&!opts.noOdo) P.push(["warn","No start reading yet."]); return P; };
+  f.vals=vals; f.problems=()=>{ const x=vals(); const P=E.idProblems(R,{sn:q("sn").value,cat:x.cat}); if(!opts.field&&E.info(R,x).tracks!=="none"&&x.startOdo===""&&!opts.noOdo) P.push(["warn","No start reading yet."]);
+    { const og=curOrg(); if(og&&E.isYMD(og.start)&&E.isYMD(x.startDate)&&x.startDate<og.start) P.push(["warn",`Start date is before the mission start (${plain(og.start)}).`]); } return P; };
   return f;
 }
 function newVehicle(x,org){ return {id:uid(),org:org.id,label:x.label,sn:x.sn,cat:x.cat,sub:x.sub,unit:"",startDate:x.startDate||"",startOdo:x.startOdo||"",rental:!!x.rental,nmc:"",eom:"",eomOdo:"",repBy:"",repFor:"",xfer:"",notes:[]}; }
@@ -2010,13 +2011,14 @@ RENDER.home=function(){
     stamp:`<a class="tile" href="#stamp"><span class="tg">STAMP.EXE</span><b>Stamp a receipt</b><span>Pre-check, stamp the MRT and VIN digits, name the file, share.</span></a>`,
     board:`<a class="tile" href="#board"><span class="tg">BOARD.EXE</span><b>Manage your Fleet: Vehicles and Mileage</b><span>Every vehicle on the mission: daily mileage, operators, FMC/NMC, fuel and flags. Open a vehicle's log to add days and print its 1970.</span></a>`,
     report:`<a class="tile" href="#report"><span class="tg">REPORT.EXE</span><b>Mission report</b><span>Fleet numbers and charts for leadership. Print, PDF or Word.</span></a>`,
-    forms:`<a class="tile" href="#forms"><span class="tg">1970.EXE</span><b>Manage your 1970</b><span>Correct a 1970 that was emailed or scanned, print 1970s for many vehicles, and download blank 1970s for the field.</span></a>`,
+    setup:`<a class="tile" href="#setup"><span class="tg">SETUP.EXE</span><b>Setup Mission</b><span>Task forces, MRT, VIN/serial digits, mission start date and your name. Save, load or close out the mission.</span></a>`,
+    forms:`<a class="tile" href="#forms"><span class="tg">1970.EXE</span><b>Manage your 1970</b><span>Correct a 1970 that was emailed or scanned, print 1970s for a task force or company, and download blank 1970s for the field.</span></a>`,
   };
   const grp=(label,keys)=>`<div class="lbl">${esc(label)}</div><div class="tiles">${keys.map(k=>T[k]).join("")}</div>`;
-  const LAYOUT=[["Every day",["stamp","board"]],["The 1970",["forms"]],["Leadership",["report"]]];
+  const LAYOUT=[["Start here",["setup"]],["Every day",["stamp","board"]],["The 1970",["forms"]],["Leadership",["report"]]];
   b.innerHTML=`${org?alerts:`<div class="w warn">Start with <a href="#setup">Setup</a>: add your task org and MRT, then add vehicles on the <a href="#board">Board</a>.</div>`}
     ${LAYOUT.map(([l,k])=>grp(l,k)).join("")}
-    <div class="toolrow"><a class="btn" href="#setup">⚙︎ Setup</a><a class="btn" href="#help">? How to use</a><a class="btn" href="#install">⬇︎ Install on this device</a></div>`;
+    <div class="toolrow"><a class="btn" href="#help">? How to use</a><a class="btn" href="#install">⬇︎ Install on this device</a></div>`;
 };
 
 // ---------- help ----------
@@ -2030,21 +2032,21 @@ RENDER.help=function(){
   <h3>ARRO operator: every day</h3><ol>
     <li><a href="#stamp">Stamp</a> each receipt a driver sends in, then upload it in ARRO with its file name.</li>
     <li><a href="#board">Board</a> → <b>Open log</b> on each vehicle → <b>+ Add day</b>: End (Start fills in), operator (and the second driver on tactical vehicles), FMC/NMC, fuel gallons and cost. The flags clear as days are filled. Preview and print the 1970 from the same log.</li>
-    <li>End of mission: <a href="#forms">1970</a>: tick the vehicles → <b>Fillable 1970s</b> (one PDF each, in a ZIP) or <b>One print-ready PDF</b>. <b>Edit days</b> fixes any single day: locations, operators, remarks, fuel card, FMC/NMC and signatures. It all works with no network and saves on the device; upload in ARRO when you're back online.</li>
+    <li>End of mission: <a href="#forms">1970</a>: tick the vehicles → <b>Fillable 1970s</b> (one PDF each, in a ZIP) or <b>One print-ready PDF</b>. Locations and signatures for a day: a vehicle's log → <b>Locations &amp; signatures</b>. It all works with no network and saves on the device; upload in ARRO when you're back online.</li>
     <li>Leadership update: <a href="#report">Mission report</a> → <b>Print</b>, <b>Save PDF</b> or <b>Save Word</b>.</li>
     <li>Last day: EOM each vehicle on the <a href="#board">Board</a>, then <b>Mission export</b> for every 1970.</li></ol>
   <h3>Stamp a receipt</h3><ul><li>Photograph the receipt on a white background, one receipt per photo.</li><li>Fill gallons, amount and odometer. Every receipt here is fuel on the WEX card. Tick the three pre-checks. Share sends the stamped copy with its file name.</li><li>The photo is cropped to the receipt automatically; tap <b>Adjust crop</b> if anything is cut off. A receipt too long for one photo can be taken in up to three parts with <b>＋ Add next part</b>: top first, overlapping a line or two.</li><li>The stamp goes on a tan band below the receipt (beside it on a very long receipt), never over it, and the photo's location data is removed. Keep the paper original for turn-in.</li></ul>
   <h3>Two operators, one task org</h3><ul><li>Board → <b>Save board file</b>, send it to the other device, and there tap <b>Merge in a board file</b>. The newest copy of every entry wins on both devices; nothing is lost unless the other device changed or removed it later. The same serial is treated as the same vehicle and the same receipt is counted once.</li><li>Entries changed before this version have no time on them; if both devices changed one, you choose whose copy to keep.</li></ul>
   <h3>Manage your Fleet (Board)</h3><ul><li>Tap the <b>Date</b> to open the mission calendar: days with vehicles on mission are highlighted with how many, the mission start is marked START, today is outlined. Tap a day to see it.</li><li><b>Open log</b> on a vehicle shows every day: Start, End, miles, operators, FMC/NMC and fuel. Fix any day the field reported wrong; the next day's Start follows. Same Start and End means it didn't move. <b>+ fill-up</b> adds another refuel for the same day; the 1970 shows the day's total gallons and cost. Typed fill-ups for a day are used instead of that day's stamped receipts. The log has <b>Preview 1970</b>, <b>Fillable 1970</b> and <b>Print-ready 1970</b>.</li><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li><b>Big missions:</b> task orgs with the same MRT make one mission. Tap the mission line at the top of the Board to see every task force, a task force to see its companies, a company to see its vehicles. Set up companies with <b>Set up companies</b>; each company has its own vehicle count, miles, missing mileage and flags.</li><li><b>Tactical vehicles need a second driver</b> (co-operator) every day. It goes on the second name line of block 16 on the 1970, and that driver signs there. The Board flags a tactical vehicle with no second driver, or with the operator entered twice.</li><li><b>Day sheet</b> enters a whole company's end mileage, operators and second drivers for one day on one screen. </li><li><b>Big screen</b> shows the Board large on a TV or second screen.</li><li><b>Print</b> prints the level you're on: mission summary, task force (companies and their vehicles) or one company. <b>1970s for</b> a company ticks just its vehicles on the 1970 screen.</li><li><b>NMC</b> (damaged, can't be driven): set the day's status to NMC in the vehicle's log. It stays NMC until you set a later day back to FMC. <b>EOM</b> is separate (More… → EOM): do it when the vehicle is done, then finalize its 1970. EOM'd vehicles still count in the task force and company totals.</li></ul>
-  <h3>Manage your 1970</h3><ul><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup: <b>White-out</b> covers a wrong entry, then tap to place text, ✓, ✗, the date or a signature on top, and save it as a PDF. A PDF that is neither fillable nor a scan (for example a print-ready copy) can't be edited here: open its fillable copy, or take a photo of the page.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
+  <h3>Manage your 1970</h3><ul><li>The 1970 header (operation, incident, unit, dispatcher, RAPTR operator) is set once per task org in <b>Setup Mission</b>; the license plate is in the vehicle's <b>Edit</b> on the Board.</li><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup: <b>White-out</b> covers a wrong entry, then tap to place text, ✓, ✗, the date or a signature on top, and save it as a PDF. A PDF that is neither fillable nor a scan (for example a print-ready copy) can't be edited here: open its fillable copy, or take a photo of the page.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
   <h3>Signatures</h3><ul><li><b>Type</b> your name and pick a handwriting style, or <b>Draw</b> it with a finger. You confirm it's your own signature; it's saved on this device for next time.</li><li>Only the person named signs. Anyone can type a printed name, but not someone else's signature. Check with J4 that e-signatures are accepted on the 1970.</li></ul>
-  <h3>Mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, and the open items for the day. Every chart has a <b>Show as a table</b> view.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
+  <h3>Mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, and the open items for the day.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
   <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and 1970 screens) saves one ZIP: every vehicle's 1970 for the mission, print-ready with day edits and signatures, plus the mission report as a PDF and the vehicle list as a spreadsheet (CSV).</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
   <h3 id="h-roles">Who does what</h3>${R.roles.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><ul>${x.d.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3 id="h-paths">ARRO path maps</h3><p class="muted" style="margin:0 0 6px">Where things are in ARRO, click by click, from the LOGSTAT Quick Reference.</p>${R.paths.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><div class="path">${x.p.map(t=>`<span>${esc(t)}</span>`).join('<b aria-hidden="true">›</b>')}</div>${x.n?`<p class="muted" style="margin:6px 0 0">${esc(x.n)}</p>`:""}${x.link?`<div class="src"><a href="${esc(x.link.u)}" target="_blank" rel="noopener noreferrer">${esc(x.link.l)} ↗</a></div>`:""}<div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3>Rules settled</h3><ul>${(R.settled||[]).map(u=>`<li>${esc(u.text)}</li>`).join("")}</ul>
   <h3>Rules not yet settled with J4</h3><ul>${R.unsettled.map(u=>`<li>${esc(u.text)}</li>`).join("")}</ul>
-  <h3>Privacy</h3><ul><li>Everything stays on this device. Nothing is sent to a server, and the app never connects to ARRO.</li><li>The app never asks for card numbers, SSNs or passwords. Vehicle transfer cards carry the vehicle, not names.</li><li>Clearing browser data or private browsing erases what's saved. Use Setup → Save everything to a file.</li></ul>
+  <h3>Privacy</h3><ul><li>Everything stays on this device. Nothing is sent to a server, and the app never connects to ARRO.</li><li>The app never asks for card numbers, SSNs or passwords.</li><li>Clearing browser data or private browsing erases what's saved. Use Setup → Save everything to a file.</li></ul>
   <p class="muted">Rules version ${esc(R.version)}.</p>`;
   const id=PARAMS.id&&String(PARAMS.id).replace(/[^a-z]/g,""), t=id&&$("h-"+id);
   if(t) setTimeout(()=>t.scrollIntoView({block:"start"}),40);
@@ -2209,11 +2211,11 @@ RENDER.stamp=function(){
   const q=(s)=>b.querySelector(s), msg=(t)=>{ q("#rsMsg").textContent=t; };
   const cur=()=>vehById(RS.veh);
   const dateV=()=>q("#rsDate").value||todayYMD();
-  function fileName(){ const v=cur(); const base=E.fileName(dateV(),org&&org.to,v?v.sn:"",digitsOf(org),RS_TYPE);
+  function fileName(){ if(RS.rec&&RS.rec.gen===(RS.gen||0)) return RS.rec.name; const v=cur(); const base=E.fileName(dateV(),org&&org.to,v?v.sn:"",digitsOf(org),RS_TYPE);
     const used=new Set(d.rc.filter(r=>r.date===dateV()).map(r=>r.file)); let n=base+".jpg", i=2; while(used.has(n)) n=`${base}_${i++}.jpg`; return n; }
   function warnings(){
-    const W=[], v=cur(), i=v?E.info(R,v):null, odo=num(q("#rsOdo").value), sodo=v?num(peekDay(v.id,dateV()).sodo):null, type=RS_TYPE;   // start reading comes from the Board, if entered there
-    if(!org||!org.mrt) W.push(["bad","Add the MRT / mission # in “My setup”."]); if(!org||!org.to) W.push(["bad","Add the task org in “My setup”."]); if(!v) W.push(["bad","Add a vehicle in “My setup”."]);
+    const W=[], v=cur(), i=v?E.info(R,v):null, odo=num(q("#rsOdo").value), sodo=v?E.startOfDay(d,v,dateV()):null, type=RS_TYPE;   // start reading comes from the Board, if entered there
+    if(!org||!org.mrt) W.push(["bad","Add the MRT / mission # in Setup Mission."]); if(!org||!org.to) W.push(["bad","Add the task org in Setup Mission."]); if(!v) W.push(["bad","Add a vehicle on the Board first."]);
     if(v&&i.tracks==="none"&&type==="FUEL") W.push(["warn","This vehicle is a trailer: no fuel or mileage. Check you picked the right vehicle."]);
     if(v&&odo!==null){ const last=num(v.lastOdo); const jump=i.tracks==="hrs"?(num(org&&org.jumpHr)||R.jumpHr):(num(org&&org.jumpMi)||R.jumpMi);
       if(sodo!==null&&odo<sodo) W.push(["bad",`${i.tracks==="hrs"?"Hours":"Odometer"} ${fmtN(odo)} is lower than this morning's start (${fmtN(sodo)}). Check it.`]);
@@ -2330,7 +2332,9 @@ RENDER.stamp=function(){
   const blob=()=>new Promise(res=>{ draw(); q("#rsCanvas").toBlob(x=>res(x),"image/jpeg",0.85); });
   function record(name){
     const v=cur(), dt=dateV();
-    d.rc.push({id:uid(),org:org?org.id:"",veh:v?v.id:"",date:dt,type:RS_TYPE,gal:q("#rsGal").value.trim(),amt:q("#rsAmt").value.trim(),odo:q("#rsOdo").value.trim(),card:RS_CARD,file:name,loc:"",status:"sent",reasons:[],note:"",src:"field",last:v?E.lastN(v.sn,digitsOf(org)):"",t:Date.now()});
+    if(RS.rec&&RS.rec.gen===(RS.gen||0)){ const r=d.rc.find(x=>x.id===RS.rec.id); if(r){ Object.assign(r,{veh:v?v.id:"",date:dt,gal:q("#rsGal").value.trim(),amt:q("#rsAmt").value.trim(),odo:q("#rsOdo").value.trim(),last:v?E.lastN(v.sn,digitsOf(org)):""}); if(v&&r.odo) v.lastOdo=r.odo; save(); return; } }
+    const rid=uid(); RS.rec={gen:RS.gen||0,id:rid,name};
+    d.rc.push({id:rid,org:org?org.id:"",veh:v?v.id:"",date:dt,type:RS_TYPE,gal:q("#rsGal").value.trim(),amt:q("#rsAmt").value.trim(),odo:q("#rsOdo").value.trim(),card:RS_CARD,file:name,loc:"",status:"sent",reasons:[],note:"",src:"field",last:v?E.lastN(v.sn,digitsOf(org)):"",t:Date.now()});
     if(v&&q("#rsOdo").value.trim()){ v.lastOdo=q("#rsOdo").value.trim(); }
     save();
   }
@@ -2434,10 +2438,10 @@ function dayForm(v,org,date){
 }
 function moreMenu(v,org,date){
   const m=el(`<div class="vform"><div class="toolrow">
-    ${v.eom||E.nmcOn(v,date)?"":`<button class="btn" type="button" data-m="nmc">Mark NMC</button>`}
+
     ${v.eom?"":`<button class="btn" type="button" data-m="eom">EOM</button>`}
     <button class="btn" type="button" data-m="note">Add note</button><button class="btn" type="button" data-m="edit">Edit</button>
-    ${v.eom?`<button class="btn" type="button" data-m="uneom">Undo EOM</button>`:""}${v.nmc?`<button class="btn" type="button" data-m="unnmc">Back to FMC</button>`:""}
+    ${v.eom?`<button class="btn" type="button" data-m="uneom">Undo EOM</button>`:""}
     <button class="btn" type="button" data-m="del">Remove</button><button class="btn" type="button" data-m="x">Close</button></div><div data-sub></div></div>`);
   const sub=m.querySelector("[data-sub]");
   m.addEventListener("click",(e)=>{ const a=e.target.closest("[data-m]"); if(!a) return; const k=a.dataset.m;
@@ -2452,13 +2456,18 @@ function actionForm(k,v,org,date){
   const i=E.info(R,v), lr=E.lastReading(db(),v,date), u=i.tracks==="hrs"?"hours":"mileage";
   const done=(t)=>{ save(); BOARD.open={}; BOARD.act=null; RENDER.board(); if(t) toast(t); };
   if(k==="note"){ const f=el(`<div class="vform"><label class="f">Note<textarea class="fld" maxlength="400"></textarea></label><div class="toolrow"><button class="btn" type="button">Add note</button></div></div>`); f.querySelector("button").addEventListener("click",()=>{ const t=f.querySelector("textarea").value.trim(); if(!t) return; addNote(v,t,date); done("Note added."); }); return f; }
-  if(k==="edit"){ const vf=vehicleForm(v,{coys:coyList(org)}); const f=el(`<div></div>`); f.appendChild(vf); const s=el(`<div class="toolrow"><button class="btn" type="button">Save changes</button></div>`); f.appendChild(s);
-    s.querySelector("button").addEventListener("click",()=>{ const x=vf.vals(), P=vf.problems(); if(P.some(p=>p[0]==="bad")){ toast(P.find(p=>p[0]==="bad")[1]); return; } const kindChanged=x.cat!==v.cat||x.sub!==(v.sub||""); Object.assign(v,{label:x.label,sn:x.sn,cat:x.cat,sub:x.sub,unit:kindChanged?"":v.unit,startDate:x.startDate,startOdo:x.startOdo,rental:x.rental}); if(x.coy!==undefined) setCoy(v,x.coy); done("Vehicle updated."); }); return f; }
+  if(k==="edit"){ const vf=vehicleForm(v,{coys:coyList(org)}); const f=el(`<div></div>`); f.appendChild(vf);
+    const pl=el(`<label class="f">6. License plate / GSA plate / bumper # (for the 1970)<input class="fld" data-plate maxlength="13" autocapitalize="characters" autocomplete="off" value="${esc(formsDB().plate[v.id]||"")}"></label>`); f.appendChild(pl);
+    const s=el(`<div class="toolrow"><button class="btn" type="button">Save changes</button></div>`); f.appendChild(s);
+    s.querySelector("button").addEventListener("click",()=>{ const x=vf.vals(), P=vf.problems(); if(P.some(p=>p[0]==="bad")){ toast(P.find(p=>p[0]==="bad")[1]); return; } const kindChanged=x.cat!==v.cat||x.sub!==(v.sub||""); Object.assign(v,{label:x.label,sn:x.sn,cat:x.cat,sub:x.sub,unit:kindChanged?"":v.unit,startDate:x.startDate,startOdo:x.startOdo,rental:x.rental}); if(x.coy!==undefined) setCoy(v,x.coy);
+      const pv=pl.querySelector("input").value.trim().toUpperCase().slice(0,13), FP=formsDB().plate; if(pv) FP[v.id]=pv; else delete FP[v.id]; done("Vehicle updated."); }); return f; }
   if(k==="nmc"){ const f=el(`<div class="vform"><div class="w warn">Damaged and can't be driven? Mark it NMC from ${esc(plain(date))}. It stays on the Board, and its 1970 shows NMC each day until you set it back to FMC. EOM is separate: do it when the vehicle is done for the mission.</div><label class="f">What happened<input class="fld" data-why maxlength="120" placeholder="suspension damage"></label><div class="toolrow"><button class="btn" type="button">Mark NMC</button></div></div>`);
     f.querySelector("button").addEventListener("click",()=>{ v.nmc=date; const why=f.querySelector("[data-why]").value.trim();
       addNote(v,`Vehicle ${E.lastN(v.sn,digitsOf(org))} declared NMC on ${plain(date)}${why?` due to ${why}`:""}.${v.eom?" EOM completed today.":""}`,date); done("Marked NMC. Set it back to FMC when it's fixed."); }); return f; }
   if(k==="eom"){ const f=el(`<div class="vform"><label class="f">Final ${u}<input class="fld" data-odo inputmode="numeric" value="${esc(lr?lr.e:"")}"></label><div class="muted">Upload the final 1970 and any pending receipts in ARRO.</div><div class="toolrow"><button class="btn" type="button">EOM ${esc(plain(date))}</button></div></div>`);
-    f.querySelector("button").addEventListener("click",()=>{ v.eom=date; v.eomOdo=f.querySelector("[data-odo]").value.replace(/[^\d.]/g,""); if(v.eomOdo&&i.tracks!=="none") dayRec(v.id,date).e=v.eomOdo; addNote(v,`EOM ${plain(date)}${v.eomOdo?` at ${v.eomOdo}`:""}.`,date); done("EOM recorded."); }); return f; }
+    f.querySelector("button").addEventListener("click",()=>{ const later=Object.keys(db().days).filter(k=>k.startsWith(v.id+"|")).map(k=>k.split("|")[1]).filter(x=>E.isYMD(x)&&x>date&&logHas(db().days[v.id+"|"+x])).sort();
+      if(later.length&&!confirm(`${v.label||v.sn} has entries after ${plain(date)} (${later.length} day${later.length>1?"s":""}, through ${plain(later[later.length-1])}). An EOM on ${plain(date)} hides them and drops them from the totals. EOM anyway?`)) return;
+      v.eom=date; v.eomOdo=f.querySelector("[data-odo]").value.replace(/[^\d.]/g,""); if(v.eomOdo&&i.tracks!=="none") dayRec(v.id,date).e=v.eomOdo; addNote(v,`EOM ${plain(date)}${v.eomOdo?` at ${v.eomOdo}`:""}.`,date); done("EOM recorded."); }); return f; }
   return el(`<div></div>`);
 }
 function boardTable(org,date,today,big,list){
@@ -2536,13 +2545,13 @@ function hStats(org,date,today,cache){
   if(cache) cache[k]=m; return m;
 }
 function hSum(m,V){ const s={veh:0,fmc:0,nmc:0,eom:0,mi:0,hrs:0,mim:0,hrm:0,miss:0,flags:0,need:0,done:0};
-  V.forEach(v=>{ const x=m[v.id]; if(!x) return; if(x.status==="EOM") s.eom++; else { s.veh++; if(x.status==="NMC") s.nmc++; else s.fmc++; }
+  V.forEach(v=>{ const x=m[v.id]; if(!x) return; s.veh++; if(x.status==="EOM") s.eom++; else { if(x.status==="NMC") s.nmc++; else s.fmc++; }
     if(x.tr==="hrs"){ s.hrs+=x.today; s.hrm+=x.p.hrs; } else if(x.tr!=="none"){ s.mi+=x.today; s.mim+=x.p.mi; }
     if(x.miss) s.miss++; s.flags+=x.flags; if(x.need){ s.need++; if(x.done) s.done++; } });
   ["mi","hrs","mim","hrm"].forEach(k=>{ s[k]=Math.round(s[k]*10)/10; }); return s; }
 function hAdd(a,b){ const s={}; Object.keys(a).forEach(k=>{ s[k]=Math.round((a[k]+b[k])*10)/10; }); return s; }
 const HZERO=()=>({veh:0,fmc:0,nmc:0,eom:0,mi:0,hrs:0,mim:0,hrm:0,miss:0,flags:0,need:0,done:0});
-const hMi=(n,h)=>`${fmtN(n)}${h?` <small>+${esc(fmtN(h))} hrs</small>`:""}`;
+const hMi=(n,h,u)=>`${fmtN(n)}${u?" mi":""}${h?` <small>+${esc(fmtN(h))} hrs</small>`:""}`;
 // One summary, three ways: a table (laptop and print), cards (small screens), and plain numbers in the header line.
 function hTable(first,rows,total,forPrint){
   const C=(s)=>`<td class="n">${s.veh}</td><td class="n">${s.fmc}</td><td class="n${s.nmc?" hbad":""}">${s.nmc}</td><td class="n">${s.eom}</td><td class="n">${hMi(s.mi,s.hrs)}</td><td class="n">${hMi(s.mim,s.hrm)}</td><td class="n${s.miss?" hwarn":""}">${s.miss}</td><td class="n${s.flags?" hwarn":""}">${s.flags}</td>`;
@@ -2553,7 +2562,7 @@ function hTable(first,rows,total,forPrint){
 }
 function hCards(rows,total){
   const card=(r,tot)=>{ const s=r.s, bits=[`<b>${s.veh}</b> vehicle${s.veh===1?"":"s"}`,`${s.fmc} FMC`,s.nmc?`<span class="hbad">${s.nmc} NMC</span>`:"0 NMC",s.eom?`${s.eom} EOM`:""].filter(Boolean).join(" · ");
-    const miles=`${hMi(s.mi,s.hrs)} mi today · ${hMi(s.mim,s.hrm)} mi mission`;
+    const miles=`${hMi(s.mi,s.hrs,1)} today · ${hMi(s.mim,s.hrm,1)} mission`;
     const warn=[s.miss?`<span class="hwarn">${s.miss} mileage missing</span>`:"",s.flags?`<span class="hwarn">${s.flags} flag${s.flags===1?"":"s"}</span>`:""].filter(Boolean).join(" · ");
     const inner=`<div class="hc-n">${esc(r.name)}${r.sub?` <small class="muted">${esc(r.sub)}</small>`:""}</div><div>${bits}</div><div class="muted">${miles}</div>${warn?`<div>${warn}</div>`:`<div class="hok">✔︎ All mileage in, no flags</div>`}`;
     return r.href&&!tot?`<a class="hcard${r.dim?" hdim":""}" href="${esc(r.href)}">${inner}<span class="hc-go" aria-hidden="true">›</span></a>`:`<div class="hcard htot">${inner}</div>`; };
@@ -2630,7 +2639,7 @@ function daySheet(org,V,date,today,co){
         <label class="ds-op"><span class="ds-l">Operator</span><input class="fld" data-k="op" maxlength="40" autocomplete="off" autocapitalize="characters" enterkeyhint="next" value="${esc(dr.op||"")}" placeholder="rank &amp; name" aria-label="Operator for ${esc(v.label||v.sn)}"></label>
         ${i.coop?`<label class="ds-co"><span class="ds-l">2nd driver</span><input class="fld" data-k="co" maxlength="40" autocomplete="off" autocapitalize="characters" enterkeyhint="next" value="${esc(dr.co||"")}" placeholder="rank &amp; name" aria-label="Second driver for ${esc(v.label||v.sn)}"></label>`:`<div class="ds-co ds-na muted" aria-hidden="true">—</div>`}
         <div class="ds-w" data-w></div></div>`; }).join("")||`<div class="muted">No vehicles on this day.</div>`}</div>
-    <div class="toolrow"><a class="btn rs-big" href="${esc(boardHref(org,co))}">Done</a><span class="muted" data-saved></span></div></div>`);
+    <div class="toolrow"><a class="btn rs-big" href="${esc(hasCoys(org)?boardHref(org,co):boardHref(org))}">Done</a><span class="muted" data-saved></span></div></div>`);
   const paint=(row)=>{ const v=vehById(row.dataset.vid); if(!v) return; const i=E.info(R,v), lo=E.startOfDay(d,v,date), ev=num(row.querySelector('[data-k="e"]').value), mi=row.querySelector("[data-mi]"), W=row.querySelector("[data-w]");
     let msg="", cls=""; if(i.tracks!=="none"&&ev!==null&&lo!==null){ const n=ev-lo; mi.textContent=fmtN(+n.toFixed(Math.max(decs(ev),decs(lo))))+" "+E.unitWord(i.tracks); if(n<0){ msg=`Lower than the start (${fmtN(lo)}).`; cls="crit"; } else if(n>jump(i)){ msg=`${fmtN(n)} in one day. Check it.`; cls="warn"; } } else mi.textContent=i.tracks==="none"?"—":"";
     // tactical: the second driver
@@ -2771,7 +2780,9 @@ function vehicleLog(b,v){
   const d=db(), org=d.orgs.find(o=>o.id===v.org)||curOrg(), i=E.info(R,v), u=i.tracks, today=todayYMD(), U=u==="hrs"?"hrs":"mi";
   const days=logDays(v,org), startD=E.isYMD(v.startDate)?v.startDate:(E.isYMD(org.start)?org.start:"");
   const next=days.length?E.addDays(days[days.length-1],1):(startD||today), closed=E.isYMD(v.eom)&&next>v.eom, future=next>today;
-  let tot=0, fuel=0, gal=0, n=0; days.forEach(x=>{ const st=E.startOfDay(d,v,x), en=E.endOfDay(d,v,x); if(st!==null&&en!==null&&en>=st){ tot+=en-st; } if(en!==null) n++; const f=E.dayFuel(d,v,x); fuel+=f.amt; gal+=f.gal; });
+  // a day before the first one (the vehicle was on the mission earlier than its start date says)
+  const firstD=days.length?days[0]:(startD&&startD<=today?startD:E.addDays(today,1)), earlier=(()=>{ const x=E.addDays(firstD,-1); return x<=today&&(days.length||x<next)&&!(E.isYMD(v.eom)&&x>v.eom)?x:""; })();
+  let tot=0, fuel=0, gal=0, n=0; days.forEach(x=>{ const st=E.startOfDay(d,v,x), en=E.endOfDay(d,v,x); if(st!==null&&en!==null&&en>=st){ tot+=en-st; } if(en!==null||(u==="none"&&String(peekDay(v.id,x).op||"").trim())) n++; const f=E.dayFuel(d,v,x); fuel+=f.amt; gal+=f.gal; });
   const status=E.isYMD(v.eom)&&v.eom<=today?(v.nmc?"NMC · EOM "+plain(v.eom):"EOM "+plain(v.eom)):E.nmcOn(v,today)?"NMC":"FMC";
   const top=el(`<div class="vform lg-top"><div class="toolrow"><a class="btn" href="#board">◀ All vehicles</a></div>
     <div class="vc-h"><span><b>${esc(v.label||i.cat.short)}</b> <code>${esc(v.sn)}</code></span><span><span class="pill">${esc(status)}</span> <span class="pill p-dim">${esc(i.cat.short)}</span></span></div>
@@ -2783,10 +2794,11 @@ function vehicleLog(b,v){
   if(!i.f1970) f70.innerHTML=`<summary>1970</summary><div class="muted">${esc(i.name)}: no 1970 needed per the course.</div>`;
   else {
     const rb=readyBox(FRM.ready,()=>{ FRM.ready=null; RENDER.board(); }); if(rb) f70.querySelector("[data-rb]").appendChild(rb);
+    { const Hh=hdrOf(org); if(!Hh.op||!Hh.inc||!Hh.unit) f70.querySelector("[data-st]").insertAdjacentHTML("beforebegin",`<div class="w warn">The 1970 header isn't complete (operation, mission/incident or unit is blank). Fill it in <a href="#setup">Setup Mission</a>.</div>`); }
     f70.querySelector("[data-prev]").addEventListener("click",()=>{ LOG.prev=!LOG.prev; RENDER.board(); });
     f70.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click",async()=>{ if(LOG.busy) return; LOG.busy=true; const st=f70.querySelector("[data-st]"); st.textContent="Building…";
       try{ await buildBoard1970s(org,[v],today,x.dataset.go==="flat",st); }catch(e){ console.error(e); st.textContent=""; toast("Couldn't build the 1970: "+(e&&e.message||e)); } LOG.busy=false; }));
-    if(LOG.prev){ const F=formsDB(), H=F.hdr[org.id]||{}, M=modelFromBoard(org,v,rows1970(d,org,v,today,F.all,H),H,F.plate[v.id]||""), h=M.hdr;
+    if(LOG.prev){ const F=formsDB(), H=hdrOf(org), M=modelFromBoard(org,v,rows1970(d,org,v,today,F.all,H),H,F.plate[v.id]||""), h=M.hdr;
       f70.querySelector("[data-pv]").innerHTML=`<div class="paper rp-screen f70p"><div class="rp-tag">Preview · ESAD Form 1970</div>
         <table class="f70h"><tr><th>1 Operation</th><td>${esc(h.op)}</td><th>2 MRT</th><td>${esc(h.mrt)}</td><th>3 Mission / incident</th><td>${esc(h.inc)}</td></tr>
         <tr><th>4 Equipment</th><td>${esc(h.equip)}</td><th>5 Type</th><td>${esc({tac:"Tactical",gsa:"GSA",rent:"Rental",ntv:"Non-tactical"}[h.type]||"")}</td><th>7 VIN / serial</th><td>${esc(h.vin)}</td></tr>
@@ -2813,13 +2825,13 @@ function vehicleLog(b,v){
       <label class="lg-op"><span>Operator</span><input class="fld" data-k="op" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="rank &amp; name" value="${esc(dr.op||"")}"></label>
       ${coop?`<label class="lg-co"><span>2nd driver</span><input class="fld" data-k="co" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="rank &amp; name" value="${esc(dr.co||"")}"></label>`:`<div class="lg-co lg-na"></div>`}
       <label class="lg-st"><span>Status</span><select class="fld" data-k="st"><option${nmc?"":" selected"}>FMC</option><option${nmc?" selected":""}>NMC</option></select></label>
-      <div class="lg-fuel"><span class="lg-fl">Fuel (gal · $)</span>${(()=>{ const FL=E.fuelList(dr), L=FL.length?FL.slice():[{g:"",c:""}]; if(LOG.addf===v.id+"|"+x&&FL.length) L.push({g:"",c:""});
+      ${none?`<div class="lg-fuel muted">No fuel or mileage</div>`:`<div class="lg-fuel"><span class="lg-fl">Fuel (gal · $)</span>${(()=>{ const FL=E.fuelList(dr), L=FL.length?FL.slice():[{g:"",c:""}]; if(LOG.addf===v.id+"|"+x&&FL.length) L.push({g:"",c:""});
         return L.map((q,j)=>`<div class="lg-fe"><input class="fld" data-k="fg" data-j="${j}" inputmode="decimal" autocomplete="off" aria-label="Fuel gallons, fill-up ${j+1}" value="${esc(q.g)}" placeholder="${j===0&&!f.manual&&f.n?esc(String(Math.round(f.gal*1000)/1000)):"gal"}"><input class="fld" data-k="fc" data-j="${j}" inputmode="decimal" autocomplete="off" aria-label="Fuel cost, fill-up ${j+1}" value="${esc(q.c)}" placeholder="${j===0&&!f.manual&&f.n?esc(f.amt.toFixed(2)):"$"}">${L.length>1?`<button type="button" class="btn lg-delf" data-delf="${j}" aria-label="Remove fill-up ${j+1}">✕</button>`:""}</div>`).join(""); })()}
-        <button type="button" class="btn lg-addf" data-addf>+ fill-up</button>${f.manual&&f.fills>1?`<span class="muted lg-ft">${f.fills} fill-ups: ${esc(String(Math.round(f.gal*1000)/1000))} gal · ${esc(money(f.amt))}</span>`:""}</div>
+        <button type="button" class="btn lg-addf" data-addf>+ fill-up</button>${f.manual&&f.fills>1?`<span class="muted lg-ft">${f.fills} fill-ups: ${esc(String(Math.round(f.gal*1000)/1000))} gal · ${esc(money(f.amt))}</span>`:""}</div>`}
       ${W.length?`<div class="lg-w">${W.map(w=>`<span class="w ${w[0]}">${esc(w[1])}</span>`).join("")}</div>`:""}
     </div>`; };
   const box=el(`<div class="lg-days"><div class="lg-head" aria-hidden="true"><span>Date</span><span>Start</span><span>End</span><span>${esc(U)}</span><span>Operator</span><span>${coop?"2nd driver":""}</span><span>Status</span><span>Fuel (gal · $)</span></div>${days.map(rowHtml).join("")}
-    <div class="toolrow">${closed?`<span class="muted">Closed out (EOM ${esc(plain(v.eom))}).</span>`:future?`<span class="muted">Every day through today is on the log.</span>`:`<button class="btn rs-big" type="button" data-add>+ Add day (${esc(plain(next))})</button>`}</div></div>`);
+    <div class="toolrow">${closed?`<span class="muted">Closed out (EOM ${esc(plain(v.eom))}).</span>`:future?(days.length?`<span class="muted">Today is on the log. The next day can be added tomorrow.</span>`:`<span class="w warn">This vehicle starts ${esc(plain(next))}. If it started earlier, tap <b>+ Add earlier day</b>, or change its start date (More… → Edit).</span>`):`<button class="btn rs-big" type="button" data-add>+ Add day (${esc(plain(next))})</button>`}${earlier?`<button class="btn" type="button" data-early>+ Add earlier day (${esc(plain(earlier))})</button>`:""}</div></div>`);
   const redraw=(keep)=>{ RENDER.board(); if(keep){ const f=document.querySelector(`.lg-row[data-d="${keep[0]}"] [data-k="${keep[1]}"]`); if(f) f.focus({preventScroll:true}); } };
   const later=()=>setTimeout(()=>{ const a=document.activeElement, r=a&&a.closest?a.closest(".lg-row"):null; redraw(r&&a.dataset.k?[r.dataset.d,a.dataset.k]:null); },0);
   box.addEventListener("change",(e)=>{ const t=e.target, row=t.closest(".lg-row"); if(!row||!t.dataset.k) return; const x=row.dataset.d, k=t.dataset.k, rec=dayRec(v.id,x);
@@ -2833,7 +2845,10 @@ function vehicleLog(b,v){
     else if(k==="op"||k==="co"){ t.value=setName(v.id,x,k,t.value); }
     else if(k==="st"){ setNmcDay(v,x,t.value==="NMC"); toast(t.value==="NMC"?`NMC from ${plain(x)} until you set a day back to FMC.`:`FMC on ${plain(x)}.`); }
     save(); later(); });
-  box.addEventListener("click",(e)=>{ if(e.target.closest("[data-add]")){ LOG.add[v.id]=next; RENDER.board(); const f=document.querySelector(`.lg-row[data-d="${next}"] [data-k="${none?"op":"e"}"]`); if(f) f.focus(); return; }
+  box.addEventListener("click",(e)=>{ if(e.target.closest("[data-early]")&&earlier){ const ok=!E.isYMD(v.startDate)||earlier<v.startDate;
+      if(ok){ if(E.isYMD(v.startDate)) addNote(v,`Start date moved from ${plain(v.startDate)} to ${plain(earlier)}.`,earlier); v.startDate=earlier; }
+      LOG.add[v.id]=LOG.add[v.id]&&LOG.add[v.id]>earlier?LOG.add[v.id]:(days.length?days[days.length-1]:earlier); save(); RENDER.board(); const f=document.querySelector(`.lg-row[data-d="${earlier}"] [data-k="${none?"op":"e"}"]`); if(f) f.focus(); toast(`${plain(earlier)} added. Start is now ${plain(v.startDate)}.`); return; }
+    if(e.target.closest("[data-add]")){ LOG.add[v.id]=next; RENDER.board(); const f=document.querySelector(`.lg-row[data-d="${next}"] [data-k="${none?"op":"e"}"]`); if(f) f.focus(); return; }
     const af=e.target.closest("[data-addf]"); if(af){ const x=af.closest(".lg-row").dataset.d; LOG.addf=v.id+"|"+x; RENDER.board(); const ins=document.querySelectorAll(`.lg-row[data-d="${x}"] [data-k="fg"]`); if(ins.length) ins[ins.length-1].focus(); return; }
     const df=e.target.closest("[data-delf]"); if(df){ const x=df.closest(".lg-row").dataset.d, rec=dayRec(v.id,x), L=E.fuelList(rec), j=+df.dataset.delf;
       if(j<L.length){ L.splice(j,1); delete rec.fg; delete rec.fc; if(L.length) rec.fx=L; else delete rec.fx; save(); toast("Fill-up removed."); } else LOG.addf=""; RENDER.board(); } });
@@ -2920,31 +2935,48 @@ RENDER.setup=function(){
     <details class="sec" open><summary>Task orgs and missions</summary><div id="suOrgs" style="display:flex;flex-direction:column;gap:8px"></div><div class="toolrow" style="margin-top:8px"><button class="btn" type="button" id="suAddOrg">+ Add task org</button></div></details>
     <details class="sec"><summary>Save, load, close out</summary>
       <div class="row"><label class="f">Passphrase for the file (optional)<input type="password" class="fld" id="suPass" autocomplete="new-password"></label></div>
-      <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" id="suExp">Save everything to a file</button><label class="btn">Load a saved file<input type="file" accept=".json,application/json" id="suImp" hidden></label></div>
+      <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" id="suExp">Save everything to a file</button><label class="btn">Load a saved file (add or replace)<input type="file" accept=".json,application/json" id="suImp" hidden></label></div>
       <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" id="suClose">Close out mission…</button><button class="btn" type="button" id="suWipe">Clear everything on this device</button></div>
       <p class="muted">Close out saves the current task org to a file, then clears its vehicles and receipts from this device.</p></details>`;
-  const saveMe=()=>{ d.me.opr=$("suMe").value.trim().toUpperCase().slice(0,60); saveReal(); };
+  const saveMe=()=>{ d.me.opr=$("suMe").value.trim().replace(/\s+/g," ").toUpperCase().slice(0,60); saveReal(); };
   ["suMe"].forEach(id=>$(id).addEventListener("change",saveMe));
   const ob=$("suOrgs");
   d.orgs.forEach(o=>{ const c=el(`<div class="vc"><div class="vc-h"><span><b>${esc(o.to||"(no name)")}</b> <code>${esc(o.mrt||"no MRT")}</code></span><span>${o.id===d.org?'<span class="pill p-ok">current</span>':`<button class="btn" type="button" data-use>Use this one</button>`}</span></div>
       <div class="row"><label class="f">Task org<input class="fld" data-k="to" value="${esc(o.to)}" placeholder="TF REDHAWK"></label><label class="f">MRT / mission #<input class="fld" data-k="mrt" value="${esc(o.mrt)}"></label></div>
       <div class="row"><label class="f">VIN / serial digits on receipts<select class="fld" data-k="digits"><option value="8"${o.digits===8?" selected":""}>Last 8 (course; meets "at least 6")</option><option value="6"${o.digits===6?" selected":""}>Last 6 (minimum)</option></select></label><label class="f">Mission start date<input type="date" class="fld" data-k="start" value="${esc(o.start)}"></label></div>
       <div class="row"><label class="f">Daily jump limit, miles<input class="fld" data-k="jumpMi" inputmode="numeric" placeholder="${R.jumpMi}" value="${esc(o.jumpMi)}"></label><label class="f">Daily jump limit, hours<input class="fld" data-k="jumpHr" inputmode="numeric" placeholder="${R.jumpHr}" value="${esc(o.jumpHr)}"></label></div>
+      ${(()=>{ const H=hdrOf(o); return `<details class="sec su-h"${H.op||H.inc||H.unit?"":" open"}><summary>1970 header (printed on every 1970 for this task org)</summary>
+      <div class="row"><label class="f">1. Operation<input class="fld" data-h="op" maxlength="60" value="${esc(H.op)}" placeholder="OPORD 3000-25-01 (Civil Support)"></label><label class="f">3. Mission / incident<input class="fld" data-h="inc" maxlength="60" value="${esc(H.inc)}"></label></div>
+      <div class="row"><label class="f">8. Unit (of origin)<input class="fld" data-h="unit" maxlength="40" value="${esc(H.unit)}"></label><label class="f">10. Dispatcher (unit of origin)<input class="fld" data-h="disp" maxlength="50" value="${esc(H.disp)}"></label></div>
+      <div class="row"><label class="f">11. RAPTR operator &amp; phone<input class="fld" data-h="rop" maxlength="60" value="${esc(H.rop)}" placeholder="SGT Name  555-555-0100"></label><label class="f">12. RAPTR operator email<input class="fld" data-h="rem" maxlength="60" value="${esc(H.rem)}" placeholder="name@cmd.ca.gov" autocapitalize="none"></label></div>
+      <div class="row"><label class="f">14. Start location (usual)<input class="fld" data-h="sl" maxlength="40" value="${esc(H.sl)}" placeholder="optional"></label><label class="f">15. End location (usual)<input class="fld" data-h="el" maxlength="40" value="${esc(H.el)}" placeholder="optional"></label></div>
+      <div class="muted">MRT, VIN, vehicle type, dates, operators, mileage, fuel and FMC/NMC come from the Board.</div></details>`; })()}
       <div class="muted">${d.veh.filter(v=>v.org===o.id).length} vehicles · ${d.rc.filter(r=>r.org===o.id).length} receipts</div>
       <div class="toolrow"><button class="btn" type="button" data-del>Delete this task org…</button></div></div>`);
-    c.addEventListener("change",(e)=>{ const k=e.target.dataset.k; if(!k) return; let v=e.target.value; if(k==="digits") v=+v===6?6:8; else if(k==="start") v=E.isYMD(v)?v:""; else if(k==="jumpMi"||k==="jumpHr") v=v.replace(/\D/g,"").slice(0,6); else v=v.trim().slice(0,40); o[k]=v; saveReal(); if(k==="to"||k==="mrt") RENDER.setup(); });
+    c.addEventListener("input",(e)=>{ const k=e.target.dataset.h; if(k){ hdrOf(o)[k]=e.target.value.slice(0,60); saveReal(); } });
+    c.addEventListener("change",(e)=>{ const k=e.target.dataset.k; if(!k) return; let v=e.target.value; if(k==="digits") v=+v===6?6:8; else if(k==="start") v=E.isYMD(v)?v:""; else if(k==="jumpMi"||k==="jumpHr") v=v.replace(/\D/g,"").slice(0,6); else v=v.trim().replace(/\s+/g," ").toUpperCase().slice(0,40); o[k]=v; saveReal(); if(k==="to"||k==="mrt") RENDER.setup(); });
     const u=c.querySelector("[data-use]"); if(u) u.addEventListener("click",()=>{ d.org=o.id; saveReal(); RENDER.setup(); });
-    c.querySelector("[data-del]").addEventListener("click",()=>{ if(!confirm(`Delete ${o.to||"this task org"} with its vehicles and receipts from this device? Save a file first if you need it.`)) return; const ids=new Set(d.veh.filter(v=>v.org===o.id).map(v=>v.id)); d.veh=d.veh.filter(v=>v.org!==o.id); d.rc=d.rc.filter(r=>r.org!==o.id); Object.keys(d.days).forEach(k=>{ if(ids.has(k.split("|")[0])) delete d.days[k]; }); Object.keys(d.chk).forEach(k=>{ if(k.startsWith(o.id+"|")) delete d.chk[k]; }); d.orgs=d.orgs.filter(x=>x!==o); d.org=d.orgs[0]?d.orgs[0].id:""; saveReal(); RENDER.setup(); });
+    c.querySelector("[data-del]").addEventListener("click",()=>{ if(!confirm(`Delete ${o.to||"this task org"} with its vehicles and receipts from this device? Save a file first if you need it.`)) return; const ids=new Set(d.veh.filter(v=>v.org===o.id).map(v=>v.id)); d.veh=d.veh.filter(v=>v.org!==o.id); d.rc=d.rc.filter(r=>r.org!==o.id); Object.keys(d.days).forEach(k=>{ if(ids.has(k.split("|")[0])) delete d.days[k]; }); Object.keys(d.chk).forEach(k=>{ if(k.startsWith(o.id+"|")) delete d.chk[k]; }); purgeOrgForms(o.id,ids); d.orgs=d.orgs.filter(x=>x!==o); d.org=d.orgs[0]?d.orgs[0].id:""; saveReal(); RENDER.setup(); });
     ob.appendChild(c); });
   if(!d.orgs.length) ob.appendChild(el(`<div class="muted">No task org yet. Add one.</div>`));
-  $("suAddOrg").addEventListener("click",()=>{ const o={id:uid(),to:"",mrt:"",digits:R.digitsDefault===6?6:8,start:todayYMD(),jumpMi:"",jumpHr:""}; d.orgs.push(o); d.org=o.id; saveReal(); RENDER.setup(); const i=ob.querySelector(".vc:last-child [data-k=to]"); if(i) i.focus(); });
+  $("suAddOrg").addEventListener("click",()=>{ const o={id:uid(),to:"",mrt:"",digits:R.digitsDefault===6?6:8,start:todayYMD(),jumpMi:"",jumpHr:""}; d.orgs.push(o); d.org=o.id; saveReal(); RENDER.setup(); const i=document.querySelector("#suOrgs .vc:last-child [data-k=to]"); if(i) i.focus(); });
   $("suExp").addEventListener("click",async()=>{ const pass=$("suPass").value; try{ const f=await packBackup(DB,pass); DB.me.bk=todayYMD(); saveReal(); dl(new Blob([JSON.stringify(f)],{type:"application/json"}),`logstat-backup-${todayYMD()}${pass?"-locked":""}.json`); toast(pass?"Saved, locked with your passphrase.":"Saved. Keep the file somewhere safe."); }catch(e){ toast("Couldn't save the file on this device."); } });
   $("suImp").addEventListener("change",async(e)=>{ const f=e.target.files[0]; e.target.value=""; if(!f) return; try{ const o=JSON.parse(await f.text()); const data=await unpackBackup(o,()=>$("suPass").value||prompt("Passphrase for this file:"));
-      const D2=repair(data); if(!confirm(`Load this file? It replaces everything on this device (${D2.orgs.length} task orgs, ${D2.veh.length} vehicles).`)) return; D2.mig=1; DB=D2; saveReal(); RENDER.setup(); toast("Loaded."); }catch(err){ toast(err.message||"Couldn't read that file."); } });
+      const D2=repair(data);
+      if(!DB.orgs.length){ D2.mig=1; DB=D2; saveReal(); RENDER.setup(); toast("Loaded."); return; }
+      const names=D2.orgs.map(o=>o.to||"(no name)").join(", ")||"no task orgs", same=D2.orgs.filter(o=>DB.orgs.some(x=>x.id===o.id)).map(o=>o.to||"(no name)");
+      const w=el(`<div class="w info" data-loadask><b>Load ${esc(f.name)}</b>: ${esc(names)} (${D2.veh.length} vehicles).${same.length?` <br>Already on this device: ${esc(same.join(", "))}; adding replaces those with the file's copy.`:""}
+        <div class="toolrow" style="margin-top:6px"><button class="btn rs-big" type="button" data-la="add">Add to this device</button><button class="btn" type="button" data-la="rep">Replace everything</button><button class="btn" type="button" data-la="no">Cancel</button></div></div>`);
+      const old=document.querySelector("[data-loadask]"); if(old) old.remove(); $("suImp").closest(".toolrow").after(w);
+      w.addEventListener("click",(ev)=>{ const k=ev.target.closest("[data-la]"); if(!k) return; const a=k.dataset.la;
+        if(a==="add"){ addBackup(D2); saveReal(); RENDER.setup(); toast(`Added ${names}.`); }
+        else if(a==="rep"){ if(!confirm(`Replace everything on this device with this file (${D2.orgs.length} task orgs, ${D2.veh.length} vehicles)?`)) return; D2.mig=1; DB=D2; saveReal(); RENDER.setup(); toast("Loaded."); }
+        else w.remove(); });
+    }catch(err){ toast(err.message||"Couldn't read that file."); } });
   $("suClose").addEventListener("click",async()=>{ const org=d.orgs.find(o=>o.id===d.org); if(!org){ toast("No task org to close out."); return; } if(!confirm(`Close out ${org.to||"this task org"}? A file is saved first, then its vehicles and receipts are cleared from this device.`)) return;
     const ids=new Set(d.veh.filter(v=>v.org===org.id).map(v=>v.id)); const part=Object.assign(fresh(),{me:d.me,orgs:[org],org:org.id,veh:d.veh.filter(v=>v.org===org.id),rc:d.rc.filter(r=>r.org===org.id),days:Object.fromEntries(Object.entries(d.days).filter(([k])=>ids.has(k.split("|")[0]))),chk:Object.fromEntries(Object.entries(d.chk).filter(([k])=>k.startsWith(org.id+"|"))),forms:formsPart(d,org,[...ids]),coy:Object.fromEntries(Object.entries(d.coy||{}).filter(([k])=>ids.has(k))),mig:1});
     try{ const f=await packBackup(part,$("suPass").value); dl(new Blob([JSON.stringify(f)],{type:"application/json"}),`logstat-closeout-${E.normTO(org.to)||"unit"}-${todayYMD()}.json`); }catch(e){ toast("Couldn't save the file, so nothing was cleared."); return; }
-    d.veh=d.veh.filter(v=>v.org!==org.id); d.rc=d.rc.filter(r=>r.org!==org.id); Object.keys(d.days).forEach(k=>{ if(ids.has(k.split("|")[0])) delete d.days[k]; }); Object.keys(d.chk).forEach(k=>{ if(k.startsWith(org.id+"|")) delete d.chk[k]; }); d.orgs=d.orgs.filter(x=>x!==org); d.org=d.orgs[0]?d.orgs[0].id:""; saveReal(); RENDER.setup(); toast("Closed out. The file is in your downloads."); });
+    d.veh=d.veh.filter(v=>v.org!==org.id); d.rc=d.rc.filter(r=>r.org!==org.id); Object.keys(d.days).forEach(k=>{ if(ids.has(k.split("|")[0])) delete d.days[k]; }); Object.keys(d.chk).forEach(k=>{ if(k.startsWith(org.id+"|")) delete d.chk[k]; }); purgeOrgForms(org.id,ids); d.orgs=d.orgs.filter(x=>x!==org); d.org=d.orgs[0]?d.orgs[0].id:""; saveReal(); RENDER.setup(); toast("Closed out. The file is in your downloads."); });
   $("suWipe").addEventListener("click",()=>{ if(!confirm("Clear every task org, vehicle and receipt from this device? Save a file first if you need it.")) return; const q=DB.quiz; DB=fresh(); DB.mig=1; DB.quiz=q; saveReal(); RENDER.setup(); toast("Cleared from this device."); });
 };
 
@@ -2953,6 +2985,22 @@ RENDER.setup=function(){
 // Everything works offline and stays on this device. Daily changes made in the editor are saved per vehicle and day (forms.day)
 // and win over what the Board computes, so a field operator can keep the 1970 right every day and upload it later.
 let FRM={sel:null,org:"",seen:null,busy:false,edit:null,up:null,ready:null};
+// A saved file's task orgs added to this device; a task org already here is replaced by the file's copy.
+function addBackup(D2){ const d=DB, F=d.forms, F2=D2.forms||{};
+  D2.orgs.forEach(o=>{ const ex=d.orgs.find(x=>x.id===o.id);
+    if(ex){ const ids=new Set(d.veh.filter(v=>v.org===o.id).map(v=>v.id)); d.veh=d.veh.filter(v=>v.org!==o.id); d.rc=d.rc.filter(r=>r.org!==o.id); Object.keys(d.days).forEach(k=>{ if(ids.has(k.split("|")[0])) delete d.days[k]; }); purgeOrgForms(o.id,ids); d.orgs=d.orgs.filter(x=>x!==ex); }
+    d.orgs.push(o); const vids=new Set(D2.veh.filter(v=>v.org===o.id).map(v=>v.id));
+    d.veh.push(...D2.veh.filter(v=>v.org===o.id)); d.rc.push(...D2.rc.filter(r=>r.org===o.id));
+    Object.keys(D2.days).forEach(k=>{ if(vids.has(k.split("|")[0])) d.days[k]=D2.days[k]; });
+    if(F2.hdr&&F2.hdr[o.id]) F.hdr[o.id]=F2.hdr[o.id];
+    vids.forEach(id=>{ if(F2.plate&&F2.plate[id]) F.plate[id]=F2.plate[id]; if(D2.coy&&D2.coy[id]){ d.coy=d.coy||{}; d.coy[id]=D2.coy[id]; } });
+    Object.keys(F2.day||{}).forEach(k=>{ if(vids.has(k.split("|")[0])) F.day[k]=F2.day[k]; });
+    if(Array.isArray(o.coys)) o.coys=o.coys.slice(); });
+  Object.assign(F.sig,F2.sig||{}); if(!d.org&&D2.orgs[0]) d.org=D2.orgs[0].id; }
+// Clearing a task org also clears its 1970 header, plates, day edits and company assignments.
+function purgeOrgForms(orgId,ids){ const d=db(), F=formsDB(); delete F.hdr[orgId]; ids.forEach(id=>{ delete F.plate[id]; if(d.coy) delete d.coy[id]; }); Object.keys(F.day).forEach(k=>{ if(ids.has(k.split("|")[0])) delete F.day[k]; }); }
+// The 1970 header for a task org (set in Setup Mission).
+const hdrOf=(o)=>{ const F=formsDB(); return F.hdr[o.id]||(F.hdr[o.id]={op:"",inc:"",unit:"",disp:"",rop:db().me.opr||"",rem:"",sl:"",el:""}); };
 const formsDB=()=>{ const d=db(); d.forms=d.forms||{}; const F=d.forms; F.hdr=F.hdr||{}; F.plate=F.plate||{}; F.day=F.day||{}; F.sig=F.sig||{}; return F; };
 function loadPdfLib(){
   if(window.PDFLib) return Promise.resolve(window.PDFLib);
@@ -3148,9 +3196,9 @@ function readyBox(r,onDone){
 }
 // ---------- building from the Board ----------
 async function buildBoard1970s(org,pick,through,flat,st){
-  const d=db(), F=formsDB(), H=F.hdr[org.id]||{}, PL=await loadPdfLib(), tpl=await template1970(), stamp=E.mmddyyyy(through), pre=PRACTICE?"PRACTICE_":"";
+  const d=db(), F=formsDB(), H=hdrOf(org), PL=await loadPdfLib(), tpl=await template1970(), stamp=E.mmddyyyy(through), pre=PRACTICE?"PRACTICE_":"";
   const jobs=[]; pick.forEach(v=>{ const rows=rows1970(d,org,v,through,F.all,H), n=Math.max(1,Math.ceil(rows.length/29)); for(let s=1;s<=n;s++) jobs.push({v,rows:rows.slice((s-1)*29,s*29),s,n}); });
-  if(jobs.length>60&&!confirm(`This builds ${jobs.length} sheets. On some devices it can take a few minutes; keep the app open. Build them?`)) return;
+  if(jobs.length>60&&!confirm(`This builds ${jobs.length} sheets. On some devices it can take a few minutes; keep the app open. Build them?`)){ if(st) st.textContent=""; return; }
   const names={}, out=[], PART=40; let merged=null, parts=[], inPart=0;
   for(let i=0;i<jobs.length;i++){ const j=jobs[i];
     const doc=await fill1970(PL,await loadPdf(PL,tpl),modelFromBoard(org,j.v,j.rows,H,F.plate[j.v.id]||""),{practice:PRACTICE,title:`ESAD Form 1970 ${j.v.label||""} ${E.lastN(j.v.sn,digitsOf(org))}${j.n>1?" sheet "+j.s:""}`});
@@ -3206,15 +3254,15 @@ function dayCards(rows,on){
 }
 function renderBoardEditor(b,org){
   const d=db(), F=formsDB(), v=vehById(FRM.edit.vid); if(!v||v.org!==org.id){ FRM.edit=null; return false; }
-  const through=viewDate(), H=F.hdr[org.id]||{}, all=rows1970(d,org,v,through,F.all,H), sheets=Math.max(1,Math.ceil(all.length/29));
+  const through=viewDate(), H=hdrOf(org), all=rows1970(d,org,v,through,F.all,H), sheets=Math.max(1,Math.ceil(all.length/29));
   if(FRM.edit.sheet>sheets) FRM.edit.sheet=sheets;
   const sh=FRM.edit.sheet||1, rows=all.slice((sh-1)*29,sh*29).map(r=>Object.assign(r,{label:`${mmdd(r.date)} · ${plain(r.date)}${E.dplus(org,r.date)?" · "+E.dplus(org,r.date):""}`}));
-  const top=el(`<div class="vform"><div class="toolrow"><button class="btn" type="button" data-back>◀ All vehicles</button></div>
+  const top=el(`<div class="vform"><div class="toolrow"><button class="btn" type="button" data-back>◀ Back to the log</button></div>
     <div class="lbl">1970 for ${esc(vname(v,org))} · through ${esc(plain(through))}</div>
-    <p class="muted" style="margin:0">Fix anything for each day: locations, operators, remarks, fuel card, FMC/NMC, signatures. Changes save on this device right away, with or without network, and win over the Board for this 1970. Mileage, operators, status and fuel come from each vehicle's log on the Board; fix them there.</p>
+    <p class="muted" style="margin:0">Add start and end locations and signatures for each day. Anything else you change here (operators, remarks, fuel card, FMC/NMC) goes on this 1970 only; to change mileage, operators, status or fuel everywhere, use the vehicle's log on the Board.</p>
     ${sheets>1?`<div class="chips">${Array.from({length:sheets},(_,k)=>`<button type="button" class="chip" data-sh="${k+1}" aria-pressed="${sh===k+1}">Sheet ${k+1}</button>`).join("")}</div>`:""}
     ${!all.length?`<div class="muted">No days for this vehicle yet. Tick "Include days with no Board entries" on the list, or enter days on the Board.</div>`:""}</div>`);
-  top.querySelector("[data-back]").addEventListener("click",()=>{ FRM.edit=null; RENDER.forms(); });
+  top.querySelector("[data-back]").addEventListener("click",()=>{ const id=FRM.edit.vid; FRM.edit=null; location.hash=href("board","log="+encodeURIComponent(id)); });
   top.querySelectorAll("[data-sh]").forEach(x=>x.addEventListener("click",()=>{ FRM.edit.sheet=+x.dataset.sh; RENDER.forms(); }));
   b.appendChild(top);
   const unit=E.info(R,v).tracks;
@@ -3243,14 +3291,14 @@ async function openFile(file){
   try{
     if(!isPdf){ const img=await loadImageFile(file); FRM.up={kind:"markup",name:file.name.replace(/\.[^.]+$/,"")||"1970",pages:[pageFromImage(img,0)],cur:0,sel:-1}; FRM.ready=null; RENDER.forms(); window.scrollTo({top:0}); return; }
     const PL=await loadPdfLib(), bytes=new Uint8Array(await file.arrayBuffer());
-    let doc=null; try{ doc=await loadPdf(PL,bytes); doc.getPageCount(); }catch(e){ toast("That PDF couldn't be read here. It may be damaged or locked."); return; }
+    let doc=null; try{ doc=await loadPdf(PL,bytes); doc.getPageCount(); }catch(e){ toast("That PDF couldn't be opened here. It may be locked. Take a photo of the page instead."); return; }
     if(doc.isEncrypted&&!is1970(doc)){ toast("That PDF is locked, so it can't be edited here. Open it in Acrobat or a browser."); return; }
     if(is1970(doc)){ const m=readModel(PL,doc); m.rows.forEach((r,i)=>{ r.label=`Row ${i+1}${r.date?" · "+r.date:""}`; });
       FRM.up={kind:"fill",name:file.name.replace(/\.pdf$/i,"")||"ESAD_1970",bytes,model:m,showAll:false}; FRM.ready=null; RENDER.forms(); return; }
     let pages=[]; try{ pages=await pdfPageImages(PL,doc); }catch(e){ pages=[]; }
     if(pages.length){ FRM.up={kind:"markup",name:file.name.replace(/\.pdf$/i,"")||"1970",pages,cur:0,sel:-1}; FRM.ready=null; RENDER.forms(); return; }
     let nf=0; try{ nf=doc.getForm().getFields().length; }catch(e){}
-    toast(nf?"This PDF is a form, but not the ESAD Form 1970. Fill it in Acrobat or a browser.":"This PDF can't be marked up here (only scans saved as photos can). For a 1970 made by this app, open its fillable copy; otherwise take a photo of the page.");
+    toast(nf?"This PDF is a form, but not the ESAD Form 1970. Fill it in Acrobat or a browser.":"This PDF isn't a fillable 1970 or a scan, so it can't be edited here. Open the fillable copy, or take a photo of the page.");
   }catch(e){ console.error(e); toast("Couldn't open that file. Try a JPG photo or a PDF."); }
 }
 // A page to mark up: big photos are scaled to at most 3000 px (devices can't hold bigger canvases), scans turned upright.
@@ -3310,7 +3358,8 @@ RENDER.forms=function(){
   const b=$("b-forms"), d=db(), F=formsDB(); b.innerHTML="";
   const rb=readyBox(FRM.ready);
   if(FRM.up){ if(PRACTICE) b.appendChild(el(`<div class="w warn">Practice mission: copies saved here are marked PRACTICE - NOT FOR ARRO.</div>`)); if(rb) b.appendChild(rb); if(FRM.up.kind==="fill") renderUploadFill(b); else renderMarkup(b); return; }
-  b.appendChild(el(`<p style="margin:0">Correct a 1970 you were emailed or scanned, download blank 1970s for the field, or print 1970s for many vehicles from the Board. A single vehicle's 1970 is in its log on the Board. Works offline; nothing leaves this device.</p>`));
+  if(FRM.edit){ const og=curOrg(); if(og&&FRM.org===og.id){ if(rb) b.appendChild(rb); if(renderBoardEditor(b,og)) return; } }
+  b.appendChild(el(`<p style="margin:0">Correct a 1970 you were emailed or scanned, download blank 1970s for the field, or print 1970s for a whole task force or company. A single vehicle's 1970 is in its log on the Board. Works offline; nothing leaves this device.</p>`));
   if(PRACTICE) b.appendChild(el(`<div class="w warn">Practice mission: 1970s made here are marked PRACTICE - NOT FOR ARRO.</div>`));
   if(rb) b.appendChild(rb);
   if(!FRM.edit) b.appendChild(backupBox());
@@ -3320,14 +3369,14 @@ RENDER.forms=function(){
   opn.querySelectorAll("[data-open]").forEach(i=>i.addEventListener("change",(e)=>{ const f=e.target.files[0]; e.target.value=""; openFile(f); }));
   b.appendChild(opn);
   const blanks=el(`<div data-blanks></div>`); b.appendChild(blanks);
-  b.appendChild(el(`<div class="lbl" style="margin-top:6px">1970s for many vehicles (from the Board)</div>`));
+  b.appendChild(el(`<div class="lbl" style="margin-top:6px">Print 1970s for a task force or company</div>`));
   b.appendChild(orgBar(()=>RENDER.forms()));
   const org=curOrg();
   if(org){
     if(FRM.org!==org.id){ FRM.org=org.id; FRM.sel=null; FRM.seen=null; FRM.edit=null; }
     if(typeof PARAMS.co==="string") FRM.edit=null;   // a "1970s for <company>" link shows the list
     if(FRM.edit&&renderBoardEditor(b,org)) return;
-    const through=viewDate(), H=F.hdr[org.id]||(F.hdr[org.id]={op:"",inc:"",unit:"",disp:"",rop:d.me.opr||"",rem:"",sl:"",el:""});
+    const through=viewDate(), H=hdrOf(org);
     const V=orgVeh(org).filter(v=>(!v.startDate||v.startDate<=through)).sort((a,c)=>(a.eom?1:0)-(c.eom?1:0));
     const want=(v)=>E.info(R,v).f1970&&(!v.eom||v.eom>=E.addDays(through,-30));
     if(!FRM.sel) FRM.sel=new Set(V.filter(want).map(v=>v.id));
@@ -3336,26 +3385,19 @@ RENDER.forms=function(){
     // arriving from a company on the Board: tick that company's vehicles
     if(typeof PARAMS.co==="string"){ const c=PARAMS.co; delete PARAMS.co; try{ history.replaceState(null,"",location.pathname+location.search+href("forms")); }catch(e){} FRM.sel=new Set(V.filter(v=>inCoy(v,c)&&want(v)).map(v=>v.id)); toast(`Ticked ${coyName(c)}: ${FRM.sel.size} vehicle${FRM.sel.size===1?"":"s"}.`); }
     const CL=coyList(org); if(CL.length){ const ix=(v)=>coyOf(v)?CL.indexOf(coyOf(v)):CL.length; V.sort((a,c)=>ix(a)-ix(c)||(a.eom?1:0)-(c.eom?1:0)); }
-    const box=el(`<div class="vform"><div class="lbl">1970 header (saved for ${esc(org.to||"this task org")})</div>
-      <div class="row"><label class="f">1. Operation<input class="fld" data-h="op" maxlength="60" value="${esc(H.op)}" placeholder="OPORD 3000-25-01 (Civil Support)"></label><label class="f">3. Mission / incident<input class="fld" data-h="inc" maxlength="60" value="${esc(H.inc)}"></label></div>
-      <div class="row"><label class="f">8. Unit (of origin)<input class="fld" data-h="unit" maxlength="40" value="${esc(H.unit)}"></label><label class="f">10. Dispatcher (unit of origin)<input class="fld" data-h="disp" maxlength="50" value="${esc(H.disp)}"></label></div>
-      <div class="row"><label class="f">11. RAPTR operator &amp; phone<input class="fld" data-h="rop" maxlength="60" value="${esc(H.rop)}" placeholder="SGT Name  555-555-0100"></label><label class="f">12. RAPTR operator email<input class="fld" data-h="rem" maxlength="60" value="${esc(H.rem)}" placeholder="name@cmd.ca.gov" autocapitalize="none"></label></div>
-      <div class="row"><label class="f">14. Start location (usual)<input class="fld" data-h="sl" maxlength="40" value="${esc(H.sl)}" placeholder="optional"></label><label class="f">15. End location (usual)<input class="fld" data-h="el" maxlength="40" value="${esc(H.el)}" placeholder="optional"></label></div>
-      <div class="muted">MRT (${esc(org.mrt||"none set")}), VIN, type, dates, operators, mileage, fuel, card and FMC/NMC come from the Board. Change any single day with <b>Edit days</b>.</div></div>`);
-    box.addEventListener("input",(e)=>{ const k=e.target.dataset.h; if(k){ H[k]=e.target.value.slice(0,60); save(); } });
-    b.appendChild(box);
-    const list=el(`<div class="vform"><div class="lbl">Vehicles: 1970 through ${esc(plain(through))}</div><div data-l style="display:flex;flex-direction:column;gap:6px"></div>
+    if(!H.op||!H.inc||!H.unit) b.appendChild(el(`<div class="w warn">The 1970 header isn't complete for ${esc(org.to||"this task org")} (operation, mission/incident or unit is blank). Fill it in <a href="#setup">Setup Mission</a>.</div>`));
+    const list=el(`<div class="vform"><div class="lbl">Tick the vehicles · 1970s through ${esc(plain(through))}</div><div data-l style="display:flex;flex-direction:column;gap:6px"></div>
       <label class="chk"><input type="checkbox" data-all${F.all?" checked":""}><span>Include days with no Board entries (blank rows to fill by hand)</span></label>
       <div class="toolrow"><button class="btn" type="button" data-sa>Select all</button><button class="btn" type="button" data-sn>None</button>${coyList(org).length?coyList(org).concat(V.some(v=>!coyOf(v))?[CO_NONE]:[]).map(c=>`<button class="btn" type="button" data-sc="${esc(c)}">Only ${esc(c===CO_NONE?"no company":c)}</button>`).join(""):""}</div>
       <div class="toolrow"><button class="btn rs-big" type="button" data-go="fill">Fillable 1970s</button><button class="btn" type="button" data-go="flat">One print-ready PDF</button></div>
       <div class="muted" data-st></div>
-      <p class="muted" style="margin:0">Fillable: one PDF per vehicle (a ZIP when there's more than one), still editable in any PDF reader. Print-ready: every selected vehicle in one flattened PDF, like Print to PDF. Make them again each day; they rebuild every day so far, with your day edits and signatures. Past 29 days a vehicle continues on a second sheet.</p></div>`);
+      <p class="muted" style="margin:0"><b>Fillable 1970s:</b> one fillable PDF per vehicle (a ZIP for several), to upload in ARRO. <b>One print-ready PDF:</b> every ticked vehicle in one file, to print. Both are built from each vehicle's log through the date above; past 29 days a vehicle continues on a second sheet.</p></div>`);
     const L=list.querySelector("[data-l]");
     if(!V.length) L.appendChild(el(`<div class="muted">No vehicles on the Board for this task org yet. <a href="${href("board")}">Open the Board</a>.</div>`));
     let lastCo=null; V.forEach(v=>{ if(CL.length&&coyOf(v)!==lastCo){ lastCo=coyOf(v); L.appendChild(el(`<div class="grp-h">${esc(lastCo||"No company")}</div>`)); }
       const i=E.info(R,v), rows=rows1970(d,org,v,through,F.all,H), sheets=Math.max(1,Math.ceil(rows.length/29)), ed=rows.filter(r=>r.edited).length, sg=rows.filter(r=>r.s1||r.s2).length;
       const r=el(`<div class="frow"><label class="chk"><input type="checkbox" data-v="${esc(v.id)}"${FRM.sel.has(v.id)?" checked":""}><span><b>${esc(vname(v,org))}</b> <span class="muted">${esc(i.cat.short)} · ${rows.length} day${rows.length===1?"":"s"}${sheets>1?` · ${sheets} sheets`:""}${ed?` · ${ed} changed`:""}${sg?` · ${sg} signed`:""}${v.eom?` · EOM ${esc(plain(v.eom))}`:""}${i.f1970?"":" · no 1970 needed per the course"}</span></span></label>
-        <label class="f fplate">6. Plate / bumper #<input class="fld" data-p="${esc(v.id)}" maxlength="13" autocapitalize="characters" value="${esc(F.plate[v.id]||"")}"></label><button class="btn" type="button" data-ed="${esc(v.id)}">Edit days</button></div>`);
+        <a class="btn" href="${esc(href("board","log="+encodeURIComponent(v.id)))}">Open log</a></div>`);
       L.appendChild(r); });
     list.addEventListener("change",(e)=>{ const t=e.target;
       if(t.dataset.v){ t.checked?FRM.sel.add(t.dataset.v):FRM.sel.delete(t.dataset.v); }
@@ -3621,10 +3663,10 @@ function dashCharts(S,pal,w){
   const topVeh=S.per.filter(p=>p.tracks==="mi").sort((a,b)=>b.mi-a.mi), rows=topVeh.slice(0,8).map(p=>({label:`${p.label||p.sn} ${E.lastN(p.sn,8)}`,value:p.mi}));
   if(topVeh.length>8) rows.push({label:`${topVeh.length-8} more vehicles`,value:Math.round(topVeh.slice(8).reduce((a,p)=>a+p.mi,0)*10)/10,noBar:true});
   return [
-    {id:"status",t:"Fleet status today",svg:stackBar({w,pal,title:"Fleet status today",parts:[{label:"FMC",value:S.fleet.fmc,color:pal.fmc},{label:"NMC",value:S.fleet.nmc,color:pal.nmc},{label:"EOM'd",value:S.fleet.eom,color:pal.eom}]}),
+    {id:"status",t:`Fleet status ${S.date===todayYMD()?"today":"on "+mmdd(S.date)}`,svg:stackBar({w,pal,title:"Fleet status",parts:[{label:"FMC",value:S.fleet.fmc,color:pal.fmc},{label:"NMC",value:S.fleet.nmc,color:pal.nmc},{label:"EOM'd",value:S.fleet.eom,color:pal.eom}]}),
       table:[["Status","Vehicles"],["FMC",S.fleet.fmc],["NMC",S.fleet.nmc],["EOM'd",S.fleet.eom]]},
     {id:"miles",t:`Miles driven per day (last ${S.days.length} days)`,svg:barChart({w,pal,h:ph?200:210,labels:lab,values:S.days.map(x=>x.mi),unit:"mi",title:"Miles per day"}),table:[["Day","Miles"],...S.days.map(x=>[plain(x.d),fmtN(x.mi)])]},
-    {id:"fuel",t:`Fuel from stamped receipts per day (last ${S.days.length} days)`,svg:barChart({w,pal,h:ph?200:210,labels:lab,values:S.days.map(x=>x.fuel),fmt:(v)=>v>=1000?money(Math.round(v)).replace(/\.00$/,""):money(v).replace(/\.00$/,""),unit:"",title:"Fuel cost per day"}),table:[["Day","Fuel $","Gallons","Receipts"],...S.days.map(x=>[plain(x.d),money(x.fuel),fmtN(x.gal),x.rc])]},
+    {id:"fuel",t:`Fuel per day (last ${S.days.length} days)`,svg:barChart({w,pal,h:ph?200:210,labels:lab,values:S.days.map(x=>x.fuel),fmt:(v)=>v>=1000?money(Math.round(v)).replace(/\.00$/,""):money(v).replace(/\.00$/,""),unit:"",title:"Fuel cost per day"}),table:[["Day","Fuel $","Gallons","Receipts"],...S.days.map(x=>[plain(x.d),money(x.fuel),fmtN(x.gal),x.rc])]},
     {id:"veh",t:"Miles by vehicle (this mission)",svg:hbarChart({w,pal,rows,title:"Miles by vehicle"}),table:[["Vehicle","Miles"],...topVeh.map(p=>[`${p.label||""} ${E.lastN(p.sn,8)}`.trim(),fmtN(p.mi)])]},
   ];
 }
@@ -3633,6 +3675,7 @@ const tableHtml=(rows)=>`<table class="dtab"><thead><tr>${rows[0].map(c=>`<th>${
 // One outline (blocks) feeds three renderers. Nothing here names the website: printed copies carry the mission, not a URL.
 let RPT={days:14,roster:true,busy:false};
 function reportBlocks(org,date,opts){
+  const DW=date===todayYMD()?"today":"on "+plain(date).replace(/ \d{4}$/,"");
   const d=db(), S=E.missionStats(R,d,org,date,opts.days||14), pal=opts.pal||PRINT_PAL;
   const catName=(c)=>R.cats[c]?R.cats[c].name.replace(/ \(.*\)$/,""):c;
   const B=[];
@@ -3645,11 +3688,11 @@ function reportBlocks(org,date,opts){
   B.push({k:"kv",rows:[
     ["Vehicles on mission",`${S.fleet.active} (${S.fleet.fmc} FMC, ${S.fleet.nmc} NMC)${S.fleet.eom?` · ${S.fleet.eom} EOM'd`:""}`],
     ["By type",S.fleet.byCat.filter(x=>x.n).map(x=>`${catName(x.cat)} ${x.n}`).join(" · ")||"—"],
-    ["Miles driven",`${fmtN(S.miles.today)} today · ${fmtN(S.miles.mission)} this mission (since ${plain(S.from)})`],
-    ...(S.hours.mission?[["Equipment hours",`${fmtN(S.hours.today)} today · ${fmtN(S.hours.mission)} this mission`]]:[]),
-    ["Fuel (stamped receipts)",`${money(S.fuel.mission)} this mission (${fmtN(S.fuel.gal)} gal) · ${money(S.fuel.today)} today${cards?` · by card: ${cards}`:""}`],
+    ["Miles driven",`${fmtN(S.miles.today)} ${DW} · ${fmtN(S.miles.mission)} this mission (since ${plain(S.from)})`],
+    ...(S.hours.mission?[["Equipment hours",`${fmtN(S.hours.today)} ${DW} · ${fmtN(S.hours.mission)} this mission`]]:[]),
+    ["Fuel",`${money(S.fuel.mission)} this mission (${fmtN(S.fuel.gal)} gal) · ${money(S.fuel.today)} ${DW}${cards?` · by card: ${cards}`:""}`],
     ["Receipts",`${S.rc.accepted} fuel receipt${S.rc.accepted===1?"":"s"} stamped`],
-    ["Mileage missing today",`${S.missing} vehicle${S.missing===1?"":"s"}`]]});
+    [`Mileage missing ${DW}`,`${S.missing} vehicle${S.missing===1?"":"s"}`]]});
   B.push({k:"h",t:"Charts"});
   B.push({k:"charts",items:dashCharts(S,pal,520).map(c=>({t:c.t,svg:c.svg,table:c.table}))});
   if(opts.roster){
@@ -3785,7 +3828,7 @@ RENDER.report=function(){
 let MEXP={busy:false};
 function csvText(rows){ return "﻿"+rows.map(r=>r.map(c=>{ const s=String(c??"").replace(/[\u0000-\u001F]/g," "); return /[",\n]/.test(s)||/^[=+\-@]/.test(s)?`"${(/^[=+\-@]/.test(s)?"'":"")+s.replace(/"/g,'""')}"`:s; }).join(",")).join("\r\n")+"\r\n"; }
 async function missionExport(org,through,st){
-  const d=db(), F=formsDB(), H=F.hdr[org.id]||{}, pre=PRACTICE?"PRACTICE_":"", base=`${pre}${E.mmddyyyy(through)}_${E.normTO(org.to)||"TASKORG"}`;
+  const d=db(), F=formsDB(), H=hdrOf(org), pre=PRACTICE?"PRACTICE_":"", base=`${pre}${E.mmddyyyy(through)}_${E.normTO(org.to)||"TASKORG"}`;
   const onMission=orgVeh(org).filter(v=>!v.startDate||v.startDate<=through), need=onMission.filter(v=>E.info(R,v).f1970), skipped=onMission.filter(v=>!E.info(R,v).f1970);
   const jobs=need.map(v=>({v,rows:rows1970(d,org,v,through,F.all,H)})).filter(j=>j.rows.length), sheets=jobs.reduce((a,j)=>a+Math.ceil(j.rows.length/29),0);
   if(sheets>60&&!confirm(`This builds ${sheets} 1970 sheets for ${jobs.length} vehicles. On some devices it can take a few minutes; keep the app open. Build the export?`)) return null;
@@ -4053,11 +4096,16 @@ function mergePanel(d,org){
   const norm=(s)=>String(s||"").toLowerCase().normalize("NFKD").replace(/[^\w\s#+-]/g," ");
   const items=[
     {n:"Stamp a receipt",w:"STAMP.EXE",h:"#stamp",k:"stamp receipt photo fuel gas camera share file name wex"},
-    {n:"Fleet whiteboard",w:"BOARD.EXE",h:"#board",k:"board whiteboard vehicles mileage fleet flags print big screen company companies task force mission day sheet every day"},
+    {n:"Manage your Fleet: Vehicles and Mileage",w:"BOARD.EXE",h:"#board",k:"board whiteboard vehicles mileage fleet flags print big screen company companies task force mission day sheet eom"},
+    {n:"Vehicle log: add days, mileage, fuel, NMC",w:"BOARD.EXE → Open log",h:"#board",k:"log add day start end miles nmc fmc status fuel fill-up gallons cost operator second driver preview 1970"},
+    {n:"1970 header: operation, incident, unit, RAPTR",w:"SETUP.EXE",h:"#setup",k:"header operation incident unit dispatcher raptr email"},
+    {n:"License plate for the 1970",w:"BOARD.EXE → More… → Edit",h:"#board",k:"plate license bumper gsa tag"},
+    {n:"Correct an emailed or scanned 1970",w:"1970.EXE",h:"#forms",k:"white-out whiteout erase correct scan scanned emailed edit fix markup"},
+    {n:"Blank 1970 to print for the field",w:"1970.EXE",h:"#forms",k:"blank print field download std 270 accident"},
     {n:"Mission report",w:"REPORT.EXE",h:"#report",k:"report mission status sitrep situational awareness leadership print pdf word docx charts graphs dashboard metrics"},
     {n:"Mission export (all 1970s + summary)",w:"REPORT.EXE",h:"#report",k:"mission export zip all 1970s summary close out turn in binder cost recovery save every 1970 dashboard pdf csv"},
     {n:"Manage your 1970",w:"1970.EXE",h:"#forms",k:"forms finalize submit arro end of mission 1970 esad form fill pdf print sign signature photo upload std 270 accident download"},
-    {n:"Setup",w:"Mission, people, data",h:"#setup",k:"setup mission mrt task org name backup close out"},
+    {n:"Setup Mission",w:"SETUP.EXE",h:"#setup",k:"setup mission mrt task org name backup close out"},
     {n:"How to use LOGSTAT",w:"Help",h:"#help",k:"help how instructions privacy rules"},
     {n:"Install on this device",w:"Install",h:"#install",k:"install home screen app add"},
     {n:"Large mode (gloves)",w:"Top bar button",h:"#",go:"lgBtn",k:"large mode glove bigger text"},
@@ -4065,7 +4113,7 @@ function mergePanel(d,org){
   const close=()=>{ box.hidden=true; inp.setAttribute("aria-expanded","false"); act=-1; };
   const draw=()=>{ const q=norm(inp.value).trim(); if(!q){ close(); return; } const words=q.split(/\s+/);
     hits=items.filter(x=>words.every(w=>x.hay.includes(w))).slice(0,12);
-    box.innerHTML=hits.length?hits.map((x,i)=>`<a href="${esc(x.h)}" role="option" data-i="${i}"${i===act?' class="on"':""}>${esc(x.n)}<span class="fs">${esc(x.w)}</span></a>`).join(""):`<div class="fnone">Nothing found. Try “toll”, “NMC” or “verify”.</div>`;
+    box.innerHTML=hits.length?hits.map((x,i)=>`<a href="${esc(x.h)}" role="option" data-i="${i}"${i===act?' class="on"':""}>${esc(x.n)}<span class="fs">${esc(x.w)}</span></a>`).join(""):`<div class="fnone">Nothing found. Try “log”, “NMC”, “plate” or “header”.</div>`;
     box.hidden=false; inp.setAttribute("aria-expanded","true"); };
   const pick=(i)=>{ const x=hits[i]; if(!x) return; close(); inp.value=""; inp.blur(); if(x.go){ $(x.go).click(); return; } if(location.hash===x.h) route(); else location.hash=x.h; };
   inp.addEventListener("input",()=>{ act=-1; draw(); });
