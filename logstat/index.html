@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-H8k7RCjJzRFzrOVd/p6bB92nSYJlxWVD3veDmdlV3a8=' 'sha256-WtievkRJN6PE2g7o7mvGM7QtUP9cD7CI2WWt4O/Uvm8=' 'sha256-hyVFOB04JIUrxucDikb1J09DjQkQV8iJu0UUvcG3lDQ=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-TsgRY5p/aOuNQsqAXYFWNhsMQv2Qz4/OkFk3Ux+q4ns=' 'sha256-hyVFOB04JIUrxucDikb1J09DjQkQV8iJu0UUvcG3lDQ=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-zYBBejxRl2g3UndvnkXMEzfSKwzzfrrP1nbYkRMvSwc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-14 22:30">
+<meta name="logstat-build" content="2026-10-14 22:45">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1113,7 +1113,7 @@
   .vlist { display:flex; flex-direction:column; gap:8px; } .grp { display:flex; flex-direction:column; gap:8px; }
   /* day sheet */
   .dsheet { display:flex; flex-direction:column; gap:6px; }
-  .ds-head, .ds-row { display:grid; grid-template-columns:minmax(0,1.5fr) 6.5em minmax(7em,1fr) 6em minmax(8em,1.2fr) minmax(8em,1.2fr) 4em; gap:4px 10px; align-items:center; }
+  .ds-head, .ds-row { display:grid; grid-template-columns:minmax(0,1.5fr) 6.5em minmax(7em,1fr) 6em minmax(8em,1.2fr) minmax(8em,1.2fr); gap:4px 10px; align-items:center; }
   .ds-head { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-dim); border-bottom:1px solid var(--lo); padding-bottom:3px; }
   .ds-row { border-bottom:1px dotted var(--rule); padding:6px 0; } .ds-row.crit { background:var(--crit-bg); } .ds-row.warn { background:var(--warn-bg); }
   .ds-row .fld { width:100%; min-width:0; } .ds-veh { min-width:0; overflow-wrap:anywhere; } .ds-veh .ds-st { display:none; }
@@ -1121,11 +1121,11 @@
   .n { font-family:var(--font-mono); text-align:right; font-variant-numeric:tabular-nums; }
   @media (max-width:700px){
     .ds-head { display:none; }
-    .ds-row { grid-template-columns:minmax(0,1fr) minmax(0,1fr) 4.8em; grid-template-areas:"veh veh mi" "end op f" ". co ." "w w w"; } .ds-co { grid-area:co; } .ds-na { display:none; }
-    .ds-veh { grid-area:veh; } .ds-veh .ds-st { display:block; } .ds-start { display:none; } .ds-end { grid-area:end; } .ds-mi { grid-area:mi; align-self:start; } .ds-op { grid-area:op; } .ds-f { grid-area:f; } .ds-w { grid-area:w; }
-    .ds-l { display:block; font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.05em; } .ds-f { flex-direction:column; align-items:center; }
+    .ds-row { grid-template-columns:minmax(0,1fr) minmax(0,1fr) 4.8em; grid-template-areas:"veh veh mi" "end op op" ". co co" "w w w"; } .ds-co { grid-area:co; } .ds-na { display:none; }
+    .ds-veh { grid-area:veh; } .ds-veh .ds-st { display:block; } .ds-start { display:none; } .ds-end { grid-area:end; } .ds-mi { grid-area:mi; align-self:start; } .ds-op { grid-area:op; } .ds-w { grid-area:w; }
+    .ds-l { display:block; font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.05em; }
   }
-  @media (max-width:700px){ html.lg .ds-row { grid-template-columns:minmax(0,1fr) 5.2em; grid-template-areas:"veh mi" "end f" "op op" "co co" "w w"; } html.lg .ds-row .ds-co.ds-na { display:none; } }
+  @media (max-width:700px){ html.lg .ds-row { grid-template-columns:minmax(0,1fr) 5.2em; grid-template-areas:"veh mi" "end end" "op op" "co co" "w w"; } html.lg .ds-row .ds-co.ds-na { display:none; } }
   /* every day for one vehicle */
   .dg-head, .dg-row { display:grid; grid-template-columns:minmax(5.5em,1fr) 6.5em minmax(6em,1fr) minmax(4.5em,.8fr) minmax(7em,1.3fr); gap:4px 8px; align-items:center; }
   .dg-head.coop, .dg-row.coop { grid-template-columns:minmax(5.5em,1fr) 6.5em minmax(6em,1fr) minmax(4.5em,.8fr) minmax(7em,1.2fr) minmax(7em,1.2fr); } .dg-c { min-width:0; }
@@ -1333,6 +1333,15 @@
   .report .rp-l { margin:0; padding-left:18px; } .report .rp-f { color:#5f6368; font-size:11px; margin-top:14px; }
   @media print { #printArea .report { font-size:11px; } #printArea .report .rp-charts { grid-template-columns:1fr 1fr; } #printArea .report th { background:#eef0f2 !important; } #printArea .rp-kv th { background:#eef0f2 !important; } }
   .report th { text-transform:none; letter-spacing:normal; font-size:inherit; }
+  /* on screen: a dark slate sheet, set apart from the app by its color, type and edge, without a white glare */
+  .paper.rp-screen { background:#1d232a; border:1px solid #3a4450; border-radius:6px; box-shadow:0 0 0 4px rgba(0,0,0,.35), 0 6px 18px rgba(0,0,0,.45); padding:20px 18px 14px; margin-top:6px; }
+  .rp-screen .rp-tag { font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:#9aa6b2; margin:-6px 0 10px; }
+  .rp-screen .report, .rp-screen .report .rp-t, .rp-screen .report .rp-h, .rp-screen .report th, .rp-screen .report td { color:#dde3ea; }
+  .rp-screen .report .rp-s, .rp-screen .report .rp-f { color:#9aa6b2; }
+  .rp-screen .report .rp-h { border-bottom-color:#3a4450; color:#a9c4ea; }
+  .rp-screen .report th, .rp-screen .report td { border-color:#3a4450; }
+  .rp-screen .report .rp-kv th, .rp-screen .report .rp-tb thead th { background:#262e37; }
+  .rp-screen .report a { color:#a9c4ea; }
   .rolepick { border-color:var(--bright); } .rolebar { font-size:13px; margin-top:4px; } .rolebar a { color:var(--link); }
   .merge .mlist { margin:4px 0; padding-left:18px; } .merge .mlist li { margin:2px 0; }
 
@@ -1514,7 +1523,6 @@
     }
     if(v.cat==="rent"&&!v.rental) F.push({lvl:"warn",id:"rental",t:"Rental agreement not uploaded"});
     if(nmcOn(v,date)&&!v.eom) F.push({lvl:"crit",id:"nmc",t:"NMC with no EOM"});
-    if(i.f1970&&!dr.f1970) F.push({lvl:"warn",id:"f1970",t:"1970 not marked done"});
     if(i.idKind==="vin"&&!isVIN(v.sn)) F.push({lvl:"crit",id:"vin",t:"VIN isn't 17 characters"});
     return F;
   }
@@ -1944,7 +1952,7 @@ RENDER.help=function(){
     <li><a href="#board">Board</a> → <b>+ Add vehicle</b> for each one: name, serial (tactical: serial only, no NSN) or 17-character VIN (GSA and rentals), category and start mileage. Tick the rental agreement once it's uploaded in ARRO.</li></ol>
   <h3>ARRO operator: every day</h3><ol>
     <li><a href="#stamp">Stamp</a> each receipt a driver sends in, then upload it in ARRO with its file name.</li>
-    <li><a href="#board">Board</a>: <b>Enter today</b> on each vehicle (end mileage, operator, 1970 done) until the flags clear.</li>
+    <li><a href="#board">Board</a>: <b>Enter today</b> on each vehicle (end mileage, operator, and the second driver on tactical vehicles) until the flags clear. Fill the 1970s at the end of the mission.</li>
     <li><a href="#forms">Forms</a>: tick the vehicles → <b>Fillable 1970s</b> (one PDF each, in a ZIP) or <b>One print-ready PDF</b>. <b>Edit days</b> fixes any single day: locations, operators, remarks, fuel card, FMC/NMC and signatures. It all works with no network and saves on the device; upload in ARRO when you're back online.</li>
     <li>Leadership update: <a href="#report">Mission report</a> → <b>Print</b>, <b>Save PDF</b> or <b>Save Word</b>.</li>
     <li>Something unusual (damaged vehicle, transfer, personal funds, toll, lost card)? Open <a href="#events">Unusual events</a>.</li>
@@ -1954,7 +1962,7 @@ RENDER.help=function(){
   <h3>Board and events</h3><ul><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li><b>Big missions:</b> task orgs with the same MRT make one mission. Tap the mission line at the top of the Board to see every task force, a task force to see its companies, a company to see its vehicles. Set up companies with <b>Set up companies</b>; each company has its own vehicle count, miles, missing mileage and flags.</li><li><b>Tactical vehicles need a second driver</b> (co-operator) every day. It goes on the second name line of block 16 on the 1970, and that driver signs there. The Board flags a tactical vehicle with no second driver, or with the operator entered twice.</li><li><b>Day sheet</b> enters a whole company's end mileage, operators and second drivers for one day on one screen. <b>Every day</b> on a vehicle fixes any day's reading or miles; the next day's start follows, and the 1970s rebuild from it.</li><li><b>Big screen</b> shows the Board large on a TV or second screen.</li><li><b>Print</b> prints the level you're on: mission summary, task force (companies and their vehicles) or one company. <b>1970s for</b> a company ticks just its vehicles on Forms.</li><li>Events cards give the steps, what not to enter, who to tell and a fill-in note. Damaged and transfer cards can apply the change to the Board.</li></ul>
   <h3>The 1970: from the Board, edited, or opened</h3><ul><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup (tap to place text, ✓, ✗, the date or a signature), then save it as a PDF.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
   <h3>Signatures</h3><ul><li><b>Type</b> your name and pick a handwriting style, or <b>Draw</b> it with a finger. You confirm it's your own signature; it's saved on this device for next time.</li><li>Only the person named signs. Anyone can type a printed name, but not someone else's signature. Check with J4 that e-signatures are accepted on the 1970.</li></ul>
-  <h3>Mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, open flags and 1970s done. Every chart has a <b>Show as a table</b> view.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
+  <h3>Mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, and the open items for the day. Every chart has a <b>Show as a table</b> view.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
   <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and Forms screens) saves one ZIP: every vehicle's 1970 for the mission, print-ready with day edits and signatures, plus the mission report as a PDF and the vehicle list as a spreadsheet (CSV).</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
   <h3 id="h-roles">Who does what</h3>${R.roles.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><ul>${x.d.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3 id="h-paths">ARRO path maps</h3><p class="muted" style="margin:0 0 6px">Where things are in ARRO, click by click, from the LOGSTAT Quick Reference.</p>${R.paths.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><div class="path">${x.p.map(t=>`<span>${esc(t)}</span>`).join('<b aria-hidden="true">›</b>')}</div>${x.n?`<p class="muted" style="margin:6px 0 0">${esc(x.n)}</p>`:""}${x.link?`<div class="src"><a href="${esc(x.link.u)}" target="_blank" rel="noopener noreferrer">${esc(x.link.l)} ↗</a></div>`:""}<div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
@@ -2332,7 +2340,6 @@ function vehicleCard(v,org,date,today){
       <div><span class="k">Day end</span><span class="v">${i.tracks==="none"?"—":esc(e===null?"—":fmtN(e))}</span></div>
       <div><span class="k">Today${u==="—"?"":` (${esc(u)})`}</span><span class="v">${e!==null&&lo!==null?esc(fmtN(e-lo)):"—"}</span></div>
       <div><span class="k">${i.coop?"Operator / 2nd driver":"Operator"}</span><span class="v">${esc(dr.op||"—")}${i.coop?` / ${esc(dr.co||"—")}`:""}</span></div>
-      <div><span class="k">1970</span><span class="v">${i.f1970?(dr.f1970?"✔︎ done":"— not yet"):"not needed"}</span></div>
       <div><span class="k">Fuel today</span><span class="v">${fuel?esc(money(fuel)):"—"}${nrc?` <small class="muted">${nrc} receipt${nrc===1?"":"s"}</small>`:""}</span></div>
     </div>
     ${flagHtml(F)}
@@ -2347,7 +2354,6 @@ function dayForm(v,org,date){
   const f=el(`<div class="vform">
     ${i.tracks==="none"?`<div class="muted">This vehicle tracks no mileage.</div>`:`<div class="row"><label class="f">End ${i.tracks==="hrs"?"hours":"mileage"} for ${esc(plain(date))}<input class="fld" data-k="e" inputmode="numeric" autocomplete="off" value="${esc(dr.e||"")}" placeholder="${lo!==null?"start "+esc(fmtN(lo)):""}"></label></div>`}
     <div class="row"><label class="f">Operator<input class="fld" data-k="op" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="rank &amp; name" value="${esc(dr.op||"")}"></label>${i.coop?`<label class="f">Second driver (co-operator)<input class="fld" data-k="co" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="rank &amp; name" value="${esc(dr.co||"")}"></label>`:""}</div>
-    ${i.f1970?`<label class="chk"><input type="checkbox" data-k="f1970"${dr.f1970?" checked":""}><span>1970 done for the day (name &amp; rank, FMC/NMC, fuel, card, tolls)</span></label>`:""}
     <div data-w></div>
     <div class="toolrow"><button class="btn" type="button" data-save>Save</button><button class="btn" type="button" data-x>Cancel</button></div></div>`);
   const g=(k)=>f.querySelector(`[data-k="${k}"]`);
@@ -2355,7 +2361,7 @@ function dayForm(v,org,date){
     if(ev!==null&&lo!==null&&ev<lo) W.push(["bad",`Lower than the day's start (${fmtN(lo)}).`]); else if(ev!==null&&lo!==null&&ev-lo>jump) W.push(["warn",`${fmtN(ev-lo)} in one day. Check it.`]);
     f.querySelector("[data-w]").innerHTML=W.map(([k,t])=>`<div class="w ${k}">${esc(t)}</div>`).join(""); return W; };
   f.addEventListener("input",check);
-  f.querySelector("[data-save]").addEventListener("click",()=>{ if(g("e")&&parseNum(g("e").value)===null){ toast(NUMMSG); g("e").focus(); return; } const r=dayRec(v.id,date); if(g("e")) r.e=parseNum(g("e").value); setName(v.id,date,"op",g("op").value); if(g("co")) setName(v.id,date,"co",g("co").value); if(g("f1970")) r.f1970=g("f1970").checked; save(); BOARD.open={}; RENDER.board(); toast("Saved."); });
+  f.querySelector("[data-save]").addEventListener("click",()=>{ if(g("e")&&parseNum(g("e").value)===null){ toast(NUMMSG); g("e").focus(); return; } const r=dayRec(v.id,date); if(g("e")) r.e=parseNum(g("e").value); setName(v.id,date,"op",g("op").value); if(g("co")) setName(v.id,date,"co",g("co").value); save(); BOARD.open={}; RENDER.board(); toast("Saved."); });
   f.querySelector("[data-x]").addEventListener("click",()=>{ BOARD.open={}; RENDER.board(); });
   check(); return f;
 }
@@ -2429,9 +2435,9 @@ function actionForm(k,v,org,date){
 }
 function boardTable(org,date,today,big,list){
   const V=(list||orgVeh(org)).filter(v=>E.active(v,date)||(v.eom===date));
-  return `<div class="tw"><table><thead><tr><th>Vehicle</th><th>Cat</th><th>Status</th><th>Start</th><th>End</th><th>Today</th><th>Operator / 2nd driver</th><th>1970</th><th>Fuel</th><th>Flags</th></tr></thead><tbody>${V.map(v=>{ const i=E.info(R,v), dr=peekDay(v.id,date), lo=E.startOfDay(db(),v,date), e=num(dr.e), F=E.flags(R,db(),v,date,org,today).filter(f=>f.lvl!=="info");
+  return `<div class="tw"><table><thead><tr><th>Vehicle</th><th>Cat</th><th>Status</th><th>Start</th><th>End</th><th>Today</th><th>Operator / 2nd driver</th><th>Fuel</th><th>Flags</th></tr></thead><tbody>${V.map(v=>{ const i=E.info(R,v), dr=peekDay(v.id,date), lo=E.startOfDay(db(),v,date), e=num(dr.e), F=E.flags(R,db(),v,date,org,today).filter(f=>f.lvl!=="info");
     const fuel=db().rc.filter(r=>r.veh===v.id&&r.date===date&&E.counted(r)&&r.type==="FUEL").reduce((s,r)=>s+(num(r.amt)||0),0);
-    return `<tr><td><b>${esc(v.label||"")}</b> ${esc(E.lastN(v.sn,digitsOf(org)))}</td><td>${esc(i.short)}</td><td>${v.eom?"EOM":E.nmcOn(v,date)?"NMC":"FMC"}</td><td class="n">${i.tracks==="none"?"—":esc(lo===null?"—":fmtN(lo))}</td><td class="n">${i.tracks==="none"?"—":esc(e===null?"—":fmtN(e))}</td><td class="n">${e!==null&&lo!==null?esc(fmtN(e-lo)):"—"}</td><td>${esc(dr.op||"—")}${i.coop&&dr.co?" / "+esc(dr.co):""}</td><td>${i.f1970?(dr.f1970?"✔︎":"—"):"n/a"}</td><td class="n">${fuel?esc(money(fuel)):"—"}</td><td>${F.length?F.map(f=>big?`<span class="w ${f.lvl}">${esc(f.t)}</span>`:esc(f.t)).join(big?"":"; "):"✔︎"}</td></tr>`; }).join("")||`<tr><td colspan="10" class="muted">No vehicles.</td></tr>`}</tbody></table></div>`;
+    return `<tr><td><b>${esc(v.label||"")}</b> ${esc(E.lastN(v.sn,digitsOf(org)))}</td><td>${esc(i.short)}</td><td>${v.eom?"EOM":E.nmcOn(v,date)?"NMC":"FMC"}</td><td class="n">${i.tracks==="none"?"—":esc(lo===null?"—":fmtN(lo))}</td><td class="n">${i.tracks==="none"?"—":esc(e===null?"—":fmtN(e))}</td><td class="n">${e!==null&&lo!==null?esc(fmtN(e-lo)):"—"}</td><td>${esc(dr.op||"—")}${i.coop&&dr.co?" / "+esc(dr.co):""}</td><td class="n">${fuel?esc(money(fuel)):"—"}</td><td>${F.length?F.map(f=>big?`<span class="w ${f.lvl}">${esc(f.t)}</span>`:esc(f.t)).join(big?"":"; "):"✔︎"}</td></tr>`; }).join("")||`<tr><td colspan="10" class="muted">No vehicles.</td></tr>`}</tbody></table></div>`;
 }
 function openBig(){
   const box=$("bigScreen"), d=db(); let pin=BOARD.bigPin||"", idx=0, timer=0;
@@ -2512,16 +2518,16 @@ const HZERO=()=>({veh:0,fmc:0,nmc:0,eom:0,mi:0,hrs:0,mim:0,hrm:0,miss:0,flags:0,
 const hMi=(n,h)=>`${fmtN(n)}${h?` <small>+${esc(fmtN(h))} hrs</small>`:""}`;
 // One summary, three ways: a table (laptop and print), cards (small screens), and plain numbers in the header line.
 function hTable(first,rows,total,forPrint){
-  const C=(s)=>`<td class="n">${s.veh}</td><td class="n">${s.fmc}</td><td class="n${s.nmc?" hbad":""}">${s.nmc}</td><td class="n">${s.eom}</td><td class="n">${hMi(s.mi,s.hrs)}</td><td class="n">${hMi(s.mim,s.hrm)}</td><td class="n${s.miss?" hwarn":""}">${s.miss}</td><td class="n${s.flags?" hwarn":""}">${s.flags}</td><td class="n">${s.need?`${s.done}/${s.need}`:"—"}</td>`;
+  const C=(s)=>`<td class="n">${s.veh}</td><td class="n">${s.fmc}</td><td class="n${s.nmc?" hbad":""}">${s.nmc}</td><td class="n">${s.eom}</td><td class="n">${hMi(s.mi,s.hrs)}</td><td class="n">${hMi(s.mim,s.hrm)}</td><td class="n${s.miss?" hwarn":""}">${s.miss}</td><td class="n${s.flags?" hwarn":""}">${s.flags}</td>`;
   const name=(r)=>!forPrint&&r.href?`<a href="${esc(r.href)}">${esc(r.name)}</a>`:esc(r.name);
-  return `<div class="tw"><table class="hsum"><thead><tr><th>${esc(first)}</th><th class="n">Vehicles</th><th class="n">FMC</th><th class="n">NMC</th><th class="n">EOM</th><th class="n">Miles today</th><th class="n">Miles mission</th><th class="n">Mileage missing</th><th class="n">Flags</th><th class="n">1970s done</th></tr></thead>
-    <tbody>${rows.map(r=>`<tr${r.dim?' class="hdim"':""}><td>${name(r)}${r.sub?` <small class="muted">${esc(r.sub)}</small>`:""}</td>${C(r.s)}</tr>`).join("")||`<tr><td colspan="10" class="muted">None yet.</td></tr>`}</tbody>
+  return `<div class="tw"><table class="hsum"><thead><tr><th>${esc(first)}</th><th class="n">Vehicles</th><th class="n">FMC</th><th class="n">NMC</th><th class="n">EOM</th><th class="n">Miles today</th><th class="n">Miles mission</th><th class="n">Mileage missing</th><th class="n">Flags</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr${r.dim?' class="hdim"':""}><td>${name(r)}${r.sub?` <small class="muted">${esc(r.sub)}</small>`:""}</td>${C(r.s)}</tr>`).join("")||`<tr><td colspan="9" class="muted">None yet.</td></tr>`}</tbody>
     ${total?`<tfoot><tr><td><b>${esc(total.name)}</b></td>${C(total.s)}</tr></tfoot>`:""}</table></div>`;
 }
 function hCards(rows,total){
   const card=(r,tot)=>{ const s=r.s, bits=[`<b>${s.veh}</b> vehicle${s.veh===1?"":"s"}`,`${s.fmc} FMC`,s.nmc?`<span class="hbad">${s.nmc} NMC</span>`:"0 NMC",s.eom?`${s.eom} EOM`:""].filter(Boolean).join(" · ");
     const miles=`${hMi(s.mi,s.hrs)} mi today · ${hMi(s.mim,s.hrm)} mi mission`;
-    const warn=[s.miss?`<span class="hwarn">${s.miss} mileage missing</span>`:"",s.flags?`<span class="hwarn">${s.flags} flag${s.flags===1?"":"s"}</span>`:"",s.need?`1970s ${s.done}/${s.need}`:""].filter(Boolean).join(" · ");
+    const warn=[s.miss?`<span class="hwarn">${s.miss} mileage missing</span>`:"",s.flags?`<span class="hwarn">${s.flags} flag${s.flags===1?"":"s"}</span>`:""].filter(Boolean).join(" · ");
     const inner=`<div class="hc-n">${esc(r.name)}${r.sub?` <small class="muted">${esc(r.sub)}</small>`:""}</div><div>${bits}</div><div class="muted">${miles}</div>${warn?`<div>${warn}</div>`:`<div class="hok">✔︎ All mileage in, no flags</div>`}`;
     return r.href&&!tot?`<a class="hcard${r.dim?" hdim":""}" href="${esc(r.href)}">${inner}<span class="hc-go" aria-hidden="true">›</span></a>`:`<div class="hcard htot">${inner}</div>`; };
   return `<div class="hcards">${rows.map(r=>card(r,false)).join("")}${total?card(total,true):""}</div>`;
@@ -2588,7 +2594,7 @@ function daySheet(org,V,date,today,co){
   const act=V.filter(v=>E.active(v,date)).sort((a,c)=>(a.label||"").localeCompare(c.label||"",undefined,{numeric:true})||a.sn.localeCompare(c.sn));
   const w=el(`<div class="dsheet"><div class="ds-top"><div class="lbl">Day sheet · ${esc(co!=null?coyName(co):org.to||"")} · ${esc(plain(date))}${E.dplus(org,date)?" · "+esc(E.dplus(org,date)):""}</div>
     <p class="muted" style="margin:0">Type each vehicle's end ${act.some(v=>E.info(R,v).tracks==="hrs")?"reading (miles or hours)":"mileage"} and operator for the day${act.some(v=>E.info(R,v).coop)?", plus the second driver on tactical vehicles":""}. Each entry saves on this device as you go; the 1970s use it. Enter moves across the row, then to the next vehicle.</p></div>
-    <div class="ds-head" aria-hidden="true"><span>Vehicle</span><span>Start</span><span>End</span><span>Today</span><span>Operator</span><span>2nd driver</span><span>1970</span></div>
+    <div class="ds-head" aria-hidden="true"><span>Vehicle</span><span>Start</span><span>End</span><span>Today</span><span>Operator</span><span>2nd driver</span></div>
     <div data-rows>${act.map(v=>{ const i=E.info(R,v), dr=peekDay(v.id,date), lo=E.startOfDay(d,v,date), none=i.tracks==="none", u=E.unitWord(i.tracks);
       return `<div class="ds-row" data-vid="${esc(v.id)}"><div class="ds-veh"><b>${esc(v.label||i.cat.short)}</b> <code>${esc(E.lastN(v.sn,digitsOf(org)))}</code>${E.nmcOn(v,date)?` <span class="pill p-crit">NMC</span>`:""}<small class="muted ds-st">start ${none?"—":esc(lo===null?"not set":fmtN(lo))}</small></div>
         <div class="ds-start n">${none?"—":esc(lo===null?"—":fmtN(lo))}</div>
@@ -2596,7 +2602,6 @@ function daySheet(org,V,date,today,co){
         <div class="ds-mi n" data-mi></div>
         <label class="ds-op"><span class="ds-l">Operator</span><input class="fld" data-k="op" maxlength="40" autocomplete="off" autocapitalize="characters" enterkeyhint="next" value="${esc(dr.op||"")}" placeholder="rank &amp; name" aria-label="Operator for ${esc(v.label||v.sn)}"></label>
         ${i.coop?`<label class="ds-co"><span class="ds-l">2nd driver</span><input class="fld" data-k="co" maxlength="40" autocomplete="off" autocapitalize="characters" enterkeyhint="next" value="${esc(dr.co||"")}" placeholder="rank &amp; name" aria-label="Second driver for ${esc(v.label||v.sn)}"></label>`:`<div class="ds-co ds-na muted" aria-hidden="true">—</div>`}
-        <label class="ds-f chk"><input type="checkbox" data-k="f1970"${dr.f1970?" checked":""}${i.f1970?"":" disabled"} aria-label="1970 done for ${esc(v.label||v.sn)}"><span class="ds-l">1970</span></label>
         <div class="ds-w" data-w></div></div>`; }).join("")||`<div class="muted">No vehicles on this day.</div>`}</div>
     <div class="toolrow"><a class="btn rs-big" href="${esc(boardHref(org,co))}">Done</a><span class="muted" data-saved></span></div></div>`);
   const paint=(row)=>{ const v=vehById(row.dataset.vid); if(!v) return; const i=E.info(R,v), lo=E.startOfDay(d,v,date), ev=num(row.querySelector('[data-k="e"]').value), mi=row.querySelector("[data-mi]"), W=row.querySelector("[data-w]");
@@ -2614,7 +2619,7 @@ function daySheet(org,V,date,today,co){
       if(k==="e"){ const p2=parseNum(t.value); if(p2===null||p2===rec.e) return; rec.e=p2; } else { const nm=String(t.value||"").replace(/\s+/g," ").trim().toUpperCase().slice(0,40); if(nm===(rec[k]||"")) return; setName(r.dataset.vid,date,k,nm); }
       save(); }; DS_FLUSH=()=>{ clearTimeout(typT); run(); }; typT=setTimeout(run,700); });
   w.addEventListener("change",(e)=>{ const t=e.target, r=t.closest(".ds-row"); if(!r) return; const k=t.dataset.k, rec=dayRec(r.dataset.vid,date);
-    if(k==="e"){ const p2=parseNum(t.value); if(p2===null){ toast(NUMMSG); t.value=rec.e||""; paint(r); return; } rec.e=p2; t.value=p2; } else if(k==="op"||k==="co"){ t.value=setName(r.dataset.vid,date,k,t.value); } else if(k==="f1970") rec.f1970=t.checked; else return;
+    if(k==="e"){ const p2=parseNum(t.value); if(p2===null){ toast(NUMMSG); t.value=rec.e||""; paint(r); return; } rec.e=p2; t.value=p2; } else if(k==="op"||k==="co"){ t.value=setName(r.dataset.vid,date,k,t.value); } else return;
     if(save()){ said.textContent="✔︎ Saved "+nowHHMM().replace(/(..)(..)/,"$1:$2"); clearTimeout(sayT); sayT=setTimeout(()=>{ said.textContent=""; },4000); } paint(r); });
   w.addEventListener("keydown",(e)=>{ if(e.key!=="Enter") return; const t=e.target; if(!t.dataset||!t.dataset.k||t.type==="checkbox") return; e.preventDefault(); t.blur();
     // Enter goes across the row as the numbers are called in (End -> Operator -> 2nd driver), then to the next vehicle
@@ -3445,6 +3450,8 @@ async function saveMarkup(kind,st){
 // Charts are plain SVG. On screen they take the IQ Kit theme colors; in the printed report, PDF and Word file they use
 // ink on white. Every chart has text labels and a table view, so nothing depends on color alone.
 const PRINT_PAL={bar:"#2f5597",text:"#1b1b1b",muted:"#5f6368",rule:"#d0d4da",bg:"#ffffff",fmc:"#2f5597",nmc:"#b3261e",eom:"#9aa0a6",ok:"#2f5597",warn:"#b26a00",bad:"#b3261e",off:"#9aa0a6",font:"Arial, Helvetica, sans-serif"};
+// The report as it shows on screen: a calm dark sheet, set apart from the green screen around it.
+const SCREEN_PAL={bar:"#7ea6e0",text:"#dde3ea",muted:"#9aa6b2",rule:"#3a4450",bg:"#1d232a",fmc:"#7ea6e0",nmc:"#e88a84",eom:"#7d8793",ok:"#7ea6e0",warn:"#e0b070",bad:"#e88a84",off:"#5c6672",font:"Arial, Helvetica, sans-serif"};
 function themePal(){
   const cs=getComputedStyle(document.documentElement), g=(n,f)=>(cs.getPropertyValue(n)||"").trim()||f;
   const ink=g("--ink","#5fe08c"), dim=g("--ink-dim","#2f7a49");
@@ -3505,7 +3512,7 @@ function stackBar(o){
 }
 // The chart set used by the mission report.
 function dashCharts(S,pal,w){
-  const lab=S.days.map(x=>mmdd(x.d)), ph=pal===PRINT_PAL;
+  const lab=S.days.map(x=>mmdd(x.d)), ph=pal===PRINT_PAL||pal===SCREEN_PAL;
   const topVeh=S.per.filter(p=>p.tracks==="mi").sort((a,b)=>b.mi-a.mi), rows=topVeh.slice(0,8).map(p=>({label:`${p.label||p.sn} ${E.lastN(p.sn,8)}`,value:p.mi}));
   if(topVeh.length>8) rows.push({label:`${topVeh.length-8} more vehicles`,value:Math.round(topVeh.slice(8).reduce((a,p)=>a+p.mi,0)*10)/10,noBar:true});
   return [
@@ -3521,7 +3528,7 @@ const tableHtml=(rows)=>`<table class="dtab"><thead><tr>${rows[0].map(c=>`<th>${
 // One outline (blocks) feeds three renderers. Nothing here names the website: printed copies carry the mission, not a URL.
 let RPT={days:14,roster:true,busy:false};
 function reportBlocks(org,date,opts){
-  const d=db(), S=E.missionStats(R,d,org,date,opts.days||14), pal=PRINT_PAL;
+  const d=db(), S=E.missionStats(R,d,org,date,opts.days||14), pal=opts.pal||PRINT_PAL;
   const catName=(c)=>R.cats[c]?R.cats[c].name.replace(/ \(.*\)$/,""):c;
   const B=[];
   B.push({k:"title",t:"Mission status report"});
@@ -3537,19 +3544,16 @@ function reportBlocks(org,date,opts){
     ...(S.hours.mission?[["Equipment hours",`${fmtN(S.hours.today)} today · ${fmtN(S.hours.mission)} this mission`]]:[]),
     ["Fuel (stamped receipts)",`${money(S.fuel.mission)} this mission (${fmtN(S.fuel.gal)} gal) · ${money(S.fuel.today)} today${cards?` · by card: ${cards}`:""}`],
     ["Receipts",`${S.rc.accepted} fuel receipt${S.rc.accepted===1?"":"s"} stamped`],
-    ["Mileage missing today",`${S.missing} vehicle${S.missing===1?"":"s"}`],
-    ["Board flags today",String(S.flags)],
-    ["1970s done today",`${S.f1970.done} of ${S.f1970.need}`]]});
+    ["Mileage missing today",`${S.missing} vehicle${S.missing===1?"":"s"}`]]});
   B.push({k:"h",t:"Charts"});
   B.push({k:"charts",items:dashCharts(S,pal,520).map(c=>({t:c.t,svg:c.svg,table:c.table}))});
   if(opts.roster){
     B.push({k:"h",t:"Vehicles"});
-    B.push({k:"table",w:[22,13,13,9,16,10,10,7],rows:[["Vehicle","Last 8","Type","Status","Latest reading","Miles","Fuel","Flags"],
+    B.push({k:"table",w:[22,13,13,9,16,10,10,7],rows:[["Vehicle","Last 8","Type","Status","Latest reading","Miles","Fuel","Open items"],
       ...S.per.map(p=>[p.label||"—",E.lastN(p.sn,8),catName(p.cat),p.status,p.reading===null?"—":`${fmtN(p.reading)}${p.tracks==="hrs"?" hrs":""}${p.readingDate?` (${mmdd(p.readingDate)})`:""}`,p.tracks==="hrs"?`${fmtN(p.hrs)} hrs`:fmtN(p.mi),money(p.fuel),String(p.flags.length)])]});
   }
   const items=[];
   S.per.forEach(p=>p.flags.forEach(f=>items.push(`${p.label||p.sn} (${E.lastN(p.sn,8)}): ${f}`)));
-  if(S.missing) items.push(`${S.missing} vehicle${S.missing>1?"s":""} with no end reading for ${plain(date)}`);
   B.push({k:"h",t:"Open items"});
   B.push({k:"list",items:items.length?items.slice(0,60):["None."]});
   B.push({k:"foot",t:R.disclaimer});
@@ -3647,7 +3651,7 @@ async function reportDocx(B,org){
 }
 RENDER.report=function(){
   const b=$("b-report"); b.innerHTML=""; b.appendChild(orgBar(()=>RENDER.report())); const org=curOrg(); if(!org) return;
-  const date=viewDate(), B=reportBlocks(org,date,RPT), base=`${PRACTICE?"PRACTICE_":""}${E.mmddyyyy(date)}_${E.normTO(org.to)||"TASKORG"}_MISSION_REPORT`;
+  const date=viewDate(), B=reportBlocks(org,date,RPT), BS=reportBlocks(org,date,Object.assign({},RPT,{pal:SCREEN_PAL})), base=`${PRACTICE?"PRACTICE_":""}${E.mmddyyyy(date)}_${E.normTO(org.to)||"TASKORG"}_MISSION_REPORT`;
   const bar=el(`<div class="vform"><div class="row"><div><div class="lbl">Charts cover</div><div class="chips">${[7,14,30].map(n=>`<button type="button" class="chip" data-days="${n}" aria-pressed="${RPT.days===n}">${n} days</button>`).join("")}</div></div>
       <label class="chk"><input type="checkbox" data-roster${RPT.roster?" checked":""}><span>Include the vehicle list</span></label></div>
     <div class="toolrow"><button class="btn rs-big" type="button" data-out="print">🖶 Print</button><button class="btn" type="button" data-out="pdf">Save PDF</button><button class="btn" type="button" data-out="docx">Save Word (.docx)</button></div>
@@ -3665,7 +3669,7 @@ RENDER.report=function(){
   bar.addEventListener("change",(e)=>{ if(e.target.hasAttribute("data-roster")){ RPT.roster=e.target.checked; RENDER.report(); } });
   b.appendChild(bar);
   b.appendChild(missionExportBox(org,date));
-  b.appendChild(el(`<div class="paper"><div class="report">${reportHtml(B)}</div></div>`));
+  b.appendChild(el(`<div class="paper rp-screen"><div class="rp-tag">Preview · prints black on white</div><div class="report">${reportHtml(BS)}</div></div>`));
 };
 
 // ================= MISSION EXPORT: every 1970 on the mission plus a summary of the dashboard, in one ZIP =================
@@ -3721,7 +3725,7 @@ async function runMissionExport(org,through,slot){
 }
 function missionExportBox(org,through){
   const w=el(`<div class="vform mexp"><div class="lbl">Mission export</div>
-    <p style="margin:0">One ZIP file: every vehicle's 1970 for this mission (print-ready, with day edits and signatures) and a PDF summary of the dashboard (key numbers, charts, vehicle list, open items), through ${esc(plain(through))}. Works offline.</p>
+    <p style="margin:0">One ZIP file: every vehicle's 1970 for this mission (print-ready, with day edits and signatures) and the mission report as a PDF (key numbers, charts, vehicle list, open items), through ${esc(plain(through))}. Works offline.</p>
     <div class="toolrow"><button class="btn rs-big" type="button" data-mx>Save mission export</button></div><div data-slot></div></div>`);
   w.querySelector("[data-mx]").addEventListener("click",()=>runMissionExport(org,through,w.querySelector("[data-slot]")));
   return w;
