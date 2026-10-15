@@ -2,7 +2,7 @@
 // Network first for the page itself, so a new upload to GitHub shows up the next time the app opens online.
 // The app makes no other network requests: nothing is sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "logstat-v7";
+const CACHE = "logstat-v8";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
   "./manifest.json", "./qrcode.min.js", "./pdf-lib.min.js",
   "./esad-form-1970.pdf", "./std-270-vehicle-accident-report.pdf", "./logstat-workflow.pdf",
@@ -12,7 +12,7 @@ const CORE = ["./index.html",   // the page is downloaded once and saved as inde
 self.addEventListener("install", (e) => {
   e.waitUntil((async () => {
     const c = await caches.open(CACHE);
-    await c.addAll(CORE);
+    await c.addAll(CORE.map((u) => new Request(u, { cache: "reload" })));   // straight from the site, not a stale browser copy
     await self.skipWaiting();
   })());
 });
@@ -52,7 +52,7 @@ self.addEventListener("fetch", (e) => {
     return;
   }
   const key = keyOf(u);
-  const net = fetch(r).then(async (res) => {
+  const net = fetch(r, { cache: "no-cache" }).then(async (res) => {   // checked with the site each time (a quick "not modified" when unchanged)
     if (res && res.ok && CORE.some((p) => key === new URL(p, self.location).href)) { const c = await caches.open(CACHE); await c.put(key, res.clone()); }
     return res;
   });
