@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-TsgRY5p/aOuNQsqAXYFWNhsMQv2Qz4/OkFk3Ux+q4ns=' 'sha256-hyVFOB04JIUrxucDikb1J09DjQkQV8iJu0UUvcG3lDQ=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-zYBBejxRl2g3UndvnkXMEzfSKwzzfrrP1nbYkRMvSwc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-8I7b3WFekCTJRuQuwCevAHyY0w5f7OOdTMnQoD0/D5A=' 'sha256-8l5KpP7+yKl5+p/SzCEIasErO5xSTB08QxlnIrwyGgQ=' 'sha256-hyVFOB04JIUrxucDikb1J09DjQkQV8iJu0UUvcG3lDQ=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-14 22:45">
+<meta name="logstat-build" content="2026-10-15 06:25">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1419,7 +1419,7 @@
     <section class="win view" id="v-home" aria-labelledby="t-home"><div class="bar"><span id="t-home">LOGSTAT.EXE</span><span class="ts" id="homeTs"></span></div><div class="body" id="b-home"></div></section>
     <section class="win view" id="v-stamp" hidden aria-labelledby="t-stamp"><div class="bar"><span id="t-stamp">STAMP.EXE<span class="bsub"> — Receipt pre-check and stamper</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-stamp"></div></section>
     <section class="win view" id="v-board" hidden aria-labelledby="t-board"><div class="bar"><span id="t-board">BOARD.EXE<span class="bsub"> — Fleet whiteboard</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-board"></div></section>
-    <section class="win view" id="v-forms" hidden aria-labelledby="t-forms"><div class="bar"><span id="t-forms">FORMS.EXE<span class="bsub"> — The 1970 and blank forms</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-forms"></div></section>
+    <section class="win view" id="v-forms" hidden aria-labelledby="t-forms"><div class="bar"><span id="t-forms">1970.EXE<span class="bsub"> — Finalize and print the 1970 for ARRO</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-forms"></div></section>
     <section class="win view" id="v-report" hidden aria-labelledby="t-report"><div class="bar"><span id="t-report">REPORT.EXE<span class="bsub"> — Mission status report</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-report"></div></section>
     <section class="win view" id="v-events" hidden aria-labelledby="t-events"><div class="bar"><span id="t-events">EVENTS.EXE<span class="bsub"> — Unusual events guide</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-events"></div></section>
     <section class="win view" id="v-setup" hidden aria-labelledby="t-setup"><div class="bar"><span id="t-setup">SETUP.EXE<span class="bsub"> — Mission, people, data</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-setup"></div></section>
@@ -1521,7 +1521,10 @@
       else if(i.coop&&!String(dr.co||"").trim()) F.push({lvl:"warn",id:"coop",t:"Second driver not entered (tactical vehicles need two)"});
       else if(i.coop&&normTO(dr.co)===normTO(dr.op)) F.push({lvl:"crit",id:"coop2",t:"Second driver is the same person as the operator"});
     }
-    if(v.cat==="rent"&&!v.rental) F.push({lvl:"warn",id:"rental",t:"Rental agreement not uploaded"});
+    // The rental agreement goes in ARRO when the rental starts the mission: a flag on its first day only,
+    // then a reminder on the card that doesn't count toward the day's flags.
+    if(v.cat==="rent"&&!v.rental){ const first=isYMD(v.startDate)?v.startDate:(org&&isYMD(org.start)?org.start:"");
+      F.push(!first||date<=first?{lvl:"warn",id:"rental",t:"Rental agreement: upload it in ARRO (start of mission)"}:{lvl:"info",id:"rental",t:"Rental agreement not marked uploaded"}); }
     if(nmcOn(v,date)&&!v.eom) F.push({lvl:"crit",id:"nmc",t:"NMC with no EOM"});
     if(i.idKind==="vin"&&!isVIN(v.sn)) F.push({lvl:"crit",id:"vin",t:"VIN isn't 17 characters"});
     return F;
@@ -1842,7 +1845,7 @@ function addNote(v,text,date){ v.notes=v.notes||[]; v.notes.push({d:date||viewDa
 const VIEWS=["home","stamp","board","forms","report","events","setup","help"];
 const RENDER={};
 let CUR="home", PARAMS={};
-function parseHash(){ const h=location.hash.replace(/^#/,""); const parts=h.split("&"); let name=(parts.shift()||"home").toLowerCase(); if(name==="stamper") name="stamp"; const p={}; parts.forEach(x=>{ const i=x.indexOf("="); if(i<0) p[x]=true; else { let v=x.slice(i+1); try{ v=decodeURIComponent(v); }catch(e){ v="%bad"; } p[x.slice(0,i)]=v; } }); return {name,p}; }
+function parseHash(){ const h=location.hash.replace(/^#/,""); const parts=h.split("&"); let name=(parts.shift()||"home").toLowerCase(); if(name==="stamper") name="stamp"; if(name==="1970") name="forms"; const p={}; parts.forEach(x=>{ const i=x.indexOf("="); if(i<0) p[x]=true; else { let v=x.slice(i+1); try{ v=decodeURIComponent(v); }catch(e){ v="%bad"; } p[x.slice(0,i)]=v; } }); return {name,p}; }
 const href=(name,extra)=>"#"+name+(extra?"&"+extra:"");
 function route(){
   const {name,p}=parseHash(); if(name==="install"){ openInstall(); return; }
@@ -1900,7 +1903,7 @@ function vehicleForm(v,opts){
       <label class="f" data-odo><span data-odol>Start mileage</span><input class="fld" data-k="startOdo" inputmode="numeric" autocomplete="off" value="${esc(v.startOdo||"")}"></label>
     </div>`}
     ${opts.coys?`<div class="row"><label class="f">Company<input class="fld" data-k="coy" maxlength="30" autocomplete="off" autocapitalize="characters" list="dl${f_id}" placeholder="optional: A CO, HHC…" value="${esc(v.id?coyOf(v):(v.coy||""))}"></label><datalist id="dl${f_id}">${opts.coys.map(c=>`<option value="${esc(c)}"></option>`).join("")}</datalist></div>`:""}
-    <label class="chk" data-rent><input type="checkbox" data-k="rental"${v.rental?" checked":""}><span>Rental agreement uploaded in ARRO</span></label>
+    <label class="chk" data-rent><input type="checkbox" data-k="rental"${v.rental?" checked":""}><span>Rental agreement uploaded in ARRO (once, when the rental starts the mission)</span></label>
     <div class="muted" data-hint></div>
     <div data-probs></div>
   </div>`);
@@ -1933,10 +1936,10 @@ RENDER.home=function(){
     stamp:`<a class="tile" href="#stamp"><span class="tg">STAMP.EXE</span><b>Stamp a receipt</b><span>Pre-check, stamp the MRT and VIN digits, name the file, share.</span></a>`,
     board:`<a class="tile" href="#board"><span class="tg">BOARD.EXE</span><b>Fleet whiteboard</b><span>Vehicles, mileage, FMC/NMC, 1970s, receipts and flags. Big screen for a TV.</span></a>`,
     report:`<a class="tile" href="#report"><span class="tg">REPORT.EXE</span><b>Mission report</b><span>Fleet numbers and charts for leadership. Print, PDF or Word.</span></a>`,
-    forms:`<a class="tile" href="#forms"><span class="tg">FORMS.EXE</span><b>Forms and the 1970</b><span>Fill every vehicle's ESAD Form 1970 from the Board. Blank forms to download.</span></a>`,
+    forms:`<a class="tile" href="#forms"><span class="tg">1970.EXE</span><b>Finalize the 1970</b><span>End of mission: each vehicle's ESAD Form 1970 from the Board. Check the days, sign, print and upload to ARRO.</span></a>`,
     events:`<a class="tile" href="#events"><span class="tg">EVENTS.EXE</span><b>Unusual events</b><span>NMC, transfers, personal funds, tolls, fuel cards, travel requests and more.</span></a>`};
   const grp=(label,keys)=>`<div class="lbl">${esc(label)}</div><div class="tiles">${keys.map(k=>T[k]).join("")}</div>`;
-  const LAYOUT=[["Every day",["stamp","board","forms"]],["Leadership and reference",["report","events"]]];
+  const LAYOUT=[["Every day",["stamp","board"]],["End of mission",["forms"]],["Leadership and reference",["report","events"]]];
   b.innerHTML=`${org?alerts:`<div class="w warn">Start with <a href="#setup">Setup</a>: add your task org and MRT, then add vehicles on the <a href="#board">Board</a>.</div>`}
     ${LAYOUT.map(([l,k])=>grp(l,k)).join("")}
     <div class="toolrow"><a class="btn" href="#setup">⚙︎ Setup</a><a class="btn" href="#help">? How to use</a><a class="btn" href="#install">⬇︎ Install on this device</a></div>`;
@@ -1953,17 +1956,17 @@ RENDER.help=function(){
   <h3>ARRO operator: every day</h3><ol>
     <li><a href="#stamp">Stamp</a> each receipt a driver sends in, then upload it in ARRO with its file name.</li>
     <li><a href="#board">Board</a>: <b>Enter today</b> on each vehicle (end mileage, operator, and the second driver on tactical vehicles) until the flags clear. Fill the 1970s at the end of the mission.</li>
-    <li><a href="#forms">Forms</a>: tick the vehicles → <b>Fillable 1970s</b> (one PDF each, in a ZIP) or <b>One print-ready PDF</b>. <b>Edit days</b> fixes any single day: locations, operators, remarks, fuel card, FMC/NMC and signatures. It all works with no network and saves on the device; upload in ARRO when you're back online.</li>
+    <li>End of mission: <a href="#forms">1970</a>: tick the vehicles → <b>Fillable 1970s</b> (one PDF each, in a ZIP) or <b>One print-ready PDF</b>. <b>Edit days</b> fixes any single day: locations, operators, remarks, fuel card, FMC/NMC and signatures. It all works with no network and saves on the device; upload in ARRO when you're back online.</li>
     <li>Leadership update: <a href="#report">Mission report</a> → <b>Print</b>, <b>Save PDF</b> or <b>Save Word</b>.</li>
     <li>Something unusual (damaged vehicle, transfer, personal funds, toll, lost card)? Open <a href="#events">Unusual events</a>.</li>
     <li>Last day: EOM each vehicle on the <a href="#board">Board</a>, then <b>Mission export</b> for every 1970.</li></ol>
   <h3>Stamp a receipt</h3><ul><li>Photograph the receipt on a white background, one receipt per photo.</li><li>Fill gallons, amount and odometer. Every receipt here is fuel on the WEX card. Tick the three pre-checks. Share sends the stamped copy with its file name.</li><li>The photo is cropped to the receipt automatically; tap <b>Adjust crop</b> if anything is cut off. A receipt too long for one photo can be taken in up to three parts with <b>＋ Add next part</b>: top first, overlapping a line or two.</li><li>The stamp goes on a tan band below the receipt (beside it on a very long receipt), never over it, and the photo's location data is removed. Keep the paper original for turn-in.</li></ul>
   <h3>Two operators, one task org</h3><ul><li>Board → <b>Save board file</b>, send it to the other device, and there tap <b>Merge in a board file</b>. The newest copy of every entry wins on both devices; nothing is lost unless the other device changed or removed it later. The same serial is treated as the same vehicle and the same receipt is counted once.</li><li>Entries changed before this version have no time on them; if both devices changed one, you choose whose copy to keep.</li></ul>
-  <h3>Board and events</h3><ul><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li><b>Big missions:</b> task orgs with the same MRT make one mission. Tap the mission line at the top of the Board to see every task force, a task force to see its companies, a company to see its vehicles. Set up companies with <b>Set up companies</b>; each company has its own vehicle count, miles, missing mileage and flags.</li><li><b>Tactical vehicles need a second driver</b> (co-operator) every day. It goes on the second name line of block 16 on the 1970, and that driver signs there. The Board flags a tactical vehicle with no second driver, or with the operator entered twice.</li><li><b>Day sheet</b> enters a whole company's end mileage, operators and second drivers for one day on one screen. <b>Every day</b> on a vehicle fixes any day's reading or miles; the next day's start follows, and the 1970s rebuild from it.</li><li><b>Big screen</b> shows the Board large on a TV or second screen.</li><li><b>Print</b> prints the level you're on: mission summary, task force (companies and their vehicles) or one company. <b>1970s for</b> a company ticks just its vehicles on Forms.</li><li>Events cards give the steps, what not to enter, who to tell and a fill-in note. Damaged and transfer cards can apply the change to the Board.</li></ul>
+  <h3>Board and events</h3><ul><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li><b>Big missions:</b> task orgs with the same MRT make one mission. Tap the mission line at the top of the Board to see every task force, a task force to see its companies, a company to see its vehicles. Set up companies with <b>Set up companies</b>; each company has its own vehicle count, miles, missing mileage and flags.</li><li><b>Tactical vehicles need a second driver</b> (co-operator) every day. It goes on the second name line of block 16 on the 1970, and that driver signs there. The Board flags a tactical vehicle with no second driver, or with the operator entered twice.</li><li><b>Day sheet</b> enters a whole company's end mileage, operators and second drivers for one day on one screen. <b>Every day</b> on a vehicle fixes any day's reading or miles; the next day's start follows, and the 1970s rebuild from it.</li><li><b>Big screen</b> shows the Board large on a TV or second screen.</li><li><b>Print</b> prints the level you're on: mission summary, task force (companies and their vehicles) or one company. <b>1970s for</b> a company ticks just its vehicles on the 1970 screen.</li><li>Events cards give the steps, what not to enter, who to tell and a fill-in note. Damaged and transfer cards can apply the change to the Board.</li></ul>
   <h3>The 1970: from the Board, edited, or opened</h3><ul><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup (tap to place text, ✓, ✗, the date or a signature), then save it as a PDF.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
   <h3>Signatures</h3><ul><li><b>Type</b> your name and pick a handwriting style, or <b>Draw</b> it with a finger. You confirm it's your own signature; it's saved on this device for next time.</li><li>Only the person named signs. Anyone can type a printed name, but not someone else's signature. Check with J4 that e-signatures are accepted on the 1970.</li></ul>
   <h3>Mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, and the open items for the day. Every chart has a <b>Show as a table</b> view.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
-  <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and Forms screens) saves one ZIP: every vehicle's 1970 for the mission, print-ready with day edits and signatures, plus the mission report as a PDF and the vehicle list as a spreadsheet (CSV).</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
+  <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and 1970 screens) saves one ZIP: every vehicle's 1970 for the mission, print-ready with day edits and signatures, plus the mission report as a PDF and the vehicle list as a spreadsheet (CSV).</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
   <h3 id="h-roles">Who does what</h3>${R.roles.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><ul>${x.d.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3 id="h-paths">ARRO path maps</h3><p class="muted" style="margin:0 0 6px">Where things are in ARRO, click by click, from the LOGSTAT Quick Reference.</p>${R.paths.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><div class="path">${x.p.map(t=>`<span>${esc(t)}</span>`).join('<b aria-hidden="true">›</b>')}</div>${x.n?`<p class="muted" style="margin:6px 0 0">${esc(x.n)}</p>`:""}${x.link?`<div class="src"><a href="${esc(x.link.u)}" target="_blank" rel="noopener noreferrer">${esc(x.link.l)} ↗</a></div>`:""}<div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3>Rules settled</h3><ul>${(R.settled||[]).map(u=>`<li>${esc(u.text)}</li>`).join("")}</ul>
@@ -3951,7 +3954,7 @@ function mergePanel(d,org){
     {n:"Fleet whiteboard",w:"BOARD.EXE",h:"#board",k:"board whiteboard vehicles mileage fleet flags print big screen company companies task force mission day sheet every day"},
     {n:"Mission report",w:"REPORT.EXE",h:"#report",k:"report mission status sitrep situational awareness leadership print pdf word docx charts graphs dashboard metrics"},
     {n:"Mission export (all 1970s + summary)",w:"REPORT.EXE",h:"#report",k:"mission export zip all 1970s summary close out turn in binder cost recovery save every 1970 dashboard pdf csv"},
-    {n:"Forms and the 1970",w:"FORMS.EXE",h:"#forms",k:"forms 1970 esad form fill pdf print sign signature photo upload std 270 accident workflow download"},
+    {n:"Finalize the 1970",w:"1970.EXE",h:"#forms",k:"forms finalize submit arro end of mission 1970 esad form fill pdf print sign signature photo upload std 270 accident workflow download"},
     {n:"Unusual events guide",w:"EVENTS.EXE",h:"#events",k:"events unusual exceptions"},
     {n:"Setup",w:"Mission, people, data",h:"#setup",k:"setup mission mrt task org name backup close out"},
     {n:"How to use LOGSTAT",w:"Help",h:"#help",k:"help how instructions privacy rules"},
