@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-H8k7RCjJzRFzrOVd/p6bB92nSYJlxWVD3veDmdlV3a8=' 'sha256-hyVFOB04JIUrxucDikb1J09DjQkQV8iJu0UUvcG3lDQ=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-ue6UavnKRNvlHjEh7hRbOfm/tfR6gAFfXte2zj6ss/M='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-H8k7RCjJzRFzrOVd/p6bB92nSYJlxWVD3veDmdlV3a8=' 'sha256-WtievkRJN6PE2g7o7mvGM7QtUP9cD7CI2WWt4O/Uvm8=' 'sha256-hyVFOB04JIUrxucDikb1J09DjQkQV8iJu0UUvcG3lDQ=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-14 22:00">
+<meta name="logstat-build" content="2026-10-14 22:30">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1351,7 +1351,7 @@
     </div>
     <div class="finder" role="search">
       <label class="sr" for="finderIn">Search events, checklist, help</label>
-      <input class="fld" id="finderIn" type="search" placeholder="Search events, checklist, help…" autocomplete="off" spellcheck="false" aria-controls="finderRes" aria-expanded="false">
+      <input class="fld" id="finderIn" type="search" placeholder="Search events, help…" autocomplete="off" spellcheck="false" aria-controls="finderRes" aria-expanded="false">
       <div class="finder-res" id="finderRes" role="listbox" hidden></div>
     </div>
     <div class="theme-sw" role="group" aria-label="Display color">
@@ -1397,7 +1397,6 @@
         </ol>
       </div>
       <p class="muted" style="margin:4px 0 0">The app opens full-screen, works offline with the last version it saved, and picks up updates each time you open it online.</p>
-      <p class="muted" style="margin:4px 0 0"><b>Used the stamper inside an installed IQ Kit on an iPhone?</b> Its setup stays in that app. Scan your ARRO operator's setup QR again, or load your setup file under Setup.</p>
       <details class="sec" style="margin-top:8px"><summary>Install card to print or post</summary>
         <div class="icard" id="icard"><div class="rs-qr" id="icardQR"></div><div><b>LOGSTAT app</b><ol><li>Scan the code, or open <b style="white-space:nowrap">inter-q.com/logstat/install</b></li><li>Tap <b>Install</b>, or Share → <b>Add to Home Screen</b></li><li>Scan the setup QR from your ARRO operator</li></ol></div></div>
         <div class="toolrow" style="margin-top:8px"><button class="btn" type="button" id="icardPrint">Print install card</button></div>
@@ -1413,7 +1412,6 @@
     <section class="win view" id="v-board" hidden aria-labelledby="t-board"><div class="bar"><span id="t-board">BOARD.EXE<span class="bsub"> — Fleet whiteboard</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-board"></div></section>
     <section class="win view" id="v-forms" hidden aria-labelledby="t-forms"><div class="bar"><span id="t-forms">FORMS.EXE<span class="bsub"> — The 1970 and blank forms</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-forms"></div></section>
     <section class="win view" id="v-report" hidden aria-labelledby="t-report"><div class="bar"><span id="t-report">REPORT.EXE<span class="bsub"> — Mission status report</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-report"></div></section>
-    <section class="win view" id="v-today" hidden aria-labelledby="t-today"><div class="bar"><span id="t-today">TODAY.EXE<span class="bsub"> — Daily checklist</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-today"></div></section>
     <section class="win view" id="v-events" hidden aria-labelledby="t-events"><div class="bar"><span id="t-events">EVENTS.EXE<span class="bsub"> — Unusual events guide</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-events"></div></section>
     <section class="win view" id="v-setup" hidden aria-labelledby="t-setup"><div class="bar"><span id="t-setup">SETUP.EXE<span class="bsub"> — Mission, people, data</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-setup"></div></section>
     <section class="win view" id="v-help" hidden aria-labelledby="t-help"><div class="bar"><span id="t-help">HELP.EXE<span class="bsub"> — How to use LOGSTAT</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body help" id="b-help"></div></section>
@@ -1828,14 +1826,12 @@ const digitsOf=(org)=>org&&org.digits===6?6:8;
 const vname=(v,org)=>v?`${v.label||E.info(R,v).cat.short} ${E.lastN(v.sn,digitsOf(org||curOrg()))}`:"—";
 const dayRec=(vid,date)=>{ const d=db(), k=E.dk(vid,date); return d.days[k]||(d.days[k]={e:"",op:"",co:"",f1970:false,sodo:""}); };
 const peekDay=(vid,date)=>db().days[E.dk(vid,date)]||{};
-let VIEWDATE="";   // the date the operator views (board, check, today) — follows the clock's "today" unless changed
+let VIEWDATE="";   // the date the operator views on the Board — follows the clock's "today" unless changed
 const viewDate=()=>VIEWDATE||todayYMD();
 function addNote(v,text,date){ v.notes=v.notes||[]; v.notes.push({d:date||viewDate(),t:String(text).slice(0,400)}); }
 
-// ---------- who uses this device (Home shows that role's tools) ----------
-function applyRole(){ const r=DB.me.role||""; const qb=$("qbBoard"); if(qb) qb.hidden=r==="driver"; document.documentElement.dataset.role=r||"all"; }
 // ---------- routing ----------
-const VIEWS=["home","stamp","board","today","forms","report","events","setup","help"];
+const VIEWS=["home","stamp","board","forms","report","events","setup","help"];
 const RENDER={};
 let CUR="home", PARAMS={};
 function parseHash(){ const h=location.hash.replace(/^#/,""); const parts=h.split("&"); let name=(parts.shift()||"home").toLowerCase(); if(name==="stamper") name="stamp"; const p={}; parts.forEach(x=>{ const i=x.indexOf("="); if(i<0) p[x]=true; else { let v=x.slice(i+1); try{ v=decodeURIComponent(v); }catch(e){ v="%bad"; } p[x.slice(0,i)]=v; } }); return {name,p}; }
@@ -1847,7 +1843,7 @@ function route(){
   if(wantP!==PRACTICE){ PRACTICE=wantP; resetViewState(); }
   if(!INSTALL_KEEP&&!$("iqHowto").hidden) $("iqHowto").hidden=true; INSTALL_KEEP=false;
   document.documentElement.classList.toggle("practice",PRACTICE);
-  ["qbStamp","qbBoard","qbEvents"].forEach((id,i)=>{ const a=$(id); if(a) a.setAttribute("href",href(["stamp","board","events"][i])); }); applyRole();
+  ["qbStamp","qbBoard","qbEvents"].forEach((id,i)=>{ const a=$(id); if(a) a.setAttribute("href",href(["stamp","board","events"][i])); });
   VIEWS.forEach(n=>{ const s=$("v-"+n); if(s) s.hidden=n!==v; });
   // The home screen keeps a clean address (inter-q.com/logstat), never ".../logstat/#home".
   if(v==="home"&&location.hash){ try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} }
@@ -1859,7 +1855,7 @@ window.addEventListener("hashchange",route);
 // Screen state belongs to one space (real or practice): moving between them starts each screen clean,
 // so nothing typed or loaded in practice can be saved into real data, or the reverse.
 let INSTALL_KEEP=false;
-function resetViewState(){ VIEWDATE=""; BOARD.open={}; BOARD.act=null; BOARD.pendingCard=null; BOARD.pendingImport=null; EVS.vals={}; EVS.open=""; RS.parts.forEach(rsFree); try{ if(RS.comp){ RS.comp.width=0; RS.comp.height=0; } }catch(_){} RS={parts:[],comp:null,crop:-1,veh:"",pre:{},f:null}; TODAY.tab=""; FRM.sel=null; FRM.up=null; FRM.ready=null; FRM.edit=null; FRM.org=""; }
+function resetViewState(){ VIEWDATE=""; BOARD.open={}; BOARD.act=null; BOARD.pendingCard=null; BOARD.pendingImport=null; EVS.vals={}; EVS.open=""; RS.parts.forEach(rsFree); try{ if(RS.comp){ RS.comp.width=0; RS.comp.height=0; } }catch(_){} RS={parts:[],comp:null,crop:-1,veh:"",pre:{},f:null}; FRM.sel=null; FRM.up=null; FRM.ready=null; FRM.edit=null; FRM.org=""; }
 const go=(name,extra)=>{ const h=href(name,extra); if(location.hash===h) route(); else location.hash=h; };
 
 // ---------- shared pieces ----------
@@ -1923,33 +1919,19 @@ RENDER.home=function(){
   let alerts="";
   if(org){
     const V=d.veh.filter(v=>v.org===org.id&&E.active(v,t)); const fl=V.reduce((n,v)=>n+E.flags(R,d,v,t,org,t).filter(f=>f.lvl!=="info").length,0);
-    const open=[]; if(E.isYMD(org.start)) for(let i=1;i<=30;i++){ const dd=E.addDays(t,-i); if(dd<org.start) break; const c=d.chk[org.id+"|"+dd]; if(!c||c.cal!=="green") open.push(dd); }
-    alerts=`<div class="status"><span>Task org <b>${esc(org.to||"—")}</b></span><span>MRT <b>${esc(org.mrt||"—")}</b></span>${E.dplus(org,t)?`<span>Mission day <b>${esc(E.dplus(org,t))}</b></span>`:""}<span>Vehicles <b>${V.length}</b></span>${fl?`<a href="#board" class="pill p-warn">${fl} board flag${fl>1?"s":""}</a>`:`<span class="pill p-ok">board clear</span>`}${open.length?`<a href="#today" class="pill p-crit" title="${esc(open.map(plain).join(", "))}">${open.length} past day${open.length>1?"s":""} not certified</a>`:""}</div>`;
+    alerts=`<div class="status"><span>Task org <b>${esc(org.to||"—")}</b></span><span>MRT <b>${esc(org.mrt||"—")}</b></span>${E.dplus(org,t)?`<span>Mission day <b>${esc(E.dplus(org,t))}</b></span>`:""}<span>Vehicles <b>${V.length}</b></span>${fl?`<a href="#board" class="pill p-warn">${fl} board flag${fl>1?"s":""}</a>`:`<span class="pill p-ok">board clear</span>`}</div>`;
   }
-  const role=d.me.role||"";
   const T={
     stamp:`<a class="tile" href="#stamp"><span class="tg">STAMP.EXE</span><b>Stamp a receipt</b><span>Pre-check, stamp the MRT and VIN digits, name the file, share.</span></a>`,
-    board:`<a class="tile" href="#board"><span class="tg">BOARD.EXE</span><b>Fleet whiteboard</b><span>Vehicles, mileage, FMC/NMC, 1970s, receipts, flags and the fleet dashboard.</span></a>`,
+    board:`<a class="tile" href="#board"><span class="tg">BOARD.EXE</span><b>Fleet whiteboard</b><span>Vehicles, mileage, FMC/NMC, 1970s, receipts and flags. Big screen for a TV.</span></a>`,
     report:`<a class="tile" href="#report"><span class="tg">REPORT.EXE</span><b>Mission report</b><span>Fleet numbers and charts for leadership. Print, PDF or Word.</span></a>`,
     forms:`<a class="tile" href="#forms"><span class="tg">FORMS.EXE</span><b>Forms and the 1970</b><span>Fill every vehicle's ESAD Form 1970 from the Board. Blank forms to download.</span></a>`,
-    today:`<a class="tile" href="#today"><span class="tg">TODAY.EXE</span><b>Today's checklist</b><span>Day 1, the daily cycle and end of mission, then the Certifier message.</span></a>`,
     events:`<a class="tile" href="#events"><span class="tg">EVENTS.EXE</span><b>Unusual events</b><span>NMC, transfers, personal funds, tolls, fuel cards, travel requests and more.</span></a>`};
   const grp=(label,keys)=>`<div class="lbl">${esc(label)}</div><div class="tiles">${keys.map(k=>T[k]).join("")}</div>`;
-  const LAYOUT={
-    driver:[["Every receipt",["stamp"]],["If something goes wrong",["events"]]],
-    operator:[["Every day",["stamp","board","today","forms"]],["Leadership",["report","events"]]],
-    lead:[["Mission picture",["report","board"]],["Certify and review",["today","forms"]],["Reference",["events"]]],
-    all:[["Field",["stamp"]],["Operator",["board","report","forms","today"]],["Everyone",["events"]]]};
-  const ROLES=[["driver","Driver"],["operator","ARRO operator"],["lead","Certifier / JLOC"],["all","Show everything"]];
-  const pick=`<div class="vform rolepick"><div class="lbl">Who uses this device?</div><p class="muted" style="margin:0">Home then shows only the tools you need. Search and the other screens still reach everything.</p><div class="chips">${ROLES.map(([k,l])=>`<button type="button" class="chip" data-role="${k}">${esc(l)}</button>`).join("")}</div></div>`;
-  const status=org&&role==="driver"?`<div class="status"><span>Task org <b>${esc(org.to||"—")}</b></span><span>MRT <b>${esc(org.mrt||"—")}</b></span>${E.dplus(org,t)?`<span>Mission day <b>${esc(E.dplus(org,t))}</b></span>`:""}</div>`:alerts;
-  b.innerHTML=`${org?status:`<div class="w warn">Start with <a href="#setup">Setup</a>: add your task org and MRT, or scan the setup QR code from your ARRO operator.</div>`}
-    ${role?"":pick}
-    ${(LAYOUT[role]||LAYOUT.all).map(([l,k])=>grp(l,k)).join("")}
-    ${role?`<div class="rolebar muted">This device: <b>${esc((ROLES.find(r=>r[0]===role)||["",""])[1])}</b> · <a href="#" data-role-change>change</a></div>`:""}
+  const LAYOUT=[["Every day",["stamp","board","forms"]],["Leadership and reference",["report","events"]]];
+  b.innerHTML=`${org?alerts:`<div class="w warn">Start with <a href="#setup">Setup</a>: add your task org and MRT, then add vehicles on the <a href="#board">Board</a>.</div>`}
+    ${LAYOUT.map(([l,k])=>grp(l,k)).join("")}
     <div class="toolrow"><a class="btn" href="#setup">⚙︎ Setup</a><a class="btn" href="#help">? How to use</a><a class="btn" href="#install">⬇︎ Install on this device</a></div>`;
-  b.querySelectorAll("[data-role]").forEach(x=>x.addEventListener("click",()=>{ DB.me.role=x.dataset.role; saveReal(); applyRole(); RENDER.home(); }));
-  const ch=b.querySelector("[data-role-change]"); if(ch) ch.addEventListener("click",(e)=>{ e.preventDefault(); DB.me.role=""; saveReal(); applyRole(); RENDER.home(); });
 };
 
 // ---------- help ----------
@@ -1957,42 +1939,28 @@ RENDER.help=function(){
   $("b-help").innerHTML=`<p><b>LOGSTAT</b> helps teams get LOGSTAT right the first time. It's built from the J4 ARRO Refresher: LOGSTAT (deck and lesson plan, May 2026), the LOGSTAT Quick Reference (26 Apr 2026), the Student Reference Materials (ESAD Fleet Card memo, ESAD Form 1970, STD 270) and the ARRO Refresher: ESAD Travel module. <b>${esc(R.disclaimer)}</b></p>
   <h3>ARRO operator: set up a mission (once)</h3><ol>
     <li>Install the app: open <b>inter-q.com/logstat/install</b> and follow the steps for your device.</li>
-    <li><a href="#setup">Setup</a> → <b>You</b>: your rank and name, and the Certifier's rank and name. The Certifier must have ARRO access and can't be you.</li>
+    <li><a href="#setup">Setup</a> → <b>You</b>: your rank and name.</li>
     <li>Setup → <b>Task orgs</b> → <b>+ Add task org</b>: task org name, MRT, VIN/serial digits (last 8 unless J4 says otherwise) and the mission start date.</li>
-    <li><a href="#board">Board</a> → <b>+ Add vehicle</b> for each one: name, serial (tactical: serial only, no NSN) or 17-character VIN (GSA and rentals), category and start mileage. Tick the rental agreement once it's uploaded in ARRO.</li>
-    <li>Setup → <b>Share setup with drivers</b> → pick <b>All vehicles</b> or one driver's vehicle → <b>Make link</b>. A QR code appears.</li>
-    <li>Show the QR code to each driver, or tap <b>Copy link</b> and text it. It carries the mission and vehicles, never names.</li></ol>
-  <h3>Driver: first time (2 minutes)</h3><ol>
-    <li>Open <b>inter-q.com/logstat/install</b> (Safari on iPhone, Chrome on Android) and add LOGSTAT to your home screen.</li>
-    <li>Point your device's camera at the ARRO operator's QR code and tap the link that pops up (or tap the link they texted you).</li>
-    <li>Tap <b>Load it</b>. Then open <b>My setup</b> at the bottom of the Stamp screen and add your rank and name.</li>
-    <li>Before you drive any vehicle: finish <a href="#events&id=ddt">Defensive Driver Training</a> on CalLearns (two hours, official state email) and sign an STD 261. Give both to your ARRO operator.</li></ol>
-  <h3>Driver: every receipt</h3><ol>
-    <li><a href="#stamp">Stamp</a> → pick your vehicle → <b>Take photo</b> of the receipt on a white background, one receipt per photo.</li>
-    <li>Fill gallons, amount and the odometer at the pump. The card should be the ESAD WEX card: standard-grade fuel only, and DEF or a car wash only when needed, in the same transaction.</li>
-    <li>Tick the three pre-check boxes → <b>Share</b> the stamped photo with your ARRO operator. Keep the paper original for the binder.</li>
-    <li>Card lost, stolen or not working? Report it to J4 Logistics and your chain of command. See <a href="#events&id=cardlost">Unusual events</a>.</li></ol>
+    <li><a href="#board">Board</a> → <b>+ Add vehicle</b> for each one: name, serial (tactical: serial only, no NSN) or 17-character VIN (GSA and rentals), category and start mileage. Tick the rental agreement once it's uploaded in ARRO.</li></ol>
   <h3>ARRO operator: every day</h3><ol>
     <li><a href="#stamp">Stamp</a> each receipt a driver sends in, then upload it in ARRO with its file name.</li>
     <li><a href="#board">Board</a>: <b>Enter today</b> on each vehicle (end mileage, operator, 1970 done) until the flags clear.</li>
-    <li><a href="#today">Today's checklist</a>: work down the steps, Verify in ARRO, then <b>Send to the Certifier</b>.</li>
     <li><a href="#forms">Forms</a>: tick the vehicles → <b>Fillable 1970s</b> (one PDF each, in a ZIP) or <b>One print-ready PDF</b>. <b>Edit days</b> fixes any single day: locations, operators, remarks, fuel card, FMC/NMC and signatures. It all works with no network and saves on the device; upload in ARRO when you're back online.</li>
-    <li>Leadership update: <a href="#report">Mission report</a> → <b>Print</b>, <b>Save PDF</b> or <b>Save Word</b>. The Board's <b>Fleet dashboard</b> shows the same numbers and charts.</li>
+    <li>Leadership update: <a href="#report">Mission report</a> → <b>Print</b>, <b>Save PDF</b> or <b>Save Word</b>.</li>
     <li>Something unusual (damaged vehicle, transfer, personal funds, toll, lost card)? Open <a href="#events">Unusual events</a>.</li>
-    <li>Last day: <a href="#today">Today's checklist</a> → <b>End of mission</b>.</li></ol>
-  <h3>Stamp a receipt (field)</h3><ul><li>Photograph the receipt on a white background, one receipt per photo.</li><li>Fill gallons, amount and odometer. Every receipt here is fuel on the WEX card. Tick the three pre-checks. Share sends the stamped copy with its file name.</li><li>The photo is cropped to the receipt automatically; tap <b>Adjust crop</b> if anything is cut off. A receipt too long for one photo can be taken in up to three parts with <b>＋ Add next part</b>: top first, overlapping a line or two.</li><li>The stamp goes on a tan band below the receipt (beside it on a very long receipt), never over it, and the photo's location data is removed. Keep the paper original for turn-in.</li></ul>
-  <h3>Who uses this device</h3><ul><li>Pick <b>Driver</b>, <b>ARRO operator</b> or <b>Certifier / JLOC</b> on Home (or in Setup), and Home shows only those tools. <b>Show everything</b> brings all of them back. A device set up from an operator's QR link starts as a driver's device.</li></ul>
+    <li>Last day: EOM each vehicle on the <a href="#board">Board</a>, then <b>Mission export</b> for every 1970.</li></ol>
+  <h3>Stamp a receipt</h3><ul><li>Photograph the receipt on a white background, one receipt per photo.</li><li>Fill gallons, amount and odometer. Every receipt here is fuel on the WEX card. Tick the three pre-checks. Share sends the stamped copy with its file name.</li><li>The photo is cropped to the receipt automatically; tap <b>Adjust crop</b> if anything is cut off. A receipt too long for one photo can be taken in up to three parts with <b>＋ Add next part</b>: top first, overlapping a line or two.</li><li>The stamp goes on a tan band below the receipt (beside it on a very long receipt), never over it, and the photo's location data is removed. Keep the paper original for turn-in.</li></ul>
   <h3>Two operators, one task org</h3><ul><li>Board → <b>Save board file</b>, send it to the other device, and there tap <b>Merge in a board file</b>. The newest copy of every entry wins on both devices; nothing is lost unless the other device changed or removed it later. The same serial is treated as the same vehicle and the same receipt is counted once.</li><li>Entries changed before this version have no time on them; if both devices changed one, you choose whose copy to keep.</li></ul>
-  <h3>Board, checklist, events</h3><ul><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li><b>Big missions:</b> task orgs with the same MRT make one mission. Tap the mission line at the top of the Board to see every task force, a task force to see its companies, a company to see its vehicles. Set up companies with <b>Set up companies</b>; each company has its own vehicle count, miles, missing mileage and flags.</li><li><b>Tactical vehicles need a second driver</b> (co-operator) every day. It goes on the second name line of block 16 on the 1970, and that driver signs there. The Board flags a tactical vehicle with no second driver, or with the operator entered twice.</li><li><b>Day sheet</b> enters a whole company's end mileage, operators and second drivers for one day on one screen. <b>Every day</b> on a vehicle fixes any day's reading or miles; the next day's start follows, and the 1970s rebuild from it.</li><li><b>Print</b> prints the level you're on: mission summary, task force (companies and their vehicles) or one company. <b>1970s for</b> a company ticks just its vehicles on Forms.</li><li>Today's checklist ticks itself where the Board knows the answer and builds the message to the Certifier.</li><li>Events cards give the steps, what not to enter, who to tell and a fill-in note. Damaged and transfer cards can apply the change to the Board.</li></ul>
+  <h3>Board and events</h3><ul><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li><b>Big missions:</b> task orgs with the same MRT make one mission. Tap the mission line at the top of the Board to see every task force, a task force to see its companies, a company to see its vehicles. Set up companies with <b>Set up companies</b>; each company has its own vehicle count, miles, missing mileage and flags.</li><li><b>Tactical vehicles need a second driver</b> (co-operator) every day. It goes on the second name line of block 16 on the 1970, and that driver signs there. The Board flags a tactical vehicle with no second driver, or with the operator entered twice.</li><li><b>Day sheet</b> enters a whole company's end mileage, operators and second drivers for one day on one screen. <b>Every day</b> on a vehicle fixes any day's reading or miles; the next day's start follows, and the 1970s rebuild from it.</li><li><b>Big screen</b> shows the Board large on a TV or second screen.</li><li><b>Print</b> prints the level you're on: mission summary, task force (companies and their vehicles) or one company. <b>1970s for</b> a company ticks just its vehicles on Forms.</li><li>Events cards give the steps, what not to enter, who to tell and a fill-in note. Damaged and transfer cards can apply the change to the Board.</li></ul>
   <h3>The 1970: from the Board, edited, or opened</h3><ul><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup (tap to place text, ✓, ✗, the date or a signature), then save it as a PDF.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
   <h3>Signatures</h3><ul><li><b>Type</b> your name and pick a handwriting style, or <b>Draw</b> it with a finger. You confirm it's your own signature; it's saved on this device for next time.</li><li>Only the person named signs. Anyone can type a printed name, but not someone else's signature. Check with J4 that e-signatures are accepted on the 1970.</li></ul>
-  <h3>Fleet dashboard and mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, receipts by status, days certified, open flags and 1970s done. Every chart has a <b>Show as a table</b> view.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
-  <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and Forms screens) saves one ZIP: every vehicle's 1970 for the mission, print-ready with day edits and signatures, plus a PDF summary of the dashboard and the vehicle list as a spreadsheet (CSV).</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
+  <h3>Mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, open flags and 1970s done. Every chart has a <b>Show as a table</b> view.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
+  <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and Forms screens) saves one ZIP: every vehicle's 1970 for the mission, print-ready with day edits and signatures, plus the mission report as a PDF and the vehicle list as a spreadsheet (CSV).</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
   <h3 id="h-roles">Who does what</h3>${R.roles.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><ul>${x.d.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3 id="h-paths">ARRO path maps</h3><p class="muted" style="margin:0 0 6px">Where things are in ARRO, click by click, from the LOGSTAT Quick Reference.</p>${R.paths.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><div class="path">${x.p.map(t=>`<span>${esc(t)}</span>`).join('<b aria-hidden="true">›</b>')}</div>${x.n?`<p class="muted" style="margin:6px 0 0">${esc(x.n)}</p>`:""}${x.link?`<div class="src"><a href="${esc(x.link.u)}" target="_blank" rel="noopener noreferrer">${esc(x.link.l)} ↗</a></div>`:""}<div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3>Rules settled</h3><ul>${(R.settled||[]).map(u=>`<li>${esc(u.text)}</li>`).join("")}</ul>
   <h3>Rules not yet settled with J4</h3><ul>${R.unsettled.map(u=>`<li>${esc(u.text)}</li>`).join("")}</ul>
-  <h3>Privacy</h3><ul><li>Everything stays on this device. Nothing is sent to a server, and the app never connects to ARRO.</li><li>The app never asks for card numbers, SSNs or passwords. Setup links carry the mission and vehicles, not names.</li><li>Clearing browser data or private browsing erases what's saved. Use Setup → Save everything to a file.</li></ul>
+  <h3>Privacy</h3><ul><li>Everything stays on this device. Nothing is sent to a server, and the app never connects to ARRO.</li><li>The app never asks for card numbers, SSNs or passwords. Vehicle transfer cards carry the vehicle, not names.</li><li>Clearing browser data or private browsing erases what's saved. Use Setup → Save everything to a file.</li></ul>
   <p class="muted">Rules version ${esc(R.version)}.</p>`;
   const id=PARAMS.id&&String(PARAMS.id).replace(/[^a-z]/g,""), t=id&&$("h-"+id);
   if(t) setTimeout(()=>t.scrollIntoView({block:"start"}),40);
@@ -2006,20 +1974,12 @@ RENDER.help=function(){
 // RS_CARDS stays for the scenario trainer, which teaches the other cards.
 const RS_TAN="#D2B48C", RS_TYPE="FUEL", RS_CARD="WEX", RS_CARDS=["WEX","Voyager","Personal funds","Unclear / other"];
 let RS={parts:[],comp:null,crop:-1,veh:"",pre:{},f:null};   // parts = the photos of this receipt, comp = them joined, crop = part being cropped (-1 none), f = what's typed
-function setupLinkFrom(org,vehs){ return location.origin+location.pathname.replace(/[^/]*$/,"")+"#stamp&rs="+b64e({mrt:org.mrt,to:org.to,digits:digitsOf(org),veh:vehs.map(v=>({label:v.label,sn:v.sn,kind:v.cat,sub:v.sub,unit:v.unit||""}))}); }
 function cleanSetup(o){
   o=o&&typeof o==="object"?o:{}; const s=(v,n=60)=>typeof v==="string"?v.slice(0,n):"";
   const veh=(Array.isArray(o.veh)?o.veh:[]).slice(0,40).filter(x=>x&&typeof x==="object"&&typeof x.sn==="string").map(x=>({label:s(x&&x.label,40),sn:E.normSN(x&&x.sn).slice(0,30),cat:CATS.includes(x&&x.kind)?x.kind:(CATS.includes(x&&x.cat)?x.cat:"tac"),sub:SUBS.includes(x&&x.sub)?x.sub:"",unit:x&&["mi","hrs","none"].includes(x.unit)?x.unit:""})).filter(x=>x.sn.length>=4);
   // Keep a unit only when it differs from what the category already tracks (old IQ Kit links always sent "mi").
   veh.forEach(v=>{ if(v.cat==="nstd"&&!v.sub) v.sub=v.unit==="hrs"?"generator":"other"; if(v.unit&&v.unit===E.info(R,{cat:v.cat,sub:v.sub}).tracks) v.unit=""; });
   return {mrt:s(o.mrt,40),to:s(o.to,40),digits:o.digits===6?6:8,veh};
-}
-function mergeSetup(c){
-  const d=db(); let org=d.orgs.find(o=>E.normTO(o.to)===E.normTO(c.to)&&(E.normSN(o.mrt)===E.normSN(c.mrt)||!o.mrt||!c.mrt));
-  if(!org){ org={id:uid(),to:c.to,mrt:c.mrt,digits:c.digits,start:"",jumpMi:"",jumpHr:""}; d.orgs.push(org); } else { if(c.mrt) org.mrt=c.mrt; if(c.to) org.to=c.to; org.digits=c.digits; }
-  d.org=org.id; let first=null;
-  c.veh.forEach(nv=>{ let ex=d.veh.find(v=>v.org===org.id&&v.sn===nv.sn); if(ex){ ex.label=nv.label||ex.label; ex.cat=nv.cat; ex.sub=nv.sub; ex.unit=nv.unit; } else { ex=newVehicle(Object.assign({startDate:"",startOdo:""},nv),org); ex.unit=nv.unit; d.veh.push(ex); } if(!first) first=ex; });
-  if(first) RS.veh=first.id; save(); return org;
 }
 async function photoQuality(cv){
   // Quick on-device hints only: blur (edge strength) and a dark border (not a white background). Warns, never blocks.
@@ -2124,15 +2084,12 @@ function rsWrap(x,parts,maxW){ const rows=[]; let line=""; parts.forEach(pp=>{ c
   return out; }
 RENDER.stamp=function(){
   const b=$("b-stamp"), d=db(), p=PARAMS;
-  // Setup link opened this page?
-  let imp="";
-  if(typeof p.rs==="string"){ const rs=p.rs; delete PARAMS.rs; let c=null; try{ c=cleanSetup(b64d(rs)); }catch(e){} RS.pendingSetup=c; try{ history.replaceState(null,"",location.pathname+location.search+href("stamp")); }catch(e){} }
-  if(RS.pendingSetup!==undefined){ const c=RS.pendingSetup; imp=!c||(!c.veh.length&&!c.mrt)?`<div class="w bad">✖︎ That setup link is damaged. Ask your ARRO operator to send it again.</div>`:`<div class="w ok"><b>Setup link:</b> ${esc(c.mrt||"—")} · ${esc(c.to||"—")} · ${c.veh.length} vehicle${c.veh.length===1?"":"s"} (${c.veh.map(v=>esc(v.label||v.sn)).join(", ")})<div class="toolrow" style="margin-top:6px"><button class="btn rs-big" type="button" id="rsDoImp">Load it</button><button class="btn" type="button" id="rsNoImp">Ignore</button></div></div>`; }
+  // An old driver setup link (#stamp&rs=…) just opens the Stamp screen.
+  if(typeof p.rs==="string"){ delete PARAMS.rs; try{ history.replaceState(null,"",location.pathname+location.search+href("stamp")); }catch(e){} }
   const org=curOrg(), V=orgVeh(org).filter(v=>!v.eom||v.eom>=todayYMD()); if(!V.some(v=>v.id===RS.veh)) RS.veh=V[0]?V[0].id:"";
   b.innerHTML=`<div class="rs" style="display:flex;flex-direction:column;gap:10px">
-    <div id="rsImport">${imp}</div>
-    ${!org?`<div class="w warn">No mission yet. Scan the setup QR code from your ARRO operator, or open <b>My setup</b> below.</div>`:`<div class="status"><span><b>${esc(org.to||"—")}</b></span><span>MRT <b>${esc(org.mrt||"—")}</b></span><span>Last <b>${digitsOf(org)}</b></span>${d.me.opr?`<span>${esc(d.me.opr)}</span>`:`<a href="#" id="rsAddMe" class="pill p-warn">add your rank &amp; name</a>`}</div>`}
-    <div class="rs-top"><label class="f">Vehicle<select id="rsVeh" class="fld">${V.length?V.map(v=>`<option value="${esc(v.id)}"${v.id===RS.veh?" selected":""}>${esc(vname(v,org))} · ${esc(E.info(R,v).cat.short)}</option>`).join(""):`<option value="">Add a vehicle in “My setup” below</option>`}</select></label></div>
+    ${!org?`<div class="w warn">No mission yet. Add your task org in <a href="#setup">Setup</a> and vehicles on the <a href="#board">Board</a>.</div>`:`<div class="status"><span><b>${esc(org.to||"—")}</b></span><span>MRT <b>${esc(org.mrt||"—")}</b></span><span>Last <b>${digitsOf(org)}</b></span>${d.me.opr?`<span>${esc(d.me.opr)}</span>`:`<a href="#setup" class="pill p-warn">add your rank &amp; name</a>`}</div>`}
+    <div class="rs-top"><label class="f">Vehicle<select id="rsVeh" class="fld">${V.length?V.map(v=>`<option value="${esc(v.id)}"${v.id===RS.veh?" selected":""}>${esc(vname(v,org))} · ${esc(E.info(R,v).cat.short)}</option>`).join(""):`<option value="">Add vehicles on the Board first</option>`}</select></label></div>
     <div class="rs-cam">
       <label class="btn rs-big">📷 Take photo<input type="file" accept="image/*" capture="environment" id="rsCam" hidden></label>
       <label class="btn">Choose photo<input type="file" accept="image/*" id="rsPick" hidden></label>
@@ -2160,16 +2117,12 @@ RENDER.stamp=function(){
     <div><div class="rs-fname" id="rsFile"></div>
       <div class="toolrow"><button class="btn rs-big" type="button" id="rsShare">Share</button><button class="btn" type="button" id="rsDl">Save</button><button class="btn" type="button" id="rsNext">Next receipt</button></div>
       <div class="msg" id="rsMsg" role="status"></div></div>
-    <details class="sec" id="rsSetup"><summary>My setup: mission, operator, vehicles</summary><div id="rsSetupB"></div></details>
     <details class="sec"><summary>How to keep it on your device</summary>
       <ul class="ihelp"><li><b>iPhone:</b> Safari → Share → <i>Add to Home Screen</i>. <b>Android:</b> Chrome → ⋮ → <i>Install app</i> or <i>Add to Home screen</i>. <a href="#install">More install help</a>.</li>
-      <li>Your setup and today's list are saved only on this device. Private browsing or clearing browser data erases them. Scan the setup link again.</li>
+      <li>Everything is saved only on this device. Private browsing or clearing browser data erases it. Use Setup → <b>Save everything to a file</b>.</li>
       <li>This screen is for fuel on the WEX card. Tolls, personal funds or another card: see <a href="#events">Unusual events</a>.</li></ul></details>
   </div>`;
   const q=(s)=>b.querySelector(s), msg=(t)=>{ q("#rsMsg").textContent=t; };
-  if(q("#rsDoImp")) q("#rsDoImp").addEventListener("click",()=>{ const o=mergeSetup(RS.pendingSetup); if(!PRACTICE&&!DB.me.role){ DB.me.role="driver"; saveReal(); applyRole(); } RS.pendingSetup=undefined; route(); toast(`Loaded ${o.to||"setup"}.${db().me.opr?"":" Add your rank & name under My setup once."}`); if(!db().me.opr) setTimeout(()=>{ const s=$("rsSetup"); if(s) s.open=true; },50); });
-  if(q("#rsNoImp")) q("#rsNoImp").addEventListener("click",()=>{ RS.pendingSetup=undefined; q("#rsImport").innerHTML=""; });
-  if(q("#rsAddMe")) q("#rsAddMe").addEventListener("click",(e)=>{ e.preventDefault(); q("#rsSetup").open=true; q("#rsSetup").scrollIntoView({block:"start"}); });
   const cur=()=>vehById(RS.veh);
   const dateV=()=>q("#rsDate").value||todayYMD();
   function fileName(){ const v=cur(); const base=E.fileName(dateV(),org&&org.to,v?v.sn:"",digitsOf(org),RS_TYPE);
@@ -2306,23 +2259,6 @@ RENDER.stamp=function(){
       catch(e){ if(e&&e.name==="AbortError") msg("Share cancelled. Nothing recorded."); else msg("Sharing failed on this device. Use Save instead."); }
     } else { dl(bl,name); record(name); msg(`Saved ${name} to your downloads. The paper original goes in the binder sleeve.`); }
   }
-  // My setup
-  (function(){
-    const box=q("#rsSetupB"); const o=org||{};
-    box.innerHTML=`<div class="row"><label class="f">MRT / mission #<input id="suMrt" class="fld" autocomplete="off" value="${esc(o.mrt||"")}"></label><label class="f">Task org<input id="suTo" class="fld" autocomplete="off" placeholder="TF REDHAWK" value="${esc(o.to||"")}"></label></div>
-      <div class="row"><label class="f">Your rank &amp; name<input id="suOpr" class="fld" autocomplete="off" placeholder="SGT LOPEZ" value="${esc(d.me.opr)}"></label><label class="f">VIN / serial digits<select id="suDig" class="fld"><option value="8"${digitsOf(org)===8?" selected":""}>Last 8</option><option value="6"${digitsOf(org)===6?" selected":""}>Last 6</option></select></label></div>
-      <div class="lbl" style="margin-top:8px">Vehicles</div><div id="suVl"></div><div id="suAdd"></div><div class="toolrow"><button class="btn" type="button" id="suVAdd">Add vehicle</button></div>
-      <p class="muted">ARRO operator: make the setup QR for drivers under <a href="#setup">Setup → Share setup</a>.</p>`;
-    const ensureOrg=()=>{ let o2=curOrg(); if(!o2){ o2={id:uid(),to:"",mrt:"",digits:8,start:"",jumpMi:"",jumpHr:""}; d.orgs.push(o2); d.org=o2.id; } return o2; };
-    box.querySelector("#suMrt").addEventListener("change",(e)=>{ ensureOrg().mrt=e.target.value.trim().slice(0,40); save(); route(); });
-    box.querySelector("#suTo").addEventListener("change",(e)=>{ ensureOrg().to=e.target.value.trim().slice(0,40); save(); route(); });
-    box.querySelector("#suOpr").addEventListener("change",(e)=>{ d.me.opr=e.target.value.trim().toUpperCase().slice(0,60); save(); draw(); });
-    box.querySelector("#suDig").addEventListener("change",(e)=>{ ensureOrg().digits=+e.target.value===6?6:8; save(); route(); });
-    const vl=box.querySelector("#suVl"); vl.innerHTML=V.length?V.map(v=>`<div class="vrow"><span><b>${esc(v.label||"Vehicle")}</b> ${esc(v.sn)} <span class="muted">· ${esc(E.info(R,v).name)}</span></span><button class="btn" type="button" data-del="${esc(v.id)}" aria-label="Remove vehicle">✕</button></div>`).join(""):`<div class="muted">No vehicles yet.</div>`;
-    vl.addEventListener("click",(e)=>{ const x=e.target.closest("[data-del]"); if(!x) return; const v=vehById(x.dataset.del); if(!v||!confirm(`Remove ${v.label||v.sn} from this device?`)) return; d.veh=d.veh.filter(y=>y!==v); save(); route(); });
-    const vf=vehicleForm({},{field:true}); box.querySelector("#suAdd").appendChild(vf);
-    box.querySelector("#suVAdd").addEventListener("click",()=>{ const x=vf.vals(), P=vf.problems(); if(P.some(p=>p[0]==="bad")){ toast(P.find(p=>p[0]==="bad")[1]); return; } const o2=ensureOrg(); if(d.veh.some(v=>v.org===o2.id&&v.sn===x.sn)){ toast("That vehicle is already in the list."); return; } const nv=newVehicle(x,o2); d.veh.push(nv); RS.veh=nv.id; save(); route(); setTimeout(()=>{ const s=$("rsSetup"); if(s) s.open=true; },0); toast(`Added ${x.label||x.sn}.`); });
-  })();
   // events
   q("#rsCam").addEventListener("change",(e)=>{ loadPhoto(e.target.files[0]); e.target.value=""; });
   q("#rsPick").addEventListener("change",(e)=>{ loadPhoto(e.target.files[0]); e.target.value=""; });
@@ -2367,7 +2303,6 @@ RENDER.stamp=function(){
   q("#rsDl").addEventListener("click",async()=>{ if(!ready()) return; const name=fileName(); dl(await blob(),name); record(name); msg(`Saved ${name} to your downloads. The paper original goes in the binder sleeve.`); });
   q("#rsNext").addEventListener("click",()=>{ RS.gen=(RS.gen||0)+1; RS.parts.forEach(rsFree); RS.parts=[]; RS.crop=-1; rebuild(); partsUI(); cropUI(); RS.pre={}; RS.f=null; b.querySelectorAll("[data-pre]").forEach(x=>x.checked=false); ["#rsGal","#rsAmt","#rsOdo","#rsNote"].forEach(s=>q(s).value=""); msg(""); paintType(); draw(); });
   paintType(); partsUI(); cropUI(); draw();
-  if(!org&&!RS.pendingSetup) q("#rsSetup").open=true;
 };
 
 // ================= MODULE 6: FLEET WHITEBOARD =================
@@ -2798,7 +2733,6 @@ RENDER.board=function(){
   { const sc=b.querySelector("[data-showclosed]"); if(sc) sc.addEventListener("click",()=>{ BOARD.showClosed=!BOARD.showClosed; RENDER.board(); }); }
   if(BOARD.pendingImport) b.appendChild(mergePanel(d,org));
   if(PARAMS.ds){ b.appendChild(daySheet(org,V,date,today,cur)); return; }
-  if(cur==null) b.appendChild(dashPanel(org,date));
   const T=(k,l,big)=>`<button class="btn${big?" rs-big":""}" type="button" data-t="${k}">${l}</button>`;
   const tools=el(`<div class="toolrow">${cur!=null
     ?`${T("sheet","Day sheet",true)}${T("add","+ Add vehicle")}${T("print","Print "+esc(cur===CO_ALL?"all vehicles":cur===CO_NONE?"list":cur))}<a class="btn" href="${esc(href("forms","co="+encodeURIComponent(cur)))}">1970s for ${esc(cur===CO_ALL?"all":cur===CO_NONE?"these vehicles":cur)}</a>`
@@ -2838,58 +2772,6 @@ RENDER.board=function(){
         const f=BOARD.open[v.id]?n.querySelector("[data-slot] input:not([disabled]),[data-slot] button"):n.querySelector(`[data-a="${a.dataset.a}"]`); if(f) f.focus({preventScroll:true}); } }); }); });
   // an open form is never hidden by a filter
   const openId=Object.keys(BOARD.open)[0]; fil.apply(); if(openId){ const n=list.querySelector(`.vc[data-vid="${CSS.escape(openId)}"]`); if(n&&n.hidden){ n.hidden=false; const g=n.closest(".grp"); if(g) g.hidden=false; } }
-};
-
-// ================= MODULE 5: DAILY CHECKLIST =================
-// Day 1 and the daily cycle in the order the deck teaches. Ticks itself where the Board knows the answer.
-let TODAY={tab:""};
-function chkRec(org,date){ const d=db(), k=org.id+"|"+date; return d.chk[k]||(d.chk[k]={st:{},cal:"red",ver:"",notified:"",issues:""}); }
-RENDER.today=function(){
-  const b=$("b-today"), d=db(); const org=curOrg();
-  b.innerHTML=""; b.appendChild(orgBar(()=>RENDER.today()));
-  if(!org) return;
-  const date=viewDate(), today=todayYMD(), c=chkRec(org,date);
-  // mission calendar
-  if(E.isYMD(org.start)){
-    const n=Math.max(E.diffDays(org.start,today),0), from=Math.max(0,n-59), cal=el(`<div><div class="lbl">Mission calendar${from?` (last 60 days)`:""}</div><div class="cal"></div></div>`), box=cal.querySelector(".cal");
-    for(let i=from;i<=n;i++){ const dd=E.addDays(org.start,i), cr=d.chk[org.id+"|"+dd], col=cr?cr.cal:"red";
-      const a=el(`<a href="#" class="${col}${dd===date?" cur":""}" title="${esc(plain(dd))}: ${col==="green"?"certified":col==="yellow"?"verified":"unverified"}">D+${i}<br>${esc(plain(dd).replace(/ \d{4}$/,""))}</a>`);
-      a.addEventListener("click",(e)=>{ e.preventDefault(); VIEWDATE=dd; RENDER.today(); }); box.appendChild(a); }
-    b.appendChild(cal);
-  } else b.appendChild(el(`<div class="muted">Add the mission start date in <a href="#setup">Setup</a> to see the mission calendar and D+ days.</div>`));
-  const isD1=E.isYMD(org.start)&&date===org.start, tab=TODAY.tab||(isD1?"day1":"daily");
-  const tabs=el(`<div class="chips" role="tablist"><button type="button" class="chip" data-tab="day1" aria-pressed="${tab==="day1"}">Day 1 setup</button><button type="button" class="chip" data-tab="daily" aria-pressed="${tab==="daily"}">Daily cycle</button><button type="button" class="chip" data-tab="eom" aria-pressed="${tab==="eom"}">End of mission</button></div>`);
-  tabs.addEventListener("click",(e)=>{ const t=e.target.closest("[data-tab]"); if(!t) return; TODAY.tab=t.dataset.tab; RENDER.today(); });
-  b.appendChild(tabs);
-  const A=E.autoChecks(R,d,org,date), steps=R.checklist[tab];
-  const ol=el(`<ol class="steps"></ol>`);
-  steps.forEach(s=>{ const auto=s.auto?A[s.auto]:null, on=!!c.st[s.id]||(auto&&auto.ok&&c.st[s.id]!==false);
-    const li=el(`<li><label class="chk"><input type="checkbox" data-step="${esc(s.id)}"${on?" checked":""}><span>${esc(s.t)}${s.rule&&unsettledIds.has(s.rule)?'<span class="tag">rule not settled</span>':""}</span></label>${auto?`<div class="auto ${auto.ok?"ok":"no"}">${auto.ok?"✔︎":"✖︎"} ${esc(auto.msg)}${!auto.ok&&c.st[s.id]?" (ticked by hand)":""}</div>`:""}<div class="src">${esc(s.src)}</div>${s.link?`<div class="src"><a href="${esc(s.link.u)}" target="_blank" rel="noopener noreferrer">${esc(s.link.l)} ↗</a></div>`:""}</li>`);
-    ol.appendChild(li); });
-  ol.addEventListener("change",(e)=>{ const id=e.target.dataset.step; if(!id) return; c.st[id]=e.target.checked; const s=steps.find(x=>x.id===id);
-    if(s&&s.verify){ if(e.target.checked){ if(c.cal==="red") c.cal="yellow"; c.ver=c.ver||nowHHMM(); } else if(c.cal==="yellow") c.cal="red"; }
-    save(); RENDER.today(); });
-  b.appendChild(ol);
-  // calendar status + certifier message
-  const st=el(`<div class="vform">
-    <div class="row"><label class="f">This day in ARRO<select class="fld" data-k="cal"><option value="red"${c.cal==="red"?" selected":""}>Unverified (red)</option><option value="yellow"${c.cal==="yellow"?" selected":""}>Verified (yellow)</option><option value="green"${c.cal==="green"?" selected":""}>Certified (green)</option></select></label><label class="f">Verified at (24-hr)<input class="fld" data-k="ver" maxlength="4" inputmode="numeric" value="${esc(c.ver||"")}" placeholder="${esc(nowHHMM())}"></label></div>
-    <label class="f">Open items for the Certifier (optional)<textarea class="fld" data-k="issues" maxlength="600" placeholder="LMTV mileage requested">${esc(c.issues||"")}</textarea></label>
-    <div class="lbl">Message to the Certifier${d.me.cert?` (${esc(d.me.cert)})`:""}</div><div class="out" id="tdMsg"></div>
-    <div class="toolrow" id="tdActs"></div>${c.notified?`<div class="muted">Certifier notified at ${esc(c.notified)}.</div>`:""}
-    ${A.cert.ok?"":`<div class="w warn">${esc(A.cert.msg)}. <a href="#setup">Setup</a></div>`}
-  </div>`);
-  b.appendChild(st);
-  const g=(k)=>st.querySelector(`[data-k="${k}"]`);
-  const msg=()=>E.certMessage(R,d,org,date,g("ver").value||c.ver||nowHHMM(),g("issues").value);
-  const paint=()=>{ $("tdMsg").textContent=msg(); }; paint();
-  g("issues").addEventListener("input",()=>{ c.issues=g("issues").value.slice(0,600); save(); paint(); });
-  g("ver").addEventListener("input",()=>{ c.ver=g("ver").value.replace(/\D/g,"").slice(0,4); save(); paint(); });
-  g("cal").addEventListener("change",()=>{ c.cal=g("cal").value; if(c.cal!=="red"&&!c.ver) c.ver=nowHHMM(); save(); RENDER.today(); });
-  const acts=st.querySelector("#tdActs");
-  const send=el(`<button class="btn rs-big" type="button">Send to the Certifier</button>`);
-  send.addEventListener("click",async()=>{ if(c.cal==="red"){ if(!confirm("This day isn't marked verified yet. Send anyway?")) return; } if(!(await shareText(msg(),"LOGSTAT ready for certification"))){ toast("Not sent. Nothing recorded."); return; } c.notified=nowHHMM(); c.st.dy_notify=true; save(); RENDER.today(); });
-  acts.appendChild(send); acts.appendChild(copyBtn("Copy",msg));
-  const gr=el(`<button class="btn" type="button">Certifier confirmed (green)</button>`); gr.addEventListener("click",()=>{ c.cal="green"; save(); RENDER.today(); toast("Marked certified."); }); acts.appendChild(gr);
 };
 
 // ================= MODULE 4: UNUSUAL EVENTS GUIDE =================
@@ -2956,20 +2838,17 @@ RENDER.setup=function(){
   PRACTICE=false; document.documentElement.classList.remove("practice");
   const b=$("b-setup"), d=DB;
   b.innerHTML=`<details class="sec" open><summary>You</summary>
-      <div class="row"><label class="f">Your rank &amp; name<input class="fld" id="suMe" value="${esc(d.me.opr)}" placeholder="SGT LOPEZ" autocomplete="off"></label><label class="f">Certifier's rank &amp; name (operators)<input class="fld" id="suCert" value="${esc(d.me.cert)}" placeholder="SFC SMITH" autocomplete="off"></label></div>
-      <p class="muted">The Certifier must have ARRO access and can't be the person who verifies. Names stay on this device; setup links never carry them.</p>
-      <label class="f">This device is used by<select class="fld" id="suRole">${[["","Not chosen (Home shows everything)"],["driver","Driver"],["operator","ARRO operator"],["lead","Certifier / JLOC"],["all","Show everything"]].map(([k,l])=>`<option value="${k}"${(DB.me.role||"")===k?" selected":""}>${l}</option>`).join("")}</select></label>
+      <div class="row"><label class="f">Your rank &amp; name<input class="fld" id="suMe" value="${esc(d.me.opr)}" placeholder="SGT LOPEZ" autocomplete="off"></label></div>
+      <p class="muted">Your name stays on this device.</p>
       <label class="f">Contacts for this mission (optional; shown on the Events cards)<textarea class="fld" id="suContacts" maxlength="600" placeholder="JLOC: (email or phone from your OPORD)">${esc(d.me.contacts)}</textarea></label></details>
     <details class="sec" open><summary>Task orgs and missions</summary><div id="suOrgs" style="display:flex;flex-direction:column;gap:8px"></div><div class="toolrow" style="margin-top:8px"><button class="btn" type="button" id="suAddOrg">+ Add task org</button></div></details>
-    <details class="sec" id="suShare"><summary>Share setup with drivers (ARRO operator)</summary><div id="suShareB"></div></details>
     <details class="sec"><summary>Save, load, close out</summary>
       <div class="row"><label class="f">Passphrase for the file (optional)<input type="password" class="fld" id="suPass" autocomplete="new-password"></label></div>
       <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" id="suExp">Save everything to a file</button><label class="btn">Load a saved file<input type="file" accept=".json,application/json" id="suImp" hidden></label></div>
       <div class="toolrow" style="margin-top:6px"><button class="btn" type="button" id="suClose">Close out mission…</button><button class="btn" type="button" id="suWipe">Clear everything on this device</button></div>
-      <p class="muted">Close out saves the current task org to a file, then clears its vehicles, receipts and checklists from this device.</p></details>`;
-  $("suRole").addEventListener("change",(e)=>{ DB.me.role=e.target.value; saveReal(); applyRole(); toast("Home updated for this device."); });
-  const saveMe=()=>{ d.me.opr=$("suMe").value.trim().toUpperCase().slice(0,60); d.me.cert=$("suCert").value.trim().toUpperCase().slice(0,60); d.me.contacts=$("suContacts").value.slice(0,600); saveReal(); };
-  ["suMe","suCert","suContacts"].forEach(id=>$(id).addEventListener("change",saveMe));
+      <p class="muted">Close out saves the current task org to a file, then clears its vehicles and receipts from this device.</p></details>`;
+  const saveMe=()=>{ d.me.opr=$("suMe").value.trim().toUpperCase().slice(0,60); d.me.contacts=$("suContacts").value.slice(0,600); saveReal(); };
+  ["suMe","suContacts"].forEach(id=>$(id).addEventListener("change",saveMe));
   const ob=$("suOrgs");
   d.orgs.forEach(o=>{ const c=el(`<div class="vc"><div class="vc-h"><span><b>${esc(o.to||"(no name)")}</b> <code>${esc(o.mrt||"no MRT")}</code></span><span>${o.id===d.org?'<span class="pill p-ok">current</span>':`<button class="btn" type="button" data-use>Use this one</button>`}</span></div>
       <div class="row"><label class="f">Task org<input class="fld" data-k="to" value="${esc(o.to)}" placeholder="TF REDHAWK"></label><label class="f">MRT / mission #<input class="fld" data-k="mrt" value="${esc(o.mrt)}"></label></div>
@@ -2979,33 +2858,18 @@ RENDER.setup=function(){
       <div class="toolrow"><button class="btn" type="button" data-del>Delete this task org…</button></div></div>`);
     c.addEventListener("change",(e)=>{ const k=e.target.dataset.k; if(!k) return; let v=e.target.value; if(k==="digits") v=+v===6?6:8; else if(k==="start") v=E.isYMD(v)?v:""; else if(k==="jumpMi"||k==="jumpHr") v=v.replace(/\D/g,"").slice(0,6); else v=v.trim().slice(0,40); o[k]=v; saveReal(); if(k==="to"||k==="mrt") RENDER.setup(); });
     const u=c.querySelector("[data-use]"); if(u) u.addEventListener("click",()=>{ d.org=o.id; saveReal(); RENDER.setup(); });
-    c.querySelector("[data-del]").addEventListener("click",()=>{ if(!confirm(`Delete ${o.to||"this task org"} with its vehicles, receipts and checklists from this device? Save a file first if you need it.`)) return; const ids=new Set(d.veh.filter(v=>v.org===o.id).map(v=>v.id)); d.veh=d.veh.filter(v=>v.org!==o.id); d.rc=d.rc.filter(r=>r.org!==o.id); Object.keys(d.days).forEach(k=>{ if(ids.has(k.split("|")[0])) delete d.days[k]; }); Object.keys(d.chk).forEach(k=>{ if(k.startsWith(o.id+"|")) delete d.chk[k]; }); d.orgs=d.orgs.filter(x=>x!==o); d.org=d.orgs[0]?d.orgs[0].id:""; saveReal(); RENDER.setup(); });
+    c.querySelector("[data-del]").addEventListener("click",()=>{ if(!confirm(`Delete ${o.to||"this task org"} with its vehicles and receipts from this device? Save a file first if you need it.`)) return; const ids=new Set(d.veh.filter(v=>v.org===o.id).map(v=>v.id)); d.veh=d.veh.filter(v=>v.org!==o.id); d.rc=d.rc.filter(r=>r.org!==o.id); Object.keys(d.days).forEach(k=>{ if(ids.has(k.split("|")[0])) delete d.days[k]; }); Object.keys(d.chk).forEach(k=>{ if(k.startsWith(o.id+"|")) delete d.chk[k]; }); d.orgs=d.orgs.filter(x=>x!==o); d.org=d.orgs[0]?d.orgs[0].id:""; saveReal(); RENDER.setup(); });
     ob.appendChild(c); });
-  if(!d.orgs.length) ob.appendChild(el(`<div class="muted">No task org yet. Add one, or scan the setup QR code from your ARRO operator.</div>`));
+  if(!d.orgs.length) ob.appendChild(el(`<div class="muted">No task org yet. Add one.</div>`));
   $("suAddOrg").addEventListener("click",()=>{ const o={id:uid(),to:"",mrt:"",digits:R.digitsDefault===6?6:8,start:todayYMD(),jumpMi:"",jumpHr:""}; d.orgs.push(o); d.org=o.id; saveReal(); RENDER.setup(); const i=ob.querySelector(".vc:last-child [data-k=to]"); if(i) i.focus(); });
-  // Share setup
-  (function(){ const box=$("suShareB"), org=d.orgs.find(o=>o.id===d.org); if(!org){ box.innerHTML=`<div class="muted">Add a task org first.</div>`; return; }
-    const V=d.veh.filter(v=>v.org===org.id&&!v.eom);
-    box.innerHTML=`<p class="sal-hint">Makes a link and QR code for <b>${esc(org.to||"this task org")}</b>. A driver scans it once and their device has the mission, task org and vehicle. The details ride after the “#” in the link, which browsers never send to the website. No names are included.</p>
-      <div class="toolrow"><select class="fld" id="shVeh" aria-label="Vehicles to include"><option value="*">All vehicles (${V.length})</option>${V.map(v=>`<option value="${esc(v.id)}">${esc(vname(v,org))}</option>`).join("")}</select><button class="btn" type="button" id="shMk">Make link</button></div>
-      <div id="shOut" hidden><div class="rs-qr" id="shQR"></div><input class="fld" id="shLink" readonly aria-label="Setup link" style="width:100%"><div class="toolrow" style="margin-top:6px"><button class="btn" type="button" id="shCopy">Copy link</button><button class="btn" type="button" id="shFile">Save setup to file</button></div></div>
-      <div class="toolrow" style="margin-top:6px"><label class="btn">Load setup file<input type="file" accept=".json,application/json" id="shLoad" hidden></label></div>`;
-    $("shMk").addEventListener("click",()=>{ if(!V.length&&!org.mrt){ toast("Add the MRT and vehicles first."); return; } const sel=$("shVeh").value, vs=sel==="*"?V:V.filter(v=>v.id===sel); const u=setupLinkFrom(org,vs); $("shLink").value=u; $("shOut").hidden=false; const q=$("shQR"); q.innerHTML="";
-      // past about 600 characters (5 vehicles) the code gets too dense for a device camera: send the link instead, or one vehicle per code
-      if(u.length>600){ q.innerHTML=`<div class="w warn">Too many vehicles for a QR code a camera can scan (${vs.length}). Pick one vehicle above to make its code, or send this link by text or email: it carries all ${vs.length}.</div>`; return; }
-      try{ new QRCode(q,{text:u,width:280,height:280,correctLevel:QRCode.CorrectLevel.L}); }catch(e){ q.textContent="Too many vehicles for one QR code. Make one per vehicle, or send the link."; } });
-    $("shCopy").addEventListener("click",()=>copyText($("shLink").value,"Setup link copied."));
-    $("shFile").addEventListener("click",()=>{ const sel=$("shVeh").value, vs=sel==="*"?V:V.filter(v=>v.id===sel); dl(new Blob([JSON.stringify({type:"inter-q-logstat-setup",v:1,mrt:org.mrt,to:org.to,digits:digitsOf(org),veh:vs.map(v=>({label:v.label,sn:v.sn,kind:v.cat,sub:v.sub,unit:v.unit||""}))},null,1)],{type:"application/json"}),`logstat-setup-${E.normTO(org.to)||"unit"}.json`); });
-    $("shLoad").addEventListener("change",async(e)=>{ const f=e.target.files[0]; e.target.value=""; if(!f) return; try{ const o=JSON.parse(await f.text()); if(o.type!=="inter-q-logstat-setup") throw 0; const c=cleanSetup(o); PRACTICE=false; mergeSetup(c); RENDER.setup(); toast(`Loaded ${c.veh.length} vehicle${c.veh.length===1?"":"s"}.`); }catch(_){ toast("That isn't a LOGSTAT setup file."); } });
-  })();
   $("suExp").addEventListener("click",async()=>{ const pass=$("suPass").value; try{ const f=await packBackup(DB,pass); DB.me.bk=todayYMD(); saveReal(); dl(new Blob([JSON.stringify(f)],{type:"application/json"}),`logstat-backup-${todayYMD()}${pass?"-locked":""}.json`); toast(pass?"Saved, locked with your passphrase.":"Saved. Keep the file somewhere safe."); }catch(e){ toast("Couldn't save the file on this device."); } });
   $("suImp").addEventListener("change",async(e)=>{ const f=e.target.files[0]; e.target.value=""; if(!f) return; try{ const o=JSON.parse(await f.text()); const data=await unpackBackup(o,()=>$("suPass").value||prompt("Passphrase for this file:"));
       const D2=repair(data); if(!confirm(`Load this file? It replaces everything on this device (${D2.orgs.length} task orgs, ${D2.veh.length} vehicles).`)) return; D2.mig=1; DB=D2; saveReal(); RENDER.setup(); toast("Loaded."); }catch(err){ toast(err.message||"Couldn't read that file."); } });
-  $("suClose").addEventListener("click",async()=>{ const org=d.orgs.find(o=>o.id===d.org); if(!org){ toast("No task org to close out."); return; } if(!confirm(`Close out ${org.to||"this task org"}? A file is saved first, then its vehicles, receipts and checklists are cleared from this device.`)) return;
+  $("suClose").addEventListener("click",async()=>{ const org=d.orgs.find(o=>o.id===d.org); if(!org){ toast("No task org to close out."); return; } if(!confirm(`Close out ${org.to||"this task org"}? A file is saved first, then its vehicles and receipts are cleared from this device.`)) return;
     const ids=new Set(d.veh.filter(v=>v.org===org.id).map(v=>v.id)); const part=Object.assign(fresh(),{me:d.me,orgs:[org],org:org.id,veh:d.veh.filter(v=>v.org===org.id),rc:d.rc.filter(r=>r.org===org.id),days:Object.fromEntries(Object.entries(d.days).filter(([k])=>ids.has(k.split("|")[0]))),chk:Object.fromEntries(Object.entries(d.chk).filter(([k])=>k.startsWith(org.id+"|"))),forms:formsPart(d,org,[...ids]),coy:Object.fromEntries(Object.entries(d.coy||{}).filter(([k])=>ids.has(k))),mig:1});
     try{ const f=await packBackup(part,$("suPass").value); dl(new Blob([JSON.stringify(f)],{type:"application/json"}),`logstat-closeout-${E.normTO(org.to)||"unit"}-${todayYMD()}.json`); }catch(e){ toast("Couldn't save the file, so nothing was cleared."); return; }
     d.veh=d.veh.filter(v=>v.org!==org.id); d.rc=d.rc.filter(r=>r.org!==org.id); Object.keys(d.days).forEach(k=>{ if(ids.has(k.split("|")[0])) delete d.days[k]; }); Object.keys(d.chk).forEach(k=>{ if(k.startsWith(org.id+"|")) delete d.chk[k]; }); d.orgs=d.orgs.filter(x=>x!==org); d.org=d.orgs[0]?d.orgs[0].id:""; saveReal(); RENDER.setup(); toast("Closed out. The file is in your downloads."); });
-  $("suWipe").addEventListener("click",()=>{ if(!confirm("Clear every task org, vehicle, receipt and checklist from this device? Save a file first if you need it.")) return; const q=DB.quiz; DB=fresh(); DB.mig=1; DB.quiz=q; saveReal(); RENDER.setup(); toast("Cleared from this device."); });
+  $("suWipe").addEventListener("click",()=>{ if(!confirm("Clear every task org, vehicle and receipt from this device? Save a file first if you need it.")) return; const q=DB.quiz; DB=fresh(); DB.mig=1; DB.quiz=q; saveReal(); RENDER.setup(); toast("Cleared from this device."); });
 };
 
 // ================= FORMS: ESAD Form 1970 from the Board, the daily 1970 editor, opening a 1970 (PDF or photo), blank forms =================
@@ -3577,7 +3441,7 @@ async function saveMarkup(kind,st){
   FRM.busy=false;
 }
 
-// ================= FLEET DASHBOARD (Board) and the charts shared with the mission report =================
+// ================= CHARTS for the mission report =================
 // Charts are plain SVG. On screen they take the IQ Kit theme colors; in the printed report, PDF and Word file they use
 // ink on white. Every chart has text labels and a table view, so nothing depends on color alone.
 const PRINT_PAL={bar:"#2f5597",text:"#1b1b1b",muted:"#5f6368",rule:"#d0d4da",bg:"#ffffff",fmc:"#2f5597",nmc:"#b3261e",eom:"#9aa0a6",ok:"#2f5597",warn:"#b26a00",bad:"#b3261e",off:"#9aa0a6",font:"Arial, Helvetica, sans-serif"};
@@ -3639,7 +3503,7 @@ function stackBar(o){
   let lx=0; o.parts.forEach(p=>{ const t=`${p.label} ${p.value}`; s+=`<rect x="${lx}" y="${48}" width="12" height="12" fill="${p.color}"/><text x="${lx+17}" y="${58}" font-size="12" fill="${pal.text}">${svgEsc(t)}</text>`; lx+=17+t.length*7.4+16; });
   return s+"</svg>";
 }
-// The chart set used by both the dashboard and the report.
+// The chart set used by the mission report.
 function dashCharts(S,pal,w){
   const lab=S.days.map(x=>mmdd(x.d)), ph=pal===PRINT_PAL;
   const topVeh=S.per.filter(p=>p.tracks==="mi").sort((a,b)=>b.mi-a.mi), rows=topVeh.slice(0,8).map(p=>({label:`${p.label||p.sn} ${E.lastN(p.sn,8)}`,value:p.mi}));
@@ -3652,39 +3516,12 @@ function dashCharts(S,pal,w){
     {id:"veh",t:"Miles by vehicle (this mission)",svg:hbarChart({w,pal,rows,title:"Miles by vehicle"}),table:[["Vehicle","Miles"],...topVeh.map(p=>[`${p.label||""} ${E.lastN(p.sn,8)}`.trim(),fmtN(p.mi)])]},
   ];
 }
-function kpis(S){
-  const pct=(a,b)=>b?Math.round(a*100/b)+"%":"—", calDays=S.cal.green+S.cal.yellow+S.cal.red;
-  return [
-    {k:"On mission",v:S.fleet.active,s:`${S.fleet.fmc} FMC · ${S.fleet.nmc} NMC`,lvl:S.fleet.nmc?"warn":""},
-    {k:"Miles today",v:fmtN(S.miles.today),s:`${fmtN(S.miles.mission)} this mission`},
-    ...(S.hours.mission?[{k:"Hours today",v:fmtN(S.hours.today),s:`${fmtN(S.hours.mission)} this mission`}]:[]),
-    {k:"Fuel entered",v:money(S.fuel.mission),s:`${fmtN(S.fuel.gal)} gal this mission${S.fuel.waiting?` · ${money(S.fuel.waiting)} waiting`:""}`},
-    {k:"Receipts waiting",v:S.rc.waiting,s:`${S.rc.accepted} accepted · ${S.rc.rejected} rejected`,lvl:S.rc.waiting||S.rc.rejected?"warn":""},
-    {k:"Mileage missing today",v:S.missing,s:"vehicles with no end reading",lvl:S.missing?"warn":""},
-    {k:"Days certified",v:`${S.cal.green}/${calDays||0}`,s:S.cal.open.length?`${S.cal.open.length} past day${S.cal.open.length>1?"s":""} open`:"all past days done",lvl:S.cal.open.length?"crit":""},
-    {k:"Open flags",v:S.flags,s:"on the Board today",lvl:S.flags?"warn":""},
-    {k:"1970s done today",v:`${S.f1970.done}/${S.f1970.need}`,s:pct(S.f1970.done,S.f1970.need),lvl:S.f1970.done<S.f1970.need?"warn":""},
-  ];
-}
 const tableHtml=(rows)=>`<table class="dtab"><thead><tr>${rows[0].map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.slice(1).map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
-let DASH={open:true};
-function dashPanel(org,date){
-  if(!DASH.open){ const w=el(`<details class="sec dash"><summary>Fleet dashboard · ${esc(plain(date))}</summary></details>`); w.addEventListener("toggle",()=>{ if(w.open){ DASH.open=true; RENDER.board(); } }); return w; }
-  const d=db(), S=E.missionStats(R,d,org,date,14), K=kpis(S), w=el(`<details class="sec dash" open><summary>Fleet dashboard · ${esc(plain(date))}${S.dplus?" · "+esc(S.dplus):""}</summary>
-    <div class="kpis">${K.map(x=>`<div class="kpi${x.lvl?" "+x.lvl:""}"><div class="kv-n${String(x.v).length>7?" long":""}">${esc(x.v)}</div><div class="kv-k">${esc(x.k)}</div><div class="kv-s">${esc(x.s)}</div></div>`).join("")}</div>
-    <div class="charts"></div>
-    <div class="toolrow"><a class="btn rs-big" href="${href("report")}">Mission report: print, PDF, Word</a></div></details>`);
-  w.addEventListener("toggle",()=>{ DASH.open=w.open; });
-  const box=w.querySelector(".charts"), wd=Math.max(300,Math.min(560,(document.documentElement.clientWidth||400)-48));
-  dashCharts(S,themePal(),wd).forEach(c=>{ const f=el(`<figure class="chart" data-c="${c.id}"><figcaption>${esc(c.t)}</figcaption><div class="cv">${c.svg}</div><details class="tview"><summary>Show as a table</summary>${tableHtml(c.table)}</details></figure>`); box.appendChild(f); });
-  return w;
-}
-
 // ================= MISSION REPORT: situational awareness for leadership — print, PDF, Word (.docx), all offline =================
 // One outline (blocks) feeds three renderers. Nothing here names the website: printed copies carry the mission, not a URL.
 let RPT={days:14,roster:true,busy:false};
 function reportBlocks(org,date,opts){
-  const d=db(), S=E.missionStats(R,d,org,date,opts.days||14), calDays=S.cal.green+S.cal.yellow+S.cal.red, pal=PRINT_PAL;
+  const d=db(), S=E.missionStats(R,d,org,date,opts.days||14), pal=PRINT_PAL;
   const catName=(c)=>R.cats[c]?R.cats[c].name.replace(/ \(.*\)$/,""):c;
   const B=[];
   B.push({k:"title",t:"Mission status report"});
@@ -3700,7 +3537,6 @@ function reportBlocks(org,date,opts){
     ...(S.hours.mission?[["Equipment hours",`${fmtN(S.hours.today)} today · ${fmtN(S.hours.mission)} this mission`]]:[]),
     ["Fuel (stamped receipts)",`${money(S.fuel.mission)} this mission (${fmtN(S.fuel.gal)} gal) · ${money(S.fuel.today)} today${cards?` · by card: ${cards}`:""}`],
     ["Receipts",`${S.rc.accepted} fuel receipt${S.rc.accepted===1?"":"s"} stamped`],
-    ["Certification",`${S.cal.green} of ${calDays} mission days certified · ${S.cal.yellow} verified, waiting · ${S.cal.open.length} past day${S.cal.open.length===1?"":"s"} still open`],
     ["Mileage missing today",`${S.missing} vehicle${S.missing===1?"":"s"}`],
     ["Board flags today",String(S.flags)],
     ["1970s done today",`${S.f1970.done} of ${S.f1970.need}`]]});
@@ -3713,9 +3549,6 @@ function reportBlocks(org,date,opts){
   }
   const items=[];
   S.per.forEach(p=>p.flags.forEach(f=>items.push(`${p.label||p.sn} (${E.lastN(p.sn,8)}): ${f}`)));
-  if(S.cal.open.length) items.push(`Days not yet certified: ${S.cal.open.slice(-12).map(mmdd).join(", ")}${S.cal.open.length>12?` and ${S.cal.open.length-12} earlier`:""}`);
-  if(S.rc.waiting) items.push(`${S.rc.waiting} receipt${S.rc.waiting>1?"s":""} waiting to be checked`);
-  if(S.rc.rejected) items.push(`${S.rc.rejected} receipt${S.rc.rejected>1?"s":""} rejected; new copies requested from the field`);
   if(S.missing) items.push(`${S.missing} vehicle${S.missing>1?"s":""} with no end reading for ${plain(date)}`);
   B.push({k:"h",t:"Open items"});
   B.push({k:"list",items:items.length?items.slice(0,60):["None."]});
@@ -4090,7 +3923,7 @@ function mergePanel(d,org){
     else { setTxt("dtgL",fmt("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}).format(d)); setTxt("dtgZ",fmt("en-US",{hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(d)); }
     const b=$("clockBtn"); if(b.getAttribute("aria-pressed")!==String(mil)){ b.setAttribute("aria-pressed",String(mil)); b.title=mil?"Tap for standard time":"Tap for military time"; }
     // Midnight: redraw only screens with nothing being typed; elsewhere say so, so a half-filled form isn't wiped.
-    const t=todayYMD(); if(t!==day){ day=t; if(!VIEWDATE&&["home","today"].includes(CUR)) route(); else if(["board","stamp"].includes(CUR)) toast("It's a new day. Check the date before you save."); }
+    const t=todayYMD(); if(t!==day){ day=t; if(!VIEWDATE&&CUR==="home") route(); else if(["board","stamp"].includes(CUR)) toast("It's a new day. Check the date before you save."); }
   }
   $("clockBtn").addEventListener("click",()=>{ mil=!mil; try{ localStorage.setItem("iq.clock",mil?"mil":"std"); }catch(_){} tick(); });
   window.addEventListener("storage",(e)=>{ if(e.key==="iq.clock"){ mil=e.newValue==="mil"; tick(); } });
@@ -4112,18 +3945,15 @@ function mergePanel(d,org){
   const items=[
     {n:"Stamp a receipt",w:"STAMP.EXE",h:"#stamp",k:"stamp receipt photo fuel gas camera share file name wex"},
     {n:"Fleet whiteboard",w:"BOARD.EXE",h:"#board",k:"board whiteboard vehicles mileage fleet flags print big screen company companies task force mission day sheet every day"},
-    {n:"Today's checklist",w:"TODAY.EXE",h:"#today",k:"checklist daily day 1 verify certify certifier calendar end of mission eom"},
     {n:"Mission report",w:"REPORT.EXE",h:"#report",k:"report mission status sitrep situational awareness leadership print pdf word docx charts graphs dashboard metrics"},
     {n:"Mission export (all 1970s + summary)",w:"REPORT.EXE",h:"#report",k:"mission export zip all 1970s summary close out turn in binder cost recovery save every 1970 dashboard pdf csv"},
-    {n:"Fleet dashboard",w:"BOARD.EXE",h:"#board",k:"dashboard metrics graphs charts kpi fleet status miles fuel"},
     {n:"Forms and the 1970",w:"FORMS.EXE",h:"#forms",k:"forms 1970 esad form fill pdf print sign signature photo upload std 270 accident workflow download"},
     {n:"Unusual events guide",w:"EVENTS.EXE",h:"#events",k:"events unusual exceptions"},
-    {n:"Setup",w:"Mission, people, data",h:"#setup",k:"setup mission mrt task org certifier share qr backup close out"},
+    {n:"Setup",w:"Mission, people, data",h:"#setup",k:"setup mission mrt task org name backup close out"},
     {n:"How to use LOGSTAT",w:"Help",h:"#help",k:"help how instructions privacy rules"},
     {n:"Install on this device",w:"Install",h:"#install",k:"install home screen app add"},
     {n:"Large mode (gloves)",w:"Top bar button",h:"#",go:"lgBtn",k:"large mode glove bigger text"},
     ...R.events.map(e=>({n:e.t,w:"Event card",h:"#events&id="+e.id,k:e.tags+" "+e.steps.join(" ")})),
-    ...R.checklist.day1.concat(R.checklist.daily,R.checklist.eom||[]).map(s=>({n:s.t,w:"Checklist step · "+s.src,h:"#today",k:""})),
   ].map(x=>Object.assign(x,{hay:norm(x.n+" "+x.w+" "+x.k)}));
   const close=()=>{ box.hidden=true; inp.setAttribute("aria-expanded","false"); act=-1; };
   const draw=()=>{ const q=norm(inp.value).trim(); if(!q){ close(); return; } const words=q.split(/\s+/);
