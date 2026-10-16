@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-1hHdkZtQcudwd7kv31Dz3WoKMwIxAgNNIat2WhmBmLI=' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-mSg1YrnL+Dr7dylWCtZnUGfgt19S1fFNhg1/6/mkoZ0=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/7F592mxAO90wUtrxpmhsPN5yfTmMhzDEr/NFbjVjac=' 'sha256-1hHdkZtQcudwd7kv31Dz3WoKMwIxAgNNIat2WhmBmLI=' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-15 16:30">
+<meta name="logstat-build" content="2026-10-16 08:00">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -2097,7 +2097,7 @@ RENDER.help=function(){
   <h3>Manage your 1970</h3><ul><li>The 1970 header (operation, incident, unit, dispatcher, RAPTR operator) is set once per task org in <b>Setup Mission</b>; the license plate is in the vehicle's <b>Edit</b> on the Board.</li><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup: <b>White-out</b> covers a wrong entry, then tap to place text, ✓, ✗, the date or a signature on top, and save it as a PDF. A PDF that is neither fillable nor a scan (for example a print-ready copy) can't be edited here: open its fillable copy, or take a photo of the page.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
   <h3>Signatures</h3><ul><li><b>Type</b> your name and pick a handwriting style, or <b>Draw</b> it with a finger. You confirm it's your own signature; it's saved on this device for next time.</li><li>Only the person named signs. Anyone can type a printed name, but not someone else's signature. Check with J4 that e-signatures are accepted on the 1970.</li></ul>
   <h3>Mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, and the open items for the day.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
-  <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and 1970 screens) saves one ZIP: every vehicle's 1970 for the mission as it stands (pick <b>PDF (print-ready)</b> or <b>Fillable PDF</b>), with day edits and signatures, plus the mission summary as a PDF and the mission data in Excel.</li><li><b>Report builder</b>: pick what to report on (a company with its sub-units, a task force, the whole mission, or every mission on this device), the period (7, 14 or 30 days, mission to date, or custom, ending on the date shown), and the sections. Print, PDF, Word, PowerPoint and Excel all follow the same choices. <b>Ready-made reports</b> (Daily brief, Weekly data, End of mission, and any you save) make one in a tap.</li><li><b>Report</b> also saves the report as <b>PowerPoint</b> slides to brief from, and the mission data as an <b>Excel</b> workbook: Summary (one row per task force, with totals), Vehicles, Daily log (every vehicle, every day: start, end, miles, operators, fuel), Fuel receipts and Units.</li><li>Every 1970 can be saved two ways: a vehicle's log (<b>Fillable 1970</b> / <b>Print-ready 1970</b>), the 1970 screen for a task force or company, a 1970 you opened to correct, and the mission export.</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
+  <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and 1970 screens) saves one ZIP: every vehicle's 1970 for the mission as it stands (pick <b>PDF (print-ready)</b> or <b>Fillable PDF</b>), with day edits and signatures, plus the mission summary as a PDF.</li><li><b>Report builder</b>: pick what to report on (a company with its sub-units, a task force, the whole mission, or every mission on this device), the period (7, 14 or 30 days, mission to date, or custom, ending on the date shown), and the sections. <b>Print</b> (or Save as PDF from the print window) and <b>Word</b> follow the same choices. <b>Ready-made reports</b> (Daily brief, End of mission, and any you save) make one in a tap.</li><li>Every 1970 can be saved two ways: a vehicle's log (<b>Fillable 1970</b> / <b>Print-ready 1970</b>), the 1970 screen for a task force or company, a 1970 you opened to correct, and the mission export.</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
   <h3 id="h-roles">Who does what</h3>${R.roles.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><ul>${x.d.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3 id="h-paths">ARRO path maps</h3><p class="muted" style="margin:0 0 6px">Where things are in ARRO, click by click, from the LOGSTAT Quick Reference.</p>${R.paths.map(x=>`<details class="sec"><summary>${esc(x.t)}</summary><div class="path">${x.p.map(t=>`<span>${esc(t)}</span>`).join('<b aria-hidden="true">›</b>')}</div>${x.n?`<p class="muted" style="margin:6px 0 0">${esc(x.n)}</p>`:""}${x.link?`<div class="src"><a href="${esc(x.link.u)}" target="_blank" rel="noopener noreferrer">${esc(x.link.l)} ↗</a></div>`:""}<div class="src">Source: ${esc(x.src)}</div></details>`).join("")}
   <h3>Rules settled</h3><ul>${(R.settled||[]).map(u=>`<li>${esc(u.text)}</li>`).join("")}</ul>
@@ -3828,14 +3828,13 @@ const tableHtml=(rows)=>`<table class="dtab"><thead><tr>${rows[0].map(c=>`<th>${
 // One set of choices (what to report on, the period, the sections) feeds every format: Print, PDF, Word, PowerPoint
 // and Excel. Scope: a company (with its sub-units), a task force, the whole mission (every task force on the MRT) or
 // every mission on this device. The period ends on the date shown above (the Board's date).
-const RPT_SECS=[["key","Key numbers"],["charts","Charts"],["units","Task force / company breakdown"],["org","Organization"],["exc","NMC and problems"],["veh","Vehicle list"],["log","Daily log"],["fuel","Fuel receipts"],["open","Open items"]];
+const RPT_SECS=[["key","Key numbers"],["charts","Charts"],["units","Task force / company breakdown"],["org","Organization"],["exc","NMC and problems"],["veh","Vehicle list"],["log","Daily log"],["fuel","Fuel receipts"]];
 const RPT_ALL=()=>Object.fromEntries(RPT_SECS.map(([k])=>[k,true]));
 const RPT_BUILTIN=[
-  {id:"b-daily",n:"Daily brief",scope:"m",per:14,fmt:"pptx",sec:{key:true,charts:true,units:true,exc:true}},
-  {id:"b-week",n:"Weekly data",scope:"m",per:7,fmt:"xlsx",sec:RPT_ALL()},
-  {id:"b-eom",n:"End of mission",scope:"m",per:"mtd",fmt:"pdf",sec:{key:true,charts:true,units:true,org:true,exc:true,veh:true,open:true}}];
-let RPT={scope:"tf",per:14,from:"",sec:{key:true,charts:true,units:true,veh:true,open:true},title:"",busy:false};
-const RPT_KEY="iq.logstat.reports", FMT_LABEL={pdf:"PDF",docx:"Word",pptx:"PowerPoint",xlsx:"Excel"};
+  {id:"b-daily",n:"Daily brief",scope:"m",per:14,fmt:"print",sec:{key:true,charts:true,units:true,exc:true}},
+  {id:"b-eom",n:"End of mission",scope:"m",per:"mtd",fmt:"print",sec:{key:true,charts:true,units:true,org:true,exc:true,veh:true}}];
+let RPT={scope:"tf",per:14,from:"",sec:{key:true,charts:true,units:true,veh:true},title:"",busy:false};
+const RPT_KEY="iq.logstat.reports", FMT_LABEL={print:"Print",docx:"Word"}, rptFmt=(f)=>f==="docx"?"docx":"print";
 const rptPresets=()=>{ let a=[]; try{ a=JSON.parse(localStorage.getItem(RPT_KEY)||"[]"); }catch(e){} return Array.isArray(a)?a.filter(p=>p&&typeof p.n==="string"&&p.sec&&typeof p.sec==="object").slice(0,20):[]; };
 const rptSavePresets=(a)=>{ try{ localStorage.setItem(RPT_KEY,JSON.stringify(a)); return true; }catch(e){ return false; } };
 const fileTag=(t)=>E.ascii(String(t||"")).toUpperCase().replace(/[^A-Z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,30);
@@ -3930,11 +3929,9 @@ function buildReport(org,cfg){
   const DW=to===todayYMD()?"today":"on "+plain(to).replace(/ \d{4}$/,""), PW=nd===1?DW:`in these ${nd} days`;
   const catName=(c)=>R.cats[c]?R.cats[c].name.replace(/ \(.*\)$/,""):c, anyCo=P.some(p=>p.co);
   const B=[]; B.S=S; B.cfg=cfg;
-  B.push({k:"title",t:cfg.title||"Mission status report"});
+  B.push({k:"title",t:scopeName(org,cfg)});
   if(PRACTICE) B.push({k:"sub",t:"PRACTICE MISSION - NOT FOR ARRO"});
-  B.push({k:"sub",t:scopeName(org,cfg)});
   B.push({k:"sub",t:`${nd===1?plain(to):`${plain(cfg.from)} – ${plain(to)} (${nd} days)`} · as of ${plain(to)}${S.dplus?` (${S.dplus})`:""}`});
-  B.push({k:"sub",t:`Prepared ${plain(todayYMD())} ${nowHHMM()}${DB.me.opr?` by ${DB.me.opr}`:""}. Data from the LOGSTAT Board on this device.`});
   if(sec.key){ const cards=Object.entries(S.fuel.cards).map(([k,v])=>`${k} ${money(v)}`).join(" · ");
     B.push({k:"h",t:"Key numbers"});
     B.push({k:"kv",rows:[
@@ -3943,12 +3940,11 @@ function buildReport(org,cfg){
       ["Miles driven",`${nd>1?`${fmtN(S.P.mi)} ${PW} · `:""}${fmtN(S.miles.today)} ${DW} · ${fmtN(S.miles.mission)} this mission (since ${plain(S.from)})`],
       ...(S.hours.mission?[["Equipment hours",`${nd>1?`${fmtN(S.P.hrs)} ${PW} · `:""}${fmtN(S.hours.today)} ${DW} · ${fmtN(S.hours.mission)} this mission`]]:[]),
       ["Fuel",`${nd>1?`${money(S.P.fuel)} ${PW} (${fmtN(S.P.gal)} gal) · `:""}${money(S.fuel.mission)} this mission (${fmtN(S.fuel.gal)} gal) · ${money(S.fuel.today)} ${DW}${cards?` · by card: ${cards}`:""}`],
-      ["Receipts",`${S.rc.accepted} fuel receipt${S.rc.accepted===1?"":"s"} stamped`],
-      [`Mileage missing ${DW}`,`${S.missing} vehicle${S.missing===1?"":"s"}`]]}); }
+]}); }
   if(sec.charts){ const C=rptCharts(cfg,S); B.charts=C; B.push({k:"h",t:"Charts"}); B.push({k:"charts",items:C.map(c=>({t:c.t,svg:c.make(520,null,pal)}))}); }
   const G=sec.units?rptGroups(cfg,S):null;
-  if(G){ const row=(n,per)=>{ const g=gStat(per); return [n,String(g.veh),String(g.fmc),String(g.nmc),String(g.eom),fmtN(g.mi),money(g.fuel),String(g.miss)]; };
-    B.push({k:"h",t:G.title}); B.push({k:"table",w:[30,9,7,7,8,12,13,12],rows:[[G.first,"Vehicles","FMC","NMC","EOM'd",nd===1?"Miles":`Miles (${nd} d)`,nd===1?"Fuel":`Fuel (${nd} d)`,"Mileage missing"],...G.rows.map(r=>row(r.name,r.per)),row(G.total,P)]}); }
+  if(G){ const row=(n,per)=>{ const g=gStat(per); return [n,String(g.veh),String(g.fmc),String(g.nmc),String(g.eom),fmtN(g.mi),money(g.fuel)]; };
+    B.push({k:"h",t:G.title}); B.push({k:"table",w:[34,10,8,8,9,15,16],rows:[[G.first,"Vehicles","FMC","NMC","EOM'd",nd===1?"Miles":`Miles (${nd} d)`,nd===1?"Fuel":`Fuel (${nd} d)`],...G.rows.map(r=>row(r.name,r.per)),row(G.total,P)]}); }
   if(sec.org){ const st=(per)=>{ const g=gStat(per); return [String(g.veh),String(g.fmc),String(g.nmc),String(g.eom)]; }, rows=[], M=new Map(), I="\u00a0\u00a0";
     cfg.L.forEach(u=>{ const k=missionKey(u.org); if(!M.has(k)) M.set(k,[]); M.get(k).push(u); });
     M.forEach(us=>{ const top=multi; if(top) rows.push([`Mission · MRT ${us[0].org.mrt||"—"}`,...st(P.filter(p=>us.some(u=>u.org.id===p.orgId)))]);
@@ -3963,8 +3959,8 @@ function buildReport(org,cfg){
     else B.push({k:"list",items:[`None: every vehicle is FMC with its mileage and operators in ${DW}.`]}); }
   if(sec.veh){ const pre=[...(multi?["Task force"]:[]),...(anyCo?["Company"]:[])];
     B.push({k:"h",t:"Vehicles"});
-    B.push({k:"table",w:[...pre.map(()=>13),20,11,12,8,15,9,10,7],rows:[[...pre,"Vehicle","Last 8","Type","Status","Latest reading",nd===1?"Miles":`Miles (${nd} d)`,nd===1?"Fuel":`Fuel (${nd} d)`,"Open items"],
-      ...P.map(p=>[...(multi?[p.tf]:[]),...(anyCo?[p.co||"—"]:[]),p.label||"—",E.lastN(p.sn,8),catName(p.cat),p.status,p.reading===null?"—":`${fmtN(p.reading)}${p.tracks==="hrs"?" hrs":""}${p.readingDate?` (${mmdd(p.readingDate)})`:""}`,p.tracks==="none"?"—":`${fmtN(p.pu)}${p.tracks==="hrs"?" hrs":""}`,money(p.pfuel||0),String(p.flags.length)])]}); }
+    B.push({k:"table",w:[...pre.map(()=>13),21,11,13,8,16,10,11],rows:[[...pre,"Vehicle","Last 8","Type","Status","Latest reading",nd===1?"Miles":`Miles (${nd} d)`,nd===1?"Fuel":`Fuel (${nd} d)`],
+      ...P.map(p=>[...(multi?[p.tf]:[]),...(anyCo?[p.co||"—"]:[]),p.label||"—",E.lastN(p.sn,8),catName(p.cat),p.status,p.reading===null?"—":`${fmtN(p.reading)}${p.tracks==="hrs"?" hrs":""}${p.readingDate?` (${mmdd(p.readingDate)})`:""}`,p.tracks==="none"?"—":`${fmtN(p.pu)}${p.tracks==="hrs"?" hrs":""}`,money(p.pfuel||0)])]}); }
   if(sec.log){ const Lg=rptLog(cfg);
     B.push({k:"h",t:"Daily log"});
     B.push({k:"table",w:[...(multi?[12]:[]),16,10,7,10,10,8,14,14,9],rows:[[...(multi?["Task force"]:[]),"Vehicle","Date","Status","Start","End","Used","Operator","2nd driver","Fuel"],
@@ -3973,13 +3969,10 @@ function buildReport(org,cfg){
     B.push({k:"h",t:"Fuel receipts"});
     if(Rc.length) B.push({k:"table",w:[...(multi?[14]:[]),10,20,10,12,10,12],rows:[["Date",...(multi?["Task force"]:[]),"Vehicle","Gallons","Amount","Card","Status"],...Rc.map(x=>[mmdd(x.r.date),...(multi?[x.o.to||""]:[]),x.v?`${x.v.label||""} ${E.lastN(x.v.sn,digitsOf(x.o))}`.trim():"—",x.r.gal?fmtN(num(x.r.gal)):"—",x.r.amt?money(num(x.r.amt)):"—",x.r.card||"—",rcStatus(x.r)])]});
     else B.push({k:"list",items:["No receipts in this period."]}); }
-  if(sec.open){ const items=[]; P.forEach(p=>p.flags.forEach(f=>items.push(`${multi?p.tf+" · ":""}${p.label||p.sn} (${E.lastN(p.sn,8)}): ${f}`)));
-    B.push({k:"h",t:"Open items"}); B.push({k:"list",items:items.length?items.slice(0,80).concat(items.length>80?[`…and ${items.length-80} more (see the vehicle list or Excel).`]:[]):["None."]}); }
-  B.push({k:"foot",t:R.disclaimer});
   return B;
 }
 // The task-force report used by the mission export (and older callers).
-function reportBlocks(org,date,opts){ const cfg=rptCfg(org,{scope:"tf",per:opts.days||14,to:date,sec:{key:true,charts:true,units:true,veh:!!opts.roster,open:true},pal:opts.pal}); return buildReport(org,cfg); }
+function reportBlocks(org,date,opts){ const cfg=rptCfg(org,{scope:"tf",per:opts.days||14,to:date,sec:{key:true,charts:true,units:true,veh:!!opts.roster},pal:opts.pal}); return buildReport(org,cfg); }
 // ---------- HTML (screen preview and print) ----------
 function reportHtml(B,cap){
   return B.map(b=>{
@@ -4031,7 +4024,7 @@ async function reportPdf(B,org){
     else if(b.k==="foot"){ need(24); y-=10; wrap(b.t,F,8.5,CW).forEach(l=>{ txt(l,M,y-10,F,8.5,mut); y-=12; }); }
   }
   const ttl=(B.find(b=>b.k==="title")||{}).t||"Mission status report";
-  pages.forEach((p,i)=>p.drawText(pdfText(`${ttl} · ${org.to||""} · page ${i+1} of ${pages.length}`),{x:M,y:22,size:8,font:F,color:mut}));
+  pages.forEach((p,i)=>p.drawText(pdfText(`${ttl} · page ${i+1} of ${pages.length}`),{x:M,y:22,size:8,font:F,color:mut}));
   if(PRACTICE) pages.forEach(p=>p.drawText("PRACTICE - NOT FOR ARRO",{x:W*0.14,y:H*0.3,size:42,font:F,color:PL.rgb(0.75,0.1,0.1),opacity:0.18,rotate:PL.degrees(38)}));
   doc.setTitle(pdfText(`${ttl} - ${org.to||""}`)); doc.setProducer("LOGSTAT"); doc.setCreator("LOGSTAT");
   return new Blob([await savePdf(doc)],{type:"application/pdf"});
@@ -4060,7 +4053,7 @@ async function reportDocx(B,org){
     else if(b.k==="foot") body+=para(run(b.t,{sz:16,c:"5F6368"}),{before:200});
   }
   const fp=`<w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:color w:val="5F6368"/><w:sz w:val="16"/></w:rPr>`, fld=(code)=>`<w:r>${fp}<w:fldChar w:fldCharType="begin"/></w:r><w:r>${fp}<w:instrText xml:space="preserve"> ${code} </w:instrText></w:r><w:r>${fp}<w:fldChar w:fldCharType="separate"/></w:r><w:r>${fp}<w:t>1</w:t></w:r><w:r>${fp}<w:fldChar w:fldCharType="end"/></w:r>`;
-  const ftr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p>${run(`${PRACTICE?"PRACTICE - NOT FOR ARRO · ":""}Mission status report · ${org.to||""} · page `,{sz:16,c:"5F6368"})}${fld("PAGE")}${run(" of ",{sz:16,c:"5F6368"})}${fld("NUMPAGES")}</w:p></w:ftr>`;
+  const ftr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p>${run(`${PRACTICE?"PRACTICE - NOT FOR ARRO · ":""}${org.to||""} · page `,{sz:16,c:"5F6368"})}${fld("PAGE")}${run(" of ",{sz:16,c:"5F6368"})}${fld("NUMPAGES")}</w:p></w:ftr>`;
   const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>${body}<w:sectPr><w:footerReference w:type="default" r:id="rIdFtr"/><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="720" w:right="720" w:bottom="720" w:left="720" w:header="360" w:footer="360" w:gutter="0"/></w:sectPr></w:body></w:document>`;
   const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${imgs.map((_,i)=>`<Relationship Id="rIdImg${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/chart${i+1}.png"/>`).join("")}<Relationship Id="rIdFtr" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/></Relationships>`;
   const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`;
@@ -4207,7 +4200,7 @@ async function reportPptx(B,org,date){
 RENDER.report=function(){
   const b=$("b-report"); b.innerHTML=""; b.appendChild(orgBar(()=>RENDER.report())); const org=curOrg(); if(!org) return;
   const cfg=rptCfg(org); RPT.scope=cfg.scope;
-  const M=missionOrgs(org), all=db().orgs, FL=coyFlat(org), mine=rptPresets(), PS=RPT_BUILTIN.concat(mine.map((p,i)=>Object.assign({},p,{id:"u"+i,user:true})));
+  const M=missionOrgs(org), all=db().orgs, FL=coyFlat(org), mine=rptPresets(), PS=RPT_BUILTIN.concat(mine.map((p,i)=>Object.assign({},p,{id:"u"+i,user:true,fmt:rptFmt(p.fmt)})));
   const sel=(v)=>cfg.scope===v?" selected":"", noneN=orgVeh(org).filter(v=>!coyOf(v)).length;
   const bar=el(`<div class="vform rpt-b">
     <div class="lbl">Ready-made reports <span class="muted">· tap one to make it now</span></div>
@@ -4225,12 +4218,12 @@ RENDER.report=function(){
     </div>
     <div class="lbl">Include</div>
     <div class="chips">${RPT_SECS.map(([k,l])=>`<button type="button" class="chip" data-sec="${k}" aria-pressed="${!!RPT.sec[k]}">${l}</button>`).join("")}</div>
-    <div class="toolrow"><button class="btn rs-big" type="button" data-out="print">🖶 Print</button><button class="btn" type="button" data-out="pdf">Save PDF</button><button class="btn" type="button" data-out="docx">Save Word (.docx)</button><button class="btn" type="button" data-out="pptx">Save PowerPoint (.pptx)</button><button class="btn" type="button" data-out="xlsx">Save Excel (.xlsx)</button></div>
+    <div class="toolrow"><button class="btn rs-big" type="button" data-out="print">🖶 Print</button><button class="btn" type="button" data-out="docx">Save Word (.docx)</button></div>
     <div class="muted" data-st></div>
     <details class="sec"><summary>Save these choices as a ready-made report</summary>
-      <div class="row"><label class="f">Name<input class="fld" data-pname maxlength="40" placeholder="Brief to J4"></label><label class="f">Saves as<select class="fld" data-pfmt>${["pptx","pdf","docx","xlsx"].map(f=>`<option value="${f}">${FMT_LABEL[f]}</option>`).join("")}</select></label><button class="btn" type="button" data-psave style="align-self:flex-end">Save</button></div>
+      <div class="row"><label class="f">Name<input class="fld" data-pname maxlength="40" placeholder="Brief to J4"></label><label class="f">Saves as<select class="fld" data-pfmt>${["print","docx"].map(f=>`<option value="${f}">${FMT_LABEL[f]}</option>`).join("")}</select></label><button class="btn" type="button" data-psave style="align-self:flex-end">Save</button></div>
       <p class="muted" style="margin:0">It keeps what the report is on (company, task force, whole mission or every mission), the period and the sections. The end date is always the date above, so tapping it each day makes that day's report. Ready-made reports stay on this device.</p></details>
-    <p class="muted" style="margin:0"><b>PowerPoint</b> is for briefing: key numbers, charts and tables, a page at a time (very long lists point to the other versions). <b>Excel</b> always has every sheet for what you picked: summary with totals, vehicles, daily log, fuel receipts and units. Works offline. If your printer adds the web address at the top, turn off "Headers and footers".</p></div>`);
+    <p class="muted" style="margin:0"><b>Print</b> opens the print window: pick a printer, or <b>Save as PDF</b> for a file. Works offline. If the web address prints at the top, turn off "Headers and footers" there.</p></div>`);
   const go=async(fmt)=>{ if(RPT.busy) return; const st=bar.querySelector("[data-st]"), c=rptCfg(org);
     if(fmt==="print"){ $("printArea").innerHTML=printWrap(`<div class="report">${reportHtml(buildReport(org,c))}</div>`); window.print(); return; }
     RPT.busy=true; st.textContent="Building…"; await tick();
@@ -4249,7 +4242,7 @@ RENDER.report=function(){
     const pe=t.closest("[data-per]"); if(pe){ const v=pe.dataset.per; RPT.per=/^\d+$/.test(v)?+v:v; if(v==="custom"&&!E.isYMD(RPT.from)) RPT.from=cfg.from; RPT.title=""; RENDER.report(); return; }
     const se=t.closest("[data-sec]"); if(se){ RPT.sec=Object.assign({},RPT.sec,{[se.dataset.sec]:!RPT.sec[se.dataset.sec]}); RPT.title=""; RENDER.report(); return; }
     if(t.closest("[data-psave]")){ const n=bar.querySelector("[data-pname]").value.replace(/\s+/g," ").trim().slice(0,40); if(!n){ toast("Give it a name."); bar.querySelector("[data-pname]").focus(); return; }
-      const a=rptPresets(), ex=a.findIndex(x=>x.n.toLowerCase()===n.toLowerCase()), p={n,scope:RPT.scope,per:RPT.per,from:RPT.per==="custom"?RPT.from:"",sec:Object.assign({},RPT.sec),fmt:bar.querySelector("[data-pfmt]").value};
+      const a=rptPresets(), ex=a.findIndex(x=>x.n.toLowerCase()===n.toLowerCase()), p={n,scope:RPT.scope,per:RPT.per,from:RPT.per==="custom"?RPT.from:"",sec:Object.assign({},RPT.sec),fmt:rptFmt(bar.querySelector("[data-pfmt]").value)};
       if(RPT_BUILTIN.some(x=>x.n.toLowerCase()===n.toLowerCase())){ toast("That name is taken by a built-in report. Pick another."); return; }
       if(ex>=0){ if(!confirm(`Replace the ready-made report "${a[ex].n}"?`)) return; a[ex]=p; } else { if(a.length>=20){ toast("Up to 20 ready-made reports. Delete one first."); return; } a.push(p); }
       if(!rptSavePresets(a)){ toast("Couldn't save on this device."); return; } RPT.title=n; toast(`Saved "${n}". Tap it any time to make it.`); RENDER.report(); return; }
@@ -4295,7 +4288,7 @@ async function missionExport(org,through,st){
   }
   if(st) st.textContent="Building the summary…";
   const span=E.isYMD(org.start)&&org.start<=through?E.diffDays(org.start,through)+1:14, B=reportBlocks(org,through,{days:Math.min(31,Math.max(7,span)),roster:true});
-  B[0]={k:"title",t:"Mission summary"};
+  
   const at=B.findIndex(b=>b.k==="h"&&b.t==="Open items"), add=[{k:"h",t:"1970s in this export"}];
   if(idx.length) add.push({k:"table",w:[30,14,10,10,20,12],rows:[["Vehicle","Last 8","Days","Sheets","Days signed","EOM"],...idx]});
   else add.push({k:"list",items:["No vehicle on this mission needs a 1970 yet."]});
@@ -4303,10 +4296,10 @@ async function missionExport(org,through,st){
   if(skipped.length) notes.push(`No 1970 needed per the course: ${skipped.map(v=>`${v.label||"vehicle"} ${E.lastN(v.sn,8)}`).join(", ")}.`);
   const unsigned=idx.filter(r=>!r[4].startsWith(r[2]+" ")).length; if(unsigned) notes.push(`${unsigned} vehicle${unsigned>1?"s have":" has"} days without a signature.`);
   add.push({k:"list",items:notes});
-  B.splice(at<0?B.length-1:at,0,...add);
+  B.splice(at<0?B.length:at,0,...add);
   const sum=await reportPdf(B,org), roster=B.find(b=>b.k==="table"&&b.rows[0][0]==="Vehicle"&&b.rows[0][1]==="Last 8"&&b.rows[0].includes("Status"));
   files.unshift({name:`${base}_MISSION_SUMMARY.pdf`,data:new Uint8Array(await sum.arrayBuffer())});
-  void roster; files.splice(1,0,{name:`${base}_MISSION_DATA.xlsx`,data:new Uint8Array(await missionXlsx(org,through).arrayBuffer())});
+  void roster;
   return {blob:zipFiles(files),name:`${base}_MISSION_EXPORT.zip`,count:idx.length,sheets};
 }
 async function runMissionExport(org,through,slot){
@@ -4319,7 +4312,7 @@ async function runMissionExport(org,through,slot){
 }
 function missionExportBox(org,through){
   const w=el(`<div class="vform mexp"><div class="lbl">Mission export</div>
-    <p style="margin:0">One ZIP file through ${esc(plain(through))}: every vehicle's 1970 as it stands now (with day edits and signatures), the mission summary as a PDF, and the mission data in Excel. Works offline.</p>
+    <p style="margin:0">One ZIP file through ${esc(plain(through))}: every vehicle's 1970 as it stands now (with day edits and signatures), and the mission summary as a PDF. Works offline.</p>
     <div class="row"><div><div class="lbl">1970s as</div><div class="chips"><button type="button" class="chip" data-mf="0" aria-pressed="${!MEXP.fill}">PDF (print-ready)</button><button type="button" class="chip" data-mf="1" aria-pressed="${MEXP.fill}">Fillable PDF</button></div></div></div>
     <p class="muted" style="margin:0" data-mfn>${MEXP.fill?"Fillable: each 1970 stays editable in Acrobat or a browser (a vehicle past 29 days gets one file per sheet).":"Print-ready: flattened, ready to print or upload; one file per vehicle with every sheet."}</p>
     <div class="toolrow"><button class="btn rs-big" type="button" data-mx>Save mission export</button></div><div data-slot></div></div>`);
