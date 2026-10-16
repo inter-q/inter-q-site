@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-CImZUapPo/sw2jj1l2w5v/m5HhKAGUqc1Dtw/Tw+yDU=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-zdZjkvaOKEn5Z0qEC4n/88mxbdbr1ba0eQnqEkBYWSU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-CImZUapPo/sw2jj1l2w5v/m5HhKAGUqc1Dtw/Tw+yDU=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-fC6XA+5sIHJAn919f4oceRMKJY7yNtENRh21V3asPEM=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-16 11:50">
+<meta name="logstat-build" content="2026-10-16 12:05">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1215,6 +1215,34 @@
   .oc-ct i.s-fmc { border-color:var(--ok); background:var(--ok-bg); } .oc-ct i.s-nmc { border-color:var(--crit); background:var(--crit-bg); }
   .oc-key { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:0 0 10px; font-size:14px; } .oc-key .oc-v { flex-direction:row; }
   .cprow.sub input { max-width:12em; }
+  #bigScreen.pop-org { background:#f7f9fd; color:#2a3f8f; }
+  #bigScreen.pop-org h2 { color:#2a3f8f; text-shadow:none; }
+  #bigScreen.pop-org .btn, #bigScreen.pop-org .fld { background:#fff; color:#2a3f8f; border:1px solid #a9b7d6; box-shadow:none; text-shadow:none; }
+  .oc-fit { overflow:hidden; display:flex; justify-content:center; }
+  .oc-fit > .oc { flex:none; width:max-content; overflow:visible; transform-origin:top center; padding:4px 0 10px; font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  .oc-fit .oc ul { padding-top:28px; } .oc-fit .oc > ul { padding-top:0; }
+  .oc-fit .oc li { padding:28px 9px 0; }
+  .oc-fit .oc li::before, .oc-fit .oc li::after { border-top:3px solid #d3dbea; height:28px; }
+  .oc-fit .oc li::after { border-left:3px solid #d3dbea; }
+  .oc-fit .oc ul ul::before { border-left:3px solid #d3dbea; height:28px; }
+  .oc-fit .oc li:first-child::before, .oc-fit .oc li:last-child::after { border:0 none; }
+  .oc-fit .oc li:last-child::before { border-right:3px solid #d3dbea; }
+  .oc-fit .oc li:only-child::before, .oc-fit .oc li:only-child::after { display:none; }
+  .oc-fit .oc li:only-child { padding-top:0; }
+  .oc-card { background:#fff; border:3px solid #4f8a10; border-radius:14px; padding:16px 14px 14px; width:220px; box-sizing:border-box; text-align:center; color:#4a74b5; box-shadow:0 1px 3px rgba(20,40,90,.08); }
+  .oc-card.oc-sub { border-color:#86b04a; width:200px; }
+  .oc-card.oc-root { border-color:#2a3f8f; }
+  .oc-n { font-weight:600; font-size:17px; letter-spacing:.04em; text-transform:uppercase; line-height:1.35; color:#4a74b5; }
+  .oc-s { font-size:12px; color:#8293b9; margin-top:2px; }
+  .oc-badge { display:inline-block; min-width:2.2em; margin:8px 0 8px; padding:2px 9px; border-radius:999px; background:#e7e9ef; color:#6b6f7a; font-size:12px; font-weight:700; }
+  .oc-stats { display:flex; justify-content:center; gap:22px; }
+  .oc-stats div { display:flex; flex-direction:column; gap:2px; }
+  .oc-stats b { color:#24399a; font-size:15px; letter-spacing:.04em; } .oc-stats i { font-style:normal; font-weight:700; color:#24399a; font-size:18px; }
+  .oc-stats .bad b, .oc-stats .bad i { color:#b3261e; }
+  .oc-vl { margin:10px 0 0; padding:8px 0 0; border-top:1px solid #e3e8f2; font-size:13px; line-height:1.6; color:#4a74b5; }
+  .oc-vl span { color:#93a3c6; } .oc-vl em { font-style:normal; font-size:11px; font-weight:700; letter-spacing:.04em; }
+  .oc-vl .s-nmc { color:#b3261e; font-weight:600; } .oc-vl .s-nmc span { color:#c96b65; }
+  .oc-vl .s-eom, .oc-vl .s-pre { color:#a3abbd; } .oc-vl .more { color:#8293b9; font-style:italic; }
   .rpt-pre { gap:6px; } .rpt-pc { display:inline-flex; gap:2px; } .rpt-pc .chip small { opacity:.75; } .rpt-x { padding-left:8px; padding-right:8px; }
   .rpt-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); gap:8px 14px; align-items:start; margin:6px 0; }
   @media (max-width:700px){ .rpt-grid { grid-template-columns:1fr; } }
@@ -2009,12 +2037,13 @@ function orgBar(onChange,opts){
   s.querySelector("select").addEventListener("change",(e)=>{ d.org=e.target.value; save(); onChange&&onChange(); });
   w.appendChild(s);
   if(opts.date!==false){
-    const dt=el(`<div class="f dt"><span>Date</span><button type="button" class="fld calbtn" data-date="${esc(viewDate())}" aria-expanded="${CAL.open}" aria-controls="calbox">${esc(plain(viewDate()))} ▾</button></div>`);
-    dt.querySelector("button").addEventListener("click",()=>{ CAL.open=!CAL.open; CAL.m=viewDate().slice(0,7); onChange&&onChange(); });
+    const keep=opts.cal==="open";   // the Board keeps its calendar open
+    const dt=el(`<div class="f dt"><span>Date</span><button type="button" class="fld calbtn" data-date="${esc(viewDate())}" aria-expanded="${keep||CAL.open}" aria-controls="calbox">${esc(plain(viewDate()))}${keep?"":" ▾"}</button></div>`);
+    dt.querySelector("button").addEventListener("click",()=>{ if(keep){ CAL.m=viewDate().slice(0,7); onChange&&onChange(); return; } CAL.open=!CAL.open; CAL.m=viewDate().slice(0,7); onChange&&onChange(); });
     w.appendChild(dt);
     const dp=E.dplus(org,viewDate()); if(dp) w.appendChild(el(`<span class="dp" title="Mission day">${esc(dp)}</span>`));
     if(viewDate()!==todayYMD()){ const t=el(`<button class="btn" type="button">Today</button>`); t.addEventListener("click",()=>{ VIEWDATE=""; onChange&&onChange(); }); w.appendChild(t); }
-    if(CAL.open&&org) w.appendChild(missionCal(org,onChange));
+    if((keep||CAL.open)&&org){ const cb=missionCal(org,onChange); if(keep){ const x=cb.querySelector("[data-x]"); if(x) x.remove(); } w.appendChild(cb); }
   }
   return w;
 }
@@ -2565,19 +2594,24 @@ const ocSt=(v,date)=>v.eom&&v.eom<=date?"eom":!E.active(v,date)?"pre":E.nmcDay(v
 function ocCount(V,date){ const c={fmc:0,nmc:0,eom:0,pre:0}; V.forEach(v=>{ c[ocSt(v,date)]++; }); return c; }
 const ocBadges=(c)=>`<span class="oc-ct">${c.fmc?`<i class="s-fmc">FMC ${c.fmc}</i>`:""}${c.nmc?`<i class="s-nmc">NMC ${c.nmc}</i>`:""}${c.eom?`<i class="s-eom">EOM ${c.eom}</i>`:""}${c.pre?`<i class="s-pre">Not started ${c.pre}</i>`:""}</span>`;
 const ocSort=(V)=>V.slice().sort((a,c)=>(a.label||"").localeCompare(c.label||"",undefined,{numeric:true})||a.sn.localeCompare(c.sn));
-function ocChip(v,org,date){ const st=ocSt(v,date), dr=peekDay(v.id,date), i=E.info(R,v);
-  const t=st==="eom"?"EOM "+mmdd(v.eom):st==="pre"?"Starts "+mmdd(v.startDate):st.toUpperCase();
-  return `<span class="oc-v s-${st}"><b>${esc(v.label||i.cat.short)}</b><span>${esc(E.lastN(v.sn,digitsOf(org)))} · ${esc(i.short)}</span><small>${esc(t)}${dr.op&&st!=="eom"&&st!=="pre"?" · "+esc(dr.op):""}</small></span>`; }
-function ocUnit(org,n,V,date){ const names=coyUnder(org,n.name), tot=V.filter(v=>names.includes(coyOf(v))), own=ocSort(V.filter(v=>coyOf(v)===n.name));
-  return `<div class="oc-u${n.depth?" oc-sub":""}"><div class="oc-uh"><b>${esc(n.name)}</b><small>${tot.length} vehicle${tot.length===1?"":"s"}${n.kids.length?` · ${n.kids.length} sub-unit${n.kids.length===1?"":"s"}`:""}</small>${ocBadges(ocCount(tot,date))}</div>${own.length?`<div class="oc-vs">${own.map(v=>ocChip(v,org,date)).join("")}</div>`:""}${n.kids.map(k=>ocUnit(org,k,V,date)).join("")}</div>`; }
-function ocTF(o,date){ const V=orgVeh(o), T=coyTree(o), none=ocSort(V.filter(v=>!coyOf(v)));
-  return `<div class="oc-node oc-tf"><b>${esc(o.to||"Task force")}</b><small>Task force HQ${o.mrt?" · MRT "+esc(o.mrt):""} · ${V.length} vehicle${V.length===1?"":"s"}${T.length?` · ${coyList(o).length} unit${coyList(o).length===1?"":"s"}`:""}</small>${ocBadges(ocCount(V,date))}</div>
-    ${V.length||T.length?`<div class="oc-units">${none.length?`<div class="oc-u oc-hq"><div class="oc-uh"><b>${T.length?"HQ / no company":"Vehicles"}</b><small>${none.length} vehicle${none.length===1?"":"s"}</small></div><div class="oc-vs">${none.map(v=>ocChip(v,o,date)).join("")}</div></div>`:""}${T.map(n=>ocUnit(o,n,V,date)).join("")}</div>`:""}`; }
+// One card: the unit's name, its vehicle count (with sub-units), FMC / NMC / EOM, and its own vehicles (NMC first).
+function ocCard(name,sub,V,own,date,cls){ const c=ocCount(V,date), MAX=10;
+  const vl=ocSort(own).sort((a,b)=>(ocSt(b,date)==="nmc")-(ocSt(a,date)==="nmc"));
+  return `<div class="oc-card ${cls||""}"><div class="oc-n">${esc(name)}</div>${sub?`<div class="oc-s">${esc(sub)}</div>`:""}<span class="oc-badge" title="Vehicles">${V.length}</span>
+    <div class="oc-stats"><div><b>FMC</b><i>${c.fmc}</i></div><div class="${c.nmc?"bad":""}"><b>NMC</b><i>${c.nmc}</i></div><div><b>EOM</b><i>${c.eom}</i></div></div>
+    ${vl.length?`<div class="oc-vl">${vl.slice(0,MAX).map(v=>{ const st=ocSt(v,date); return `<div class="s-${st}">${esc(v.label||E.info(R,v).cat.short)} <span>${esc(E.lastN(v.sn,4))}</span>${st!=="fmc"?` <em>${st==="pre"?"not started":st.toUpperCase()}</em>`:""}</div>`; }).join("")}${vl.length>MAX?`<div class="more">+${vl.length-MAX} more</div>`:""}</div>`:""}</div>`; }
+function ocUnitLi(org,n,V,date){ const names=coyUnder(org,n.name), tot=V.filter(v=>names.includes(coyOf(v))), own=V.filter(v=>coyOf(v)===n.name);
+  return `<li>${ocCard(n.name,n.depth?"in "+coyPar(org,n.name):"",tot,own,date,n.depth?"oc-sub":"")}${n.kids.length?`<ul>${n.kids.map(k=>ocUnitLi(org,k,V,date)).join("")}</ul>`:""}</li>`; }
+function ocTFLi(o,date){ const V=orgVeh(o), T=coyTree(o), none=V.filter(v=>!coyOf(v));
+  return `<li>${ocCard(o.to||"Task force","Task force HQ",V,none,date,"oc-tf")}${T.length?`<ul>${T.map(n=>ocUnitLi(o,n,V,date)).join("")}</ul>`:""}</li>`; }
 function orgChartHtml(org,mission,date){
-  if(!mission) return `<div class="oc"><ul><li>${ocTF(org,date)}</li></ul></div>`;
+  if(!mission) return `<div class="oc-fit"><div class="oc"><ul>${ocTFLi(org,date)}</ul></div></div>`;
   const M=missionOrgs(org), all=M.flatMap(o=>orgVeh(o));
-  return `<div class="oc"><ul><li><div class="oc-node oc-root"><b>Mission${org.mrt?" · MRT "+esc(org.mrt):""}</b><small>${M.length} task force${M.length===1?"":"s"} · ${all.length} vehicle${all.length===1?"":"s"}</small>${ocBadges(ocCount(all,date))}</div><ul>${M.map(o=>`<li>${ocTF(o,date)}</li>`).join("")}</ul></li></ul></div>`;
-}
+  return `<div class="oc-fit"><div class="oc"><ul><li>${ocCard(`MRT ${org.mrt||"—"}`,"Mission",all,[],date,"oc-root")}<ul>${M.map(o=>ocTFLi(o,date)).join("")}</ul></li></ul></div></div>`; }
+// Scale the chart down so the whole thing fits the window (never up).
+function fitOc(box){ const w=box.querySelector(".oc-fit"), c=w&&w.firstElementChild; if(!c) return; c.style.transform=""; w.style.height="";
+  const top=w.getBoundingClientRect().top, availH=Math.max(220,window.innerHeight-top-14), sc=Math.min(1,w.clientWidth/Math.max(1,c.scrollWidth),Math.max(0.5,availH/Math.max(1,c.scrollHeight)));
+  if(sc<1) c.style.transform=`scale(${sc})`; w.style.height=Math.ceil(c.scrollHeight*sc)+"px"; }
 function renderPop(kind){
   clearInterval(POP.timer); POP.timer=0;
   const box=$("bigScreen"), p=PARAMS; box.hidden=false; box.className="pop-"+kind;
@@ -2606,9 +2640,9 @@ function renderPop(kind){
     d.orgs.forEach(o=>{ const k=E.normSN(o.mrt)||o.id; let g=groups.find(x=>x.k===k); if(!g) groups.push(g={k,orgs:[]}); g.orgs.push(o); });
     const sel=`<select class="fld" id="ocSel" aria-label="What to show">${groups.map(g=>`${g.orgs.length>1||E.normSN(g.orgs[0].mrt)?`<option value="m:${esc(g.orgs[0].id)}"${sc.m&&g.orgs.some(o=>o.id===org.id)?" selected":""}>Whole mission · MRT ${esc(g.orgs[0].mrt||"—")} (${g.orgs.length} task force${g.orgs.length===1?"":"s"})</option>`:""}${g.orgs.map(o=>`<option value="t:${esc(o.id)}"${!sc.m&&o.id===org.id?" selected":""}>Task force: ${esc(o.to||"(no name)")}</option>`).join("")}`).join("")}</select>`;
     box.innerHTML=`<div class="bs-top"><h2>Org chart · ${esc(sc.m?"MRT "+(org.mrt||"—"):org.to||"—")} · ${esc(plain(date))}</h2>${tools(sel+`<button class="btn" type="button" data-pop="pr">Print</button>`)}</div>
-      <div class="oc-key"><span class="oc-v s-fmc">FMC</span><span class="oc-v s-nmc">NMC</span><span class="oc-v s-eom">EOM</span><span class="oc-v s-pre">Not started</span><span class="muted">Each vehicle shows its last digits, type, status and today's operator.</span></div>
-      ${orgChartHtml(org,sc.m,date)}${upd()}`;
-    wire(); $("ocSel").addEventListener("change",(e)=>{ const v=e.target.value; POP.scope={id:v.slice(2),m:v[0]==="m"}; draw(); }); };
+      ${orgChartHtml(org,sc.m,date)}`;
+    wire(); fitOc(box); $("ocSel").addEventListener("change",(e)=>{ const v=e.target.value; POP.scope={id:v.slice(2),m:v[0]==="m"}; draw(); }); };
+  if(!POP.fitOn){ POP.fitOn=true; window.addEventListener("resize",()=>{ const bx=$("bigScreen"); if(bx&&bx.classList.contains("pop-org")) fitOc(bx); }); }
   draw(); POP.timer=setInterval(draw,20000);
 }
 function printBoard(org,date){
@@ -3027,7 +3061,7 @@ function boardMain(){
   const mission=!!PARAMS.m&&!!org&&missionOrgs(org).length>1;
   const want=typeof PARAMS.co==="string"&&PARAMS.co?PARAMS.co:null, cur=org&&want!=null&&(want===CO_ALL||want===CO_NONE||coyList(org).includes(want))?want:null;
   // the dropdown changes the task force (go to it); the date picker only changes the day (stay where you are)
-  const was=org?org.id:""; b.innerHTML=""; b.appendChild(orgBar(()=>{ if(db().org!==was) location.hash=boardHref(curOrg(),null,PARAMS.m?"m":""); else RENDER.board(); }));
+  const was=org?org.id:""; b.innerHTML=""; b.appendChild(orgBar(()=>{ if(db().org!==was) location.hash=boardHref(curOrg(),null,PARAMS.m?"m":""); else RENDER.board(); },{cal:"open"}));
   if(!org){ const t=el(`<div class="toolrow"><label class="btn">Load a board file from another device<input type="file" accept=".json,application/json" hidden></label></div>`); t.querySelector("input").addEventListener("change",(e)=>{ const f=e.target.files[0]; e.target.value=""; if(f) boardImport(f); }); b.appendChild(t); return; }
   const cr=crumbs(org,mission?null:cur,mission); if(cr) b.appendChild(el(cr));
   if(mission){ missionView(b,org,date,today); return; }
