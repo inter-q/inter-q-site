@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-VUoLBg/2fesUGOZmSHj6uWNaFBrXdHTOt4Xk3qgG9g8=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-wDu7yF+3dUC6J745X0i2zZojbXVbjQab5Yhp6lv4ks0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-CImZUapPo/sw2jj1l2w5v/m5HhKAGUqc1Dtw/Tw+yDU=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-zdZjkvaOKEn5Z0qEC4n/88mxbdbr1ba0eQnqEkBYWSU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-16 11:00">
+<meta name="logstat-build" content="2026-10-16 11:50">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1069,6 +1069,9 @@
   .p-ok { color:var(--ok); background:var(--ok-bg); } .p-warn { color:var(--warn); background:var(--warn-bg); } .p-crit { color:var(--crit); background:var(--crit-bg); } .p-dim { color:var(--ink-dim); }
   /* home tiles */
   .tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:10px; }
+.tiles.home4 { grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:1fr; gap:12px; margin:4px 0 10px; }
+.tiles.home4 .tile { min-height:132px; justify-content:flex-start; }
+@media (max-width:460px){ .tiles.home4 { grid-template-columns:1fr; grid-auto-rows:auto; } .tiles.home4 .tile { min-height:0; } }
   .tile { display:flex; flex-direction:column; gap:4px; text-decoration:none; color:var(--ink); border:1px solid var(--edge); padding:12px; background:var(--btn); min-height:84px; }
   .tile:hover { background:var(--btn-hi); box-shadow:0 0 10px rgba(var(--glow),.35); }
   .tile b { font-size:17px; color:var(--bright); font-family:var(--font-mono); letter-spacing:.02em; }
@@ -1087,6 +1090,7 @@
   .lg-fuel { display:flex; flex-direction:column; gap:3px; min-width:0; } .lg-fe { display:flex; gap:4px; } .lg-fe .fld { flex:1 1 0; min-width:0; } .lg-delf, .lg-addf { font-size:11px; padding:2px 6px; min-height:0; } .lg-addf { align-self:flex-start; } .lg-ft { font-size:11px; } .lg-fl { display:none; }
   .lg-head { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-dim); border-bottom:1px solid var(--lo); padding-bottom:3px; }
   .lg-row { border-bottom:1px dotted var(--rule); padding:6px 4px; } .lg-row.crit { background:var(--crit-bg); } .lg-row.warn { background:var(--warn-bg); } .lg-row.today { box-shadow:inset 3px 0 0 var(--bright); }
+.lg-loc { grid-column:1 / -1; display:grid; grid-template-columns:7.5em minmax(0,1fr) minmax(0,1fr); gap:4px 8px; align-items:center; } .lg-locl { font-size:11px; }
   .lg-row label > span, .lg-mi > span { display:none; } .lg-row .fld { width:100%; min-width:0; }
   .lg-mi { display:flex; flex-direction:column; gap:2px; align-items:flex-start; } .lg-mi b { font-family:var(--font-mono); } .lg-still { font-size:11px; padding:2px 6px; min-height:0; }
   .lg-w { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:4px; } .lg-w .w { font-size:12px; padding:1px 6px; }
@@ -1095,10 +1099,11 @@
   .f70p th { background:#262e37; font-size:11px; } .f70h th { width:13%; } .f70r td:nth-child(4) { font-size:11px; }
   @media (max-width:760px){
     .lg-head { display:none; }
-    .lg-row { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-areas:"date mi" "s e" "op co" "st st" "fuel fuel" "w w"; }
+    .lg-row { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-areas:"date mi" "s e" "op co" "st st" "fuel fuel" "loc loc" "w w"; }
+    .lg-loc { grid-area:loc; grid-template-columns:repeat(2,minmax(0,1fr)); } .lg-locl { display:none; }
     .lg-date { grid-area:date; } .lg-s { grid-area:s; } .lg-e { grid-area:e; } .lg-mi { grid-area:mi; align-items:flex-end; } .lg-op { grid-area:op; } .lg-co { grid-area:co; } .lg-st { grid-area:st; } .lg-fuel { grid-area:fuel; } .lg-fl { display:block; font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.05em; } .lg-w { grid-area:w; }
     .lg-row label > span, .lg-mi > span { display:block; font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.05em; } .lg-na { display:none; }
-    .lg-row:not(:has(.lg-co label, label.lg-co)) { grid-template-areas:"date mi" "s e" "op op" "st st" "fuel fuel" "w w"; }
+    .lg-row:not(:has(.lg-co label, label.lg-co)) { grid-template-areas:"date mi" "s e" "op op" "st st" "fuel fuel" "loc loc" "w w"; }
   }
   .cal2 { flex:1 1 100%; border:1px solid var(--lo); padding:8px; display:flex; flex-direction:column; gap:6px; }
   .cal2-h { display:flex; flex-wrap:wrap; gap:6px; align-items:center; } .cal2-h b { flex:1 1 auto; text-align:center; color:var(--bright); }
@@ -1428,7 +1433,6 @@
     <div class="iq-btns">
       <a class="np-btn" id="qbStamp" href="#stamp" title="Stamp a receipt" aria-label="Stamp a receipt"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span class="np-lbl">Stamp</span></a>
       <a class="np-btn" id="qbBoard" href="#board" title="Manage your Fleet: Vehicles and Mileage" aria-label="Manage your Fleet: Vehicles and Mileage"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><rect x="3" y="4" width="18" height="14"/><path d="M3 9h18M9 9v9M15 9v9M8 21h8"/></svg><span class="np-lbl">Board</span></a>
-      <a class="np-btn" id="qb1970" href="#forms" title="Manage your 1970" aria-label="Manage your 1970"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><path d="M6 2h9l4 4v16H6z"/><path d="M14 2v5h5M9 12h7M9 16h7"/></svg><span class="np-lbl">1970</span></a>
       <button type="button" class="np-btn lg-btn" id="lgBtn" aria-pressed="false" aria-label="Large text and buttons" title="Large mode — bigger buttons and text (good with gloves)"><span class="lg-aa" aria-hidden="true"><span>A</span><span>A</span></span><span class="np-lbl">Large</span></button>
     </div>
     <div class="finder" role="search">
@@ -1492,7 +1496,7 @@
     <section class="win view" id="v-home" aria-labelledby="t-home"><div class="bar"><span id="t-home">LOGSTAT.EXE</span><span class="ts" id="homeTs"></span></div><div class="body" id="b-home"></div></section>
     <section class="win view" id="v-stamp" hidden aria-labelledby="t-stamp"><div class="bar"><span id="t-stamp">STAMP.EXE<span class="bsub"> — Receipt pre-check and stamper</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-stamp"></div></section>
     <section class="win view" id="v-board" hidden aria-labelledby="t-board"><div class="bar"><span id="t-board">BOARD.EXE<span class="bsub"> — Manage your Fleet</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-board"></div></section>
-    <section class="win view" id="v-forms" hidden aria-labelledby="t-forms"><div class="bar"><span id="t-forms">1970.EXE<span class="bsub"> — Manage your 1970</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-forms"></div></section>
+    <section class="win view" id="v-forms" hidden aria-labelledby="t-forms"><div class="bar"><span id="t-forms">BOARD.EXE<span class="bsub"> — Manage your Fleet › 1970s</span></span><span class="bar-r"><a class="btn hb" href="#board">◀ Board</a></span></div><div class="body" id="b-forms"></div></section>
     <section class="win view" id="v-report" hidden aria-labelledby="t-report"><div class="bar"><span id="t-report">REPORT.EXE<span class="bsub"> — Mission status report</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-report"></div></section>
     <section class="win view" id="v-setup" hidden aria-labelledby="t-setup"><div class="bar"><span id="t-setup">SETUP.EXE<span class="bsub"> — Setup Mission</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body" id="b-setup"></div></section>
     <section class="win view" id="v-help" hidden aria-labelledby="t-help"><div class="bar"><span id="t-help">HELP.EXE<span class="bsub"> — How to use LOGSTAT</span></span><span class="bar-r"><a class="btn hb" href="#home">◀ Home</a></span></div><div class="body help" id="b-help"></div></section>
@@ -1598,12 +1602,10 @@
     return {gal:rg,amt:ra,n:rc.length,manual:false,rgal:rg,ramt:ra}; }
   function flags(R,db,v,date,org,today){
     const F=[], i=info(R,v), dr=dayRec(db,v.id,date), lo=startOfDay(db,v,date), e=num(dr.e), u=unitWord(i.tracks);
-    const jump=i.tracks==="hrs"?R.jumpHr:R.jumpMi;
     if(!active(v,date)) return F;
     if(i.tracks!=="none"){
       if(e===null){ if(!today||date<=today) F.push({lvl:"warn",id:"miles",t:i.tracks==="hrs"?"Hours not entered":"Mileage not entered"}); }
       else if(lo!==null&&e<lo) F.push({lvl:"crit",id:"lower",t:`End ${fmtN(e)} is lower than the day's start (${fmtN(lo)})`});
-      else if(lo!==null&&e-lo>jump) F.push({lvl:"warn",id:"jump",t:`${fmtN(e-lo)} ${u} in one day. Check it (limit ${fmtN(jump)}).`});
       if(num(dr.so)!==null){ const b=baseStart(db,v,date); if(b!==null&&b!==num(dr.so)) F.push({lvl:"info",id:"so",t:`Start ${fmtN(num(dr.so))} typed on the 1970 (the day before ended at ${fmtN(b)})`}); }
       if(!String(dr.op||"").trim()) F.push({lvl:"warn",id:"op",t:"Operator not entered"});
       else if(i.coop&&!String(dr.co||"").trim()) F.push({lvl:"warn",id:"coop",t:"Second driver not entered (tactical vehicles need two)"});
@@ -1959,7 +1961,7 @@ function route(){
   if(wantP!==PRACTICE){ PRACTICE=wantP; resetViewState(); }
   if(!INSTALL_KEEP&&!$("iqHowto").hidden) $("iqHowto").hidden=true; INSTALL_KEEP=false;
   document.documentElement.classList.toggle("practice",PRACTICE);
-  ["qbStamp","qbBoard","qb1970"].forEach((id,i)=>{ const a=$(id); if(a) a.setAttribute("href",href(["stamp","board","forms"][i])); });
+  ["qbStamp","qbBoard"].forEach((id,i)=>{ const a=$(id); if(a) a.setAttribute("href",href(["stamp","board"][i])); });
   VIEWS.forEach(n=>{ const s=$("v-"+n); if(s) s.hidden=n!==v; });
   // The home screen keeps a clean address (inter-q.com/logstat), never ".../logstat/#home".
   if(v==="home"&&location.hash){ try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} }
@@ -2065,13 +2067,12 @@ RENDER.home=function(){
   }
   const T={
     stamp:`<a class="tile" href="#stamp"><span class="tg">STAMP.EXE</span><b>Stamp a receipt</b><span>Pre-check, stamp the MRT and VIN digits, name the file, share.</span></a>`,
-    board:`<a class="tile" href="#board"><span class="tg">BOARD.EXE</span><b>Manage your Fleet: Vehicles and Mileage</b><span>Every vehicle on the mission: daily mileage, operators, FMC/NMC, fuel and flags. Open a vehicle's log to add days and print its 1970.</span></a>`,
-    report:`<a class="tile" href="#report"><span class="tg">REPORT.EXE</span><b>Mission report</b><span>Fleet numbers and charts for leadership. Print, PDF or Word.</span></a>`,
+    board:`<a class="tile" href="#board"><span class="tg">BOARD.EXE</span><b>Manage your Fleet</b><span>Vehicles, daily mileage, operators, FMC/NMC and fuel. Each vehicle's 1970, corrections, and blank forms.</span></a>`,
+    report:`<a class="tile" href="#report"><span class="tg">REPORT.EXE</span><b>Mission report</b><span>Fleet numbers and charts for leadership. Print or Word.</span></a>`,
     setup:`<a class="tile" href="#setup"><span class="tg">SETUP.EXE</span><b>Setup Mission</b><span>Task forces, MRT, VIN/serial digits, mission start date and your name. Save, load or close out the mission.</span></a>`,
-    forms:`<a class="tile" href="#forms"><span class="tg">1970.EXE</span><b>Manage your 1970</b><span>Correct a 1970 that was emailed or scanned, print 1970s for a task force or company, and download blank 1970s for the field.</span></a>`,
   };
-  const grp=(label,keys)=>`<div class="lbl">${esc(label)}</div><div class="tiles">${keys.map(k=>T[k]).join("")}</div>`;
-  const LAYOUT=[["Start here",["setup"]],["Every day",["stamp","board"]],["The 1970",["forms"]],["Leadership",["report"]]];
+  const grp=()=>`<div class="tiles home4">${["setup","stamp","board","report"].map(k=>T[k]).join("")}</div>`;
+  const LAYOUT=[[]];
   b.innerHTML=`${org?alerts:`<div class="w warn">Start with <a href="#setup">Setup</a>: add your task org and MRT, then add vehicles on the <a href="#board">Board</a>.</div>`}
     ${LAYOUT.map(([l,k])=>grp(l,k)).join("")}
     <div class="toolrow"><a class="btn" href="#help">? How to use</a><a class="btn" href="#install">⬇︎ Install on this device</a></div>`;
@@ -2094,7 +2095,7 @@ RENDER.help=function(){
   <h3>Stamp a receipt</h3><ul><li>Photograph the receipt on a white background, one receipt per photo.</li><li>Fill gallons, amount and odometer. Every receipt here is fuel on the WEX card. Tick the three pre-checks. Share sends the stamped copy with its file name.</li><li>The photo is cropped to the receipt automatically; tap <b>Adjust crop</b> if anything is cut off. A receipt too long for one photo can be taken in up to three parts with <b>＋ Add next part</b>: top first, overlapping a line or two.</li><li>The stamp goes on a tan band below the receipt (beside it on a very long receipt), never over it, and the photo's location data is removed. Keep the paper original for turn-in.</li></ul>
   <h3>Two operators, one task org</h3><ul><li>Board → <b>Save board file</b>, send it to the other device, and there tap <b>Merge in a board file</b>. The newest copy of every entry wins on both devices; nothing is lost unless the other device changed or removed it later. The same serial is treated as the same vehicle and the same receipt is counted once.</li><li>Entries changed before this version have no time on them; if both devices changed one, you choose whose copy to keep.</li></ul>
   <h3>Manage your Fleet (Board)</h3><ul><li>Tap the <b>Date</b> to open the mission calendar: days with vehicles on mission are highlighted with how many, the mission start is marked START, today is outlined. Tap a day to see it.</li><li><b>Open log</b> on a vehicle shows every day: Start, End, miles, operators, FMC/NMC and fuel. Fix any day the field reported wrong; the next day's Start follows. Same Start and End means it didn't move. <b>+ fill-up</b> adds another refuel for the same day; the 1970 shows the day's total gallons and cost. Typed fill-ups for a day are used instead of that day's stamped receipts. The log has <b>Preview 1970</b>, <b>Fillable 1970</b> and <b>Print-ready 1970</b>.</li><li>The Board holds each vehicle's daily mileage, operators, 1970 and receipts, and flags problems.</li><li><b>Big missions:</b> task orgs with the same MRT make one mission. Tap the mission line at the top of the Board to see every task force, a task force to see its companies, a company to see its vehicles. Set up companies with <b>Set up companies</b>; each company has its own vehicle count, miles, missing mileage and flags.</li><li><b>Tactical vehicles need a second driver</b> (co-operator) every day. It goes on the second name line of block 16 on the 1970, and that driver signs there. The Board flags a tactical vehicle with no second driver, or with the operator entered twice.</li><li><b>Day sheet</b> enters a whole company's end mileage, operators and second drivers for one day on one screen. </li><li><b>Big screen ↗</b> and <b>Org chart ↗</b> open in their own window: drag it to a TV or second screen and use Full screen. They refresh on their own every 20 seconds and right away when you save anything on this device. Entries from other devices show once their board file is merged in. The org chart goes mission → task force (HQ) → companies → sub-units → vehicles, each with FMC/NMC/EOM and today's operator.</li><li><b>Companies</b>: type over a name to rename it (its vehicles follow); <b>Part of</b> makes a sub-unit, such as a platoon inside a company.</li><li><b>Print</b> prints the level you're on: mission summary, task force (companies and their vehicles) or one company. <b>1970s for</b> a company ticks just its vehicles on the 1970 screen.</li><li><b>NMC</b> (damaged, can't be driven): set the day's status to NMC in the vehicle's log. It stays NMC until you set a later day back to FMC. <b>EOM</b> is separate (More… → EOM): do it when the vehicle is done, then finalize its 1970. EOM'd vehicles still count in the task force and company totals.</li></ul>
-  <h3>Manage your 1970</h3><ul><li>The 1970 header (operation, incident, unit, dispatcher, RAPTR operator) is set once per task org in <b>Setup Mission</b>; the license plate is in the vehicle's <b>Edit</b> on the Board.</li><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup: <b>White-out</b> covers a wrong entry, then tap to place text, ✓, ✗, the date or a signature on top, and save it as a PDF. A PDF that is neither fillable nor a scan (for example a print-ready copy) can't be edited here: open its fillable copy, or take a photo of the page.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
+  <h3>1970s (in Manage your Fleet)</h3><ul><li>On the Board, the <b>1970s and forms</b> section at the bottom prints 1970s for a task force or company, opens a 1970 to correct it, and has the blank forms. A single vehicle's 1970 is in its log.</li><li>The 1970 header (operation, incident, unit, dispatcher, RAPTR operator) is set once per task org in <b>Setup Mission</b>; the license plate is in the vehicle's <b>Edit</b> on the Board.</li><li>Built from the Board's daily entries: operators, start and end mileage, fuel and the card used, FMC/NMC. Your day edits win over the Board for the 1970.</li><li><b>Open a 1970</b>: a fillable ESAD 1970 PDF opens in the editor (every box and day); a photo or scan of a paper 1970 opens for markup: <b>White-out</b> covers a wrong entry, then tap to place text, ✓, ✗, the date or a signature on top, and save it as a PDF. A PDF that is neither fillable nor a scan (for example a print-ready copy) can't be edited here: open its fillable copy, or take a photo of the page.</li><li>Names with accents are written without them on the PDF (Nguyễn → Nguyen); the form's font has no accented letters.</li></ul>
   <h3>Signatures</h3><ul><li><b>Type</b> your name and pick a handwriting style, or <b>Draw</b> it with a finger. You confirm it's your own signature; it's saved on this device for next time.</li><li>Only the person named signs. Anyone can type a printed name, but not someone else's signature. Check with J4 that e-signatures are accepted on the 1970.</li></ul>
   <h3>Mission report</h3><ul><li>Vehicles on mission (FMC/NMC/EOM'd), miles and fuel per day, miles by vehicle, and the open items for the day.</li><li>The report prints with no web address on it, and saves as a PDF or a Word file, offline.</li></ul>
   <h3>Mission export</h3><ul><li><b>Mission export</b> (on the Board, Report and 1970 screens) saves one ZIP: every vehicle's 1970 for the mission as it stands (pick <b>PDF (print-ready)</b> or <b>Fillable PDF</b>), with day edits and signatures, plus the mission summary as a PDF.</li><li><b>Report builder</b>: pick what to report on (a company with its sub-units, a task force, the whole mission, or every mission on this device), the period (7, 14 or 30 days, mission to date, or custom, ending on the date shown), and the sections. <b>Print</b> (or Save as PDF from the print window) and <b>Word</b> follow the same choices. <b>Ready-made reports</b> (Daily brief, End of mission, and any you save) make one in a tap.</li><li>Every 1970 can be saved two ways: a vehicle's log (<b>Fillable 1970</b> / <b>Print-ready 1970</b>), the 1970 screen for a task force or company, a 1970 you opened to correct, and the mission export.</li><li>It covers the date the Board is showing. Use it at turn-in, close-out, or whenever someone asks for the mission's 1970s.</li></ul>
@@ -2278,9 +2279,8 @@ RENDER.stamp=function(){
       else if(v&&E.isYMD(v.startDate)&&dt<v.startDate) W.push(["warn",`The receipt date is before this vehicle started (${plain(v.startDate)}).`]);
       else if(v&&E.isYMD(v.eom)&&dt>v.eom) W.push(["warn",`This vehicle was EOM'd on ${plain(v.eom)}, before the receipt date.`]); }
     if(v&&i.tracks==="none"&&type==="FUEL") W.push(["warn","This vehicle is a trailer: no fuel or mileage. Check you picked the right vehicle."]);
-    if(v&&odo!==null){ const last=num(v.lastOdo); const jump=i.tracks==="hrs"?R.jumpHr:R.jumpMi;
+    if(v&&odo!==null){ const last=num(v.lastOdo);
       if(sodo!==null&&odo<sodo) W.push(["bad",`${i.tracks==="hrs"?"Hours":"Odometer"} ${fmtN(odo)} is lower than this morning's start (${fmtN(sodo)}). Check it.`]);
-      else if(sodo!==null&&odo-sodo>jump) W.push(["warn",`${fmtN(odo-sodo)} since this morning's start. Double-check the reading.`]);
       else if(v&&E.endOfDay(d,v,dateV())!==null&&odo>E.endOfDay(d,v,dateV())) W.push(["warn",`${i.tracks==="hrs"?"Hours":"Odometer"} ${fmtN(odo)} is above the day's end reading on the Board (${fmtN(E.endOfDay(d,v,dateV()))}). Check one of them.`]);
       else if(last!==null&&odo<last&&sodo===null) W.push(["bad",`${i.tracks==="hrs"?"Hours":"Odometer"} ${fmtN(odo)} is lower than the last reading (${fmtN(last)}). Check it.`]); }
     if(type==="FUEL"&&(num(q("#rsGal").value)===null||num(q("#rsAmt").value)===null)) W.push(["warn","Enter gallons and amount so they're on the stamp."]);
@@ -2490,8 +2490,8 @@ function dayForm(v,org,date){
     <div data-w></div>
     <div class="toolrow"><button class="btn" type="button" data-save>Save</button><button class="btn" type="button" data-x>Cancel</button></div></div>`);
   const g=(k)=>f.querySelector(`[data-k="${k}"]`);
-  const check=()=>{ const ev=g("e")?num(g("e").value):null, W=[]; const jump=i.tracks==="hrs"?R.jumpHr:R.jumpMi;
-    if(ev!==null&&lo!==null&&ev<lo) W.push(["bad",`Lower than the day's start (${fmtN(lo)}).`]); else if(ev!==null&&lo!==null&&ev-lo>jump) W.push(["warn",`${fmtN(ev-lo)} in one day. Check it.`]);
+  const check=()=>{ const ev=g("e")?num(g("e").value):null, W=[];
+    if(ev!==null&&lo!==null&&ev<lo) W.push(["bad",`Lower than the day's start (${fmtN(lo)}).`]);;
     f.querySelector("[data-w]").innerHTML=W.map(([k,t])=>`<div class="w ${k}">${esc(t)}</div>`).join(""); return W; };
   f.addEventListener("input",check);
   f.querySelector("[data-save]").addEventListener("click",()=>{ if(g("e")&&parseNum(g("e").value)===null){ toast(NUMMSG); g("e").focus(); return; } const r=dayRec(v.id,date); if(g("e")) r.e=parseNum(g("e").value); setName(v.id,date,"op",g("op").value); if(g("co")) setName(v.id,date,"co",g("co").value); save(); BOARD.open={}; RENDER.board(); toast("Saved."); });
@@ -2636,6 +2636,17 @@ async function boardImport(f){ const d=db(); try{ const o=JSON.parse(await f.tex
         if(tmp.forms&&tmp.forms.hdr&&tmp.forms.hdr[io.id]){ tmp.forms.hdr[have.id]=tmp.forms.hdr[io.id]; delete tmp.forms.hdr[io.id]; }
         const rk=(k)=>k.replace("o:"+io.id,"o:"+have.id).replace("h:"+io.id,"h:"+have.id).replace("c:"+io.id+"|","c:"+have.id+"|"); ["stamp","tomb"].forEach(m=>{ tmp[m]=Object.fromEntries(Object.entries(tmp[m]||{}).map(([k,v])=>[rk(k),v])); }); }
       BOARD.pendingImport={tmp,plan:planMerge(d,tmp,have.id),replace:()=>{ if(have.id!==io.id){ io.id=have.id; } replace(); }}; d.org=have.id; save(); RENDER.board(); window.scrollTo({top:0}); }catch(err){ console.error(err); toast(err.message||"Couldn't read that file."); } }
+// The bottom of the Board: print 1970s for a task force or company, open a 1970 to correct it, and the blank forms.
+function board1970Panel(){
+  const p=el(`<section class="vform b70" aria-label="1970s and forms"><div class="lbl">1970s and forms</div>
+    <div class="toolrow"><a class="btn rs-big" href="#forms">Print 1970s for a task force or company</a><label class="btn">Open a 1970 to correct it (PDF or picture)<input type="file" accept="application/pdf,.pdf,image/*" hidden data-open70></label><label class="btn">📷 Photo of a paper 1970<input type="file" accept="image/*" capture="environment" hidden data-open70></label></div>
+    <p class="muted" style="margin:0">A single vehicle's 1970 is in its log (<b>Open log</b> → Preview, Fillable or Print-ready). A fillable 1970 you open can be retyped box by box; a scan or photo gets White-out and text on top.</p>
+    <div class="lbl" style="margin-top:8px">Blank forms to download and print</div>
+    <div class="flist">${R.forms.map(x=>`<div class="fitem"><div><b>${esc(x.t)}</b> <span class="muted">PDF · ${esc(x.size)}</span><div class="muted">${esc(x.note)}</div></div><a class="btn" href="${esc(x.file)}" download="${esc(x.file)}">Download</a></div>`).join("")}
+      <div class="fitem"><div><b>Defensive Driver Training (DGS)</b> <span class="muted">Website · CalLearns</span><div class="muted">Required before driving a state vehicle (about two hours, official state email). Give the certificate and a signed STD 261 to your ARRO operator.</div></div><a class="btn" href="${esc(R.links.ddt.u)}" target="_blank" rel="noopener noreferrer">Open ↗</a></div></div></section>`);
+  p.querySelectorAll("[data-open70]").forEach(i=>i.addEventListener("change",(e)=>{ const f=e.target.files[0]; e.target.value=""; if(!f) return; FRM.edit=null; go("forms"); openFile(f); }));
+  return p;
+}
 // ---------- task forces and companies ----------
 // A mission is every task org on one MRT; each task org is a task force; a vehicle can belong to a company (db().coy).
 // The Board drills down: mission (#board&m) -> task force (#board&tf=ID) -> company (#board&tf=ID&co=NAME, "-" = no company,
@@ -2770,7 +2781,7 @@ let DS_FLUSH=null;   // a Day sheet entry still waiting for its pause
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden"&&DS_FLUSH) DS_FLUSH(); });
 // ---- day sheet: one company, one day, every vehicle on one screen; each entry saves as it's typed ----
 function daySheet(org,V,date,today,co){
-  const d=db(), jump=(i)=>i.tracks==="hrs"?R.jumpHr:R.jumpMi;
+  const d=db();
   const act=V.filter(v=>E.active(v,date)).sort((a,c)=>(a.label||"").localeCompare(c.label||"",undefined,{numeric:true})||a.sn.localeCompare(c.sn));
   const w=el(`<div class="dsheet"><div class="ds-top"><div class="lbl">Day sheet · ${esc(co!=null?coyName(co):org.to||"")} · ${esc(plain(date))}${E.dplus(org,date)?" · "+esc(E.dplus(org,date)):""}</div>
     <p class="muted" style="margin:0">Type each vehicle's end ${act.some(v=>E.info(R,v).tracks==="hrs")?"reading (miles or hours)":"mileage"} and operator for the day${act.some(v=>E.info(R,v).coop)?", plus the second driver on tactical vehicles":""}. Each entry saves on this device as you go; the 1970s use it. Enter moves across the row, then to the next vehicle.</p></div>
@@ -2785,7 +2796,7 @@ function daySheet(org,V,date,today,co){
         <div class="ds-w" data-w></div></div>`; }).join("")||`<div class="muted">No vehicles on this day.</div>`}</div>
     <div class="toolrow"><a class="btn rs-big" href="${esc(hasCoys(org)&&co!==CO_ALL?boardHref(org,co):boardHref(org))}">Done</a><span class="muted" data-saved></span></div></div>`);
   const paint=(row)=>{ const v=vehById(row.dataset.vid); if(!v) return; const i=E.info(R,v), lo=E.startOfDay(d,v,date), ev=num(row.querySelector('[data-k="e"]').value), mi=row.querySelector("[data-mi]"), W=row.querySelector("[data-w]");
-    let msg="", cls=""; if(i.tracks!=="none"&&ev!==null&&lo!==null){ const n=ev-lo; mi.textContent=fmtN(+n.toFixed(Math.max(decs(ev),decs(lo))))+" "+E.unitWord(i.tracks); if(n<0){ msg=`Lower than the start (${fmtN(lo)}).`; cls="crit"; } else if(n>jump(i)){ msg=`${fmtN(n)} in one day. Check it.`; cls="warn"; } } else mi.textContent=i.tracks==="none"?"—":"";
+    let msg="", cls=""; if(i.tracks!=="none"&&ev!==null&&lo!==null){ const n=ev-lo; mi.textContent=fmtN(+n.toFixed(Math.max(decs(ev),decs(lo))))+" "+E.unitWord(i.tracks); if(n<0){ msg=`Lower than the start (${fmtN(lo)}).`; cls="crit"; } } else mi.textContent=i.tracks==="none"?"—":"";
     // tactical: the second driver
     const op=row.querySelector('[data-k="op"]').value.trim(), coI=row.querySelector('[data-k="co"]'), co=coI?coI.value.trim():"";
     if(i.coop&&i.tracks!=="none"&&op){ if(!co){ msg=(msg?msg+" ":"")+"Second driver needed (tactical)."; if(!cls) cls="warn"; } else if(E.normTO(co)===E.normTO(op)){ msg=(msg?msg+" ":"")+"Second driver can't be the operator."; cls="crit"; } }
@@ -2934,7 +2945,7 @@ function vehicleLog(b,v){
   const top=el(`<div class="vform lg-top"><div class="toolrow"><a class="btn" href="#board">◀ All vehicles</a></div>
     <div class="vc-h"><span><b>${esc(v.label||i.cat.short)}</b> <code>${esc(v.sn)}</code></span><span><span class="pill">${esc(status)}</span> <span class="pill p-dim">${esc(i.cat.short)}</span></span></div>
     <div class="status"><span>Start <b>${esc(startD?plain(startD):"—")}</b>${v.startOdo?` at <b>${esc(fmtN(num(v.startOdo)))}</b>`:""}</span>${u==="none"?"":`<span>This mission <b>${esc(fmtN(Math.round(tot*10)/10))} ${U}</b></span>`}<span>Fuel <b>${esc(money(fuel))}</b> (${esc(String(Math.round(gal*1000)/1000))} gal)</span><span>Days entered <b>${n}</b> of ${days.length}</span></div>
-    <p class="muted" style="margin:0">Add a day for each day the vehicle is on the mission. Start fills in from the day before's End; fix any number the field reported wrong. Same Start and End means it didn't move. More than one fill-up in a day? Tap + fill-up. Everything here updates the Board, the report and this vehicle's 1970.</p></div>`);
+    <p class="muted" style="margin:0">Add a day for each day the vehicle is on the mission. Start fills in from the day before's End; fix any number the field reported wrong. Same Start and End means it didn't move. Type the 1970's start and end locations (boxes 14 and 15) each day. More than one fill-up in a day? Tap + fill-up. Everything here updates the Board, the report and this vehicle's 1970.</p></div>`);
   b.appendChild(top);
   // the 1970
   const f70=el(`<details class="sec lg-1970" open><summary>1970 for this vehicle</summary><div class="toolrow"><button class="btn" type="button" data-prev aria-pressed="${LOG.prev}">${LOG.prev?"Hide preview":"Preview 1970"}</button><button class="btn" type="button" data-go="fill">Fillable 1970 (PDF)</button><button class="btn rs-big" type="button" data-go="flat">Print-ready 1970 (PDF)</button><a class="btn" href="${esc(href("forms","v="+encodeURIComponent(v.id)))}">Locations &amp; signatures</a></div><div class="muted" data-st></div><div data-rb></div><div data-pv></div></details>`);
@@ -2975,6 +2986,7 @@ function vehicleLog(b,v){
       ${none?`<div class="lg-fuel muted">No fuel or mileage</div>`:`<div class="lg-fuel"><span class="lg-fl">Fuel (gal · $)</span>${(()=>{ const FL=E.fuelList(dr), L=FL.length?FL.slice():[{g:"",c:""}]; if(LOG.addf===v.id+"|"+x&&FL.length) L.push({g:"",c:""});
         return L.map((q,j)=>`<div class="lg-fe"><input class="fld" data-k="fg" data-j="${j}" inputmode="decimal" autocomplete="off" aria-label="Fuel gallons, fill-up ${j+1}" value="${esc(q.g)}" placeholder="${j===0&&!f.manual&&f.n?esc(String(Math.round(f.gal*1000)/1000)):"gal"}"><input class="fld" data-k="fc" data-j="${j}" inputmode="decimal" autocomplete="off" aria-label="Fuel cost, fill-up ${j+1}" value="${esc(q.c)}" placeholder="${j===0&&!f.manual&&f.n?esc(f.amt.toFixed(2)):"$"}">${L.length>1?`<button type="button" class="btn lg-delf" data-delf="${j}" aria-label="Remove fill-up ${j+1}">✕</button>`:""}</div>`).join(""); })()}
         <button type="button" class="btn lg-addf" data-addf>+ fill-up</button>${f.manual&&f.fills>1?`<span class="muted lg-ft">${f.fills} fill-ups: ${esc(String(Math.round(f.gal*1000)/1000))} gal · ${esc(money(f.amt))}</span>`:""}</div>`}
+      ${(()=>{ const o=formsDB().day[v.id+"|"+x]||{}; return `<div class="lg-loc"><span class="lg-locl muted">1970 box 14 / 15</span><label><span>14. Start location</span><input class="fld" data-k="sl" maxlength="40" autocomplete="off" placeholder="14. Start location" aria-label="14. Start location" value="${esc(o.sl||"")}"></label><label><span>15. End location</span><input class="fld" data-k="el" maxlength="40" autocomplete="off" placeholder="15. End location" aria-label="15. End location" value="${esc(o.el||"")}"></label></div>`; })()}
       ${W.length?`<div class="lg-w">${W.map(w=>`<span class="w ${w[0]}">${esc(w[1])}</span>`).join("")}</div>`:""}
     </div>`; };
   const box=el(`<div class="lg-days"><div class="lg-head" aria-hidden="true"><span>Date</span><span>Start</span><span>End</span><span>${esc(U)}</span><span>Operator</span><span>${coop?"2nd driver":""}</span><span>Status</span><span>Fuel (gal · $)</span></div>${days.map(rowHtml).join("")}
@@ -2990,6 +3002,7 @@ function vehicleLog(b,v){
       // remarks typed over on the 1970 for this day rebuild from the new numbers
       const FD=formsDB().day, o=FD[v.id+"|"+x]; if(o&&(typeof o.r1==="string"||typeof o.r2==="string")){ delete o.r1; delete o.r2; if(!Object.keys(o).length) delete FD[v.id+"|"+x]; toast("The 1970 remarks for this day now follow these numbers."); } }
     else if(k==="op"||k==="co"){ t.value=setName(v.id,x,k,t.value); }
+    else if(k==="sl"||k==="el"){ const FD=formsDB().day, key=v.id+"|"+x, val=t.value.replace(/\s+/g," ").trim().slice(0,40), o=FD[key]||(FD[key]={}); if(val) o[k]=val; else delete o[k]; if(!Object.keys(o).length) delete FD[key]; t.value=val; }
     else if(k==="st"){ setNmcDay(v,x,t.value==="NMC"); toast(t.value==="NMC"?`NMC from ${plain(x)} until you set a day back to FMC.`:`FMC on ${plain(x)}.`); }
     save(); later(); });
   box.addEventListener("click",(e)=>{ if(e.target.closest("[data-early]")&&earlier){ const ok=!E.isYMD(v.startDate)||earlier<v.startDate;
@@ -3001,7 +3014,10 @@ function vehicleLog(b,v){
       if(j<L.length){ L.splice(j,1); delete rec.fg; delete rec.fc; if(L.length) rec.fx=L; else delete rec.fx; save(); toast("Fill-up removed."); } else LOG.addf=""; RENDER.board(); } });
   b.appendChild(box);
 }
-RENDER.board=function(){
+RENDER.board=function(){ boardMain(); const p=PARAMS, b=$("b-board");
+  if(typeof p.log==="string"&&vehById(p.log)) return; if(p.ds) return;
+  if(b&&!b.querySelector(".b70")) b.appendChild(board1970Panel()); };
+function boardMain(){
   const b=$("b-board"), d=db(), p=PARAMS;
   if(typeof p.log==="string"){ const v=vehById(p.log); if(v){ b.innerHTML=""; vehicleLog(b,v); return; } }
   if(typeof p.vc==="string"){ delete PARAMS.vc; try{ history.replaceState(null,"",location.pathname+location.search+href("board")); }catch(e){} }   // old transfer links: just the Board
@@ -3095,7 +3111,6 @@ RENDER.setup=function(){
       <div class="row"><label class="f">1. Operation<input class="fld" data-h="op" maxlength="60" value="${esc(H.op)}" placeholder="OPORD 3000-25-01 (Civil Support)"></label><label class="f">3. Mission / incident<input class="fld" data-h="inc" maxlength="60" value="${esc(H.inc)}"></label></div>
       <div class="row"><label class="f">8. Unit (of origin)<input class="fld" data-h="unit" maxlength="40" value="${esc(H.unit)}"></label><label class="f">10. Dispatcher (unit of origin)<input class="fld" data-h="disp" maxlength="50" value="${esc(H.disp)}"></label></div>
       <div class="row"><label class="f">11. RAPTR operator &amp; phone<input class="fld" data-h="rop" maxlength="60" value="${esc(H.rop)}" placeholder="SGT Name  555-555-0100"></label><label class="f">12. RAPTR operator email<input class="fld" data-h="rem" maxlength="60" value="${esc(H.rem)}" placeholder="name@cmd.ca.gov" autocapitalize="none"></label></div>
-      <div class="row"><label class="f">14. Start location (usual)<input class="fld" data-h="sl" maxlength="40" value="${esc(H.sl)}" placeholder="optional"></label><label class="f">15. End location (usual)<input class="fld" data-h="el" maxlength="40" value="${esc(H.el)}" placeholder="optional"></label></div>
       <div class="muted">MRT, VIN, vehicle type, dates, operators, mileage, fuel and FMC/NMC come from the Board.</div></details>`; })()}
       <div class="muted">${d.veh.filter(v=>v.org===o.id).length} vehicles · ${d.rc.filter(r=>r.org===o.id).length} receipts</div>
       <div class="toolrow"><button class="btn" type="button" data-del>Delete this task org…</button></div></div>`);
@@ -3193,7 +3208,7 @@ function rows1970(d,org,v,through,all,H){
     const fuelTxt=hasFuel?("FUEL: "+(fp.join(" · ")||"see receipt")):"";
     const tollTxt=toll.length?`TOLL ${money(tamt)}${toll[0].loc?" "+String(toll[0].loc).slice(0,18):""}`:"";
     r2=[r2,fuelTxt,tollTxt].filter(Boolean).join(" · ");
-    const base={sl:H.sl||"",el:H.el||"",op:String(dr.op||""),co:E.info(R,v).coop?String(dr.co||""):"",r1,r2,
+    const base={sl:"",el:"",op:String(dr.op||""),co:E.info(R,v).coop?String(dr.co||""):"",r1,r2,
       card:cardStr({p:!DF.manual&&fuel.some(r=>r.card==="Personal funds"),w:DF.manual||fuel.some(r=>r.card==="WEX"),v:!DF.manual&&fuel.some(r=>r.card==="Voyager")}),st:E.nmcDay(v,dt)?"NMC":"FMC",s1:"",s2:""};
     const row={date:dt,base,edited:false};
     OVK.forEach(k=>{ const x=o&&typeof o[k]==="string"?o[k]:null; row[k]=x!==null?x:base[k]; if(x!==null&&x!==base[k]&&!["sl","el","s1","s2"].includes(k)) row.edited=true; });
@@ -3506,7 +3521,7 @@ RENDER.forms=function(){
   const rb=readyBox(FRM.ready);
   if(FRM.up){ if(PRACTICE) b.appendChild(el(`<div class="w warn">Practice mission: copies saved here are marked PRACTICE - NOT FOR ARRO.</div>`)); if(rb) b.appendChild(rb); if(FRM.up.kind==="fill") renderUploadFill(b); else renderMarkup(b); return; }
   if(FRM.edit){ const og=curOrg(); if(og&&FRM.org===og.id){ if(rb) b.appendChild(rb); if(renderBoardEditor(b,og)) return; } }
-  b.appendChild(el(`<p style="margin:0">Correct a 1970 you were emailed or scanned, download blank 1970s for the field, or print 1970s for a whole task force or company. A single vehicle's 1970 is in its log on the Board. Works offline; nothing leaves this device.</p>`));
+  b.appendChild(el(`<p style="margin:0">Print 1970s for a whole task force or company, or correct a 1970 you were emailed or scanned. A single vehicle's 1970 is in its log on the Board; blank forms are at the bottom of the Board. Works offline; nothing leaves this device.</p>`));
   if(PRACTICE) b.appendChild(el(`<div class="w warn">Practice mission: 1970s made here are marked PRACTICE - NOT FOR ARRO.</div>`));
   if(rb) b.appendChild(rb);
   if(!FRM.edit) b.appendChild(backupBox());
@@ -3568,7 +3583,7 @@ RENDER.forms=function(){
     <div class="fitem"><div><b>Defensive Driver Training (DGS)</b> <span class="muted">Website · CalLearns</span><div class="muted">Required before driving a state vehicle (about two hours, official state email). Give the certificate and a signed STD 261 to your ARRO operator.</div></div><a class="btn" href="${esc(R.links.ddt.u)}" target="_blank" rel="noopener noreferrer">Open ↗</a></div></div>`);
   // the task force section becomes one highlighted panel; blank forms go at the bottom
   const th=b.querySelector("[data-tfh]"); if(th){ const panel=el(`<section class="f70tf" aria-label="Print 1970s for a task force or company"></section>`); th.before(panel); let n=th; while(n){ const nx=n.nextSibling; panel.appendChild(n); n=nx; } }
-  const bl=b.querySelector("[data-blanks]"); if(bl) bl.remove(); b.appendChild(fl);
+  const bl=b.querySelector("[data-blanks]"); if(bl) bl.remove(); void fl;
 };
 
 // ================= SIGNATURES: adopt (type in a handwriting style, or draw), then place =================
@@ -4549,7 +4564,7 @@ function mergePanel(d,org){
     {n:"Blank 1970 to print for the field",w:"1970.EXE",h:"#forms",k:"blank print field download std 270 accident"},
     {n:"Mission report",w:"REPORT.EXE",h:"#report",k:"report mission status sitrep situational awareness leadership print pdf word docx charts graphs dashboard metrics"},
     {n:"Mission export (all 1970s + summary)",w:"REPORT.EXE",h:"#report",k:"mission export zip all 1970s summary close out turn in binder cost recovery save every 1970 dashboard pdf csv"},
-    {n:"Manage your 1970",w:"1970.EXE",h:"#forms",k:"forms finalize submit arro end of mission 1970 esad form fill pdf print sign signature photo upload std 270 accident download"},
+    {n:"1970s (Manage your Fleet)",w:"BOARD.EXE",h:"#forms",k:"forms finalize submit arro end of mission 1970 esad form fill pdf print sign signature photo upload std 270 accident download"},
     {n:"Setup Mission",w:"SETUP.EXE",h:"#setup",k:"setup mission mrt task org name backup close out"},
     {n:"How to use LOGSTAT",w:"Help",h:"#help",k:"help how instructions privacy rules"},
     {n:"Install on this device",w:"Install",h:"#install",k:"install home screen app add"},
