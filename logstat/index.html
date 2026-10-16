@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/7F592mxAO90wUtrxpmhsPN5yfTmMhzDEr/NFbjVjac=' 'sha256-1hHdkZtQcudwd7kv31Dz3WoKMwIxAgNNIat2WhmBmLI=' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-VUoLBg/2fesUGOZmSHj6uWNaFBrXdHTOt4Xk3qgG9g8=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-wDu7yF+3dUC6J745X0i2zZojbXVbjQab5Yhp6lv4ks0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-16 08:00">
+<meta name="logstat-build" content="2026-10-16 11:00">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -1598,7 +1598,7 @@
     return {gal:rg,amt:ra,n:rc.length,manual:false,rgal:rg,ramt:ra}; }
   function flags(R,db,v,date,org,today){
     const F=[], i=info(R,v), dr=dayRec(db,v.id,date), lo=startOfDay(db,v,date), e=num(dr.e), u=unitWord(i.tracks);
-    const jump=i.tracks==="hrs"?(num(org&&org.jumpHr)||R.jumpHr):(num(org&&org.jumpMi)||R.jumpMi);
+    const jump=i.tracks==="hrs"?R.jumpHr:R.jumpMi;
     if(!active(v,date)) return F;
     if(i.tracks!=="none"){
       if(e===null){ if(!today||date<=today) F.push({lvl:"warn",id:"miles",t:i.tracks==="hrs"?"Hours not entered":"Mileage not entered"}); }
@@ -2278,7 +2278,7 @@ RENDER.stamp=function(){
       else if(v&&E.isYMD(v.startDate)&&dt<v.startDate) W.push(["warn",`The receipt date is before this vehicle started (${plain(v.startDate)}).`]);
       else if(v&&E.isYMD(v.eom)&&dt>v.eom) W.push(["warn",`This vehicle was EOM'd on ${plain(v.eom)}, before the receipt date.`]); }
     if(v&&i.tracks==="none"&&type==="FUEL") W.push(["warn","This vehicle is a trailer: no fuel or mileage. Check you picked the right vehicle."]);
-    if(v&&odo!==null){ const last=num(v.lastOdo); const jump=i.tracks==="hrs"?(num(org&&org.jumpHr)||R.jumpHr):(num(org&&org.jumpMi)||R.jumpMi);
+    if(v&&odo!==null){ const last=num(v.lastOdo); const jump=i.tracks==="hrs"?R.jumpHr:R.jumpMi;
       if(sodo!==null&&odo<sodo) W.push(["bad",`${i.tracks==="hrs"?"Hours":"Odometer"} ${fmtN(odo)} is lower than this morning's start (${fmtN(sodo)}). Check it.`]);
       else if(sodo!==null&&odo-sodo>jump) W.push(["warn",`${fmtN(odo-sodo)} since this morning's start. Double-check the reading.`]);
       else if(v&&E.endOfDay(d,v,dateV())!==null&&odo>E.endOfDay(d,v,dateV())) W.push(["warn",`${i.tracks==="hrs"?"Hours":"Odometer"} ${fmtN(odo)} is above the day's end reading on the Board (${fmtN(E.endOfDay(d,v,dateV()))}). Check one of them.`]);
@@ -2490,7 +2490,7 @@ function dayForm(v,org,date){
     <div data-w></div>
     <div class="toolrow"><button class="btn" type="button" data-save>Save</button><button class="btn" type="button" data-x>Cancel</button></div></div>`);
   const g=(k)=>f.querySelector(`[data-k="${k}"]`);
-  const check=()=>{ const ev=g("e")?num(g("e").value):null, W=[]; const jump=i.tracks==="hrs"?(num(org.jumpHr)||R.jumpHr):(num(org.jumpMi)||R.jumpMi);
+  const check=()=>{ const ev=g("e")?num(g("e").value):null, W=[]; const jump=i.tracks==="hrs"?R.jumpHr:R.jumpMi;
     if(ev!==null&&lo!==null&&ev<lo) W.push(["bad",`Lower than the day's start (${fmtN(lo)}).`]); else if(ev!==null&&lo!==null&&ev-lo>jump) W.push(["warn",`${fmtN(ev-lo)} in one day. Check it.`]);
     f.querySelector("[data-w]").innerHTML=W.map(([k,t])=>`<div class="w ${k}">${esc(t)}</div>`).join(""); return W; };
   f.addEventListener("input",check);
@@ -2770,7 +2770,7 @@ let DS_FLUSH=null;   // a Day sheet entry still waiting for its pause
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden"&&DS_FLUSH) DS_FLUSH(); });
 // ---- day sheet: one company, one day, every vehicle on one screen; each entry saves as it's typed ----
 function daySheet(org,V,date,today,co){
-  const d=db(), jump=(i)=>i.tracks==="hrs"?(num(org.jumpHr)||R.jumpHr):(num(org.jumpMi)||R.jumpMi);
+  const d=db(), jump=(i)=>i.tracks==="hrs"?R.jumpHr:R.jumpMi;
   const act=V.filter(v=>E.active(v,date)).sort((a,c)=>(a.label||"").localeCompare(c.label||"",undefined,{numeric:true})||a.sn.localeCompare(c.sn));
   const w=el(`<div class="dsheet"><div class="ds-top"><div class="lbl">Day sheet · ${esc(co!=null?coyName(co):org.to||"")} · ${esc(plain(date))}${E.dplus(org,date)?" · "+esc(E.dplus(org,date)):""}</div>
     <p class="muted" style="margin:0">Type each vehicle's end ${act.some(v=>E.info(R,v).tracks==="hrs")?"reading (miles or hours)":"mileage"} and operator for the day${act.some(v=>E.info(R,v).coop)?", plus the second driver on tactical vehicles":""}. Each entry saves on this device as you go; the 1970s use it. Enter moves across the row, then to the next vehicle.</p></div>
@@ -3091,7 +3091,6 @@ RENDER.setup=function(){
   d.orgs.forEach(o=>{ const c=el(`<div class="vc"><div class="vc-h"><span><b>${esc(o.to||"(no name)")}</b> <code>${esc(o.mrt||"no MRT")}</code></span><span>${o.id===d.org?'<span class="pill p-ok">current</span>':`<button class="btn" type="button" data-use>Use this one</button>`}</span></div>
       <div class="row"><label class="f">Task org<input class="fld" data-k="to" value="${esc(o.to)}" placeholder="TF REDHAWK"></label><label class="f">MRT / mission #<input class="fld" data-k="mrt" value="${esc(o.mrt)}"></label></div>
       <div class="row"><label class="f">VIN / serial digits on receipts<select class="fld" data-k="digits"><option value="8"${o.digits===8?" selected":""}>Last 8 (course; meets "at least 6")</option><option value="6"${o.digits===6?" selected":""}>Last 6 (minimum)</option></select></label><label class="f">Mission start date<input type="date" class="fld" data-k="start" value="${esc(o.start)}"></label></div>
-      <div class="row"><label class="f">Daily jump limit, miles<input class="fld" data-k="jumpMi" inputmode="numeric" placeholder="${R.jumpMi}" value="${esc(o.jumpMi)}"></label><label class="f">Daily jump limit, hours<input class="fld" data-k="jumpHr" inputmode="numeric" placeholder="${R.jumpHr}" value="${esc(o.jumpHr)}"></label></div>
       ${(()=>{ const H=hdrOf(o); return `<details class="sec su-h"${H.op||H.inc||H.unit?"":" open"}><summary>1970 header (printed on every 1970 for this task org)</summary>
       <div class="row"><label class="f">1. Operation<input class="fld" data-h="op" maxlength="60" value="${esc(H.op)}" placeholder="OPORD 3000-25-01 (Civil Support)"></label><label class="f">3. Mission / incident<input class="fld" data-h="inc" maxlength="60" value="${esc(H.inc)}"></label></div>
       <div class="row"><label class="f">8. Unit (of origin)<input class="fld" data-h="unit" maxlength="40" value="${esc(H.unit)}"></label><label class="f">10. Dispatcher (unit of origin)<input class="fld" data-h="disp" maxlength="50" value="${esc(H.disp)}"></label></div>
