@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-1TMGWabO8xXegaUVN5lyBnXsxCFXd8mnUmp60GoueY8=' 'sha256-5/uCimzFA7dVPctCmyVNgrDzEZ//ajQcGHCDVMd/lO0=' 'sha256-B4z4WyFqzVkZFQfg2jyxe34hDG36oeEqKIS1GeXbfN8=' 'sha256-EgF6iFkQwiByy/Wy0JSYS2bwHCzcHjNz/JQX3N2e0DU=' 'sha256-EzsfbgPVP59MwW1KZFwcmZpirugTNHmwsT3Wl5FgN0w=' 'sha256-M+TX0TqdYD3zOd85REQrMdXYpkYcda2rvWbRoGD6bfE=' 'sha256-SCsQfMiDpt02zw4AIv21okS9p9LLpmvSzrKX53AabKk=' 'sha256-TsHMH/wmw3OhFvfrhhhPZqkgnZTqlH3a3kSs5dmqgAM=' 'sha256-YYLu3OYDEKRMGIsdO53o8pSlU/hW+NN1Pu7lvnsudl0=' 'sha256-bFKYacH02sJ46LmWFM94Zrq6fjiI81HYCZhVIVN3KqI=' 'sha256-ea+/wYbb9qBCIo1zazDCGJfxH/9a+XDNLuaEhVoSnso=' 'sha256-fc8T6sZwd94fncfKm0DNRVn7pRIYVBzouoKdJILi8yk=' 'sha256-icJ2c59XJzxhh2RwcSKh4VocKp8HEFseHv6zHLuYE6s=' 'sha256-jG57SIqSOQRs3onvTY30LRclIUQfDj2kHtCmLITZYLI=' 'sha256-kCx6K/QeFpQwUXUO1IYPlp8iHZPPPmhIJfk09VQZn9I=' 'sha256-lQYrNDnlFbI1yLA1Pm6whAsJCx1lRLq6ihNkfxfqw3A=' 'sha256-oiEnl1dQ2Ey5eYKf0JE0+r2j5hIyZs6W44Ds2EJd8LU=' 'sha256-pW03XpYLka+/MQ0J6PMkDchzsTtKyzSUZt0bGjpqbKg=' 'sha256-zfcubeHhMvjToQdGfWuQrBtYDT7y8fxeT7NL3o2L3Co='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://ipapi.co https://api.open-meteo.com https://air-quality-api.open-meteo.com https://earthquake.usgs.gov https://api.sunrise-sunset.org https://api.weather.gov https://api.bart.gov https://www.fema.gov https://www.gdacs.org https://eonet.gsfc.nasa.gov; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Inter-Q Field Kit</title>
+<title>TOOLS</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}
 // GPS switch. false = no "Use my location" buttons and no GPS on the camera stamp (Home Screen apps on recent iPhones are refused location).
@@ -12,7 +12,7 @@
 var IQ_GPS=false; if(!IQ_GPS) document.documentElement.classList.add("no-gps");</script>
 <script>if(/[?&]notepad\b/.test(location.search)){ document.documentElement.classList.add("np-mode"); var t=(location.search.match(/[?&]theme=(green|blue|amber|red)\b/)||[])[1]; if(t) document.documentElement.dataset.theme=t; }</script>
 <meta name="referrer" content="no-referrer">
-<meta name="iq-build" content="2026-10-20 09:00">
+<meta name="iq-build" content="2026-10-22 09:00">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="iqkit-32.png?v=2" id="iqFav">
 <link rel="apple-touch-icon" href="iqkit-180.png?v=2">
