@@ -3,10 +3,10 @@
 // background, and the open page is told when a new build has arrived so it can offer a reload.
 // Live feeds and lookups (weather, news, maps, AI sites) always go straight to the network and are never stored.
 // Bump CACHE whenever a file in CORE changes, so installed apps pick up the new copy.
-const CACHE = "iqkit-v9";
+const CACHE = "iqkit-v10";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
   "./manifest.json", "./qrcode.min.js",
-  "./iqkit-32.png", "./iqkit-48.png", "./iqkit-180.png", "./iqkit-apple-512.png", "./iqkit-192.png", "./iqkit-512.png", "./iqkit-maskable-512.png"];
+  "./iqkit-32.png", "./iqkit-48.png", "./iqkit-home-180.png", "./iqkit-home-512.png", "./iqkit-app-192.png", "./iqkit-app-512.png", "./iqkit-app-maskable-512.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil((async () => {
