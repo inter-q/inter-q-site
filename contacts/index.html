@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-5ftX6yobDdB4VypN2OSbZvFeI1dZoFI/Pn+Dp64bs+Y='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-IZeIC2+rMA3nVOhf94/OI+HPLrU1wQy/qQAF/sDXquc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CONTACTS</title>
-<meta name="iqc-build" content="2026.10.22-2">
+<meta name="iqc-build" content="2026.10.22-3">
 <meta name="description" content="A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -54,6 +54,10 @@ a{color:var(--link)}
 @keyframes iqblink{50%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.mark .cur{animation:none}}
 .top .sp{flex:1}
+.btn.plus{min-width:44px;padding:0 12px;font-size:22px;font-weight:700}
+@media (max-width:430px){.btn.plus{min-width:40px;padding:0 10px;font-size:20px}}
+@media (max-width:370px){.btn.plus{min-width:34px;padding:0 7px;font-size:18px}}
+@media (max-width:340px){.top{gap:4px}.mark{font-size:15px!important}.top .btn{padding:6px 7px}.btn.plus{min-width:30px;padding:0 6px}.theme-sw button{padding:4px 5px}}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 14px;border-radius:6px;white-space:nowrap;
   border:2px solid var(--ink);background:transparent;color:var(--ink);font:700 14px/1 var(--mono);cursor:pointer;text-decoration:none;user-select:none;-webkit-user-select:none}
 .btn:hover{background:var(--hover)}
@@ -433,6 +437,17 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
   #printArea .wcard table{margin:0}
   .wcard .ft{font-size:6pt;line-height:1.25;margin-top:.8mm;color:#333}
 }
+/* Desktop: one clean header line. The colour switch sits on one row and the items share the width evenly, with no
+   big hole after the title. The rolodex knobs are left out; the card is as wide as the A–Z row below it. */
+@media (min-width:700px){
+  .top{justify-content:space-between;gap:12px}
+  .top .sp{display:none}
+  .theme-sw{grid-template-columns:repeat(4,auto)}
+  .theme-sw button{padding:0 11px;min-height:36px}
+  .theme-sw button:nth-child(n+3){border-top:0}
+  .theme-sw button+button{border-left:1px solid var(--rule)}
+  .knob{display:none}
+}
 </style>
 </head>
 <body>
@@ -446,7 +461,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
       <button type="button" data-theme-set="amber" aria-pressed="false" title="Amber: warm, best in daylight"><span class="sw" style="background:#ffb000"></span><span class="lb">Amber</span></button>
       <button type="button" data-theme-set="red" aria-pressed="false" title="Red: night mode, protects night vision"><span class="sw" style="background:#e0382c"></span><span class="lb">Red</span></button>
     </div>
-    <button class="btn primary" id="newBtn" type="button" aria-label="New card">+<span class="nw">&nbsp;New</span><span class="wide">&nbsp;card</span></button>
+    <button class="btn primary plus" id="newBtn" type="button" aria-label="New card" title="New card">+</button>
     <button class="btn" id="modeBtn" type="button" aria-pressed="false">List</button>
     <button class="btn" id="menuBtn" type="button" aria-haspopup="dialog">Menu</button>
   </header>
@@ -953,7 +968,7 @@ function welcomeCard(kind){
 /* ================= the drum: layout + render ================= */
 let deckW=560, deckH=360, lastFront=-1, STACKY=19, LMAX=5, NOTECHARS=30;   // how far each card behind sticks up
 /* Phones: the card file fills the screen. Wider screens: a 5x3 index card, with the whole file sized to fit and centered. */
-const app=document.querySelector(".app");let lastDevH=0;const PEEK=104;   // room above the front card for the cards behind it and their tabs
+const app=document.querySelector(".app"),baseEl=document.querySelector(".base");let lastDevH=0;const PEEK=104;   // room above the front card for the cards behind it and their tabs
 function layout(){
   const wide=innerWidth>=700;
   let room=0;
@@ -962,13 +977,15 @@ function layout(){
   const compact=wide&&room>=220;app.classList.toggle("compact",compact);
   if(compact){STACKY=19*PEEK/118;const sw=Math.min(stage.clientWidth||innerWidth,760);
     const fixed=[...app.children].filter((el)=>el!==dev&&el.offsetParent!==null).reduce((a,el)=>{const cs=getComputedStyle(el);return a+el.offsetHeight+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom);},0)+24;
-    deckW=Math.round(Math.min(620,sw-40));
-    const want=Math.round(deckW*.62),room=innerHeight-fixed-60-PEEK;
+    const azW=Math.round($("az").getBoundingClientRect().width);deckW=azW>300?azW:Math.round(Math.min(620,sw-40));   // same width as the A–Z row
+    const want=Math.round(deckW*.56),room=innerHeight-fixed-60-PEEK;
     deckH=Math.round(clamp(Math.min(want,room),200,want));
-    const devH=deckH+PEEK+60;if(devH!==lastDevH){lastDevH=devH;dev.style.height=devH+"px";}}
-  else{if(lastDevH){lastDevH=0;dev.style.height="";}
+    const devH=deckH+PEEK+60;if(devH!==lastDevH){lastDevH=devH;dev.style.height=devH+"px";}
+    baseEl.style.width=deckW+"px";baseEl.style.maxWidth="none";}
+  else{if(lastDevH){lastDevH=0;dev.style.height="";}baseEl.style.width="";baseEl.style.maxWidth="";
     const sw=stage.clientWidth, sh=stage.clientHeight;if(!sw||!sh)return;
-    deckW=Math.round(Math.min(620,sw-28));
+    const azW=Math.round($("az").getBoundingClientRect().width);deckW=wide&&azW>300?azW:Math.round(Math.min(620,sw-28));
+    if(wide){baseEl.style.width=deckW+"px";baseEl.style.maxWidth="none";}
     const peek=sh<560?62:sh<680?90:118;STACKY=19*peek/118;
     deckH=Math.round(clamp(sh-peek,170,deckW<480?560:Math.round(deckW*.72)));}
   const short=deckH<330,narrow=deckW<470;deck.classList.toggle("short",short);
