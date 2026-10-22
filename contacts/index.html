@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-+Oqg5i6WH2ZVcy7pKj8uUUXTqgfbPyNFeHHr1TtWe/8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-GShIj7aqOdV8rjYvTB8+ORwznASz0TA8JEQP2kRYEw4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CONTACTS</title>
-<meta name="iqc-build" content="2026.10.22-4">
+<meta name="iqc-build" content="2026.10.22-5">
 <meta name="description" content="A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -446,7 +446,6 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
   .theme-sw button{padding:0 11px;min-height:36px}
   .theme-sw button:nth-child(n+3){border-top:0}
   .theme-sw button+button{border-left:1px solid var(--rule)}
-  .knob{display:none}
 }
 </style>
 </head>
@@ -485,11 +484,9 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     </div>
     <div class="list" id="list" hidden></div>
     <div class="base">
-      <div class="knob l" data-knob aria-hidden="true"><i></i></div>
       <button class="navb" id="prevBtn" type="button" aria-label="Previous card">▲</button>
       <span class="pos" id="pos" aria-hidden="true"></span>
       <button class="navb" id="nextBtn" type="button" aria-label="Next card">▼</button>
-      <div class="knob r" data-knob aria-hidden="true"><i></i></div>
     </div>
   </main>
   <nav class="az" id="az" aria-label="Jump to letter"></nav>
@@ -982,10 +979,10 @@ function layout(){
     deckH=Math.round(clamp(Math.min(want,room),200,want));
     const devH=deckH+PEEK+60;if(devH!==lastDevH){lastDevH=devH;dev.style.height=devH+"px";}
     baseEl.style.width=deckW+"px";baseEl.style.maxWidth="none";}
-  else{if(lastDevH){lastDevH=0;dev.style.height="";}baseEl.style.width="";baseEl.style.maxWidth="";
+  else{if(lastDevH){lastDevH=0;dev.style.height="";}
     const sw=stage.clientWidth, sh=stage.clientHeight;if(!sw||!sh)return;
     const azW=Math.round($("az").getBoundingClientRect().width);deckW=wide&&azW>300?azW:Math.round(Math.min(620,sw-28));
-    if(wide){baseEl.style.width=deckW+"px";baseEl.style.maxWidth="none";}
+    baseEl.style.width=deckW+"px";baseEl.style.maxWidth="none";   // the strip under the cards is as wide as the cards
     const peek=sh<560?62:sh<680?90:118;STACKY=19*peek/118;
     deckH=Math.round(clamp(sh-peek,170,deckW<480?560:Math.round(deckW*.72)));}
   const short=deckH<330,narrow=deckW<470;deck.classList.toggle("short",short);
