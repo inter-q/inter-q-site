@@ -59,19 +59,20 @@ main{max-width:640px;margin:0 auto;padding:56px 20px 40px}
   caret-color:var(--ink);font:inherit;outline:none;border-radius:0}
 .term .msg{flex:1;margin-left:10px;color:var(--dim);font-weight:400;font-size:15px}
 
-h2{font:700 15px/1.3 var(--mono);color:var(--ink);margin:0 0 14px}
+h2{font:700 1em/1.3 var(--mono);color:var(--ink);margin:0 0 16px}
 h2::before{content:"> ";color:var(--edge)}
 section{margin-top:52px;padding-top:28px;border-top:1px solid var(--rule)}
-p{margin:0 0 16px}
+p{margin:0 0 1.2em;text-wrap:balance}
+p.long{text-wrap:pretty}
 
-.principles{list-style:none;margin:8px 0 0;padding:0}
-.principles li{border-left:3px solid var(--edge);padding:2px 0 2px 16px;margin:0 0 18px}
+.principles{list-style:none;margin:0;padding:0}
+.principles li{margin:0 0 1.2em;text-wrap:balance}
 .principles strong{color:var(--ink);font-weight:700;display:block}
 
 .actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:30px}
 .btn{
   display:inline-block;padding:12px 20px;border-radius:6px;
-  font:700 15px/1 var(--mono);text-decoration:none;
+  font:700 1em/1 var(--mono);text-decoration:none;
   border:2px solid var(--ink);color:var(--ink);background:transparent;
 }
 .btn.primary{background:var(--ink);color:var(--screen)}
@@ -81,8 +82,8 @@ a{color:#8ff0b0}
 a:focus-visible,.btn:focus-visible{outline:3px solid #f2e27a;outline-offset:3px}
 
 footer{width:calc(100% - 40px);max-width:600px;margin:0 auto;padding:24px 0 48px;border-top:1px solid var(--rule);
-  color:var(--dim);font-size:14px;text-align:center}
-footer p{margin:4px 0}
+  color:var(--dim);font-size:1em;text-align:center;text-wrap:balance}
+footer p{margin:0 0 .4em}
 
 @media (max-width:480px){
   body{font-size:16px}
@@ -97,12 +98,13 @@ footer p{margin:4px 0}
 
   <section aria-labelledby="about">
     <h2 id="about">About</h2>
-    <p>Inter-Q Labs builds practical, dependable tools that help people stay prepared, informed and organized. We design lightweight software for preparedness, field reporting and situational awareness. Our flagship app, IQ Kit, brings structured reports, research tools and everyday utilities together in one place. It installs on any phone or computer and works fully offline.</p>
+    <p>Inter-Q Labs builds practical, dependable tools that help people stay prepared, informed and organized.</p>
+    <p class="long">We design lightweight software for preparedness, field reporting and situational awareness. Our flagship app, IQ Kit, brings structured reports, research tools and everyday utilities together in one place. It installs on any phone or computer and works fully offline.</p>
     <p>Our tools are built on a few principles:</p>
     <ul class="principles">
       <li><strong>Reliable when it matters.</strong>Everything works without a signal, so the tools are there in an emergency, in the field or anywhere coverage is uncertain.</li>
       <li><strong>Private by design.</strong>Your information stays on your device. There are no accounts, no ads, no analytics and no tracking.</li>
-      <li><strong>Free to use.</strong>Inter-Q Labs is independent and self-funded. Our tools are free to use. Supporter contributions help keep them that way.</li>
+      <li><strong>Free to use.</strong>Inter-Q Labs is independent and self&#8209;funded. Our tools are free to use. Supporter contributions help keep them that way.</li>
     </ul>
     <div class="actions">
       <a class="btn" href="https://buymeacoffee.com/interq" target="_blank" rel="noopener">Support Inter-Q Labs</a>
