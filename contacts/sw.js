@@ -1,0 +1,59 @@
+// IQ Contacts — keeps a copy of the app so it opens offline. Same design as IQ Kit's tools/sw.js.
+// Network first for the page itself, so a new upload to GitHub shows up the next time the app opens online.
+// The app makes no other network requests: your cards are never sent anywhere.
+// Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
+const CACHE = "iqcontacts-v2";
+const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
+  "./manifest.json",
+  "./iqc-32.png", "./iqc-48.png", "./iqc-180.png", "./iqc-192.png", "./iqc-512.png", "./iqc-maskable-512.png"];
+
+self.addEventListener("install", (e) => {
+  e.waitUntil((async () => {
+    const c = await caches.open(CACHE);
+    await c.addAll(CORE.map((u) => new Request(u, { cache: "reload" })));   // straight from the site, not a stale browser copy
+    await self.skipWaiting();
+  })());
+});
+
+self.addEventListener("activate", (e) => {
+  e.waitUntil((async () => {
+    for (const k of await caches.keys()) if (k.startsWith("iqcontacts-") && k !== CACHE) await caches.delete(k);
+    await self.clients.claim();
+  })());
+});
+
+// The app page is /contacts/ or /contacts/index.html — exactly. /contacts/install/ is a separate forwarding page and must
+// never replace the saved app.
+const SCOPE = new URL("./", self.location).pathname;
+const isAppPage = (u) => u.pathname === SCOPE || u.pathname === SCOPE + "index.html";
+const isHtml = (res) => (res.headers.get("content-type") || "").includes("text/html");
+const keyOf = (u) => { const k = new URL(u.href); k.search = ""; k.hash = ""; return k.href; };
+
+self.addEventListener("fetch", (e) => {
+  const r = e.request;
+  if (r.method !== "GET") return;
+  const u = new URL(r.url);
+  if (u.origin !== self.location.origin) return;
+  if (r.cache === "no-store" || u.searchParams.has("iqccheck")) return;   // "Check for update" always goes to GitHub
+  if (r.mode === "navigate") {
+    const net = fetch(r, { cache: "no-cache" }).then(async (res) => {
+      if (res && res.ok && isAppPage(u) && isHtml(res)) { const c = await caches.open(CACHE); await c.put("./index.html", res.clone()); }
+      return res;
+    });
+    e.waitUntil(net.then(() => {}, () => {}));
+    e.respondWith((async () => {
+      const saved = isAppPage(u) ? ((await caches.match("./index.html")) || (await caches.match("./"))) : null;
+      if (!saved) { try { return await net; } catch (_) { return Response.error(); } }
+      const slow = new Promise((res) => setTimeout(() => res(saved), 3000));
+      try { const res = await Promise.race([net, slow]); return res && (res.ok || res.type === "opaqueredirect" || res.status === 304) ? res : saved; } catch (_) { return saved; }
+    })());
+    return;
+  }
+  const key = keyOf(u);
+  const net = fetch(r, { cache: "no-cache" }).then(async (res) => {   // checked with the site each time (a quick "not modified" when unchanged)
+    if (res && res.ok && CORE.some((p) => key === new URL(p, self.location).href)) { const c = await caches.open(CACHE); await c.put(key, res.clone()); }
+    return res;
+  });
+  e.waitUntil(net.then(() => {}, () => {}));
+  e.respondWith((async () => (await caches.match(key)) || net)());
+});

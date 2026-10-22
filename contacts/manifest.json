@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "IQ Contacts",
+  "short_name": "IQ Contacts",
+  "description": "A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#03140a",
+  "theme_color": "#03140a",
+  "icons": [
+    {"src": "iqc-32.png", "sizes": "32x32", "type": "image/png", "purpose": "any"},
+    {"src": "iqc-48.png", "sizes": "48x48", "type": "image/png", "purpose": "any"},
+    {"src": "iqc-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "iqc-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "iqc-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "New card", "short_name": "New card", "url": "./#new", "icons": [{"src": "iqc-192.png", "sizes": "192x192", "type": "image/png"}]}
+  ]
+}
