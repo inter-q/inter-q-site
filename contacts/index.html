@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Qrhh/MgWQzjzd7JEVd460IvsgrRsmFSfe4gw5cPPIU0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-tDcih2VYGpxRlrO6a03b61/eR/cnv/XfxRO9gzlh1nQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CONTACTS</title>
-<meta name="iqc-build" content="2026.10.23-3">
+<meta name="iqc-build" content="2026.10.23-4">
 <meta name="description" content="A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -456,6 +456,17 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
   #printArea td{border-bottom:.5pt solid #999;padding:3pt 4pt;vertical-align:top}
   #printArea tr{break-inside:avoid}
   #printArea .let td{font-weight:700;border-bottom:1pt solid #000;padding-top:8pt}
+  #printArea .case{display:block;font:9.5pt/1.4 var(--mono)}
+  #printArea .case+.case{break-before:page;page-break-before:always}
+  #printArea .case .cf-hd{display:flow-root;border-bottom:1.5pt solid #000;padding:0 0 3mm;margin:0 0 4mm}
+  #printArea .case .cf-hd img{float:left;width:26mm;height:26mm;object-fit:cover;border:.6pt solid #000;border-radius:2mm;margin:0 4mm 0 0}
+  #printArea .case h1{font-size:16pt;margin:0 0 1.5mm}
+  #printArea .case .cf-org{font-size:10pt;margin:0}
+  #printArea .case .cf-meta{font-size:7.5pt;color:#444;margin:1.5mm 0 0}
+  #printArea .case table{margin:0 0 4mm}
+  #printArea .case th{width:34mm;font-size:8pt;vertical-align:top;border-bottom:.5pt solid #999;padding:2pt 4pt}
+  #printArea .case h2{font-size:10pt;margin:4mm 0 1.5mm;border-bottom:1pt solid #000;padding-bottom:1mm}
+  #printArea .case .cf-nt{white-space:pre-wrap;margin:0}
   .wallet{display:flex;flex-wrap:wrap;gap:6mm}
   .wcard{width:85.6mm;height:54mm;border:.6pt dashed #000;border-radius:3mm;padding:3mm 3.5mm;overflow:hidden;break-inside:avoid;font:7pt/1.3 var(--mono)}
   #printArea .wcard h2{font-size:8.5pt;margin:0 0 1.2mm;border-bottom:.6pt solid #000;padding-bottom:.8mm}
@@ -632,7 +643,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
       <button class="mi" type="button" data-go="phone"><div><b id="mPhoneT">Send to iPhone Contacts</b><span id="mPhone">For Siri, CarPlay and caller ID</span></div></button>
       <button class="mi" type="button" id="mUpd"><div><b>↻ Check for update</b><span id="mUpdMsg" role="status"></span></div></button>
       <button class="mi" type="button" data-go="bdays"><div><b>Birthdays</b><span>Upcoming, and add them all to your calendar</span></div></button>
-      <button class="mi" type="button" data-go="print"><div><b>Print</b><span>Paper roster or a wallet card for when your phone is dead</span></div></button>
+      <button class="mi" type="button" data-go="print"><div><b>Print</b><span>Case files, a paper roster, or a wallet card for when your phone is dead</span></div></button>
       <button class="mi" type="button" data-go="dupes"><div><b>Clean up duplicates</b><span>Merge cards that are the same person</span></div></button>
       <button class="mi" type="button" data-go="install"><div><b>Install on this device</b><span>Home screen or desktop app that works offline</span></div></button>
     </div>
@@ -698,6 +709,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     </div>
     <div class="mlist">
       <button class="mi" type="button" data-x="vcf"><div><b>vCard (.vcf)</b><span>Opens in iPhone Contacts, Google, Outlook and Android. A second copy your phone protects.</span></div></button>
+      <button class="mi" type="button" data-x="xlsx"><div><b>Readable spreadsheet (.xlsx)</b><span>One row per person with every detail, for reading and sorting. Relationship and last email get their own columns. Opens in Excel, Numbers and Google Sheets. No photos.</span></div></button>
       <button class="mi" type="button" data-x="csv"><div><b>Spreadsheet (.csv)</b><span>Google Contacts format; opens in Excel or Sheets. No photos.</span></div></button>
     </div>
     <label class="chk" style="margin-top:14px" id="xOnlyWrap" hidden><input type="checkbox" id="xOnly"><span id="xOnlyT"></span></label>
@@ -777,6 +789,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
   <div class="db">
     <div class="mlist">
       <button class="mi" type="button" data-p="roster"><div><b>Roster</b><span id="prRosterT">Every card: names, numbers and emails, A to Z</span></div></button>
+      <button class="mi" type="button" data-p="case"><div><b>Case files</b><span id="prCaseT">One page per person: photo, every number, email and address, and the full notes</span></div></button>
       <button class="mi" type="button" data-p="wallet"><div><b>Wallet card</b><span>Credit-card size, for your wallet or go-bag: up to 8 people</span></div></button>
     </div>
     <p class="note" style="margin-top:12px">On iPhone, the print screen can also save a PDF: tap Share there, then Save to Files.</p>
@@ -1804,6 +1817,60 @@ function toCSV(cards){const np=Math.max(1,...cards.map((c)=>c.phones.length)),ne
     for(let i=0;i<ne;i++){const e=c.emails[i];r.push(e?LABELS[e.label]:"",e?e.value:"");}
     for(let i=0;i<np;i++){const p=c.phones[i];r.push(p?LABELS[p.label]:"",p?p.value:"");}r.push(c.address);return r.map(qt).join(",");});
   return "\uFEFF"+[head.map(qt).join(",")].concat(rows).join("\r\n")+"\r\n";}
+/* Notes can carry two structured lines (written when cards were built from Gmail):
+   "Relationship (guess): …" and "Last email: YYYY-MM-DD — "subject" — summary". Pull them out for the readable exports. */
+function noteFields(notes){const o={rel:"",lastDate:"",lastSubj:"",lastSum:"",rest:[]};
+  for(const line of String(notes||"").split(/\n/)){let m=/^\s*Relationship \(guess\):\s*(.*)$/i.exec(line);if(m){o.rel=m[1].trim();continue;}
+    m=/^\s*Last email:\s*(\d{4}-\d\d-\d\d)\s*[—-]\s*"(.*)"\s*[—-]\s*(.*)$/i.exec(line);if(m){o.lastDate=m[1];o.lastSubj=m[2];o.lastSum=m[3].trim();continue;}
+    m=/^\s*Last (?:email|contact)(?: \(Gmail\))?:\s*(\d{4}-\d\d-\d\d)\s*$/i.exec(line);if(m){o.lastDate=m[1];continue;}
+    o.rest.push(line);}
+  o.rest=o.rest.join("\n").trim();return o;}
+const isoDay=(t)=>{if(!t)return "";const d=new Date(t);return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`;};
+/* Readable spreadsheet: a real .xlsx (two tabs, frozen header row, filters, wrapped text), built here with no library. */
+const XLSX_COLS=[["Name",24],["Company",24],["Title",20],["Phones",24],["Emails",30],["Address",30],["Birthday",11],["Groups",16],["Favourite",9],
+  ["Relationship (guess)",30],["Last email date",12],["Last email subject",30],["Last email summary",40],["Notes",50],["Added",11],["Last edited",11]];
+function xlsxRow(c){const f=noteFields(c.notes);const b=bdayParts(c.birthday);
+  return [display(c),c.company,c.title,c.phones.map((p)=>`${LABELS[p.label]||"Phone"}: ${fmtPhone(p.value)}`).join("\n"),c.emails.map((e)=>e.value).join("\n"),
+    c.address,b?(b.y?`${b.y}-${p2(b.m)}-${p2(b.d)}`:`${MON[b.m-1]} ${b.d}`):"",c.tags.join(", "),c.fav?"★":"",
+    f.rel,f.lastDate,f.lastSubj,f.lastSum,f.rest,isoDay(c.created),isoDay(c.updated)];}
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function zipStore(files){const enc=new TextEncoder(),parts=[],cen=[];let off=0;const d=new Date();
+  const tm=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),dt=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  for(const [name,text] of files){const nm=enc.encode(name),data=enc.encode(text),crc=crc32(data);
+    const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);
+    h.setUint16(10,tm,true);h.setUint16(12,dt,true);h.setUint32(14,crc,true);h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);h.setUint16(26,nm.length,true);h.setUint16(28,0,true);
+    parts.push(h,nm,data);
+    const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(10,0,true);
+    c.setUint16(12,tm,true);c.setUint16(14,dt,true);c.setUint32(16,crc,true);c.setUint32(20,data.length,true);c.setUint32(24,data.length,true);c.setUint16(28,nm.length,true);
+    c.setUint32(42,off,true);cen.push(c,nm);off+=30+nm.length+data.length;}
+  const cdSize=cen.reduce((a,x)=>a+(x.byteLength),0);const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);
+  e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cdSize,true);e.setUint32(16,off,true);
+  return new Blob([...parts,...cen,e],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});}
+const xEsc=(v)=>String(v??"").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g,"").slice(0,32000).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const colL=(i)=>{let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26);}return s;};
+function sheetXML(rows,widths,frozen){const cell=(v,r,ci,st)=>v===""||v==null?"":`<c r="${colL(ci)}${r}" t="inlineStr" s="${st}"><is><t xml:space="preserve">${xEsc(v)}</t></is></c>`;
+  let x=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">`;
+  x+=frozen?`<sheetViews><sheetView workbookViewId="0"><pane xSplit="1" ySplit="1" topLeftCell="B2" activePane="bottomRight" state="frozen"/></sheetView></sheetViews>`:`<sheetViews><sheetView workbookViewId="0"/></sheetViews>`;
+  x+=`<sheetFormatPr defaultRowHeight="15"/><cols>${widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>`;
+  rows.forEach((row,ri)=>{x+=`<row r="${ri+1}">${row.map((v,ci)=>cell(v,ri+1,ci,frozen&&ri===0?1:(!frozen&&ci===0?3:2))).join("")}</row>`;});
+  x+=`</sheetData>`;if(frozen&&rows.length>1)x+=`<autoFilter ref="A1:${colL(widths.length-1)}${rows.length}"/>`;return x+`</worksheet>`;}
+function toXLSX(cards){cards=uniqSorted(cards);const n=cards.length;
+  const main=[XLSX_COLS.map((c)=>c[0])].concat(cards.map(xlsxRow));
+  const about=[["IQ Contacts export"],["Exported",`${longDate(Date.now())} at ${hhmm(Date.now())}`],["Cards",String(n)],
+    ["Relationship (guess)","A best guess at how you know the person, taken from the card's notes. Check it before relying on it."],
+    ["Last email","The most recent email exchange recorded in the card's notes (date, subject and a one-line summary)."],
+    ["Notes","Everything else in the card's notes."],["Added / Last edited","When the card was filed in IQ Contacts and when it was last changed."],
+    ["Keep it safe","This file is not encrypted. For a locked copy, use the passphrase backup (.json)."]];
+  const NS='xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"',R='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  const files=[["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
+    ["_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="${R}/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+    ["xl/workbook.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook ${NS} xmlns:r="${R}"><sheets><sheet name="Contacts" sheetId="1" r:id="rId1"/><sheet name="About" sheetId="2" r:id="rId2"/></sheets>${n?`<definedNames><definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">Contacts!$A$1:$${colL(XLSX_COLS.length-1)}$${n+1}</definedName></definedNames>`:""}</workbook>`],
+    ["xl/_rels/workbook.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="${R}/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="${R}/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="${R}/styles" Target="styles.xml"/></Relationships>`],
+    ["xl/styles.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<styleSheet ${NS}><fonts count="3"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font><font><b/><sz val="10"/><name val="Arial"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1F3A5F"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`],
+    ["xl/worksheets/sheet1.xml",sheetXML(main,XLSX_COLS.map((c)=>c[1]),true)],
+    ["xl/worksheets/sheet2.xml",sheetXML(about,[22,90],false)]];
+  return zipStore(files);}
 const fileSafe=(s)=>String(s).replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-")||"contact";
 async function saveFile(blob,name){
   const file=new File([blob],name,{type:blob.type});
@@ -1856,6 +1923,7 @@ $("dlgExport").addEventListener("click",async(e)=>{const b=e.target.closest("[da
     if(ok){LS.set("lastBackup",String(Date.now()));LS.set("changes","0");checkBars();}}
   if(kind==="vcf")ok=await saveFile(new Blob([toVCF(list)],{type:"text/vcard"}),`iq-contacts-${stamp()}.vcf`);
   if(kind==="csv")ok=await saveFile(new Blob([toCSV(list)],{type:"text/csv"}),`iq-contacts-${stamp()}.csv`);
+  if(kind==="xlsx")ok=await saveFile(toXLSX(list),`iq-contacts-${stamp()}.xlsx`);
   if(ok){$("dlgExport").close();toast(kind==="json"?`Backup saved: ${list.length} card${list.length===1?"":"s"}.`:`Exported ${list.length} card${list.length===1?"":"s"}.`);}});
 
 /* ================= duplicates ================= */
@@ -1969,9 +2037,21 @@ function printRoster(cards,title){cards=uniqSorted(cards);
     const org=[c.title,c.company].filter(Boolean).join(", ");const note=(c.notes||"").replace(/\s*\n\s*/g," ");
     h+=`<tr><td><b>${esc(display(c))}</b>${org&&fullName(c)?`<br>${esc(org)}`:""}</td><td>${c.phones.map((p)=>`${esc(fmtPhone(p.value))} <span style="color:#555">${SHORT[p.label]||""}</span>`).join("<br>")}</td><td>${c.emails.map((e)=>esc(e.value)).join("<br>")}</td><td>${esc(note.length>90?note.slice(0,88)+"…":note)}</td></tr>`;}
   doPrint(h+"</tbody></table>");}
-function openPrint(){const n=new Set(groupMembers().map((c)=>c.id)).size;$("prRosterT").textContent=GROUP?`${groupLabel(GROUP)}: ${n} ${n===1?"person":"people"}, names, numbers and emails`:`All ${n} cards: names, numbers and emails, A to Z`;openDlg("dlgPrint");}
+function printCases(cards,title){cards=uniqSorted(cards);const now=Date.now();
+  const row=(k,v)=>v?`<tr><th>${esc(k)}</th><td>${v}</td></tr>`:"";
+  doPrint(cards.map((c)=>{const f=noteFields(c.notes);const b=bdayParts(c.birthday);const org=[c.title,c.company].filter(Boolean).join(", ");
+    const ph=/^data:image\/(jpeg|png|gif|webp);base64,/.test(c.photo||"")?`<img src="${c.photo}" alt="">`:"";
+    let h=`<section class="case"><div class="cf-hd">${ph}<h1>${esc(display(c))}</h1>${org&&fullName(c)?`<p class="cf-org">${esc(org)}</p>`:""}<p class="cf-meta">${esc(title)} · printed ${esc(longDate(now))} ${hhmm(now)}${c.created?` · filed ${esc(isoDay(c.created))}`:""}${c.updated?` · edited ${esc(isoDay(c.updated))}`:""}</p></div>`;
+    h+=`<table>`+row("Phones",c.phones.map((p)=>`${esc(fmtPhone(p.value))} <span style="color:#555">${esc(LABELS[p.label]||"")}</span>`).join("<br>"))+
+      row("Emails",c.emails.map((e)=>esc(e.value)).join("<br>"))+row("Address",esc(c.address).replace(/\n/g,"<br>"))+
+      row("Birthday",b?esc(b.y?`${MON[b.m-1]} ${b.d}, ${b.y}`:`${MON[b.m-1]} ${b.d}`):"")+row("Groups",esc(c.tags.join(", ")+(c.fav?(c.tags.length?" · ":"")+"★ Favourite":"")))+`</table>`;
+    if(f.rel||f.lastDate)h+=`<h2>Relationship and contact</h2><table>`+row("Relationship (guess)",esc(f.rel))+row("Last email",esc([f.lastDate,f.lastSubj?`“${f.lastSubj}”`:""].filter(Boolean).join(" — ")))+row("About it",esc(f.lastSum))+`</table>`;
+    if(f.rest)h+=`<h2>Notes</h2><p class="cf-nt">${esc(f.rest)}</p>`;
+    return h+`</section>`;}).join(""));}
+function openPrint(){const n=new Set(groupMembers().map((c)=>c.id)).size;$("prCaseT").textContent=GROUP?`${groupLabel(GROUP)}: one page per person (${n}), with every detail and the full notes`:`One page per person (${n}): photo, every number, email and address, and the full notes`;$("prRosterT").textContent=GROUP?`${groupLabel(GROUP)}: ${n} ${n===1?"person":"people"}, names, numbers and emails`:`All ${n} cards: names, numbers and emails, A to Z`;openDlg("dlgPrint");}
 $("dlgPrint").addEventListener("click",(e)=>{const b=e.target.closest("[data-p]");if(!b)return;$("dlgPrint").close();
-  if(b.dataset.p==="roster")printRoster(groupMembers(),GROUP?groupLabel(GROUP):"Contacts");else openWallet();});
+  if(b.dataset.p==="roster")printRoster(groupMembers(),GROUP?groupLabel(GROUP):"Contacts");
+  else if(b.dataset.p==="case")printCases(groupMembers(),GROUP?groupLabel(GROUP):"Contacts");else openWallet();});
 let wSel=new Set();
 function openWallet(){wSel=new Set(ALL.filter((c)=>c.fav&&c.phones.length).slice(0,8).map((c)=>c.id));$("wQ").value="";drawWallet();openDlg("dlgWallet");}
 function drawWallet(){const qv=$("wQ").value.trim().toLowerCase();const list=uniqSorted(ALL).filter((c)=>c.phones.length&&(!qv||matches(c,qv)));
