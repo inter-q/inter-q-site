@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-GShIj7aqOdV8rjYvTB8+ORwznASz0TA8JEQP2kRYEw4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Qrhh/MgWQzjzd7JEVd460IvsgrRsmFSfe4gw5cPPIU0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CONTACTS</title>
-<meta name="iqc-build" content="2026.10.22-5">
+<meta name="iqc-build" content="2026.10.23-3">
 <meta name="description" content="A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -380,6 +380,33 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
 
 .upd{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:16px;padding-top:12px;border-top:1px solid var(--rule)}
 .upd .note b{color:var(--text)}
+/* duplicate warning in the edit form: stays in view while you scroll the form */
+.dupwarn{position:sticky;top:-16px;z-index:4;margin:-16px -16px 14px;padding:12px 16px;background:var(--screen);border-bottom:1.5px solid var(--warn);color:var(--warn);font-size:14px}
+.dupwarn b{color:var(--text)}
+.dupwarn .dw-b{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.dupwarn.soft{border-bottom-color:var(--edge);color:var(--dim)}
+:root[data-theme="blue"] .dupwarn{background:#fff2a8;color:#000;border-bottom:1px solid #000}
+
+/* desktop: names on the left, the whole card on the right */
+.pane{position:absolute;top:0;bottom:0;right:0;overflow-y:auto;overscroll-behavior:contain;border:1.5px solid var(--edge);border-radius:12px;
+  background:linear-gradient(170deg,var(--stock),var(--stock2));box-shadow:0 10px 30px rgba(0,0,0,.4);display:flex;flex-direction:column}
+.pane .pb{padding:18px 20px;flex:1}
+.pane .pf{display:flex;gap:10px;padding:12px 20px;border-top:1px solid var(--rule);position:sticky;bottom:0;background:var(--stock2)}
+.pane .pf .sp{flex:1}
+.pane .pempty{margin:auto;color:var(--dim);text-align:center;padding:30px}
+/* the list and the card sit inside the same 728px column as the A–Z row */
+.split{--colw:min(calc(100% - 24px),728px);--side:calc((100% - var(--colw)) / 2);--lw:min(300px,40%)}
+.split .list{left:var(--side);right:auto;width:var(--lw)}
+.split .pane{left:calc(var(--side) + var(--lw) + 12px);right:var(--side)}
+.split .list .list-in{width:100%;margin:0}
+.split .lhead .hint{display:none}
+.warnnote{color:var(--warn)}
+.row.sel{background:var(--hover);box-shadow:inset 3px 0 0 var(--ink)}
+:root[data-theme="blue"] .pane{background:#c0c0c0;border:0;border-radius:0;box-shadow:inset -1px -1px #000,inset 1px 1px #fff,inset -2px -2px #808080,inset 2px 2px #dfdfdf}
+:root[data-theme="blue"] .pane .pf{background:#c0c0c0}
+:root[data-theme="blue"] .row.sel{background:#000080}
+:root[data-theme="blue"] .row.sel .rn,:root[data-theme="blue"] .row.sel .rs{color:#fff}
+
 /* check-in */
 .ck-sum{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:14px;color:var(--dim);margin:0 0 12px}
 .ck-sum b{color:var(--ink)}
@@ -483,6 +510,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
       <div class="deck" id="deck"></div>
     </div>
     <div class="list" id="list" hidden></div>
+    <section class="pane" id="pane" hidden aria-live="polite"></section>
     <div class="base">
       <button class="navb" id="prevBtn" type="button" aria-label="Previous card">▲</button>
       <span class="pos" id="pos" aria-hidden="true"></span>
@@ -506,6 +534,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
 <dialog id="dlgEdit" aria-labelledby="eT">
   <div class="dh"><h2 id="eT">New card</h2><button class="dx" id="eX" type="button" aria-label="Close">✕</button></div>
   <form class="db" id="eForm" autocomplete="off" novalidate>
+    <div class="dupwarn" id="eDup" role="status" hidden></div>
     <div class="f">
       <div class="photo-pick">
         <button class="ph" id="ePh" type="button" aria-label="Choose a photo"></button>
@@ -573,6 +602,18 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
   <div class="db"><div class="picklist" id="pList"></div></div>
 </dialog>
 
+<dialog id="dlgMail" aria-labelledby="mwT">
+  <div class="dh"><h2 id="mwT">Send email with</h2><button class="dx" data-close aria-label="Close">✕</button></div>
+  <div class="db">
+    <p class="note">To <b id="mwTo"></b>. The address is copied too, so you can paste it if you need to.</p>
+    <div class="mlist">
+      <button class="mi" type="button" data-mw="gmail"><div><b>Gmail</b><span id="mwG">Opens a new Gmail message with the address filled in</span></div></button>
+      <button class="mi" type="button" data-mw="app"><div><b>Mail app</b><span>Whatever this device uses for email links</span></div></button>
+    </div>
+    <label class="chk" style="margin-top:12px"><input type="checkbox" id="mwRem" checked><span>Remember on this device (change it any time in Menu)</span></label>
+  </div>
+</dialog>
+
 <!-- QR -->
 <dialog id="dlgQR" aria-labelledby="qT">
   <div class="dh"><h2 id="qT">QR code</h2><button class="dx" data-close aria-label="Close">✕</button></div>
@@ -588,6 +629,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
       <button class="mi" type="button" data-go="checkin" id="mCheck" hidden><div><b>Resume check-in</b><span id="mCheckT"></span></div></button>
       <button class="mi" type="button" data-go="import"><div><b>Import or restore</b><span>From your iPhone, Google, Outlook or an IQ Contacts backup</span></div></button>
       <button class="mi" type="button" data-go="export"><div><b>Back up and export</b><span id="mBackup">Never backed up</span></div></button>
+      <button class="mi" type="button" data-go="phone"><div><b id="mPhoneT">Send to iPhone Contacts</b><span id="mPhone">For Siri, CarPlay and caller ID</span></div></button>
       <button class="mi" type="button" id="mUpd"><div><b>↻ Check for update</b><span id="mUpdMsg" role="status"></span></div></button>
       <button class="mi" type="button" data-go="bdays"><div><b>Birthdays</b><span>Upcoming, and add them all to your calendar</span></div></button>
       <button class="mi" type="button" data-go="print"><div><b>Print</b><span>Paper roster or a wallet card for when your phone is dead</span></div></button>
@@ -596,6 +638,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     </div>
     <div style="margin-top:18px;border-top:1px solid var(--rule);padding-top:12px">
       <div class="setrow"><span>File cards by</span><div class="seg" id="sortSeg"><button type="button" data-v="last">Last name</button><button type="button" data-v="first">First name</button></div></div>
+      <div class="setrow"><span>Send email with</span><div class="seg" id="mailSeg"><button type="button" data-v="ask">Ask</button><button type="button" data-v="gmail">Gmail</button><button type="button" data-v="app">Mail app</button></div></div>
       <div class="setrow"><span>Card click and buzz</span><div class="seg" id="sndSeg"><button type="button" data-v="on">On</button><button type="button" data-v="off">Off</button></div></div>
     </div>
     <p class="note" style="margin-top:16px">Your cards are stored only on this device, in this app. Nothing is uploaded. <span id="mStore"></span> Back up now and then so you can restore them on another device.</p>
@@ -658,6 +701,24 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
       <button class="mi" type="button" data-x="csv"><div><b>Spreadsheet (.csv)</b><span>Google Contacts format; opens in Excel or Sheets. No photos.</span></div></button>
     </div>
     <label class="chk" style="margin-top:14px" id="xOnlyWrap" hidden><input type="checkbox" id="xOnly"><span id="xOnlyT"></span></label>
+  </div>
+</dialog>
+
+<!-- send to the phone's own Contacts app -->
+<dialog id="dlgSend" aria-labelledby="sT">
+  <div class="dh"><h2 id="sT">Send to iPhone Contacts</h2><button class="dx" data-close aria-label="Close">✕</button></div>
+  <div class="db">
+    <p>Copies your cards into the phone's own Contacts app, so <b>Siri, CarPlay and caller ID</b> know who's calling and who you mean.</p>
+    <p class="note" id="sInfo"></p>
+    <p class="note warnnote" id="sGone" hidden></p>
+    <div class="mlist">
+      <button class="mi" type="button" data-s="changed"><div><b id="sChangedT">Send changed cards</b><span id="sChangedS"></span></div></button>
+      <button class="mi" type="button" data-s="all"><div><b id="sAllT">Send all cards</b><span>Every card in IQ Contacts</span></div></button>
+    </div>
+    <div class="src" style="margin-top:14px"><h3>On iPhone</h3><ol class="steps">
+      <li>In the share sheet, choose <b>Contacts</b>. If it isn't there, choose <b>Save to Files</b>, then open the file in Files</li>
+      <li>Tap <b>Add All Contacts</b></li>
+      <li>Anyone already in your iPhone gets a second copy: open <b>Contacts</b>, tap <b>Duplicates Found</b> at the top, then <b>Merge All</b>. Merging keeps every number from both copies, so a number you changed here stays on the phone too: delete the old one there</li></ol></div>
   </div>
 </dialog>
 
@@ -902,7 +963,11 @@ function rebuild(keepId){
   lastFront=-1;buildChips();buildAZ();applyMode();render();renderList();checkBars();}
 function invalidate(c){c._h=null;}
 const listShown=()=>MODE==="list"||(QUERY.trim()&&VIEW.length>=2&&!forceCards);
+/* Wide screens show the list and the selected card side by side; phones open the card in a sheet. */
+const isSplit=()=>listShown()&&innerWidth>=900;
+let SEL="", wasSplit=false;   // the card shown in the side pane
 function applyMode(){const L=listShown();dev.classList.toggle("listmode",L);listEl.hidden=!L;
+  const sp=isSplit();wasSplit=sp;dev.classList.toggle("split",sp);$("pane").hidden=!sp;
   const b=$("modeBtn");b.textContent=L?"Cards":"List";b.setAttribute("aria-pressed",String(MODE==="list"));}
 
 /* ================= icons ================= */
@@ -1037,12 +1102,27 @@ function rowsHTML(from,to){let h="";for(let i=from;i<to;i++){if(i===0||LET[i]!==
 function renderList(upTo){
   if(!listShown()){listEl.innerHTML="";listN=0;return;}
   const n=VIEW.length;
-  if(!n){const q=QUERY.trim();listEl.innerHTML=`<div class="list-in"><div class="lempty">${q||GROUP?`<b>No card matches${q?` “${esc(q)}”`:""}</b>Try part of a name, a few digits of a number, or a tag.<br><br><button class="btn" type="button" data-clear>Clear search</button>`:`<b>Your card file is empty</b>Import your contacts or start a card by hand.<br><br><button class="btn primary" type="button" data-import>Import contacts</button> <button class="btn" type="button" data-new>+ New card</button>`}</div></div>`;listN=0;return;}
-  listN=Math.min(n,Math.max(CHUNK,upTo||0));
+  if(!n){SEL="";renderPane();const q=QUERY.trim();listEl.innerHTML=`<div class="list-in"><div class="lempty">${q||GROUP?`<b>No card matches${q?` “${esc(q)}”`:""}</b>Try part of a name, a few digits of a number, or a tag.<br><br><button class="btn" type="button" data-clear>Clear search</button>`:`<b>Your card file is empty</b>Import your contacts or start a card by hand.<br><br><button class="btn primary" type="button" data-import>Import contacts</button> <button class="btn" type="button" data-new>+ New card</button>`}</div></div>`;listN=0;return;}
+  const sp=isSplit(),ae=document.activeElement,hadFocus=sp&&ae&&(ae===document.body||listEl.contains(ae)||$("pane").contains(ae));
+  if(sp&&!VIEW.some((c)=>c.id===SEL))SEL=VIEW[0].id;
+  const si=sp?VIEW.findIndex((c)=>c.id===SEL):-1;
+  listN=Math.min(n,Math.max(CHUNK,upTo||0,si+40));
   const uniq=new Set(VIEW.map((c)=>c.id)).size;
   const head=QUERY.trim()?`${VIEW.length} match${VIEW.length===1?"":"es"}`:GROUP?`${groupLabel(GROUP)}: ${uniq} ${uniq===1?"person":"people"}`:`${uniq} card${uniq===1?"":"s"}`;
   listEl.innerHTML=`<div class="list-in"><div class="lhead"><span>${esc(head)}</span><span class="sp"></span><span class="hint">Hold Call or Text for other numbers</span></div><div id="rows">${rowsHTML(0,listN)}</div>${listN<n?`<span class="lmore" id="lmore">Scroll for more</span>`:""}</div>`;
-  listEl.scrollTop=0;markAZ(LET[0]);}
+  listEl.scrollTop=0;markAZ(LET[0]);
+  if(sp){const r=markSel();renderPane();if(r&&si>0){r.scrollIntoView({block:"center"});markAZ(LET[si]);}if(r&&hadFocus&&!document.querySelector("dialog[open]"))r.focus({preventScroll:true});}}
+function selectOrOpen(c){if(isSplit())selectCard(c.id,true);}
+/* move the selection in side-by-side view: arrows, Page keys, Home/End */
+function moveSel(d){if(!VIEW.length)return;let i=VIEW.findIndex((c)=>c.id===SEL);i=d==="home"?0:d==="end"?VIEW.length-1:clamp((i<0?0:i)+d,0,VIEW.length-1);
+  if(i>=listN)moreRows(i+40);selectCard(VIEW[i].id,true);}
+function markSel(){listEl.querySelectorAll(".row.sel").forEach((r)=>r.classList.remove("sel"));
+  const r=[...listEl.querySelectorAll(".row")].find((x)=>VIEW[+x.dataset.i]&&VIEW[+x.dataset.i].id===SEL);if(r)r.classList.add("sel");return r;}
+function selectCard(id,focus){SEL=id;const r=markSel();renderPane();if(r){r.scrollIntoView({block:"nearest"});if(focus)r.focus({preventScroll:true});}}
+function renderPane(){const pane=$("pane");if(!isSplit()){pane.innerHTML="";return;}
+  const c=ALL.find((x)=>x.id===SEL);
+  pane.innerHTML=c?`<div class="pb">${viewHTML(c)}</div><div class="pf"><button class="btn danger" type="button" data-t="del">Delete</button><span class="sp"></span><button class="btn primary" type="button" data-t="edit">Edit</button></div>`
+    :`<div class="pempty">${VIEW.length?"Choose a name on the left.":"No cards to show."}</div>`;}
 function moreRows(to){const n=VIEW.length;if(listN>=n)return;const end=Math.min(n,Math.max(listN+CHUNK,to||0));
   $("rows").insertAdjacentHTML("beforeend",rowsHTML(listN,end).replace(/^<div class="lsec"[^>]*>[^<]*<\/div>/,(m)=>LET[listN]===LET[listN-1]?"":m));listN=end;
   if(listN>=n){const m=$("lmore");if(m)m.remove();}}
@@ -1053,8 +1133,13 @@ listEl.addEventListener("click",(e)=>{
   if(e.target.closest("[data-new]")){openEdit(null);return;}
   if(e.target.closest("[data-import]")){openDlg("dlgImport");return;}
   if(e.target.closest(".ra"))return;
-  const r=e.target.closest(".row");if(r)openView(VIEW[+r.dataset.i]);});
-listEl.addEventListener("keydown",(e)=>{if(e.key==="Enter"&&e.target.classList.contains("row")){e.preventDefault();openView(VIEW[+e.target.dataset.i]);}});
+  const r=e.target.closest(".row");if(!r)return;const c=VIEW[+r.dataset.i];
+  if(isSplit())selectCard(c.id,true);else openView(c);});
+listEl.addEventListener("keydown",(e)=>{const row=e.target.closest&&e.target.closest(".row");if(!row)return;
+  if(e.key==="Enter"){e.preventDefault();const c=VIEW[+row.dataset.i];if(isSplit())selectCard(c.id,true);else openView(c);return;}
+  if(e.key==="Escape"){row.blur();$("q").focus();}});
+$("pane").addEventListener("click",(e)=>{const c=ALL.find((x)=>x.id===SEL);if(c)viewClick(e,c);});
+window.addEventListener("resize",()=>{const sp=isSplit();if(sp!==wasSplit){wasSplit=sp;if(sp&&$("dlgView").open){if(viewing)SEL=viewing.id;$("dlgView").close();}applyMode();renderList();}});
 $("modeBtn").addEventListener("click",()=>{
   if(listShown()){if(MODE==="list"){MODE="cards";LS.set("mode",MODE);}forceCards=true;}
   else{MODE="list";LS.set("mode",MODE);forceCards=false;}
@@ -1146,6 +1231,9 @@ document.addEventListener("keydown",(e)=>{
   const k=e.key;const L=listShown();
   if(k==="/"){e.preventDefault();$("q").focus();return;}
   if(/^[a-z]$/i.test(k)){jumpLetter(k.toUpperCase());return;}
+  if(L&&isSplit()&&!(t&&t.closest&&t.closest("#pane a,#pane button"))){
+    const m={ArrowDown:1,ArrowUp:-1,PageDown:10,PageUp:-10,Home:"home",End:"end"}[k];if(m!==undefined){e.preventDefault();moveSel(m);return;}
+    if(k==="Enter"&&SEL&&!e.defaultPrevented&&!(t&&t.closest&&t.closest(".row,a,button,dialog"))){const c=ALL.find((x)=>x.id===SEL);if(c){e.preventDefault();openEdit(c);}return;}}
   if(L)return;
   if(k==="ArrowDown"){e.preventDefault();audioInit();step(1);}
   else if(k==="ArrowUp"){e.preventDefault();audioInit();step(-1);}
@@ -1176,6 +1264,7 @@ function jumpLetter(L){let i=-1;
   if(L in firstOf)i=firstOf[L];
   else{const keys=TABX.split("");for(let k=keys.indexOf(L)+1;k<keys.length;k++){if(keys[k] in firstOf){i=firstOf[keys[k]];break;}}}
   if(i<0)return;audioInit();
+  if(listShown()&&isSplit()){if(i>=listN)moreRows(i+40);selectCard(VIEW[i].id,false);const sec=[...listEl.querySelectorAll(".lsec")].find((s)=>s.dataset.sec===LET[i]);if(sec)listEl.scrollTop+=sec.getBoundingClientRect().top-listEl.getBoundingClientRect().top;markAZ(LET[i]);tick();return;}
   if(listShown()){if(i>=listN)moreRows(i+40);const sec=[...listEl.querySelectorAll(".lsec")].find((s)=>s.dataset.sec===LET[i]);if(sec)listEl.scrollTop+=sec.getBoundingClientRect().top-listEl.getBoundingClientRect().top;markAZ(LET[i]);tick();}
   else goTo(i);}
 let azDrag=false;
@@ -1268,7 +1357,8 @@ async function unGone(ids){ids.forEach((id)=>GONE.delete(id));try{await DB.del(i
 
 /* ================= view ================= */
 let viewing=null;
-function openView(c){if(!c)return;viewing=c;
+function openView(c){if(!c)return;viewing=c;$("vT").textContent=display(c);$("vBody").innerHTML=viewHTML(c);openDlg("dlgView");}
+function viewHTML(c){
   const org=orgLine(c);
   const rows=[];
   c.phones.forEach((p)=>rows.push(`<li><span class="k">${esc(LABELS[p.label])}</span><span class="v">${esc(fmtPhone(p.value))}</span><span class="bt"><a class="btn mini" href="${esc(telHref(p.value))}">Call</a><a class="btn mini quiet" href="${esc(smsHref(p.value))}">Text</a><button class="btn mini quiet" type="button" data-copy="${esc(fmtPhone(p.value))}">Copy</button></span></li>`));
@@ -1277,25 +1367,28 @@ function openView(c){if(!c)return;viewing=c;
   if(c.birthday)rows.push(`<li><span class="k">Birthday</span><span class="v">${esc(fmtBday(c.birthday))}</span></li>`);
   if(c.tags.length)rows.push(`<li><span class="k">Groups</span><span class="v">${c.tags.map((t)=>`<span class="chip">${esc(t)}</span>`).join(" ")}</span></li>`);
   if(c.notes)rows.push(`<li><span class="k">Notes</span><span class="v">${esc(c.notes)}</span></li>`);
-  $("vT").textContent=display(c);
-  $("vBody").innerHTML=`<div class="dt-top"><div class="ph"${photoStyle(c)}>${c.photo?"":esc(initials(c))}</div><div><p class="name">${esc(display(c))}</p>${org?`<div class="org">${esc(org)}</div>`:""}</div></div>`+
+  return `<div class="dt-top"><div class="ph"${photoStyle(c)}>${c.photo?"":esc(initials(c))}</div><div><p class="name">${esc(display(c))}</p>${org?`<div class="org">${esc(org)}</div>`:""}</div></div>`+
     `<div class="tools"><button class="btn mini${c.fav?" primary":""}" type="button" data-t="fav">${c.fav?"★ Favourite":"☆ Favourite"}</button><button class="btn mini quiet" type="button" data-t="copy">Copy details</button><button class="btn mini quiet" type="button" data-t="qr">QR code</button><button class="btn mini quiet" type="button" data-t="file">Send as file</button></div>`+
-    `<ul class="rows">${rows.join("")||'<li><span class="v note">Nothing on this card yet. Tap Edit to add a number or email.</span></li>'}</ul>`;
-  openDlg("dlgView");}
-$("vBody").addEventListener("click",async(e)=>{const c=viewing;if(!c)return;
+    `<ul class="rows">${rows.join("")||'<li><span class="v note">Nothing on this card yet. Tap Edit to add a number or email.</span></li>'}</ul>`;}
+$("vBody").addEventListener("click",(e)=>{if(viewing)viewClick(e,viewing);});
+async function viewClick(e,c){
   const cp=e.target.closest("[data-copy]");if(cp){copyText(cp.dataset.copy,"Copied "+cp.dataset.copy);return;}
   const t=e.target.closest("[data-t]");if(!t)return;
-  if(t.dataset.t==="fav"){c.fav=!c.fav;c.updated=Date.now();try{await DB.put(copyOf(c));}catch(_){}bump();rebuild(c.id);openView(c);toast(c.fav?"Added to favourites (★ at the front of the file).":"Removed from favourites.");}
+  if(t.dataset.t==="edit"){openEdit(c);return;}
+  if(t.dataset.t==="del"){deleteCard(c);return;}
+  if(t.dataset.t==="fav"){c.fav=!c.fav;c.updated=Date.now();try{await DB.put(copyOf(c));}catch(_){}bump();rebuild(c.id);if($("dlgView").open)openView(c);toast(c.fav?"Added to favourites (★ at the front of the file).":"Removed from favourites.");}
   if(t.dataset.t==="copy")copyText(detailsText(c),"Copied. Paste it into IQ Kit, a report or a message.");
   if(t.dataset.t==="qr")openQR(c);
-  if(t.dataset.t==="file")saveFile(new Blob([toVCF([c])],{type:"text/vcard"}),fileSafe(display(c))+".vcf");});
+  if(t.dataset.t==="file")saveFile(new Blob([toVCF([c])],{type:"text/vcard"}),fileSafe(display(c))+".vcf");}
 function detailsText(c){const L=[display(c)];const org=[c.title,c.company].filter(Boolean).join(", ");if(org)L.push(org);
   c.phones.forEach((p)=>L.push(`${LABELS[p.label]}: ${fmtPhone(p.value)}`));c.emails.forEach((m)=>L.push(`Email: ${m.value}`));
   if(c.address)L.push("Address: "+c.address.replace(/\s*\n\s*/g,", "));if(c.birthday)L.push("Birthday: "+fmtBday(c.birthday));return L.join("\n");}
 $("vEdit").addEventListener("click",()=>{if(viewing)openEdit(viewing);});
-$("vDel").addEventListener("click",async()=>{const c=viewing;if(!c)return;$("dlgView").close();
+$("vDel").addEventListener("click",()=>{if(viewing)deleteCard(viewing);});
+async function deleteCard(c){if($("dlgView").open)$("dlgView").close();
+  if(isSplit()){const j=VIEW.findIndex((x)=>x.id===c.id);const rest=VIEW.filter((x)=>x.id!==c.id);const nb=rest[Math.min(Math.max(j,0),rest.length-1)];SEL=nb?nb.id:"";}
   const i=ALL.indexOf(c);if(i>=0)ALL.splice(i,1);await DB.del(c.id);await markGone([c.id]);bump();const at=Math.round(pos);rebuild();goTo(Math.min(at,maxPos()),true);
-  toast(`Deleted ${display(c)}`,"Undo",async()=>{ALL.push(c);await DB.put(copyOf(c));await unGone([c.id]);rebuild(c.id);});});
+  toast(`Deleted ${display(c)}`,"Undo",async()=>{ALL.push(c);await DB.put(copyOf(c));await unGone([c.id]);SEL=c.id;rebuild(c.id);});}
 
 /* pick which number/email */
 function pickFrom(c,kind){
@@ -1318,7 +1411,7 @@ function openQR(c){const box=$("qrBox");box.innerHTML="";$("qT").textContent=dis
   openDlg("dlgQR");}
 
 /* ================= edit ================= */
-let editing=null, editPhoto="", eInit="", editNY="";
+let editing=null, editPhoto="", eInit="", editNY="", dupIgnore=new Set(), dupHit=null, dupT=0;
 function showNY(){$("eNY").hidden=!editNY;if(editNY)$("eNYt").textContent=fmtBday(editNY);}
 $("eNYx").addEventListener("click",()=>{editNY="";showNY();});
 const eForm=$("eForm");
@@ -1342,7 +1435,7 @@ function openEdit(c){editing=c;
   (c&&c.phones.length?c.phones:[{label:"mobile",value:""}]).forEach((x)=>addRow("phone",x));
   (c&&c.emails.length?c.emails:[{label:"home",value:""}]).forEach((x)=>addRow("email",x));
   setEditPhoto(c?c.photo:"",c);
-  $("eParse").hidden=!!c;
+  $("eParse").hidden=!!c;dupIgnore=new Set();dupHit=null;$("eDup").hidden=true;
   if($("dlgView").open)$("dlgView").close();
   openDlg("dlgEdit");eInit=formState();
   if(!coarse)setTimeout(()=>f.first.focus(),30);}
@@ -1358,6 +1451,39 @@ eForm.addEventListener("submit",(e)=>{e.preventDefault();});
 eForm.addEventListener("keydown",(e)=>{if(e.key!=="Enter"||e.target.tagName!=="INPUT"||e.target.type==="checkbox")return;e.preventDefault();
   const f=[...eForm.querySelectorAll("input.in,textarea.in")].filter((x)=>x.offsetParent);const i=f.indexOf(e.target);if(i>=0&&i<f.length-1)f[i+1].focus();else e.target.blur();});
 $("eSave").addEventListener("click",saveEdit);
+/* While typing, warn when a number or email is already on another card (or the exact name is), and offer to add
+   what's been typed to that card instead of making a second one. */
+function formCard(){const f=eForm.elements;
+  return clean({id:editing?editing.id:uid(),first:f.first.value,last:f.last.value,company:f.company.value,title:f.title.value,
+    phones:rowsOf("ePhones"),emails:rowsOf("eEmails"),address:f.address.value,birthday:f.birthday.value||editNY,tags:f.tags.value,notes:f.notes.value,photo:editPhoto,fav:f.fav.checked,showCo:f.showCo.checked,
+    created:editing?editing.created:Date.now(),updated:Date.now()});}
+function findDup(c){const others=ALL.filter((x)=>x!==editing&&!dupIgnore.has(x.id));
+  for(const p of c.phones){const k=phoneKey(p.value),x=splitExt(p.value).ext;if(!k)continue;
+    const hit=others.find((o)=>o.phones.some((q)=>phoneKey(q.value)===k&&splitExt(q.value).ext===x));if(hit)return {c:hit,what:fmtPhone(p.value),strong:true};}
+  for(const e of c.emails){const k=e.value.toLowerCase();const hit=others.find((o)=>o.emails.some((q)=>q.value.toLowerCase()===k));if(hit)return {c:hit,what:e.value,strong:true};}
+  const n=nKey(c);if(n){const hit=others.find((o)=>nKey(o)===n);if(hit)return {c:hit,what:"",strong:false};}
+  return null;}
+function checkDup(){dupHit=findDup(formCard());const box=$("eDup");if(!dupHit){box.hidden=true;return;}
+  const who=esc(display(dupHit.c));box.classList.toggle("soft",!dupHit.strong);
+  box.innerHTML=(dupHit.strong?`<b>${esc(dupHit.what)}</b> is already on <b>${who}</b>'s card.`:`There's already a card for <b>${who}</b>.`)+
+    `<div class="dw-b"><button class="btn mini primary" type="button" data-dw="merge">Add to ${who}'s card</button><button class="btn mini quiet" type="button" data-dw="keep">Keep separate</button></div>`;
+  box.hidden=false;}
+eForm.addEventListener("input",()=>{clearTimeout(dupT);dupT=setTimeout(checkDup,250);});
+$("eDup").addEventListener("click",async(e)=>{const b=e.target.closest("[data-dw]");if(!b||!dupHit)return;
+  const shown=dupHit.c;clearTimeout(dupT);checkDup();   // check again with what's in the boxes right now
+  if(!dupHit||dupHit.c!==shown){toast("The card changed while you were typing. Check the warning again.");return;}
+  if(b.dataset.dw==="keep"){dupIgnore.add(dupHit.c.id);checkDup();return;}
+  const target=dupHit.c,c=formCard(),from=editing;
+  if(empty(c)){toast("Nothing to add yet.");return;}
+  if(fullName(c)&&!namesMatch(target,c)){c.notes=(c.notes?c.notes+"\n":"")+`Name (also): ${fullName(c)}`;c.first="";c.last="";}   // a different name is kept in the notes, never lost
+  if(!from){const trial=clean(copyOf(target));if(!mergeInto(trial,copyOf(c))){editing=null;$("dlgEdit").close();if(QUERY)setQuery("");selectOrOpen(target);toast(`That's all on ${display(target)}'s card already.`);return;}}
+  snapshot("Undo merge");
+  mergeInto(target,c);invalidate(target);
+  try{await DB.put(copyOf(target));}catch(_){}
+  if(from){const i=ALL.indexOf(from);if(i>=0)ALL.splice(i,1);try{await DB.del(from.id);}catch(_){}await markGone([from.id]);}
+  bump();sealSnap();editing=null;$("dlgEdit").close();
+  if(QUERY)setQuery("");SEL=target.id;rebuild(target.id);if(!isSplit()&&listShown())selectOrOpen(target);
+  toast(`Added to ${display(target)}'s card.`,"Undo",undoSnap,12000);});
 async function saveEdit(){
   const f=eForm.elements;
   const birthday=f.birthday.value||editNY;
@@ -1366,11 +1492,13 @@ async function saveEdit(){
     created:editing?editing.created:Date.now(),updated:Date.now()});
   if(empty(c)){toast("Add a name, company, phone or email before saving.");return;}
   const was=editing;
+  if(was){const a=copyOf(was),b=copyOf(c);delete a.updated;delete b.updated;
+    if(JSON.stringify(a)===JSON.stringify(b)){$("dlgEdit").close();editing=null;toast("No changes to save.");return;}}
   if(was){Object.assign(was,c);invalidate(was);}else ALL.push(c);
   try{await DB.put(copyOf(c));}catch(_){toast("Couldn't save to this device. Export a backup.");}
   bump();$("dlgEdit").close();
   if(QUERY&&!was)setQuery("");
-  rebuild(c.id);toast(was?"Card saved":"Card filed");editing=null;}
+  SEL=c.id;rebuild(c.id);toast(was?"Card saved":"Card filed");editing=null;}
 
 /* paste-to-parse */
 $("eParse").addEventListener("click",()=>{$("ptIn").value="";openDlg("dlgParse");setTimeout(()=>$("ptIn").focus(),50);});
@@ -1682,6 +1810,36 @@ async function saveFile(blob,name){
   if(coarse&&navigator.canShare){try{if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return true;}}catch(e){if(e&&e.name==="AbortError")return false;}}
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},4000);return true;}
+/* Send to the phone's own Contacts app (what Siri, CarPlay and caller ID read). Only cards changed since the last send by default. */
+const phoneWord=isIOS?"iPhone":"phone";
+const sentAt=()=>+LS.get("phoneSent","0");
+const fp=(c)=>{const t=toVCF([copyOf(c)]).replace(/^FN:.*$/m,"");let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36)+t.length.toString(36);};
+function sentMap(){try{return JSON.parse(LS.get("phoneSentFp","")||"null");}catch(_){return null;}}
+/* What the phone already has: cards whose vCard is unchanged since the last send are skipped. */
+const changedSince=()=>{const m=sentMap(),t=sentAt();if(!m)return t?ALL.filter((c)=>c.updated>t):ALL.slice();return ALL.filter((c)=>!m[c.id]||m[c.id][0]!==fp(c));};
+const goneSince=()=>{const m=sentMap();if(!m)return [];const have=new Set(ALL.map((c)=>c.id));return Object.keys(m).filter((id)=>!have.has(id)).map((id)=>m[id][1]);};
+function recordSent(list,all){const m=all?{}:(sentMap()||{});
+  if(all){}else{const have=new Set(ALL.map((c)=>c.id));for(const id of Object.keys(m))if(!have.has(id))delete m[id];}   // deletions are reported once, then forgotten
+  for(const c of list)m[c.id]=[fp(c),display(c)];
+  LS.set("phoneSentFp",JSON.stringify(m));LS.set("phoneSent",String(Date.now()));}
+function sendSummary(){const t=sentAt(),n=changedSince().length;if(!ALL.length)return "No cards yet.";
+  return !t?"Never sent. The first time sends every card.":n?`${n} card${n===1?"":"s"} changed since ${new Date(t).toLocaleDateString(undefined,{month:"short",day:"numeric"})}`:`Nothing changed since ${new Date(t).toLocaleDateString(undefined,{month:"short",day:"numeric"})}`;}
+function openSend(){const t=sentAt(),ch=changedSince(),n=ALL.length,gone=goneSince();
+  $("sT").textContent=`Send to ${phoneWord} Contacts`;
+  $("sInfo").textContent=!n?"No cards yet. Add or import some first.":t?`Last sent ${longDate(t)} at ${hhmm(t)}.`:"You haven't sent any cards yet.";
+  $("sChangedT").textContent=!n?"No cards yet":!t?`Send ${ch.length} card${ch.length===1?"":"s"}`:ch.length?`Send ${ch.length} changed card${ch.length===1?"":"s"}`:"Nothing changed since last time";
+  $("sChangedS").textContent=t?"New or edited since the last send":"Every card, since this is the first time";
+  const g=$("sGone");g.hidden=!gone.length;
+  if(gone.length)g.textContent=`${gone.length===1?"1 card was":gone.length+" cards were"} deleted here since the last send. A file can't remove cards from the ${phoneWord}, so delete ${gone.length===1?"it":"them"} in Contacts yourself: ${gone.slice(0,8).join(", ")}${gone.length>8?` and ${gone.length-8} more`:""}.`;
+  document.querySelector('#dlgSend [data-s="changed"]').disabled=!ch.length;
+  $("sAllT").textContent=`Send all ${n} card${n===1?"":"s"}`;document.querySelector('#dlgSend [data-s="all"]').disabled=!n;
+  openDlg("dlgSend");}
+$("dlgSend").addEventListener("click",async(e)=>{const b=e.target.closest("[data-s]");if(!b||b.disabled)return;
+  const list=(b.dataset.s==="all"?ALL:changedSince()).map(copyOf);if(!list.length)return;
+  const ok=await saveFile(new Blob([toVCF(list)],{type:"text/vcard"}),`contacts-for-${phoneWord.toLowerCase()}-${stamp()}.vcf`);
+  if(ok){recordSent(b.dataset.s==="all"?ALL:changedSince(),b.dataset.s==="all");$("dlgSend").close();
+    toast(coarse?`Sent ${list.length} card${list.length===1?"":"s"}. In Contacts, tap Add All.`:`Saved ${list.length} card${list.length===1?"":"s"} as a file. Send it to your ${phoneWord} (AirDrop or email), open it there, then tap Add All.`,null,null,9000);}});
+
 function openExport(){const n=ALL.length;$("xScope").textContent=n?`${n} card${n===1?"":"s"} on this device.`:"There are no cards to export yet.";
   const scoped=VIEW.length&&(QUERY.trim()||GROUP);const un=new Set(VIEW.map((c)=>c.id)).size;$("xOnlyWrap").hidden=!scoped;$("xOnly").checked=false;
   if(scoped)$("xOnlyT").textContent=`vCard and spreadsheet: only the ${un} card${un===1?"":"s"} ${QUERY.trim()?`matching “${QUERY.trim()}”`:`in ${groupLabel(GROUP)}`}`;
@@ -1831,20 +1989,47 @@ $("wGo").addEventListener("click",()=>{const people=uniqSorted(ALL.filter((c)=>w
 function syncSeg(id,v){$(id).querySelectorAll("button").forEach((b)=>b.classList.toggle("on",b.dataset.v===v));}
 function openMenu(){const lb=+LS.get("lastBackup","0");
   $("mBackup").textContent=lb?`Last backup ${new Date(lb).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}`:(ALL.length?"Never backed up. Save a backup file.":"Save your cards to a file");
+  $("mPhoneT").textContent=`Send to ${phoneWord} Contacts`;$("mPhone").textContent=sendSummary();
   const ck=loadCK();$("mCheck").hidden=!ck;if(ck)$("mCheckT").textContent=`${ck.title}: ${ck.items.filter((x)=>x.status==="reached").length} of ${ck.items.length} reached`;
   $("mUndo").hidden=!SNAP;if(SNAP)$("mUndoT").textContent=SNAP.label;
-  syncSeg("sortSeg",SORT);syncSeg("sndSeg",SOUND?"on":"off");$("mUpdMsg").textContent=`You have build ${(document.querySelector('meta[name="iqc-build"]')||{}).content||"?"}. Tap to check for a newer one.`;
+  syncSeg("sortSeg",SORT);syncSeg("sndSeg",SOUND?"on":"off");syncSeg("mailSeg",mailWith());$("mUpdMsg").textContent=`You have build ${(document.querySelector('meta[name="iqc-build"]')||{}).content||"?"}. Tap to check for a newer one.`;
   if(navigator.storage&&navigator.storage.persisted)navigator.storage.persisted().then((p)=>{$("mStore").textContent=p?"This browser has agreed not to clear them on its own.":"";}).catch(()=>{});
   openDlg("dlgMenu");}
 $("menuBtn").addEventListener("click",openMenu);
 $("newBtn").addEventListener("click",()=>openEdit(null));
 $("dlgMenu").addEventListener("click",(e)=>{const g=e.target.closest("[data-go]");if(!g)return;const k=g.dataset.go;
   if(k==="undo"){$("dlgMenu").close();undoSnap();}if(k==="checkin")openCheck();
+  if(k==="phone")openSend();
   if(k==="import")openDlg("dlgImport");if(k==="export")openExport();if(k==="dupes")openDupes();if(k==="install")openInstall();
   if(k==="bdays")openBdays();if(k==="print")openPrint();
   if(k==="erase"){$("zN").textContent=ALL.length;$("zIn").value="";$("zGo").disabled=true;openDlg("dlgErase");}});
 $("sortSeg").addEventListener("click",(e)=>{const b=e.target.closest("button");if(!b)return;SORT=b.dataset.v;LS.set("sort",SORT);syncSeg("sortSeg",SORT);
   const c=VIEW[Math.round(pos)];ALL.forEach(invalidate);rebuild(c&&c.id);});
+/* ================= email: Gmail or the mail app, and the address is always copied ================= */
+const isAndroid=/Android/i.test(UA);
+const mailWith=()=>LS.get("mailWith","ask");
+function gmailURL(to){const t=encodeURIComponent(to);
+  if(isIOS)return "googlegmail:///co?to="+t;   // the Gmail app, with the address filled in
+  const web="https://mail.google.com/mail/?view=cm&fs=1&to="+t;
+  if(isAndroid)return `intent:${to}#Intent;scheme=mailto;package=com.google.android.gm;S.browser_fallback_url=${encodeURIComponent(web)};end`;
+  return web;}
+async function copyText(v){try{await navigator.clipboard.writeText(v);return true;}catch(_){
+  try{const ta=document.createElement("textarea");ta.value=v;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;opacity:0";document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();return ok;}catch(_){return false;}}}
+function sendMail(to,how){
+  if(how==="gmail"){const u=gmailURL(to);if(!isIOS&&!isAndroid)window.open(u,"_blank","noopener");else location.href=u;}
+  else location.href="mailto:"+encodeURIComponent(to).replace(/%40/g,"@");}
+let mailTo="";
+document.addEventListener("click",(e)=>{if(e.defaultPrevented)return;const a=e.target.closest&&e.target.closest('a[href^="mailto:"]');if(!a||a.id==="mMail")return;
+  const to=decodeURIComponent(a.getAttribute("href").slice(7).split("?")[0]);if(!to)return;
+  copyText(to);const how=mailWith();
+  if(how==="app"){toast(`Copied ${to}, in case your mail app doesn't fill it in.`);return;}   // the link opens the mail app as usual
+  e.preventDefault();
+  if(how==="gmail"){toast(`Opening Gmail. ${to} is copied too.`);sendMail(to,"gmail");return;}
+  mailTo=to;$("mwTo").textContent=to;if(isIOS)$("mwG").textContent="Opens the Gmail app with the address filled in (the app needs to be installed)";$("mwRem").checked=true;if($("dlgPick").open)$("dlgPick").close();openDlg("dlgMail");});
+$("dlgMail").addEventListener("click",(e)=>{const b=e.target.closest("[data-mw]");if(!b)return;const how=b.dataset.mw;
+  if($("mwRem").checked){LS.set("mailWith",how);syncSeg("mailSeg",how);}
+  $("dlgMail").close();toast($("mwRem").checked?`Email will open in ${how==="gmail"?"Gmail":"your mail app"} from now on. Change it in Menu.`:`${mailTo} is copied too.`,null,null,6000);sendMail(mailTo,how);});
+$("mailSeg").addEventListener("click",(e)=>{const b=e.target.closest("button");if(!b)return;LS.set("mailWith",b.dataset.v);syncSeg("mailSeg",b.dataset.v);});
 $("sndSeg").addEventListener("click",(e)=>{const b=e.target.closest("button");if(!b)return;SOUND=b.dataset.v==="on";LS.set("sound",SOUND?"on":"off");syncSeg("sndSeg",b.dataset.v);if(SOUND){audioInit();tick();}});
 $("zIn").addEventListener("input",()=>{$("zGo").disabled=$("zIn").value.trim().toUpperCase()!=="ERASE";});
 $("zGo").addEventListener("click",async()=>{snapshot("Undo erase");await DB.clear("cards");await DB.clear("gone");ALL=[];GONE=new Map();sealSnap();$("dlgErase").close();GROUP="";setQuery("");toast("All cards erased from this device.","Undo",undoSnap,12000);});
