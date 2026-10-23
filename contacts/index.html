@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-tDcih2VYGpxRlrO6a03b61/eR/cnv/XfxRO9gzlh1nQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-G1GlcL8pDAULRdu0rn6aVerwsUpbKUE2WmEvBfDmRCg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CONTACTS</title>
-<meta name="iqc-build" content="2026.10.23-4">
+<meta name="iqc-build" content="2026.10.23-5">
 <meta name="description" content="A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -319,6 +319,16 @@ dialog.tall{height:calc(100dvh - 40px)}
 .rows .k{width:62px;flex:none;color:var(--klabel);font-size:12px}
 .rows .v{flex:1;min-width:120px;overflow-wrap:anywhere;white-space:pre-wrap}
 .rows .bt{display:flex;gap:6px;margin-left:auto}
+.vsec{margin:18px 0 6px;color:var(--ink);font:700 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.caseno{display:inline-block;font:700 12px/1 var(--mono);color:var(--ink);border:1px solid var(--edge);border-radius:4px;padding:4px 7px;margin:6px 6px 0 0;letter-spacing:.06em}
+.lastc{display:inline-block;color:var(--dim);font-size:12.5px;margin-top:6px}
+.srcb{display:inline-block;font-size:11px;line-height:16px;padding:0 5px;border:1px solid var(--edge);border-radius:4px;color:var(--dim);margin-left:8px;vertical-align:1px;white-space:nowrap}
+.srcb.inferred{border-style:dashed}
+.rows .k.w{width:112px}
+.logl .k{width:92px}
+.logl .ch{color:var(--ink);font-size:12px;margin-right:8px;white-space:nowrap}
+.frow{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:6px}
+.mrow.arow{grid-template-columns:minmax(0,1fr) minmax(0,.8fr) 34px}
 
 /* forms */
 .f{display:grid;gap:12px}
@@ -467,6 +477,20 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
   #printArea .case th{width:34mm;font-size:8pt;vertical-align:top;border-bottom:.5pt solid #999;padding:2pt 4pt}
   #printArea .case h2{font-size:10pt;margin:4mm 0 1.5mm;border-bottom:1pt solid #000;padding-bottom:1mm}
   #printArea .case .cf-nt{white-space:pre-wrap;margin:0}
+  #printArea .cf-ban{text-align:center;font:700 8.5pt/1.2 var(--mono);letter-spacing:.18em;border:1pt solid #000;padding:1.2mm;margin:0 0 4mm}
+  #printArea .cf-no{float:right;font:700 12pt/1 var(--mono);border:1.2pt solid #000;padding:1.5mm 2.5mm;margin:0 0 2mm 4mm;letter-spacing:.06em}
+  #printArea .cf-end{clear:both;margin:7mm 0 0;border-top:1pt solid #000;padding-top:1.5mm;font:700 7.5pt/1.2 var(--mono);text-align:center;letter-spacing:.14em}
+  #printArea .case table.kf td.s{width:20mm;font-size:7.5pt;color:#444;text-align:right}
+  #printArea .case table.lg td.d{width:22mm;white-space:nowrap}
+  #printArea .case table.lg td.h{width:18mm;white-space:nowrap}
+  #printArea .case table.lg th{width:auto}
+  #printArea .cover .cv{text-align:center;margin:60mm 0 40mm}
+  #printArea .cover .cf-k{font:700 9pt var(--mono);letter-spacing:.3em;margin:0 0 3mm}
+  #printArea .cover h1{font-size:30pt;letter-spacing:.22em;margin:0 0 4mm}
+  #printArea .cover .cf-org{font-size:13pt}
+  #printArea table.ix th{width:auto;font-size:7.5pt}
+  #printArea table.ix td{font-size:8pt;padding:1.5pt 4pt}
+  #printArea table.ix td:first-child,#printArea table.ix td:last-child{white-space:nowrap}
   .wallet{display:flex;flex-wrap:wrap;gap:6mm}
   .wcard{width:85.6mm;height:54mm;border:.6pt dashed #000;border-radius:3mm;padding:3mm 3.5mm;overflow:hidden;break-inside:avoid;font:7pt/1.3 var(--mono)}
   #printArea .wcard h2{font-size:8.5pt;margin:0 0 1.2mm;border-bottom:.6pt solid #000;padding-bottom:.8mm}
@@ -541,6 +565,20 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
   <div class="df"><button class="btn danger" id="vDel" type="button">Delete</button><span class="sp"></span><button class="btn primary" id="vEdit" type="button">Edit</button></div>
 </dialog>
 
+<!-- contact log entry -->
+<dialog id="dlgLog" aria-labelledby="lgT">
+  <div class="dh"><h2 id="lgT">Log contact</h2><button class="dx" data-close aria-label="Close">✕</button></div>
+  <div class="db">
+    <p class="note" id="lgWho" style="margin:0 0 12px"></p>
+    <div class="f2">
+      <label class="fl"><span>Date</span><input class="in" id="lgD" type="date"></label>
+      <label class="fl"><span>How</span><select class="in" id="lgCh"><option value="call">Call</option><option value="text">Text</option><option value="email">Email</option><option value="person">In person</option><option value="video">Video</option><option value="other">Other</option></select></label>
+    </div>
+    <label class="fl" style="margin-top:12px"><span>What happened</span><textarea class="in" id="lgTx" rows="4" placeholder="What you talked about, what you learned, any follow-up"></textarea></label>
+  </div>
+  <div class="df"><button class="btn danger" id="lgDel" type="button" hidden>Delete entry</button><span class="sp"></span><button class="btn primary" id="lgSave" type="button">Save entry</button></div>
+</dialog>
+
 <!-- edit -->
 <dialog id="dlgEdit" aria-labelledby="eT">
   <div class="dh"><h2 id="eT">New card</h2><button class="dx" id="eX" type="button" aria-label="Close">✕</button></div>
@@ -571,6 +609,8 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
         <label class="fl"><span>Groups (tags), comma separated</span><input class="in" name="tags" placeholder="Family, Guard, Work"></label>
       </div>
       <div class="note" id="eNY" hidden>Birthday on file: <b id="eNYt"></b> (no year). Pick a date above to replace it, or <button type="button" class="btn mini quiet" id="eNYx">Remove</button></div>
+      <fieldset class="grp"><legend>Key facts</legend><p class="note" style="margin:0 0 10px">Mark where each fact came from: <b>Stated</b> (they told you), <b>Observed</b> (you saw or checked it), <b>Inferred</b> (a guess).</p><div class="f" id="eFacts"></div></fieldset>
+      <fieldset class="grp"><legend>Associates</legend><div class="multi" id="eAssoc"></div><button class="addrow" type="button" data-add="assoc">+ Add associate</button><datalist id="eAssocNames"></datalist></fieldset>
       <label class="fl"><span>Notes</span><textarea class="in" name="notes" rows="3"></textarea></label>
       <label class="chk"><input type="checkbox" name="fav"><span>Favourite (shows under ★ at the front of the file)</span></label>
       <label class="chk"><input type="checkbox" name="showCo"><span>Show and file under the company name (for a business or office)</span></label>
@@ -792,6 +832,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
       <button class="mi" type="button" data-p="case"><div><b>Case files</b><span id="prCaseT">One page per person: photo, every number, email and address, and the full notes</span></div></button>
       <button class="mi" type="button" data-p="wallet"><div><b>Wallet card</b><span>Credit-card size, for your wallet or go-bag: up to 8 people</span></div></button>
     </div>
+    <label class="fl" style="margin-top:14px"><span>Handling marking for case files (top and bottom of every file; leave blank for none)</span><input class="in" id="prBanner" maxlength="60" autocapitalize="characters"></label>
     <p class="note" style="margin-top:12px">On iPhone, the print screen can also save a PDF: tap Share there, then Save to Files.</p>
   </div>
 </dialog>
@@ -905,6 +946,28 @@ const okPhoto=(p)=>typeof p==="string"&&/^data:image\/(jpeg|png|webp|gif);base64
 const primaryPhone=(c)=>c.phones.find((p)=>p.label==="mobile")||c.phones[0]||null;
 const photoStyle=(c)=>c.photo?` style="background-image:url('${c.photo}')"`:"";
 
+/* Case-file structure: key facts (each with where it came from), associates (links to other cards) and a dated contact log. */
+const FACTS=[["rel","Relationship"],["met","How we met"],["metOn","First met"],["affil","Affiliation / unit"],["city","City"],["langs","Languages"],["skills","Expertise"]];
+const FACT_BY=Object.fromEntries(FACTS.map(([k,l])=>[l.toLowerCase(),k]));
+const FACT_RE=new RegExp("^("+FACTS.map((f)=>f[1].replace(/[\/]/g,"\\$&")).join("|")+"):\\s*(.+?)(?:\\s+\\((stated|observed|inferred)\\))?$","i");
+const SRCS=["stated","observed","inferred"],SRCL={stated:"Stated",observed:"Observed",inferred:"Inferred"};
+const CH={call:"Call",text:"Text",email:"Email",person:"In person",video:"Video",other:"Other"};
+const CHBY=Object.fromEntries(Object.entries(CH).map(([k,v])=>[v.toLowerCase(),k]));
+const DATE_RE=/^\d{4}-\d\d-\d\d$/;
+/* Lines in the notes that came from another app or file become structure: "Relationship (guess): …" and "Last email: …"
+   from the Gmail build, and the readable block this app writes into vCard and spreadsheet notes. Anything else stays in the notes. */
+function liftNotes(o){if(!o.notes)return;const keep=[];
+  for(const line of o.notes.split(/\n/)){const L=line.trim();let m;
+    if(/^(?:[—–-]+\s*)?(?:key facts|contact log)(?:\s*[—–-]+)?:?$/i.test(L))continue;
+    if((m=/^case file:\s*(IQC-\d{4,})$/i.exec(L))){if(!o.caseNo)o.caseNo=m[1].toUpperCase();continue;}
+    if((m=/^Relationship \(guess\):\s*(.+)$/i.exec(L))){if(!o.facts.rel)o.facts.rel={v:m[1].trim(),s:"inferred"};continue;}
+    if((m=/^Last email:\s*(\d{4}-\d\d-\d\d)\s*[—–-]\s*"(.*)"\s*[—–-]\s*(.*)$/i.exec(L))){o.log.push({id:uid(),d:m[1],ch:"email",t:`“${m[2]}” — ${m[3].trim()}`});continue;}
+    if((m=/^Last (?:email|contact)(?: \(Gmail\))?:\s*(\d{4}-\d\d-\d\d)$/i.exec(L))){o.log.push({id:uid(),d:m[1],ch:"email",t:"Email exchange (from Gmail)"});continue;}
+    if((m=FACT_RE.exec(L))){const k=FACT_BY[m[1].toLowerCase()];if(!o.facts[k])o.facts[k]={v:m[2].trim(),s:(m[3]||"stated").toLowerCase()};continue;}
+    if((m=/^Associates:\s*(.+)$/i.exec(L))){for(const part of m[1].split(/\s*;\s*/)){const a=/^(.*?)(?:\s*\(([^()]*)\))?$/.exec(part);if(a&&a[1].trim())o.assoc.push({id:"",n:a[1].trim(),r:(a[2]||"").trim()});}continue;}
+    if((m=/^(\d{4}-\d\d-\d\d)\s+·\s+(Call|Text|Email|In person|Video|Other)\s+·\s+(.*)$/i.exec(L))){o.log.push({id:uid(),d:m[1],ch:CHBY[m[2].toLowerCase()]||"other",t:m[3].trim()});continue;}
+    keep.push(line);}
+  o.notes=keep.join("\n").replace(/\n{3,}/g,"\n\n").trim();}
 function clean(c){const s=(v)=>typeof v==="string"?v.trim():(v==null?"":String(v).trim());
   const list=(a,lab)=>(Array.isArray(a)?a:[]).map((x)=>({label:LABELS[x&&x.label]?x.label:lab,value:s(x&&x.value)})).filter((x)=>x.value);
   const o={id:s(c.id)||uid(),first:s(c.first),last:s(c.last),company:s(c.company),title:s(c.title),
@@ -914,6 +977,15 @@ function clean(c){const s=(v)=>typeof v==="string"?v.trim():(v==null?"":String(v
   const seenP=new Set();o.phones=o.phones.filter((p)=>{const k=(phoneKey(p.value)||p.value)+"|"+splitExt(p.value).ext;if(seenP.has(k))return false;seenP.add(k);return true;});
   const seenE=new Set();o.emails=o.emails.filter((e)=>{const k=e.value.toLowerCase();if(seenE.has(k))return false;seenE.add(k);return true;});
   const seenT=new Set();o.tags=o.tags.filter((t)=>{const k=t.toLowerCase();if(seenT.has(k))return false;seenT.add(k);return true;});
+  o.caseNo=/^IQC-\d{4,}$/.test(s(c.caseNo))?s(c.caseNo):"";
+  o.facts={};const fi=c.facts&&typeof c.facts==="object"?c.facts:{};
+  for(const [k] of FACTS){const x=fi[k];const v=s(x&&typeof x==="object"?x.v:x);if(v)o.facts[k]={v,s:SRCS.includes(x&&x.s)?x.s:"stated"};}
+  o.log=(Array.isArray(c.log)?c.log:[]).map((e)=>({id:s(e&&e.id)||uid(),d:s(e&&e.d),ch:CH[e&&e.ch]?e.ch:"other",t:s(e&&e.t)}));
+  o.assoc=(Array.isArray(c.assoc)?c.assoc:[]).map((a)=>({id:s(a&&a.id),n:s(a&&a.n),r:s(a&&a.r)}));
+  liftNotes(o);
+  const seenL=new Set();o.log=o.log.filter((e)=>{if(!DATE_RE.test(e.d)||!e.t)return false;const k=e.d+"|"+e.ch+"|"+e.t.toLowerCase();if(seenL.has(k))return false;seenL.add(k);return true;})
+    .sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:0);
+  const seenA=new Set();o.assoc=o.assoc.filter((a)=>{if(!a.id&&!a.n)return false;if(a.id&&a.id===o.id)return false;const k=a.id||a.n.toLowerCase();if(seenA.has(k))return false;seenA.add(k);return true;});
   return o;}
 const empty=(c)=>!c.first&&!c.last&&!c.company&&!c.phones.length&&!c.emails.length;
 const copyOf=(c)=>JSON.parse(JSON.stringify(clean(c)));
@@ -928,7 +1000,7 @@ const strongKeys=(c)=>c.phones.map((p)=>{const k=phoneKey(p.value),x=splitExt(p.
 const nKey=(c)=>{const n=nameToks(c).join(" ");return n.includes(" ")?"n"+n:"";};
 const FIELDNAME={company:"Company",title:"Job title",address:"Address",birthday:"Birthday"};
 /* merge b into a (a keeps its id). Conflicting details from b are kept in the notes, never dropped. */
-const sig=(c)=>JSON.stringify([c.first,c.last,c.company,c.title,c.address,c.birthday,c.notes,c.phones,c.emails,c.tags,c.photo,c.fav,c.showCo]);
+const sig=(c)=>JSON.stringify([c.first,c.last,c.company,c.title,c.address,c.birthday,c.notes,c.phones,c.emails,c.tags,c.photo,c.fav,c.showCo,c.caseNo,c.facts,c.log,c.assoc]);
 function mergeInto(a,b){
   const before=sig(a);
   if(!a.first&&b.first)a.first=b.first;if(!a.last&&b.last)a.last=b.last;
@@ -936,6 +1008,9 @@ function mergeInto(a,b){
   for(const f of ["company","title","address","birthday"]){if(!b[f])continue;
     if(!a[f])a[f]=b[f];
     else if(a[f].replace(/\s+/g," ").toLowerCase()!==b[f].replace(/\s+/g," ").toLowerCase())extra.push(`${FIELDNAME[f]} (also): ${f==="birthday"?fmtBday(b[f]):b[f].replace(/\s*\n\s*/g,", ")}`);}
+  for(const [k,lab] of FACTS){const fa=a.facts[k],fb=b.facts&&b.facts[k];if(!fb)continue;
+    if(!fa)a.facts[k]=fb;else if(fa.v.toLowerCase()!==fb.v.toLowerCase())extra.push(`${lab} (also): ${fb.v}`);}
+  a.log=a.log.concat(b.log||[]);a.assoc=a.assoc.concat(b.assoc||[]);if(!a.caseNo&&b.caseNo)a.caseNo=b.caseNo;
   let notes=a.notes||"";
   for(const line of (b.notes?[b.notes]:[]).concat(extra)) if(!notes.includes(line)) notes=notes?notes+"\n"+line:line;
   a.notes=notes;
@@ -954,14 +1029,40 @@ const hasTag=(c,t)=>c.tags.some((x)=>x.toLowerCase()===t.toLowerCase());
 function groupMembers(g){g=g===undefined?GROUP:g;if(!g)return ALL.slice();if(g==="★")return ALL.filter((c)=>c.fav);return ALL.filter((c)=>hasTag(c,g));}
 const groupLabel=(g)=>g==="★"?"Favourites":g;
 function matches(c,q){
-  if(!c._h)c._h=[fullName(c),c.company,c.title,c.notes,c.address,c.tags.join(" "),c.emails.map((e)=>e.value).join(" "),c.phones.map((p)=>p.value).join(" ")].join(" ").toLowerCase();
+  if(!c._h)c._h=[fullName(c),c.company,c.title,c.notes,c.address,c.tags.join(" "),c.emails.map((e)=>e.value).join(" "),c.phones.map((p)=>p.value).join(" "),
+    c.caseNo,Object.values(c.facts).map((f)=>f.v).join(" "),c.log.map((e)=>e.t).join(" "),c.assoc.map((a)=>a.n+" "+a.r).join(" ")].join(" ").toLowerCase();
   const qd=digits(q);
   if(qd.length>=3&&/^[\d\s()+.\-]+$/.test(q)){
     const vars=[qd];if(qd[0]==="1"&&qd.length>=4)vars.push(qd.slice(1));
     return c.phones.some((p)=>{const d=digits(p.value);return vars.some((v)=>d.includes(v)||nd(d).includes(v));});}
   return q.split(/\s+/).every((t)=>c._h.includes(t));}
+/* Every card gets a case number (IQC-0001, IQC-0002, … in the order cards were filed; never reused), and associates
+   typed by name are linked to the card with that name once it exists. */
+function housekeep(){const dirty=new Set();
+  let seq=Math.max(+LS.get("caseSeq","0")||0,...ALL.map((c)=>+(c.caseNo||"").slice(4)||0),0);
+  const seen=new Set(),order=ALL.slice().sort((a,b)=>a.created-b.created||(a._k||"").localeCompare(b._k||""));
+  const need=[];for(const c of order){if(c.caseNo&&!seen.has(c.caseNo))seen.add(c.caseNo);else need.push(c);}
+  for(const c of need){c.caseNo="IQC-"+String(++seq).padStart(4,"0");dirty.add(c);}
+  LS.set("caseSeq",String(seq));
+  const byId=new Map(ALL.map((c)=>[c.id,c])),byName=new Map();
+  for(const c of ALL){const k=display(c).toLowerCase();byName.set(k,byName.has(k)?null:c);}
+  for(const c of ALL)for(const a of c.assoc){
+    if(a.id&&byId.has(a.id)){const n=display(byId.get(a.id));if(a.n!==n){a.n=n;dirty.add(c);}}
+    else if(!a.id||!byId.has(a.id)){const hit=byName.get(a.n.toLowerCase());if(hit&&hit!==c&&a.id!==hit.id){a.id=hit.id;dirty.add(c);}}}
+  if(dirty.size){dirty.forEach(invalidate);DB.put([...dirty].map(copyOf)).catch(()=>{});}}
+const assocName=(a)=>{const t=a.id&&ALL.find((x)=>x.id===a.id);return t?display(t):a.n;};
+const lastLog=(c)=>c.log[0]||null;
+const daysAgo=(d)=>{const t=new Date(d+"T00:00:00"),n=new Date();n.setHours(0,0,0,0);const k=Math.round((n-t)/86400000);return k<=0?"today":k===1?"yesterday":k<60?`${k} days ago`:k<730?`${Math.round(k/30.4)} months ago`:`${Math.round(k/365.25)} years ago`;};
+/* The structure written back out as plain note lines, for vCard and spreadsheet exports. Importing the file reads it back. */
+function notesFull(c){const L=[];if(c.notes)L.push(c.notes);const meta=[];
+  if(c.caseNo)meta.push("Case file: "+c.caseNo);
+  for(const [k,lab] of FACTS){const f=c.facts[k];if(f)meta.push(`${lab}: ${f.v} (${f.s})`);}
+  if(c.assoc.length)meta.push("Associates: "+c.assoc.map((a)=>assocName(a).replace(/[;()]/g," ")+(a.r?` (${a.r.replace(/[;()]/g," ")})`:"")).join("; "));
+  if(meta.length)L.push(meta.join("\n"));
+  if(c.log.length)L.push("Contact log:\n"+c.log.map((e)=>`${e.d} · ${CH[e.ch]} · ${e.t.replace(/\s*\n\s*/g," ")}`).join("\n"));
+  return L.join("\n\n");}
 function rebuild(keepId){
-  ALL.forEach((c)=>{c._k=sortKey(c);});
+  ALL.forEach((c)=>{c._k=sortKey(c);});housekeep();
   ALL.sort((a,b)=>a._k<b._k?-1:a._k>b._k?1:0);
   if(GROUP&&!(GROUP==="★"?ALL.some((c)=>c.fav):ALL.some((c)=>hasTag(c,GROUP)))){GROUP="";LS.set("group","");}
   const q=QUERY.trim().toLowerCase();
@@ -1006,6 +1107,9 @@ function faceHTML(c){
   const lines=[],extra=[];
   c.phones.slice(0,2).forEach((p)=>lines.push(`<li><span class="k">${SHORT[p.label]||"TEL"}</span><a class="v" href="${esc(telHref(p.value))}">${esc(fmtPhone(p.value))}</a></li>`));
   if(c.emails[0]) lines.push(`<li><span class="k">EMAIL</span><a class="v" href="${esc(mailHref(c.emails[0].value))}">${esc(c.emails[0].value)}</a></li>`);
+  {const rel=c.facts.rel,ll=lastLog(c);
+    if(ll)extra.push(`<li><span class="k">LAST</span><span class="v">${esc(ll.d)} · ${esc(CH[ll.ch])}</span></li>`);
+    if(c.caseNo||rel)extra.push(`<li><span class="k">CASE</span><span class="v">${esc([c.caseNo,rel&&rel.v].filter(Boolean).join(" · "))}</span></li>`);}
   if(c.address) extra.push(`<li><span class="k">ADDR</span><span class="v">${esc(c.address.replace(/\s*\n\s*/g,", "))}</span></li>`);
   if(c.birthday) extra.push(`<li><span class="k">BDAY</span><span class="v">${esc(fmtBday(c.birthday))}</span></li>`);
   if(c.tags.length) extra.push(`<li><span class="k">TAGS</span><span class="tags">${c.tags.map((t)=>`<span class="chip">${esc(t)}</span>`).join("")}</span></li>`);
@@ -1311,7 +1415,7 @@ q.addEventListener("input",()=>{QUERY=q.value;$("qx").hidden=!q.value;forceCards
 $("qx").addEventListener("click",()=>{setQuery("");q.focus();});
 
 /* ================= dialogs ================= */
-const STACK=new Set(["dlgCrop","dlgPick","dlgAsk","dlgParse","dlgPass","dlgSms","dlgQR","dlgRestore"]);
+const STACK=new Set(["dlgLog","dlgCrop","dlgPick","dlgAsk","dlgParse","dlgPass","dlgSms","dlgQR","dlgRestore"]);
 function openDlg(id){const d=$(id);if(!STACK.has(id))document.querySelectorAll("dialog[open]").forEach((o)=>{if(o!==d&&o.id!=="dlgEdit")o.close();});
   if(!STACK.has(id)&&$("dlgEdit").open&&id!=="dlgEdit")$("dlgEdit").close();
   if(!d.open){d.showModal();if(coarse&&document.activeElement&&document.activeElement.blur)document.activeElement.blur();}return d;}
@@ -1379,14 +1483,28 @@ function viewHTML(c){
   if(c.address)rows.push(`<li><span class="k">Address</span><span class="v">${esc(c.address)}</span><span class="bt"><a class="btn mini quiet" href="https://maps.apple.com/?q=${encodeURIComponent(c.address.replace(/\n/g,", "))}" target="_blank" rel="noopener">Map</a></span></li>`);
   if(c.birthday)rows.push(`<li><span class="k">Birthday</span><span class="v">${esc(fmtBday(c.birthday))}</span></li>`);
   if(c.tags.length)rows.push(`<li><span class="k">Groups</span><span class="v">${c.tags.map((t)=>`<span class="chip">${esc(t)}</span>`).join(" ")}</span></li>`);
-  if(c.notes)rows.push(`<li><span class="k">Notes</span><span class="v">${esc(c.notes)}</span></li>`);
-  return `<div class="dt-top"><div class="ph"${photoStyle(c)}>${c.photo?"":esc(initials(c))}</div><div><p class="name">${esc(display(c))}</p>${org?`<div class="org">${esc(org)}</div>`:""}</div></div>`+
-    `<div class="tools"><button class="btn mini${c.fav?" primary":""}" type="button" data-t="fav">${c.fav?"★ Favourite":"☆ Favourite"}</button><button class="btn mini quiet" type="button" data-t="copy">Copy details</button><button class="btn mini quiet" type="button" data-t="qr">QR code</button><button class="btn mini quiet" type="button" data-t="file">Send as file</button></div>`+
-    `<ul class="rows">${rows.join("")||'<li><span class="v note">Nothing on this card yet. Tap Edit to add a number or email.</span></li>'}</ul>`;}
+  const ll=lastLog(c);
+  let facts="";for(const [k,lab] of FACTS){const f=c.facts[k];if(f)facts+=`<li><span class="k w">${esc(lab)}</span><span class="v">${esc(f.v)}<span class="srcb ${f.s}">${SRCL[f.s]}</span></span></li>`;}
+  const links=new Map();for(const a of c.assoc)links.set(a.id||"n:"+a.n,{id:a.id,n:assocName(a),r:a.r});
+  for(const x of ALL)if(x!==c)for(const a of x.assoc)if(a.id===c.id&&!links.has(x.id))links.set(x.id,{id:x.id,n:display(x),r:a.r?`lists ${display(c).split(" ")[0]} as ${a.r}`:"lists this card"});
+  const assoc=[...links.values()].map((a)=>{const ok=a.id&&ALL.some((x)=>x.id===a.id);
+    return `<li><span class="v">${ok?`<button class="btn mini quiet" type="button" data-assoc="${esc(a.id)}">${esc(a.n)}</button>`:`${esc(a.n)} <span class="note">(no card)</span>`}${a.r?` <span class="note">${esc(a.r)}</span>`:""}</span></li>`;}).join("");
+  const log=c.log.map((e)=>`<li><span class="k">${esc(e.d)}</span><span class="v"><span class="ch">${esc(CH[e.ch])}</span>${esc(e.t)}</span><span class="bt"><button class="btn mini quiet" type="button" data-log="${esc(e.id)}">Edit</button></span></li>`).join("");
+  return `<div class="dt-top"><div class="ph"${photoStyle(c)}>${c.photo?"":esc(initials(c))}</div><div><p class="name">${esc(display(c))}</p>${org?`<div class="org">${esc(org)}</div>`:""}${c.caseNo?`<span class="caseno">${esc(c.caseNo)}</span>`:""}<span class="lastc">${ll?`Last contact ${esc(ll.d)} (${daysAgo(ll.d)})`:"No contact logged"}</span></div></div>`+
+    `<div class="tools"><button class="btn mini primary" type="button" data-t="log">+ Log contact</button><button class="btn mini${c.fav?" primary":""}" type="button" data-t="fav">${c.fav?"★ Favourite":"☆ Favourite"}</button><button class="btn mini quiet" type="button" data-t="copy">Copy details</button><button class="btn mini quiet" type="button" data-t="qr">QR code</button><button class="btn mini quiet" type="button" data-t="file">Send as file</button></div>`+
+    `<ul class="rows">${rows.join("")||'<li><span class="v note">Nothing on this card yet. Tap Edit to add a number or email.</span></li>'}</ul>`+
+    (facts?`<h3 class="vsec">Key facts</h3><ul class="rows">${facts}</ul>`:"")+
+    (assoc?`<h3 class="vsec">Associates</h3><ul class="rows">${assoc}</ul>`:"")+
+    `<h3 class="vsec">Contact log${c.log.length?` · ${c.log.length}`:""}</h3>`+
+    (log?`<ul class="rows logl">${log}</ul>`:`<p class="note">Nothing logged yet. Tap <b>+ Log contact</b> after you call, meet or message.</p>`)+
+    (c.notes?`<h3 class="vsec">Notes</h3><p style="white-space:pre-wrap;overflow-wrap:anywhere;margin:0">${esc(c.notes)}</p>`:"");}
 $("vBody").addEventListener("click",(e)=>{if(viewing)viewClick(e,viewing);});
 async function viewClick(e,c){
   const cp=e.target.closest("[data-copy]");if(cp){copyText(cp.dataset.copy,"Copied "+cp.dataset.copy);return;}
+  const as=e.target.closest("[data-assoc]");if(as){const t=ALL.find((x)=>x.id===as.dataset.assoc);if(t){if(isSplit()){SEL=t.id;rebuild(t.id);}else openView(t);}return;}
+  const lg=e.target.closest("[data-log]");if(lg){openLog(c,lg.dataset.log);return;}
   const t=e.target.closest("[data-t]");if(!t)return;
+  if(t.dataset.t==="log"){openLog(c,"");return;}
   if(t.dataset.t==="edit"){openEdit(c);return;}
   if(t.dataset.t==="del"){deleteCard(c);return;}
   if(t.dataset.t==="fav"){c.fav=!c.fav;c.updated=Date.now();try{await DB.put(copyOf(c));}catch(_){}bump();rebuild(c.id);if($("dlgView").open)openView(c);toast(c.fav?"Added to favourites (★ at the front of the file).":"Removed from favourites.");}
@@ -1396,6 +1514,22 @@ async function viewClick(e,c){
 function detailsText(c){const L=[display(c)];const org=[c.title,c.company].filter(Boolean).join(", ");if(org)L.push(org);
   c.phones.forEach((p)=>L.push(`${LABELS[p.label]}: ${fmtPhone(p.value)}`));c.emails.forEach((m)=>L.push(`Email: ${m.value}`));
   if(c.address)L.push("Address: "+c.address.replace(/\s*\n\s*/g,", "));if(c.birthday)L.push("Birthday: "+fmtBday(c.birthday));return L.join("\n");}
+/* contact log entries */
+let logCard=null,logId="";
+function openLog(c,id){logCard=c;logId=id||"";const e=logId?c.log.find((x)=>x.id===logId):null;if(logId&&!e){logId="";}
+  $("lgT").textContent=e?"Edit log entry":"Log contact";$("lgWho").textContent=display(c)+(c.caseNo?" · "+c.caseNo:"");
+  $("lgD").value=e?e.d:stamp();$("lgCh").value=e?e.ch:"call";$("lgTx").value=e?e.t:"";$("lgDel").hidden=!e;
+  openDlg("dlgLog");if(!coarse)setTimeout(()=>$("lgTx").focus(),30);}
+async function saveCardNow(c){c.updated=Date.now();Object.assign(c,clean(c));invalidate(c);
+  try{await DB.put(copyOf(c));}catch(_){toast("Couldn't save to this device. Export a backup.");}
+  bump();rebuild(c.id);if($("dlgView").open&&viewing&&viewing.id===c.id)openView(c);}
+$("lgSave").addEventListener("click",async()=>{const c=logCard;if(!c)return;const d=$("lgD").value,t=$("lgTx").value.trim(),ch=$("lgCh").value;
+  if(!DATE_RE.test(d)){toast("Pick the date it happened.");return;}if(!t){toast("Write a line about what happened.");$("lgTx").focus();return;}
+  const e=logId&&c.log.find((x)=>x.id===logId);if(e)Object.assign(e,{d,ch,t});else c.log.push({id:uid(),d,ch,t});
+  const was=!!e;$("dlgLog").close();await saveCardNow(c);toast(was?"Log entry saved":"Contact logged");});
+$("lgDel").addEventListener("click",async()=>{const c=logCard;if(!c||!logId)return;
+  if(!(await ask("This entry will be removed from the contact log.","Delete entry?","Delete","Keep",true)))return;
+  c.log=c.log.filter((x)=>x.id!==logId);$("dlgLog").close();await saveCardNow(c);toast("Log entry deleted");});
 $("vEdit").addEventListener("click",()=>{if(viewing)openEdit(viewing);});
 $("vDel").addEventListener("click",()=>{if(viewing)deleteCard(viewing);});
 async function deleteCard(c){if($("dlgView").open)$("dlgView").close();
@@ -1435,7 +1569,16 @@ function rowHTMLe(kind,x){const opts=kind==="phone"?["mobile","home","work","mai
 function addRow(kind,x){const box=$(kind==="phone"?"ePhones":"eEmails");box.insertAdjacentHTML("beforeend",rowHTMLe(kind,x||{label:kind==="phone"?"mobile":"home",value:""}));return box.lastElementChild;}
 function setEditPhoto(p,c){editPhoto=p||"";const b=$("ePh");b.style.backgroundImage=editPhoto?`url('${editPhoto}')`:"";b.textContent=editPhoto?"":(c?initials(c):"+");$("ePhDel").hidden=!editPhoto;$("ePhPick").textContent=editPhoto?"Change photo":"Choose photo";}
 const rowsOf=(id)=>[...$(id).children].map((r)=>({label:r.querySelector("select").value,value:r.querySelector("input").value}));
-function formState(){const f=eForm.elements;return JSON.stringify([f.first.value,f.last.value,f.company.value,f.title.value,f.address.value,f.birthday.value,f.tags.value,f.notes.value,f.fav.checked,f.showCo.checked,editNY,rowsOf("ePhones").filter((x)=>x.value.trim()),rowsOf("eEmails").filter((x)=>x.value.trim()),editPhoto]);}
+function factsHTML(c){return FACTS.map(([k,lab])=>{const f=c&&c.facts[k];const src=f?f.s:"stated";
+  return `<div class="fl"><span>${esc(lab)}</span><div class="frow"><input class="in" data-fact="${k}" value="${esc(f?f.v:"")}" aria-label="${esc(lab)}"${k==="metOn"?' placeholder="e.g. 2019, or 2019-05-12"':k==="rel"?' placeholder="e.g. CSG colleague, aikido friend"':""}>`+
+    `<select class="in" data-src="${k}" aria-label="${esc(lab)}: where this came from">${SRCS.map((x)=>`<option value="${x}"${src===x?" selected":""}>${SRCL[x]}</option>`).join("")}</select></div></div>`;}).join("");}
+function factsOf(){const o={};for(const [k] of FACTS){const v=eForm.querySelector(`[data-fact="${k}"]`).value.trim();if(v)o[k]={v,s:eForm.querySelector(`[data-src="${k}"]`).value};}return o;}
+function addAssoc(a){const box=$("eAssoc");box.insertAdjacentHTML("beforeend",`<div class="mrow arow" data-kind="assoc"><input class="in" list="eAssocNames" value="${esc(a?assocName(a):"")}" aria-label="Associate: name on another card" placeholder="Name on another card"><input class="in" value="${esc(a?a.r:"")}" aria-label="Associate: role" placeholder="Role, e.g. spouse, boss"><button class="ib" type="button" data-rm aria-label="Remove">✕</button></div>`);return box.lastElementChild;}
+const assocRows=()=>[...$("eAssoc").children].map((r)=>{const i=r.querySelectorAll("input");return {n:i[0].value.trim(),r:i[1].value.trim()};}).filter((x)=>x.n);
+function assocOf(){const byName=new Map();for(const x of ALL){if(x===editing)continue;const k=display(x).toLowerCase();byName.set(k,byName.has(k)?null:x);}
+  return assocRows().map(({n,r})=>{const hit=byName.get(n.toLowerCase());const prev=editing&&editing.assoc.find((a)=>assocName(a).toLowerCase()===n.toLowerCase());
+    return {id:hit?hit.id:prev?prev.id:"",n:hit?display(hit):n,r};});}
+function formState(){const f=eForm.elements;return JSON.stringify([f.first.value,f.last.value,f.company.value,f.title.value,f.address.value,f.birthday.value,f.tags.value,f.notes.value,f.fav.checked,f.showCo.checked,editNY,rowsOf("ePhones").filter((x)=>x.value.trim()),rowsOf("eEmails").filter((x)=>x.value.trim()),editPhoto,factsOf(),assocRows()]);}
 function openEdit(c){editing=c;
   $("eT").textContent=c?"Edit card":"New card";eForm.reset();
   const f=eForm.elements;
@@ -1447,6 +1590,8 @@ function openEdit(c){editing=c;
   $("ePhones").innerHTML="";$("eEmails").innerHTML="";
   (c&&c.phones.length?c.phones:[{label:"mobile",value:""}]).forEach((x)=>addRow("phone",x));
   (c&&c.emails.length?c.emails:[{label:"home",value:""}]).forEach((x)=>addRow("email",x));
+  $("eFacts").innerHTML=factsHTML(c);$("eAssoc").innerHTML="";(c?c.assoc:[]).forEach((a)=>addAssoc(a));
+  $("eAssocNames").innerHTML=ALL.filter((x)=>x!==c).map((x)=>`<option value="${esc(display(x))}">`).join("");
   setEditPhoto(c?c.photo:"",c);
   $("eParse").hidden=!!c;dupIgnore=new Set();dupHit=null;$("eDup").hidden=true;
   if($("dlgView").open)$("dlgView").close();
@@ -1456,8 +1601,8 @@ async function tryCloseEdit(){if(formState()===eInit){$("dlgEdit").close();retur
   if(await ask("You have changes on this card that aren't saved.","Discard changes?","Discard","Keep editing",true))$("dlgEdit").close();}
 $("eX").addEventListener("click",tryCloseEdit);$("eCancel").addEventListener("click",tryCloseEdit);
 $("dlgEdit").addEventListener("cancel",(e)=>{e.preventDefault();tryCloseEdit();});
-eForm.addEventListener("click",(e)=>{const a=e.target.closest("[data-add]");if(a){const r=addRow(a.dataset.add);r.querySelector("input").focus();return;}
-  const rm=e.target.closest("[data-rm]");if(rm){const row=rm.closest(".mrow"),box=row.parentNode;row.remove();if(!box.children.length)addRow(box.id==="ePhones"?"phone":"email");return;}
+eForm.addEventListener("click",(e)=>{const a=e.target.closest("[data-add]");if(a){const r=a.dataset.add==="assoc"?addAssoc():addRow(a.dataset.add);r.querySelector("input").focus();return;}
+  const rm=e.target.closest("[data-rm]");if(rm){const row=rm.closest(".mrow"),box=row.parentNode;row.remove();if(!box.children.length&&box.id!=="eAssoc")addRow(box.id==="ePhones"?"phone":"email");return;}
   const up=e.target.closest("[data-up]");if(up){const row=up.closest(".mrow");row.parentNode.prepend(row);}});
 eForm.addEventListener("submit",(e)=>{e.preventDefault();});
 /* Return moves to the next box; it never saves a half-finished card. */
@@ -1469,6 +1614,7 @@ $("eSave").addEventListener("click",saveEdit);
 function formCard(){const f=eForm.elements;
   return clean({id:editing?editing.id:uid(),first:f.first.value,last:f.last.value,company:f.company.value,title:f.title.value,
     phones:rowsOf("ePhones"),emails:rowsOf("eEmails"),address:f.address.value,birthday:f.birthday.value||editNY,tags:f.tags.value,notes:f.notes.value,photo:editPhoto,fav:f.fav.checked,showCo:f.showCo.checked,
+    facts:factsOf(),assoc:assocOf(),log:editing?editing.log:[],caseNo:editing?editing.caseNo:"",
     created:editing?editing.created:Date.now(),updated:Date.now()});}
 function findDup(c){const others=ALL.filter((x)=>x!==editing&&!dupIgnore.has(x.id));
   for(const p of c.phones){const k=phoneKey(p.value),x=splitExt(p.value).ext;if(!k)continue;
@@ -1502,6 +1648,7 @@ async function saveEdit(){
   const birthday=f.birthday.value||editNY;
   const c=clean({id:editing?editing.id:uid(),first:f.first.value,last:f.last.value,company:f.company.value,title:f.title.value,
     phones:rowsOf("ePhones"),emails:rowsOf("eEmails"),address:f.address.value,birthday,tags:f.tags.value,notes:f.notes.value,photo:editPhoto,fav:f.fav.checked,showCo:f.showCo.checked,
+    facts:factsOf(),assoc:assocOf(),log:editing?editing.log:[],caseNo:editing?editing.caseNo:"",
     created:editing?editing.created:Date.now(),updated:Date.now()});
   if(empty(c)){toast("Add a name, company, phone or email before saving.");return;}
   const was=editing;
@@ -1804,7 +1951,7 @@ function toVCF(cards){return cards.map((c)=>{const L=["BEGIN:VCARD","VERSION:3.0
   c.emails.forEach((e,i)=>L.push(`EMAIL;TYPE=INTERNET,${e.label==="work"?"WORK":"HOME"}${i===0?",pref":""}:${e.value}`));
   if(c.address)L.push(adrLine(c.address));
   if(c.birthday){const b=bdayParts(c.birthday);if(b)L.push(b.y?`BDAY:${b.y}-${p2(b.m)}-${p2(b.d)}`:`BDAY;X-APPLE-OMIT-YEAR=1604:1604-${p2(b.m)}-${p2(b.d)}`);}
-  if(c.notes)L.push(`NOTE:${vEsc(c.notes)}`);
+  {const nf=notesFull(c);if(nf)L.push(`NOTE:${vEsc(nf)}`);}
   if(c.tags.length)L.push(`CATEGORIES:${c.tags.map(vEsc).join(",")}`);
   const m=/^data:image\/(jpeg|png|gif|webp);base64,(.+)$/.exec(c.photo||"");if(m)L.push(`PHOTO;ENCODING=b;TYPE=${m[1].toUpperCase()}:${m[2]}`);
   L.push("END:VCARD");return L.map(fold).join("\r\n");}).join("\r\n")+"\r\n";}
@@ -1813,26 +1960,22 @@ function toCSV(cards){const np=Math.max(1,...cards.map((c)=>c.phones.length)),ne
   for(let i=1;i<=ne;i++)head.push(`E-mail ${i} - Label`,`E-mail ${i} - Value`);
   for(let i=1;i<=np;i++)head.push(`Phone ${i} - Label`,`Phone ${i} - Value`);head.push("Address 1 - Formatted");
   const qt=(v)=>{v=String(v??"");return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
-  const rows=cards.map((c)=>{const r=[c.first,c.last,c.company,c.title,c.birthday,c.notes,c.tags.concat(c.fav?["* starred"]:[]).join(" ::: ")];
+  const rows=cards.map((c)=>{const r=[c.first,c.last,c.company,c.title,c.birthday,notesFull(c),c.tags.concat(c.fav?["* starred"]:[]).join(" ::: ")];
     for(let i=0;i<ne;i++){const e=c.emails[i];r.push(e?LABELS[e.label]:"",e?e.value:"");}
     for(let i=0;i<np;i++){const p=c.phones[i];r.push(p?LABELS[p.label]:"",p?p.value:"");}r.push(c.address);return r.map(qt).join(",");});
   return "\uFEFF"+[head.map(qt).join(",")].concat(rows).join("\r\n")+"\r\n";}
-/* Notes can carry two structured lines (written when cards were built from Gmail):
-   "Relationship (guess): …" and "Last email: YYYY-MM-DD — "subject" — summary". Pull them out for the readable exports. */
-function noteFields(notes){const o={rel:"",lastDate:"",lastSubj:"",lastSum:"",rest:[]};
-  for(const line of String(notes||"").split(/\n/)){let m=/^\s*Relationship \(guess\):\s*(.*)$/i.exec(line);if(m){o.rel=m[1].trim();continue;}
-    m=/^\s*Last email:\s*(\d{4}-\d\d-\d\d)\s*[—-]\s*"(.*)"\s*[—-]\s*(.*)$/i.exec(line);if(m){o.lastDate=m[1];o.lastSubj=m[2];o.lastSum=m[3].trim();continue;}
-    m=/^\s*Last (?:email|contact)(?: \(Gmail\))?:\s*(\d{4}-\d\d-\d\d)\s*$/i.exec(line);if(m){o.lastDate=m[1];continue;}
-    o.rest.push(line);}
-  o.rest=o.rest.join("\n").trim();return o;}
 const isoDay=(t)=>{if(!t)return "";const d=new Date(t);return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`;};
 /* Readable spreadsheet: a real .xlsx (two tabs, frozen header row, filters, wrapped text), built here with no library. */
-const XLSX_COLS=[["Name",24],["Company",24],["Title",20],["Phones",24],["Emails",30],["Address",30],["Birthday",11],["Groups",16],["Favourite",9],
-  ["Relationship (guess)",30],["Last email date",12],["Last email subject",30],["Last email summary",40],["Notes",50],["Added",11],["Last edited",11]];
-function xlsxRow(c){const f=noteFields(c.notes);const b=bdayParts(c.birthday);
-  return [display(c),c.company,c.title,c.phones.map((p)=>`${LABELS[p.label]||"Phone"}: ${fmtPhone(p.value)}`).join("\n"),c.emails.map((e)=>e.value).join("\n"),
+const XLSX_COLS=[["Case no",11],["Name",24],["Company",24],["Title",20],["Phones",24],["Emails",30],["Address",30],["Birthday",11],["Groups",16],["Favourite",9],
+  ["Relationship",28],["Relationship source",11],["How we met",28],["First met",12],["Affiliation / unit",24],["City",16],["Languages",16],["Expertise",24],["Associates",28],
+  ["Last contact",12],["Last contact by",11],["Last contact note",40],["Contact log",60],["Notes",50],["Added",11],["Last edited",11]];
+function xlsxRow(c){const b=bdayParts(c.birthday);const ll=lastLog(c);
+  const fv=(k)=>{const f=c.facts[k];return f?f.v+(k!=="rel"&&f.s!=="stated"?` (${f.s})`:""):"";};
+  return [c.caseNo,display(c),c.company,c.title,c.phones.map((p)=>`${LABELS[p.label]||"Phone"}: ${fmtPhone(p.value)}`).join("\n"),c.emails.map((e)=>e.value).join("\n"),
     c.address,b?(b.y?`${b.y}-${p2(b.m)}-${p2(b.d)}`:`${MON[b.m-1]} ${b.d}`):"",c.tags.join(", "),c.fav?"★":"",
-    f.rel,f.lastDate,f.lastSubj,f.lastSum,f.rest,isoDay(c.created),isoDay(c.updated)];}
+    fv("rel"),c.facts.rel?SRCL[c.facts.rel.s]:"",fv("met"),fv("metOn"),fv("affil"),fv("city"),fv("langs"),fv("skills"),
+    c.assoc.map((a)=>assocName(a)+(a.r?` (${a.r})`:"")).join("\n"),ll?ll.d:"",ll?CH[ll.ch]:"",ll?ll.t:"",
+    c.log.map((e)=>`${e.d} · ${CH[e.ch]} · ${e.t}`).join("\n"),c.notes,isoDay(c.created),isoDay(c.updated)];}
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
 function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
 function zipStore(files){const enc=new TextEncoder(),parts=[],cen=[];let off=0;const d=new Date();
@@ -1858,9 +2001,11 @@ function sheetXML(rows,widths,frozen){const cell=(v,r,ci,st)=>v===""||v==null?""
 function toXLSX(cards){cards=uniqSorted(cards);const n=cards.length;
   const main=[XLSX_COLS.map((c)=>c[0])].concat(cards.map(xlsxRow));
   const about=[["IQ Contacts export"],["Exported",`${longDate(Date.now())} at ${hhmm(Date.now())}`],["Cards",String(n)],
-    ["Relationship (guess)","A best guess at how you know the person, taken from the card's notes. Check it before relying on it."],
-    ["Last email","The most recent email exchange recorded in the card's notes (date, subject and a one-line summary)."],
-    ["Notes","Everything else in the card's notes."],["Added / Last edited","When the card was filed in IQ Contacts and when it was last changed."],
+    ["Case no","Each card's permanent case number, given in the order cards were filed."],
+    ["Relationship source","Where the relationship came from: Stated (they told you), Observed (you saw or checked it), Inferred (a guess). Other facts show the source in brackets when it isn't Stated."],
+    ["Associates","Other cards linked to this one, with their role."],
+    ["Last contact","The newest entry in the card's contact log. The full log, newest first, is in the Contact log column."],
+    ["Added / Last edited","When the card was filed in IQ Contacts and when it was last changed."],
     ["Keep it safe","This file is not encrypted. For a locked copy, use the passphrase backup (.json)."]];
   const NS='xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"',R='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
   const files=[["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
@@ -2029,7 +2174,7 @@ $("bIcs").addEventListener("click",()=>{const now=new Date(),y=now.getFullYear()
 
 /* ================= printing ================= */
 function doPrint(html){const pa=$("printArea");pa.innerHTML=html;setTimeout(()=>{window.print();},60);}
-window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";});
+window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";const st=$("cfPageCss");if(st)st.remove();});
 function printRoster(cards,title){cards=uniqSorted(cards);
   let h=`<h1>${esc(title||"Contacts")}</h1><p class="sub">Printed ${esc(longDate(Date.now()))} at ${hhmm(Date.now())} · ${cards.length} ${cards.length===1?"person":"people"} · IQ Contacts</p><table><thead><tr><th style="width:26%">Name</th><th style="width:30%">Phone</th><th style="width:26%">Email</th><th>Notes</th></tr></thead><tbody>`;
   let last="";
@@ -2037,18 +2182,37 @@ function printRoster(cards,title){cards=uniqSorted(cards);
     const org=[c.title,c.company].filter(Boolean).join(", ");const note=(c.notes||"").replace(/\s*\n\s*/g," ");
     h+=`<tr><td><b>${esc(display(c))}</b>${org&&fullName(c)?`<br>${esc(org)}`:""}</td><td>${c.phones.map((p)=>`${esc(fmtPhone(p.value))} <span style="color:#555">${SHORT[p.label]||""}</span>`).join("<br>")}</td><td>${c.emails.map((e)=>esc(e.value)).join("<br>")}</td><td>${esc(note.length>90?note.slice(0,88)+"…":note)}</td></tr>`;}
   doPrint(h+"</tbody></table>");}
+/* Case files: optional cover page and index, then one file per person with its case number, handling marking,
+   identification, key facts with sources, associates, the full contact log and notes. Page numbers where the browser supports them. */
 function printCases(cards,title){cards=uniqSorted(cards);const now=Date.now();
-  const row=(k,v)=>v?`<tr><th>${esc(k)}</th><td>${v}</td></tr>`:"";
-  doPrint(cards.map((c)=>{const f=noteFields(c.notes);const b=bdayParts(c.birthday);const org=[c.title,c.company].filter(Boolean).join(", ");
+  const ban=($("prBanner").value||"").trim().toUpperCase();LS.set("banner",ban);
+  const top=ban?`<p class="cf-ban">${esc(ban)}</p>`:"";
+  const row=(k,v,src)=>v?`<tr><th>${esc(k)}</th><td>${v}</td>${src===undefined?"":`<td class="s">${src}</td>`}</tr>`:"";
+  const stampL=`printed ${esc(longDate(now))} ${hhmm(now)}`;
+  let h="";
+  if(cards.length>1){
+    h+=`<section class="case cover">${top}<div class="cv"><p class="cf-k">IQ CONTACTS</p><h1>CASE FILES</h1><p class="cf-org">${esc(title)}</p><p class="cf-meta">${cards.length} files · ${stampL}</p></div>${ban?`<p class="cf-end">${esc(ban)}</p>`:""}</section>`;
+    h+=`<section class="case">${top}<h2>Index</h2><table class="ix"><thead><tr><th>Case</th><th>Name</th><th>Affiliation</th><th>Relationship</th><th>Last contact</th></tr></thead><tbody>`+
+      cards.map((c)=>{const ll=lastLog(c);return `<tr><td>${esc(c.caseNo)}</td><td>${esc(display(c))}</td><td>${esc((c.facts.affil&&c.facts.affil.v)||c.company)}</td><td>${esc(c.facts.rel?c.facts.rel.v:"")}</td><td>${ll?esc(ll.d):""}</td></tr>`;}).join("")+
+      `</tbody></table>${ban?`<p class="cf-end">${esc(ban)}</p>`:""}</section>`;}
+  h+=cards.map((c)=>{const b=bdayParts(c.birthday);const org=[c.title,c.company].filter(Boolean).join(", ");
     const ph=/^data:image\/(jpeg|png|gif|webp);base64,/.test(c.photo||"")?`<img src="${c.photo}" alt="">`:"";
-    let h=`<section class="case"><div class="cf-hd">${ph}<h1>${esc(display(c))}</h1>${org&&fullName(c)?`<p class="cf-org">${esc(org)}</p>`:""}<p class="cf-meta">${esc(title)} · printed ${esc(longDate(now))} ${hhmm(now)}${c.created?` · filed ${esc(isoDay(c.created))}`:""}${c.updated?` · edited ${esc(isoDay(c.updated))}`:""}</p></div>`;
-    h+=`<table>`+row("Phones",c.phones.map((p)=>`${esc(fmtPhone(p.value))} <span style="color:#555">${esc(LABELS[p.label]||"")}</span>`).join("<br>"))+
+    let x=`<section class="case">${top}<div class="cf-hd">${ph}${c.caseNo?`<div class="cf-no">${esc(c.caseNo)}</div>`:""}<h1>${esc(display(c))}</h1>${org&&fullName(c)?`<p class="cf-org">${esc(org)}</p>`:""}<p class="cf-meta">${esc(title)} · ${stampL}${c.created?` · filed ${esc(isoDay(c.created))}`:""}${c.updated?` · edited ${esc(isoDay(c.updated))}`:""}</p></div>`;
+    x+=`<h2>Identification</h2><table>`+row("Phones",c.phones.map((p)=>`${esc(fmtPhone(p.value))} <span style="color:#555">${esc(LABELS[p.label]||"")}</span>`).join("<br>"))+
       row("Emails",c.emails.map((e)=>esc(e.value)).join("<br>"))+row("Address",esc(c.address).replace(/\n/g,"<br>"))+
       row("Birthday",b?esc(b.y?`${MON[b.m-1]} ${b.d}, ${b.y}`:`${MON[b.m-1]} ${b.d}`):"")+row("Groups",esc(c.tags.join(", ")+(c.fav?(c.tags.length?" · ":"")+"★ Favourite":"")))+`</table>`;
-    if(f.rel||f.lastDate)h+=`<h2>Relationship and contact</h2><table>`+row("Relationship (guess)",esc(f.rel))+row("Last email",esc([f.lastDate,f.lastSubj?`“${f.lastSubj}”`:""].filter(Boolean).join(" — ")))+row("About it",esc(f.lastSum))+`</table>`;
-    if(f.rest)h+=`<h2>Notes</h2><p class="cf-nt">${esc(f.rest)}</p>`;
-    return h+`</section>`;}).join(""));}
-function openPrint(){const n=new Set(groupMembers().map((c)=>c.id)).size;$("prCaseT").textContent=GROUP?`${groupLabel(GROUP)}: one page per person (${n}), with every detail and the full notes`:`One page per person (${n}): photo, every number, email and address, and the full notes`;$("prRosterT").textContent=GROUP?`${groupLabel(GROUP)}: ${n} ${n===1?"person":"people"}, names, numbers and emails`:`All ${n} cards: names, numbers and emails, A to Z`;openDlg("dlgPrint");}
+    const kf=FACTS.map(([k,lab])=>{const f=c.facts[k];return f?row(lab,esc(f.v),SRCL[f.s]):"";}).join("");
+    if(kf)x+=`<h2>Key facts</h2><table class="kf">${kf}</table>`;
+    const links=[...c.assoc.map((a)=>({n:assocName(a),r:a.r,id:a.id})),...ALL.filter((o)=>o!==c&&o.assoc.some((a)=>a.id===c.id)&&!c.assoc.some((a)=>a.id===o.id)).map((o)=>({n:display(o),r:"lists this file",id:o.id}))];
+    if(links.length)x+=`<h2>Associates</h2><table>`+links.map((a)=>{const t=a.id&&ALL.find((o)=>o.id===a.id);return `<tr><th>${esc(a.n)}</th><td>${esc([a.r,t&&t.caseNo].filter(Boolean).join(" · "))}</td></tr>`;}).join("")+`</table>`;
+    x+=`<h2>Contact log${c.log.length?` · ${c.log.length} entr${c.log.length===1?"y":"ies"}`:""}</h2>`+(c.log.length?`<table class="lg"><thead><tr><th>Date</th><th>How</th><th>Entry</th></tr></thead><tbody>`+
+      c.log.map((e)=>`<tr><td class="d">${esc(e.d)}</td><td class="h">${esc(CH[e.ch])}</td><td>${esc(e.t)}</td></tr>`).join("")+`</tbody></table>`:`<p class="cf-nt">Nothing logged.</p>`);
+    if(c.notes)x+=`<h2>Notes</h2><p class="cf-nt">${esc(c.notes)}</p>`;
+    return x+`<p class="cf-end">END OF FILE${c.caseNo?" "+esc(c.caseNo):""}${ban?" · "+esc(ban):""}</p></section>`;}).join("");
+  let st=$("cfPageCss");if(!st){st=document.createElement("style");st.id="cfPageCss";document.head.appendChild(st);}
+  st.textContent=`@media print{@page{@bottom-right{content:"Page " counter(page) " of " counter(pages);font:7.5pt monospace}}}`;
+  doPrint(h);}
+function openPrint(){const n=new Set(groupMembers().map((c)=>c.id)).size;$("prBanner").value=LS.get("banner","PERSONAL — PRIVATE");$("prCaseT").textContent=GROUP?`${groupLabel(GROUP)}: one page per person (${n}), with every detail and the full notes`:`One page per person (${n}): photo, every number, email and address, and the full notes`;$("prRosterT").textContent=GROUP?`${groupLabel(GROUP)}: ${n} ${n===1?"person":"people"}, names, numbers and emails`:`All ${n} cards: names, numbers and emails, A to Z`;openDlg("dlgPrint");}
 $("dlgPrint").addEventListener("click",(e)=>{const b=e.target.closest("[data-p]");if(!b)return;$("dlgPrint").close();
   if(b.dataset.p==="roster")printRoster(groupMembers(),GROUP?groupLabel(GROUP):"Contacts");
   else if(b.dataset.p==="case")printCases(groupMembers(),GROUP?groupLabel(GROUP):"Contacts");else openWallet();});
