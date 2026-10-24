@@ -1,0 +1,23 @@
+{
+  "id": "./",
+  "name": "CRASH",
+  "short_name": "CRASH",
+  "description": "Collision speed calculator: skid marks, combined surfaces, drag factor, yaw marks and stopping distance, with the work shown. Works offline; your case stays on this device.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#03140a",
+  "theme_color": "#03140a",
+  "icons": [
+    {"src": "crash-32.png", "sizes": "32x32", "type": "image/png", "purpose": "any"},
+    {"src": "crash-48.png", "sizes": "48x48", "type": "image/png", "purpose": "any"},
+    {"src": "crash-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "crash-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "crash-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "Skid to stop", "short_name": "Skid", "url": "./#skid", "icons": [{"src": "crash-192.png", "sizes": "192x192", "type": "image/png"}]},
+    {"name": "Print or save", "short_name": "Print", "url": "./#report", "icons": [{"src": "crash-192.png", "sizes": "192x192", "type": "image/png"}]}
+  ]
+}
