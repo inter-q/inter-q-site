@@ -2,10 +2,10 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-1PGh+GvzGRp2HEHGijkKJJRyvm5YzkKBp/JTLssBtcc=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-aGD4OXl30rglhwt4rgMvCqHEWljY8yQpc45jstktaKE=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CRASH</title>
-<meta name="crash-build" content="2026.10.24-3">
+<meta name="crash-build" content="2026.10.24-5">
 <meta name="description" content="Collision speed calculator: skid marks, combined surfaces, drag factor, yaw marks and stopping distance, with the work shown. Works offline; your case stays on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -67,7 +67,6 @@ hr.rainbow { border:0; height:1px; margin:2px 0; background:var(--ink); box-shad
 .top { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;
   position:sticky; top:0; z-index:40; margin:-16px -16px 0; padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px; background:var(--page-bg); }
 .top::before { content:""; position:absolute; z-index:-1; top:0; bottom:0; left:-100vmax; right:-100vmax; background:var(--page-bg); border-bottom:1px solid transparent; transition:border-color .15s, box-shadow .15s; }
-.top.stuck::before { border-bottom-color:var(--lo); box-shadow:0 6px 10px -4px rgba(0,0,0,.7); }
 .iq-brand { flex:none; font-family:var(--font-mono); font-weight:700; font-size:26px; line-height:1; letter-spacing:.02em; color:var(--ink); text-shadow:0 0 8px rgba(var(--glow),.55); user-select:none; -webkit-user-select:none; text-decoration:none; }
 .iq-cur { animation:iqblink 1.06s steps(1,end) infinite; }
 @keyframes iqblink { 50% { opacity:0; } }
@@ -231,7 +230,7 @@ table.ref td.n { font-family:var(--font-mono); white-space:nowrap; }
 .iq-upd { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px 10px; }
 .iq-upd .btn { font-size:12px; padding:2px 10px; }
 #toast { position:fixed; z-index:90; left:50%; bottom:calc(16px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); max-width:min(92vw,520px); background:var(--win); color:var(--ink); border:1px solid var(--edge); padding:8px 14px; box-shadow:0 8px 20px rgba(0,0,0,.7); display:flex; gap:10px; align-items:center; font-size:14px; }
-#offlineNote { position:relative; z-index:1; background:var(--warn-bg); color:var(--warn); text-align:center; font-size:13px; padding:4px 8px; margin:-16px -16px 8px; }
+#offlineNote { position:relative; z-index:1; background:var(--warn-bg); color:var(--warn); text-align:center; font-size:13px; padding:4px 8px; margin:-16px -16px 16px; }
 .icard { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 .icard .qr { background:#fff; padding:6px; line-height:0; }
 .icard ol { margin:4px 0 0; padding-left:20px; }
@@ -300,6 +299,24 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
 
 
 label[for="rpOpen"]:has(+ #rpOpen:focus-visible) { outline:1px dotted var(--ink); outline-offset:2px; }
+
+/* ---- desktop header: CRASH:_ | tabs | Large, colors, clock — one balanced row ---- */
+@media (min-width:1024px) {
+  .top.has-tabs { gap:14px; flex-wrap:nowrap; }
+  .top.has-tabs .sp { display:none; }
+  .top nav.tabs { flex:1 1 auto; flex-wrap:nowrap; gap:4px; min-width:0; }
+  .top nav.tabs .btn { flex:1 1 auto; font-size:12.5px; padding:6px 6px; min-height:34px; letter-spacing:.02em; }
+}
+@media (min-width:1024px) and (max-width:1199.98px) {
+  .top.has-tabs { gap:10px; } .top nav.tabs { gap:3px; }
+  .top nav.tabs .btn { font-size:11.5px; padding:5px 4px; letter-spacing:0; }
+  .top.has-tabs .iq-brand { font-size:22px; } .top.has-tabs .clock { padding:3px 8px; font-size:13px; }
+}
+
+/* ---- keep focused fields and panels clear of the frozen header ---- */
+html { scroll-padding-top:calc(var(--top-h,72px) + 8px); }
+#iqHowto, .view { scroll-margin-top:calc(var(--top-h,72px) + 8px); }
+@media (min-width:1024px) { .rp-ctl { max-height:calc(100vh - var(--top-h,72px) - 24px); overflow:auto; overscroll-behavior:contain; } }
 /* ---- design pass: units inside boxes, narrower number fields, result emphasis, controls ---- */
 .unit { position:relative; display:block; max-width:var(--num-w,20rem); }
 .unit .fld { padding-right:3.6em; }
@@ -1127,10 +1144,20 @@ let INSTALL_EV=null;   // declared before boot(): route() can open the install p
 boot(true);
 
 // ================= TOP BAR: colors, clock, Large mode =================
+let placeTabs=()=>{};
 (function(){ const top=$("top"), t2=$("top2"), sw=top.querySelector(".theme-sw"), ck=top.querySelector(".clock");
   const c2=sw.cloneNode(true), k2=ck.cloneNode(true); t2.append(c2,k2);       // narrow screens show this second copy below the bar
   const th=()=>document.documentElement.style.setProperty("--top-h",top.offsetHeight+"px"); th(); window.addEventListener("resize",th); if(window.ResizeObserver) new ResizeObserver(th).observe(top);
-  let on=false; const mark=()=>{ const s=window.scrollY>4; if(s!==on){ on=s; top.classList.toggle("stuck",s); } }; window.addEventListener("scroll",mark,{passive:true}); mark(); })();
+  // Desktop: the section tabs sit in the header row between CRASH:_ and the controls, so they stay in view. Narrower: below the header.
+  const nav=document.querySelector("nav.tabs"), home=document.createComment("tabs"), wide=matchMedia("(min-width:1024px)");
+  nav.before(home);
+  const place=()=>{ const inTop=wide.matches&&!document.documentElement.classList.contains("lg");
+    const f=nav.contains(document.activeElement)?document.activeElement:null;
+    if(inTop){ if(nav.parentNode!==top) top.querySelector(".iq-brand").after(nav); } else if(nav.parentNode===top) home.after(nav);
+    if(f&&document.activeElement!==f) f.focus({preventScroll:true});
+    top.classList.toggle("has-tabs",inTop); th(); };
+  placeTabs=place;
+  if(wide.addEventListener) wide.addEventListener("change",place); else wide.addListener(place); place(); })();
 // Display color: every visit opens in green; a choice lasts until the page is closed or reloaded (same as IQ Kit and LOGSTAT).
 (function(){ const root=document.documentElement;
   const paint=()=>{ const t=["green","blue","amber","red"].includes(root.dataset.theme)?root.dataset.theme:"green"; document.querySelectorAll("[data-theme-set]").forEach((b)=>b.setAttribute("aria-pressed",String(b.dataset.themeSet===t)));
@@ -1150,8 +1177,8 @@ boot(true);
   tick(); setInterval(tick,1000); })();
 (function(){ const b=$("lgBtn"), root=document.documentElement;
   const paint=()=>{ const on=root.classList.contains("lg"); b.setAttribute("aria-pressed",String(on)); b.title=on?"Large mode is on — tap for normal size":"Large mode — bigger buttons and text (good with gloves)"; };
-  b.addEventListener("click",()=>{ const on=!root.classList.contains("lg"); root.classList.toggle("lg",on); try{ localStorage.setItem("iq.large",on?"1":"0"); }catch(_){} paint(); });
-  window.addEventListener("storage",(e)=>{ if(e.key==="iq.large"){ root.classList.toggle("lg",e.newValue==="1"); paint(); } });
+  b.addEventListener("click",()=>{ const on=!root.classList.contains("lg"); root.classList.toggle("lg",on); try{ localStorage.setItem("iq.large",on?"1":"0"); }catch(_){} paint(); placeTabs(); });
+  window.addEventListener("storage",(e)=>{ if(e.key==="iq.large"){ root.classList.toggle("lg",e.newValue==="1"); paint(); placeTabs(); } });
   paint(); })();
 // Same case open in two tabs: take the other tab's save, unless this tab has an edit waiting to save (then this tab's save follows and wins).
 window.addEventListener("storage",(e)=>{ if(e.key!==KEY||!e.newValue||saveT) return; try{
