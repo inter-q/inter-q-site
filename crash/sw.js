@@ -39,7 +39,7 @@ async function refreshPage() {
     const old = await c.match("./index.html");
     const oldBuild = old ? buildOf(await old.text()) : "";
     const newBuild = buildOf(text);
-    if (!newBuild || newBuild === oldBuild) return;
+    if (!newBuild || (oldBuild && newBuild.localeCompare(oldBuild, undefined, { numeric: true }) <= 0)) return;   // only ever move to a newer build
     await c.put("./index.html", new Response(text, { headers: { "Content-Type": "text/html; charset=utf-8" } }));
     if (oldBuild) for (const cl of await self.clients.matchAll({ type: "window" })) cl.postMessage({ type: "crash-updated", build: newBuild });
   } catch (_) { /* offline: keep the saved copy */ }

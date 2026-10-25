@@ -2,10 +2,10 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-HSspzb7LzJNRv1cBiWqdauRkTCmJDl0acEFaTtmHpTQ=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-1PGh+GvzGRp2HEHGijkKJJRyvm5YzkKBp/JTLssBtcc=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CRASH</title>
-<meta name="crash-build" content="2026.10.24-1">
+<meta name="crash-build" content="2026.10.24-3">
 <meta name="description" content="Collision speed calculator: skid marks, combined surfaces, drag factor, yaw marks and stopping distance, with the work shown. Works offline; your case stays on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -129,6 +129,7 @@ p { margin:0; line-height:1.5; }
 @media (max-width:520px) { .fgrid { grid-template-columns:1fr; } .fgrid.keep2 { grid-template-columns:1fr 1fr; } }
 label.f { display:flex; flex-direction:column; gap:4px; font-size:12.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.05em; min-width:0; }
 label.f .lc { text-transform:none; }
+label.f .cap { display:block; }
 label.f small { text-transform:none; letter-spacing:0; font-size:12px; }
 .fld { width:100%; padding:6px 8px; background:var(--well); color:var(--ink); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); font-family:var(--font-mono); font-size:16px; border-radius:0; min-width:0; }
 textarea.fld { min-height:72px; resize:vertical; }
@@ -168,6 +169,7 @@ details.sec > summary::-webkit-details-marker { display:none; }
 details.sec > summary::before { content:"▶"; font-size:10px; transition:transform .1s; }
 details.sec[open] > summary::before { transform:rotate(90deg); }
 details.sec > .in { padding:2px 12px 12px; }
+details.intro > .in { display:flex; flex-direction:column; gap:8px; }
 ol.steps { margin:0; padding-left:22px; font-family:var(--font-mono); font-size:14.5px; line-height:1.55; font-variant-numeric:tabular-nums; }
 ol.steps li { padding:3px 0; border-bottom:1px dotted var(--rule); overflow-wrap:anywhere; }
 ol.steps li:last-child { border-bottom:0; }
@@ -194,6 +196,7 @@ table.ref td.n { font-family:var(--font-mono); white-space:nowrap; }
 .menu a b { font-family:var(--font-mono); letter-spacing:.04em; color:var(--bright); }
 .menu a span { font-size:13px; color:var(--ink-dim); line-height:1.4; }
 .status { font-size:13px; color:var(--ink-dim); }
+
 
 /* ---- worksheet preview (paper) ---- */
 .paper { background:#fff; color:#000; text-shadow:none; padding:18px; border:1px solid var(--lo); font-family:"IBM Plex Mono","Courier New",monospace; overflow-x:auto; }
@@ -228,7 +231,7 @@ table.ref td.n { font-family:var(--font-mono); white-space:nowrap; }
 .iq-upd { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px 10px; }
 .iq-upd .btn { font-size:12px; padding:2px 10px; }
 #toast { position:fixed; z-index:90; left:50%; bottom:calc(16px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); max-width:min(92vw,520px); background:var(--win); color:var(--ink); border:1px solid var(--edge); padding:8px 14px; box-shadow:0 8px 20px rgba(0,0,0,.7); display:flex; gap:10px; align-items:center; font-size:14px; }
-#offlineNote { position:sticky; top:0; z-index:60; background:var(--warn-bg); color:var(--warn); text-align:center; font-size:13px; padding:4px 8px; margin:-16px -16px 8px; }
+#offlineNote { position:relative; z-index:1; background:var(--warn-bg); color:var(--warn); text-align:center; font-size:13px; padding:4px 8px; margin:-16px -16px 8px; }
 .icard { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 .icard .qr { background:#fff; padding:6px; line-height:0; }
 .icard ol { margin:4px 0 0; padding-left:20px; }
@@ -271,6 +274,67 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
 :root[data-theme="blue"] ol.steps li b { color:#000080; }
 :root[data-theme="blue"] #toast { background:#c0c0c0; color:#000; border:0; box-shadow:inset -1px -1px #000, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf; }
 :root[data-theme="blue"] .verdict.ok { color:#005200; } :root[data-theme="blue"] .alert { color:#5c4400; }
+
+/* ---- wide screens: calculators in two columns (inputs | result, work, check) ---- */
+.cin, .cout, .rp-ctl, .rp-prev { display:flex; flex-direction:column; gap:10px; min-width:0; }
+@media (min-width:1024px) {
+  .wrap { max-width:1180px; }
+  .body.calc { display:grid; grid-template-columns:minmax(0,3fr) minmax(360px,2fr); gap:16px 20px; align-items:start; padding:14px 16px 16px; }
+  .cout { position:sticky; top:calc(var(--top-h,72px) + 12px); max-height:calc(100vh - var(--top-h,72px) - 24px); overflow:auto; overscroll-behavior:contain; padding-right:2px; }
+  .body.rpt { display:grid; grid-template-columns:320px minmax(0,1fr); gap:16px 20px; align-items:start; }
+  .cout .ros { grid-template-columns:1fr; }
+  .cout .ros .ro { display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .rp-ctl { position:sticky; top:calc(var(--top-h,72px) + 12px); }
+  .fgrid.case-grid { grid-template-columns:repeat(4,minmax(0,1fr)); align-items:end; }
+  html.lg .fgrid.case-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .fgrid.case-grid .full { grid-column:1/-1; } .fgrid.case-grid .w2 { grid-column:span 2; }
+  #v-case fieldset.grp { max-width:50%; }
+  .menu { grid-template-columns:repeat(4,1fr); }
+  #v-home .intro .in p { max-width:76ch; }
+  #helpBody { display:block; columns:2 440px; column-gap:36px; }
+  #helpBody > * { margin:0 0 10px; }
+  #helpBody h3 { break-after:avoid; }
+  #helpBody p, #helpBody table, #helpBody ul, #helpBody ol { break-inside:avoid; }
+}
+@media (min-width:600px) and (max-width:1023.98px) { .menu { grid-template-columns:repeat(2,1fr); } }
+
+
+label[for="rpOpen"]:has(+ #rpOpen:focus-visible) { outline:1px dotted var(--ink); outline-offset:2px; }
+/* ---- design pass: units inside boxes, narrower number fields, result emphasis, controls ---- */
+.unit { position:relative; display:block; max-width:var(--num-w,20rem); }
+.unit .fld { padding-right:3.6em; }
+.unit > span { position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; }
+label.f > .fld[inputmode="decimal"] { max-width:var(--num-w,20rem); }
+.fgrid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+@media (max-width:520px) { .fgrid.three { grid-template-columns:1fr 1fr; } .fgrid.three > :first-child { grid-column:1/-1; } }
+.ro { border-left-width:6px; border-left-color:var(--ink); padding:10px 12px; }
+.ro .k { font-size:12px; }
+.ro .v { font-size:40px; line-height:1.1; }
+.ro .v small { font-size:15px; margin-left:.2em; }
+.ro .sub { font-size:14px; margin-top:4px; }
+.ros .ro .v { font-size:26px; }
+@media (max-width:520px) { .ro .v { font-size:34px; } }
+[data-out] { display:flex; flex-direction:column; gap:8px; }
+.seg { align-self:flex-start; justify-self:start; }
+@media (max-width:520px) {
+  .seg { display:grid; grid-template-columns:repeat(auto-fit,minmax(8rem,1fr)); gap:1px; background:var(--lo); align-self:stretch; justify-self:stretch; }
+  .seg label { background:var(--win); justify-content:center; }
+  .seg label + label { border-left:0; }
+}
+.tabs .btn { flex:1 1 0; white-space:nowrap; }
+@media (max-width:599.98px) { .tabs { display:grid; grid-template-columns:repeat(3,1fr); } .tabs .btn { padding:6px 4px; font-size:13px; } }
+.paper { width:min(100%,8.5in); margin-inline:auto; padding:clamp(12px,4vw,.6in); box-shadow:0 6px 18px rgba(0,0,0,.6); }
+.ws td { overflow-wrap:break-word; }
+@media (max-width:520px) { .ws td.k { width:42%; } }
+.help ol, .help ul { padding-left:2.2em; }
+ol.steps li { overflow-wrap:break-word; padding:5px 0; }
+ol.steps li::marker { color:var(--ink-dim); }
+:root, :root[data-theme="green"] { --lo:#277f48; }
+:root[data-theme="red"] { --ink-dim:#cf4c40; --lo:#a8322a; }
+:root[data-theme="blue"] .ro { border-left-color:#000080; }
+:root[data-theme="blue"] .seg label { background:#fff; }
+:root[data-theme="blue"] .seg label:has(input:checked) { background:#000080; color:#fff; }
+:root[data-theme="blue"] .foot a.btn { color:#000; }
 </style>
 </head>
 <body>
@@ -338,8 +402,13 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
     <section class="win view" id="v-home" aria-labelledby="t-home">
       <div class="bar"><span id="t-home">CRASH.EXE <span class="bsub">— collision speed calculator</span></span></div>
       <div class="body">
-        <p>Enter what was measured at the scene. Each calculator gives the minimum speed and shows every step of the math, so you can follow it line by line.</p>
-        <p><b>Checking a hand calculation?</b> Enter the same numbers you used, then type your answer in <b>Check your work</b> under the result. CRASH tells you whether it matches and, if it doesn't, the most likely slip.</p>
+        <details class="sec intro">
+          <summary>What CRASH does</summary>
+          <div class="in">
+            <p>Enter what was measured at the scene. Each calculator gives a result (a minimum speed, a drag factor or a stopping distance) and shows every step of the math, so you can follow it line by line.</p>
+            <p><b>Checking a hand calculation?</b> Enter the same numbers you used, then type your answer in <b>Check your work</b> under the result. CRASH tells you whether it matches and, if it doesn't, the most likely slip.</p>
+          </div>
+        </details>
         <div class="menu">
           <a href="#case"><b>CASE.EXE</b><span>Case number, date and time, location, investigator, vehicle and road.</span></a>
           <a href="#skid"><b>SKID.EXE</b><span>Skid to stop. One length or each tire mark, braking efficiency, grade.</span></a>
@@ -347,7 +416,7 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
           <a href="#drag"><b>DRAG.EXE</b><span>Find the drag factor from test skids, a drag sled or an accelerometer.</span></a>
           <a href="#yaw"><b>YAW.EXE</b><span>Critical speed from a curved yaw mark (chord and middle ordinate).</span></a>
           <a href="#stop"><b>STOP.EXE</b><span>Stopping distance from a speed: reaction plus braking.</span></a>
-          <a href="#report"><b>PRINT.EXE</b><span>Worksheet with all the work shown. Print, save the case, open a saved case.</span></a>
+          <a href="#report"><b>PRINT.EXE</b><span>PRINT / SAVE: worksheet with all the work shown. Print, save the case, open a saved case.</span></a>
           <a href="#help"><b>HELP</b><span>Formulas, where the 30 comes from, drag factor table, limits.</span></a>
         </div>
         <p class="status" id="homeCase"></p>
@@ -357,19 +426,19 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
     <section class="win view" id="v-case" hidden aria-labelledby="t-case">
       <div class="bar"><span id="t-case">CASE.EXE <span class="bsub">— case details</span></span></div>
       <div class="body">
-        <div class="fgrid">
+        <div class="fgrid case-grid">
           <label class="f">Case number<input class="fld" data-k="info.caseNo" autocomplete="off"></label>
           <label class="f">Report number<input class="fld" data-k="info.reportNo" autocomplete="off"></label>
           <label class="f">Date and time of collision<input class="fld" type="datetime-local" data-k="info.when"></label>
           <label class="f">Investigator (name, ID)<input class="fld" data-k="info.investigator" autocomplete="off"></label>
-          <label class="f full">Location (street address)<input class="fld" data-k="info.location" autocomplete="off" placeholder="e.g. 450 Civic Center Plaza, Richmond, CA"></label>
-          <div class="full" style="display:flex;flex-direction:column;gap:6px">
-            <label class="f">Coordinates<input class="fld" data-k="info.coords" autocomplete="off" placeholder="latitude, longitude · grid"></label>
+          <label class="f full w2">Location (street address)<input class="fld" data-k="info.location" autocomplete="off" placeholder="e.g. 450 Civic Center Plaza, Richmond, CA"></label>
+          <div class="full w2" style="display:flex;flex-direction:column;gap:6px">
+            <label class="f">Coordinates<input class="fld" data-k="info.coords" autocomplete="off" placeholder="latitude, longitude · MGRS grid"></label>
             <div class="toolrow"><button class="btn mini" type="button" id="gpsBtn">⌖ Use my location</button><span class="status" id="gpsMsg" role="status"></span></div>
           </div>
           <label class="f">Vehicle (year, make, model, plate)<input class="fld" data-k="info.vehicle" autocomplete="off"></label>
           <label class="f">ABS brakes<select class="fld" data-k="info.abs"><option value="">Not recorded</option><option>Yes</option><option>No</option><option>Unknown</option></select></label>
-          <label class="f">Road surface and condition<input class="fld" data-k="info.road" autocomplete="off" placeholder="e.g. asphalt, dry, travelled"></label>
+          <label class="f">Road surface and condition<input class="fld" data-k="info.road" autocomplete="off" placeholder="e.g. asphalt, dry, traveled"></label>
           <label class="f">Weather and light<input class="fld" data-k="info.weather" autocomplete="off" placeholder="e.g. clear, daylight"></label>
           <label class="f full">Notes<textarea class="fld" data-k="info.notes" placeholder="Measurements, who took them, how f was found, anything that limits the estimate"></textarea></label>
         </div>
@@ -386,7 +455,7 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
 
     <section class="win view" id="v-skid" hidden aria-labelledby="t-skid">
       <div class="bar"><span id="t-skid">SKID.EXE <span class="bsub">— skid to stop</span></span></div>
-      <div class="body">
+      <div class="body calc"><div class="cin">
         <div class="formula" data-formula="skid"></div>
         <fieldset class="grp"><legend>Skid length</legend>
           <div class="seg" role="radiogroup" aria-label="How to use the tire marks">
@@ -395,9 +464,10 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
             <label><input type="radio" name="skm" value="longest" data-k="skid.method">Longest mark</label>
             <label><input type="radio" name="skm" value="stepped" data-k="skid.method">Each wheel</label>
           </div>
-          <div data-show="skid.method=single">
+          <div data-show="skid.method=single" class="fgrid">
             <label class="f">Skid length<span class="unit"><input class="fld" inputmode="decimal" data-k="skid.d"><span data-u="d"></span></span></label>
           </div>
+          <p class="muted">Measure each tire mark from where it starts to where that tire stopped. If front and rear tires marked the same line, subtract the wheelbase.</p>
           <div data-show="skid.method!=single" class="fgrid keep2">
             <label class="f">Left front<span class="unit"><input class="fld" inputmode="decimal" data-k="skid.lf"><span data-u="d"></span></span></label>
             <label class="f">Right front<span class="unit"><input class="fld" inputmode="decimal" data-k="skid.rf"><span data-u="d"></span></span></label>
@@ -411,14 +481,12 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
           </div>
         </fieldset>
         <fieldset class="grp"><legend>Drag and braking</legend>
-          <div class="fgrid">
-            <label class="f">Drag factor <span class="lc">(f)</span><input class="fld" inputmode="decimal" data-k="skid.f" placeholder="e.g. 0.75"></label>
-            <div class="fgrid keep2" style="gap:8px">
-              <label class="f">Range low<small>optional</small><input class="fld" inputmode="decimal" data-k="skid.fLo"></label>
-              <label class="f">Range high<small>optional</small><input class="fld" inputmode="decimal" data-k="skid.fHi"></label>
-            </div>
+          <div class="fgrid three">
+            <label class="f"><span class="cap">Drag factor <span class="lc">(f)</span></span><input class="fld" inputmode="decimal" data-k="skid.f" placeholder="e.g. 0.75"></label>
+            <label class="f"><span class="cap">Low f <small>optional</small></span><input class="fld" inputmode="decimal" data-k="skid.fLo"></label>
+            <label class="f"><span class="cap">High f <small>optional</small></span><input class="fld" inputmode="decimal" data-k="skid.fHi"></label>
             <div data-show="skid.method!=stepped" class="full" style="display:flex;flex-direction:column;gap:6px">
-              <label class="f">Braking efficiency <span class="lc">(n)</span><span class="unit"><input class="fld" inputmode="decimal" data-k="skid.n"><span>%</span></span></label>
+              <label class="f"><span class="cap">Braking efficiency <span class="lc">(n)</span></span><span class="unit"><input class="fld" inputmode="decimal" data-k="skid.n"><span>%</span></span></label>
               <div class="picks"><button class="btn mini" type="button" data-n="skid:100">All wheels 100%</button><button class="btn mini" type="button" data-n="skid:front">Front only</button><button class="btn mini" type="button" data-n="skid:rear">Rear only</button></div>
             </div>
           </div>
@@ -431,36 +499,41 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
               <label><input type="radio" name="skg" value="down" data-k="skid.dir">Downhill</label>
             </div>
             <label class="f" data-show="skid.dir!=level">Grade<span class="unit"><input class="fld" inputmode="decimal" data-k="skid.grade"><span>%</span></span></label>
+            <p class="muted full">Uphill means the car was going uphill as it skidded. Grade % = rise ÷ run × 100.</p>
           </div>
         </fieldset>
-        <div data-out="skid"></div>
+        </div>
+        <aside class="cout" aria-label="Result"><div data-out="skid"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your answer<span class="unit"><input class="fld" inputmode="decimal" data-k="skid.check" placeholder="the speed you worked out"><span data-u="s"></span></span></label>
           <div data-verdict="skid"></div>
         </div>
         <label class="inc"><input type="checkbox" data-k="skid.inc">Include in the printed worksheet</label>
+      </aside>
       </div>
     </section>
 
     <section class="win view" id="v-combined" hidden aria-labelledby="t-combined">
       <div class="bar"><span id="t-combined">COMBINED.EXE <span class="bsub">— more than one surface</span></span></div>
-      <div class="body">
+      <div class="body calc"><div class="cin">
         <div class="formula">S = √(S₁² + S₂² + S₃² …)</div>
-        <p class="muted">Work out each stretch on its own, then combine the squares. Energy adds; speeds don't. Add a known speed (for example, impact speed from a momentum analysis) as its own line.</p>
+        <p class="muted">Work out each stretch on its own, then combine the squares. Energy adds; speeds don't. Add a known speed (for example, impact speed from a momentum analysis) as its own line. Uphill means the car was going uphill on that stretch.</p>
         <div id="combSegs" style="display:flex;flex-direction:column;gap:10px"></div>
         <div class="toolrow"><button class="btn" type="button" id="combAddSkid">+ Add skid stretch</button><button class="btn" type="button" id="combAddSpeed">+ Add known speed</button></div>
-        <div data-out="comb"></div>
+        </div>
+        <aside class="cout" aria-label="Result"><div data-out="comb"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your answer<span class="unit"><input class="fld" inputmode="decimal" data-k="comb.check" placeholder="the combined speed you worked out"><span data-u="s"></span></span></label>
           <div data-verdict="comb"></div>
         </div>
         <label class="inc"><input type="checkbox" data-k="comb.inc">Include in the printed worksheet</label>
+      </aside>
       </div>
     </section>
 
     <section class="win view" id="v-drag" hidden aria-labelledby="t-drag">
       <div class="bar"><span id="t-drag">DRAG.EXE <span class="bsub">— find the drag factor</span></span></div>
-      <div class="body">
+      <div class="body calc"><div class="cin">
         <div class="seg" role="radiogroup" aria-label="Method">
           <label><input type="radio" name="dgm" value="test" data-k="drag.mode">Test skids</label>
           <label><input type="radio" name="dgm" value="sled" data-k="drag.mode">Drag sled</label>
@@ -468,84 +541,93 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
         </div>
         <div class="formula" data-formula="drag"></div>
         <div id="dragRows" style="display:flex;flex-direction:column;gap:10px"></div>
-        <div data-out="drag"></div>
+        </div>
+        <aside class="cout" aria-label="Result"><div data-out="drag"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your drag factor<input class="fld" inputmode="decimal" data-k="drag.check" placeholder="e.g. 0.72"></label>
           <div data-verdict="drag"></div>
         </div>
         <label class="inc"><input type="checkbox" data-k="drag.inc">Include in the printed worksheet</label>
+      </aside>
       </div>
     </section>
 
     <section class="win view" id="v-yaw" hidden aria-labelledby="t-yaw">
       <div class="bar"><span id="t-yaw">YAW.EXE <span class="bsub">— critical speed from a yaw mark</span></span></div>
-      <div class="body">
+      <div class="body calc"><div class="cin">
         <div class="formula" data-formula="yaw"></div>
-        <p class="muted">Measure a chord across the yaw mark, then the middle ordinate: the distance from the chord's midpoint straight out to the mark. Use the first part of the mark, before the car rotates far.</p>
+        <p class="muted">Measure a chord across the yaw mark, then the middle ordinate: the distance from the chord's midpoint to the mark, at a right angle to the chord. Run the chord between two points on the outer edge of the mark. Use the first part of the mark, before the car rotates far.</p>
         <div class="fgrid">
-          <label class="f">Chord <span class="lc">(C)</span><span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.C"><span data-u="d"></span></span></label>
-          <label class="f">Middle ordinate <span class="lc">(M)</span><span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.M"><span data-u="d"></span></span></label>
+          <label class="f"><span class="cap">Chord <span class="lc">(C)</span></span><span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.C"><span data-u="d"></span></span></label>
+          <label class="f"><span class="cap">Middle ordinate <span class="lc">(M)</span></span><span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.M"><span data-u="d"></span></span></label>
           <label class="f">Track width<small>optional: moves the radius to the car's center</small><span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.track"><span data-u="d"></span></span></label>
-          <label class="f">Drag factor <span class="lc">(f)</span><input class="fld" inputmode="decimal" data-k="yaw.f" placeholder="e.g. 0.75"></label>
+          <label class="f"><span class="cap">Drag factor <span class="lc">(f)</span></span><input class="fld" inputmode="decimal" data-k="yaw.f" placeholder="e.g. 0.75"></label>
           <div class="seg full" role="radiogroup" aria-label="Superelevation">
             <label><input type="radio" name="yse" value="flat" data-k="yaw.edir">Flat road</label>
-            <label><input type="radio" name="yse" value="in" data-k="yaw.edir">Banked toward the inside</label>
-            <label><input type="radio" name="yse" value="out" data-k="yaw.edir">Banked toward the outside</label>
+            <label><input type="radio" name="yse" value="in" data-k="yaw.edir">Low side on the inside (normal bank)</label>
+            <label><input type="radio" name="yse" value="out" data-k="yaw.edir">Low side on the outside (adverse bank)</label>
           </div>
           <label class="f" data-show="yaw.edir!=flat">Superelevation (bank)<span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.e"><span>%</span></span></label>
         </div>
-        <div data-out="yaw"></div>
+        </div>
+        <aside class="cout" aria-label="Result"><div data-out="yaw"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your answer<span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.check" placeholder="the speed you worked out"><span data-u="s"></span></span></label>
           <div data-verdict="yaw"></div>
         </div>
         <label class="inc"><input type="checkbox" data-k="yaw.inc">Include in the printed worksheet</label>
+      </aside>
       </div>
     </section>
 
     <section class="win view" id="v-stop" hidden aria-labelledby="t-stop">
       <div class="bar"><span id="t-stop">STOP.EXE <span class="bsub">— stopping distance</span></span></div>
-      <div class="body">
+      <div class="body calc"><div class="cin">
         <div class="formula" data-formula="stop"></div>
         <div class="fgrid">
           <label class="f">Speed<span class="unit"><input class="fld" inputmode="decimal" data-k="stop.S"><span data-u="s"></span></span></label>
           <label class="f">Perception-reaction time<span class="unit"><input class="fld" inputmode="decimal" data-k="stop.t"><span>sec</span></span></label>
-          <label class="f">Drag factor <span class="lc">(f)</span><input class="fld" inputmode="decimal" data-k="stop.f" placeholder="e.g. 0.75"></label>
-          <label class="f">Braking efficiency <span class="lc">(n)</span><span class="unit"><input class="fld" inputmode="decimal" data-k="stop.n"><span>%</span></span></label>
+          <label class="f"><span class="cap">Drag factor <span class="lc">(f)</span></span><input class="fld" inputmode="decimal" data-k="stop.f" placeholder="e.g. 0.75"></label>
+          <label class="f"><span class="cap">Braking efficiency <span class="lc">(n)</span></span><span class="unit"><input class="fld" inputmode="decimal" data-k="stop.n"><span>%</span></span></label>
           <div class="seg" role="radiogroup" aria-label="Grade direction">
             <label><input type="radio" name="stg" value="level" data-k="stop.dir">Level</label>
             <label><input type="radio" name="stg" value="up" data-k="stop.dir">Uphill</label>
             <label><input type="radio" name="stg" value="down" data-k="stop.dir">Downhill</label>
           </div>
           <label class="f" data-show="stop.dir!=level">Grade<span class="unit"><input class="fld" inputmode="decimal" data-k="stop.grade"><span>%</span></span></label>
+          <p class="muted full">Uphill means the car was going uphill. Grade % = rise ÷ run × 100.</p>
         </div>
-        <div data-out="stop"></div>
+        </div>
+        <aside class="cout" aria-label="Result"><div data-out="stop"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your total stopping distance<span class="unit"><input class="fld" inputmode="decimal" data-k="stop.check"><span data-u="d"></span></span></label>
           <div data-verdict="stop"></div>
         </div>
         <label class="inc"><input type="checkbox" data-k="stop.inc">Include in the printed worksheet</label>
+      </aside>
       </div>
     </section>
 
     <section class="win view" id="v-report" hidden aria-labelledby="t-report">
       <div class="bar"><span id="t-report">PRINT.EXE <span class="bsub">— worksheet, save and open</span></span></div>
-      <div class="body">
+      <div class="body rpt"><div class="rp-ctl">
         <div class="toolrow">
           <button class="btn primary" type="button" id="rpPrint">🖶 Print / PDF</button>
           <button class="btn" type="button" id="rpCopy">Copy as text</button>
         </div>
         <fieldset class="grp"><legend>Save this case</legend>
-          <label class="f">Passphrase<small>optional — locks the file so only someone with the passphrase can open it</small><input class="fld" type="password" id="rpPass" autocomplete="new-password"></label>
+          <label class="f">Passphrase<small>Optional. Locks the file so only someone with the passphrase can open it. A forgotten passphrase can't be recovered, and the file can't be opened without it.</small><input class="fld" type="password" id="rpPass" autocomplete="new-password"></label>
           <div class="toolrow"><button class="btn" type="button" id="rpSave">⬇︎ Save case file</button><button class="btn" type="button" id="rpShare" hidden>Share case file</button></div>
-          <p class="muted">The case also stays on this device as you type, until you start a new one. A saved file is the copy to keep.</p>
+          <p class="muted">CRASH also keeps the case in this browser as you type, until you tap New case. Clearing browser data erases it. Save a case file to keep a copy.</p>
         </fieldset>
         <fieldset class="grp"><legend>Open or start over</legend>
           <div class="toolrow"><label class="btn" for="rpOpen">⬆︎ Open case file</label><input type="file" id="rpOpen" accept=".json,application/json" class="sr"><button class="btn danger" type="button" id="rpNew">New case</button></div>
           <p class="status" id="rpMsg" role="status"></p>
         </fieldset>
-        <p class="muted">Preview. Sections with a result and “Include in the printed worksheet” ticked are printed.</p>
+        </div>
+        <div class="rp-prev"><p class="muted">Preview. Sections with a result and “Include in the printed worksheet” ticked are printed.</p>
         <div class="paper"><div class="ws" id="rpPreview"></div></div>
+      </div>
       </div>
     </section>
 
@@ -570,7 +652,14 @@ html.lg .theme-sw .sw { width:16px; height:16px; }
 <script id="crash-app">(function(){ "use strict";
 const $=(id)=>document.getElementById(id);
 const esc=(s)=>String(s==null?"":s).replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const num=(v)=>{ if(v==null) return NaN; const s=String(v).trim().replace(/,/g,""); if(!s) return NaN; const x=Number(s); return isFinite(x)?x:NaN; };
+// "30,5" (or "30,500" in metric) is a decimal comma; "1,250" in feet/mph is a thousands separator.
+// Accepts plain numbers (12, -3.5, .75), US thousands (1,250 or 1,250.5) and a decimal comma (30,5). Anything else is not a number.
+const num=(v)=>{ if(v==null) return NaN; let s=String(v).trim(); if(!s) return NaN;
+  const m=/^(-?\d+),(\d+)$/.exec(s);
+  if(m&&(m[2].length!==3||(typeof C!=="undefined"&&C&&C.units==="metric"))) s=m[1]+"."+m[2];
+  else if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s=s.replace(/,/g,"");
+  if(!/^-?(\d+\.?\d*|\.\d+)$/.test(s)) return NaN;
+  const x=Number(s); return isFinite(x)?x:NaN; };
 const ok=(x)=>typeof x==="number"&&isFinite(x);
 const fx=(x,d)=>ok(x)?x.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}):"—";
 const trim=(x,d)=>ok(x)?String(+x.toFixed(d)):"—";
@@ -597,10 +686,18 @@ function merge(o){ const b=blank(); if(!o||typeof o!=="object") return b;
   b.drag.pulls=arr(b.drag.pulls,()=>({F:""}))||blank().drag.pulls;
   b.drag.accels=arr(b.drag.accels,()=>({g:""}))||blank().drag.accels;
   for(const s of b.comb.segs) if(s.kind!=="speed") s.kind="skid";
+  // keep every stored value a plain string (or boolean for the include boxes) and every choice one of its allowed values
+  [b.info,b.skid,b.comb,b.drag,b.yaw,b.stop,...b.comb.segs,...b.drag.tests,...b.drag.pulls,...b.drag.accels].forEach((o)=>{
+    for(const k of Object.keys(o)){ if(Array.isArray(o[k])) continue; if(k==="inc") o[k]=o[k]!==false; else if(typeof o[k]!=="string") o[k]=o[k]==null||typeof o[k]==="object"?"":String(o[k]); } });
+  const pick=(v,ok2,d)=>ok2.includes(v)?v:d;
+  b.skid.method=pick(b.skid.method,["single","average","longest","stepped"],"single"); b.skid.dir=pick(b.skid.dir,["level","up","down"],"level"); b.stop.dir=pick(b.stop.dir,["level","up","down"],"level");
+  b.yaw.edir=pick(b.yaw.edir,["flat","in","out"],"flat"); b.drag.mode=pick(b.drag.mode,["test","sled","accel"],"test"); b.comb.segs.forEach((s)=>{ s.dir=pick(s.dir,["level","up","down"],"level"); });
   return b; }
 let C=(()=>{ try{ return merge(JSON.parse(localStorage.getItem(KEY)||"null")); }catch(_){ return blank(); } })();
 let saveT=0;
-function persist(){ clearTimeout(saveT); saveT=setTimeout(()=>{ try{ localStorage.setItem(KEY,JSON.stringify(C)); savedNote("Saved on this device."); }catch(_){ savedNote("Couldn't save on this device (storage is off or full). Save a case file from PRINT / SAVE."); } },300); }
+function persist(){ clearTimeout(saveT); saveT=setTimeout(()=>{ saveT=0; try{ localStorage.setItem(KEY,JSON.stringify(C)); savedNote("Saved on this device."); }catch(_){ savedNote("Couldn't save on this device (storage is off or full). Save a case file from PRINT / SAVE."); } },300); }
+function flush(){ if(!saveT) return; clearTimeout(saveT); saveT=0; try{ localStorage.setItem(KEY,JSON.stringify(C)); }catch(_){} }
+window.addEventListener("pagehide",flush); document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") flush(); });
 function savedNote(t){ document.querySelectorAll("[data-saved]").forEach((e)=>{ e.textContent=t; }); }
 const getK=(path)=>path.split(".").reduce((o,k)=>o==null?undefined:o[k],C);
 function setK(path,val){ const ks=path.split("."); let o=C; for(let i=0;i<ks.length-1;i++){ o=o[ks[i]]; if(o==null) return; } o[ks[ks.length-1]]=val; }
@@ -617,6 +714,7 @@ function effTxt(f,n,G){ let s=trim(f,3); if(n!==1) s+=` × ${trim(n,3)}`; if(G) 
 
 // ================= CALCULATORS =================
 // Each returns { ok, msg, S (main value), unit, dec, rows:[[label,value]], steps:[html], extra:[[label,value]], variants:[{why,val}] }
+const NMSG="Enter braking efficiency as a percent from 1 to 100 (for example 80, not 0.8).";
 function need(r,msg){ r.ok=false; r.msg=msg; return r; }
 function base(title){ return {title,ok:true,msg:"",rows:[],steps:[],extra:[],variants:[],dec:1}; }
 
@@ -640,14 +738,14 @@ function calcSkid(s){
       const share={lf:fr/2,rf:fr/2,lr:(1-fr)/2,rr:(1-fr)/2}, srt=[...wheels].sort((a,b)=>a.v-b.v); let prev=0; sumDn=0;
       r.steps.push(`Each wheel's share of the weight: front ${trim(fr*50,2)}% each, rear ${trim((1-fr)*50,2)}% each.`);
       srt.forEach((m,i)=>{ const seg=m.v-prev; if(seg<=0) return; const locked=srt.slice(i), nn=locked.reduce((a,x)=>a+share[x.k],0); sumDn+=seg*nn;
-        r.steps.push(`${nf(prev,2)} to ${nf(m.v,2)} ${u.d} back from rest: ${locked.length} wheel${locked.length>1?"s":""} locked, n = ${trim(nn*100,2)}% → ${nf(seg,2)} × ${trim(nn,4)} = <b>${nf(seg*nn,2)}</b>`); prev=m.v; });
+        r.steps.push(`${nf(prev,2)} to ${nf(m.v,2)} ${u.d} back from where the car stopped: ${locked.length} wheel${locked.length>1?"s":""} locked, n = ${trim(nn*100,2)}% → ${nf(seg,2)} × ${trim(nn,4)} = <b>${nf(seg*nn,2)}</b>`); prev=m.v; });
       d=srt[srt.length-1].v;
-      r.steps.push(`Add them: Σ(length × n) = <b>${fx(sumDn,2)}</b>. Whole skid = ${fx(d,1)} ${u.d} (same as ${fx(sumDn,2)} ${u.d} with every wheel locked, n = ${trim(sumDn/d*100,1)}%).`);
+      r.steps.push(`Add them: total of (length × n) = <b>${fx(sumDn,2)}</b>. Whole skid = ${fx(d,1)} ${u.d} (same as ${fx(sumDn,2)} ${u.d} with every wheel locked, n = ${trim(sumDn/d*100,1)}%).`);
     }
   }
   if(!(f>0)) return need(r,"Enter the drag factor (f).");
   if(f>1.5) return need(r,"A drag factor above 1.5 isn't realistic for a skidding car. Check the number.");
-  if(!stepped&&!(n>0&&n<=1)) return need(r,"Braking efficiency must be between 1 and 100%.");
+  if(!stepped&&!(n>=0.01&&n<=1)) return need(r,NMSG);
   if(!ok(G)) return need(r,"Enter the grade in percent, or choose Level.");
   r.rows.push(["Drag factor (f)",trim(f,3)]); if(!stepped) r.rows.push(["Braking efficiency (n)",`${trim(n*100,1)}%`]);
   r.rows.push(["Grade",G?`${trim(Math.abs(G)*100,2)}% ${G>0?"uphill":"downhill"}`:"Level"]);
@@ -657,7 +755,7 @@ function calcSkid(s){
   if(stepped){
     const W=f*sumDn+G*d; if(!(W>0)) return need(r,"With that downhill grade the car couldn't have stopped by skidding alone. Check the grade and drag factor.");
     S2=u.K*W;
-    r.steps.push(G?`Drag work: f × Σ(length × n) ${sgn(G)} grade × skid = ${trim(f,3)} × ${fx(sumDn,2)} ${sgn(G)} ${trim(Math.abs(G),3)} × ${fx(d,1)} = <b>${fx(W,2)}</b>`:`Drag work: f × Σ(length × n) = ${trim(f,3)} × ${fx(sumDn,2)} = <b>${fx(W,2)}</b>`);
+    r.steps.push(G?`Drag work: f × total(length × n) ${sgn(G)} grade × skid = ${trim(f,3)} × ${fx(sumDn,2)} ${sgn(G)} ${trim(Math.abs(G),3)} × ${fx(d,1)} = <b>${fx(W,2)}</b>`:`Drag work: f × total(length × n) = ${trim(f,3)} × ${fx(sumDn,2)} = <b>${fx(W,2)}</b>`);
     r.steps.push(`${u.Kname} × ${fx(W,2)} = <b>${fx(S2,1)}</b>`);
   } else {
     const fe=f*n+G; if(!(fe>0)) return need(r,"With that downhill grade the car couldn't have stopped by skidding alone. Check the grade and drag factor.");
@@ -676,11 +774,11 @@ function calcSkid(s){
   if(!stepped&&n<1) add("leave out braking efficiency (n)",core(f,{nn:1}));
   if(G){ add("leave out the grade",core(f,{GG:0})); add(G>0?"subtract the grade instead of adding it (uphill adds)":"add the grade instead of subtracting it (downhill subtracts)",core(f,{GG:-G}));
     add("use the grade as a whole number instead of a decimal",core(f,{GG:G*100}));
-    if(!stepped&&n<1) add("multiply the grade by braking efficiency too, (f ± G) × n",Math.sqrt(u.K*d*(f+G)*n)); }
-  if(wheels.length>1){ const avg=wheels.reduce((a,m)=>a+m.v,0)/wheels.length, mx=Math.max(...wheels.map((m)=>m.v)), tot=wheels.reduce((a,m)=>a+m.v,0);
+    if(!stepped&&n<1) add("multiply the grade by braking efficiency too: (f ± G) × n",Math.sqrt(u.K*d*(f+G)*n)); }
+  if(s.method!=="single"&&wheels.length>1){ const avg=wheels.reduce((a,m)=>a+m.v,0)/wheels.length, mx=Math.max(...wheels.map((m)=>m.v)), tot=wheels.reduce((a,m)=>a+m.v,0);
     if(s.method!=="average") add("use the average mark length",stepped?core(f,{dd:avg,dn:null,nn:1}):core(f,{dd:avg}));
     if(s.method!=="longest") add("use the longest mark",stepped?core(f,{dd:mx,dn:null,nn:1}):core(f,{dd:mx}));
-    add("add all the marks together instead of averaging",stepped?core(f,{dd:tot,dn:null,nn:1}):core(f,{dd:tot})); }
+    add("add all the marks together",stepped?core(f,{dd:tot,dn:null,nn:1}):core(f,{dd:tot})); }
   if(C.units==="us") add("use 15 instead of 30",core(f,{K:15})); else add("use 127 instead of 254",core(f,{K:127}));
   add("stop before taking the square root",S2);
   return r;
@@ -691,7 +789,7 @@ function segSq(sg,u,i){ // one combined-speed line → {sq, txt, label} or {err}
   if(sg.kind==="speed"){ const S=num(sg.S); if(!(S>=0)) return {err:`${lab}: enter the known speed.`}; return {sq:S*S,S,lab,txt:`${labH} (known speed): ${fx(S,1)}² = <b>${fx(S*S,1)}</b>`}; }
   const d=num(sg.d), f=num(sg.f), n=pct(sg.n), G=gradeOf(sg);
   if(!(d>0)) return {err:`${lab}: enter the skid length.`}; if(!(f>0)) return {err:`${lab}: enter the drag factor.`};
-  if(!(n>0&&n<=1)) return {err:`${lab}: braking efficiency must be 1–100%.`}; if(!ok(G)) return {err:`${lab}: enter the grade or choose Level.`};
+  if(!(n>=0.01&&n<=1)) return {err:`${lab}: ${NMSG.charAt(0).toLowerCase()+NMSG.slice(1)}`}; if(!ok(G)) return {err:`${lab}: enter the grade in percent, or choose Level.`};
   const fe=f*n+G; if(!(fe>0)) return {err:`${lab}: that downhill grade is steeper than the drag. Check the numbers.`};
   const sq=u.K*d*fe; return {sq,S:Math.sqrt(sq),lab,d,f,n,G,fe,txt:`${labH}: ${u.Kname} × ${nf(d,2)} × ${n!==1||G?`(${effTxt(f,n,G)})`:trim(f,3)} = <b>${fx(sq,1)}</b><span class="why">That stretch alone: √${fx(sq,1)} = ${fx(Math.sqrt(sq),1)} ${u.s}</span>`};
 }
@@ -704,7 +802,7 @@ function calcComb(c){
   r.steps.push(`Add the squares: ${L.map((x)=>fx(x.sq,1)).join(" + ")} = <b>${fx(tot,1)}</b>`);
   r.steps.push(`Square root: √${fx(tot,1)} = <b>${fx(r.S,1)} ${u.s}</b>`);
   const V=r.variants, add=(why,val)=>{ if(ok(val)&&Math.abs(val-r.S)>0.05) V.push({why,val}); };
-  add("add the separate speeds together instead of their squares",L.reduce((a,x)=>a+x.S,0));
+  add("add the speeds instead of their squares",L.reduce((a,x)=>a+x.S,0));
   L.forEach((x,i)=>add(`leave out ${x.lab}`,Math.sqrt(tot-x.sq)));
   L.forEach((x,i)=>{ if(c.segs[i].kind==="speed") add(`add ${x.lab} without squaring it`,Math.sqrt(tot-x.sq+x.S)); });
   add("stop before taking the square root",tot);
@@ -726,8 +824,8 @@ function calcDrag(g){
       r.steps.push(`Pull ${i+1}: f = pull ÷ weight = ${fx(F,1)} ÷ ${fx(W,1)} = <b>${trim(f,3)}</b>`); });
     if(!vals.length) return need(r,"Enter at least one pull reading (same units as the weight).");
   } else {
-    g.accels.forEach((a,i)=>{ const x=num(a.g); if(!(x>0)) return; vals.push(x); r.rows.push([`Reading ${i+1}`,`${trim(x,3)} g`]); r.steps.push(`Reading ${i+1}: <b>${trim(x,3)}</b> (a reading in g is the drag factor)`); });
-    if(!vals.length) return need(r,"Enter at least one peak deceleration reading in g.");
+    g.accels.forEach((a,i)=>{ const x=num(a.g); if(!(x>0)) return; vals.push(x); r.rows.push([`Reading ${i+1}`,`${trim(x,3)} g`]); r.steps.push(`Reading ${i+1}: <b>${trim(x,3)}</b> (an average reading in g is the drag factor)`); });
+    if(!vals.length) return need(r,"Enter at least one average deceleration reading in g.");
   }
   r.S=vals.reduce((a,x)=>a+x,0)/vals.length;
   if(vals.length>1){ r.steps.push(`Average: (${vals.map((x)=>trim(x,3)).join(" + ")}) ÷ ${vals.length} = <b>${trim(r.S,3)}</b>`);
@@ -748,7 +846,7 @@ function calcYaw(y){
   if(!(Cc>0)) return need(r,"Enter the chord length."); if(!(M>0)) return need(r,"Enter the middle ordinate."); if(M>=Cc/2) return need(r,"The middle ordinate should be much smaller than half the chord. Check the measurements.");
   if(!(f>0)) return need(r,"Enter the drag factor (f)."); if(!ok(e)) return need(r,"Enter the superelevation in percent, or choose Flat road.");
   r.rows.push(["Chord (C)",`${fx(Cc,2)} ${u.d}`],["Middle ordinate (M)",`${fx(M,2)} ${u.d}`]); if(T>0) r.rows.push(["Track width",`${fx(T,2)} ${u.d}`]);
-  r.rows.push(["Drag factor (f)",trim(f,3)],["Superelevation",e?`${trim(Math.abs(e)*100,2)}% ${e>0?"toward the inside":"toward the outside"}`:"Flat"]);
+  r.rows.push(["Drag factor (f)",trim(f,3)],["Superelevation",e?`${trim(Math.abs(e)*100,2)}%, low side ${e>0?"on the inside (normal bank)":"on the outside (adverse bank)"}`:"Flat"]);
   const R0=Cc*Cc/(8*M)+M/2;
   r.steps.push(`Radius = C² ÷ (8 × M) + M ÷ 2 = ${nf(Cc,2)}² ÷ (8 × ${nf(M,2)}) + ${nf(M,2)} ÷ 2 = ${nf(Cc*Cc,2)} ÷ ${nf(8*M,2)} + ${nf(M/2,3)} = <b>${fx(R0,2)} ${u.d}</b>`);
   let R=R0; if(T>0){ R=R0-T/2; if(!(R>0)) return need(r,"Track width is too large for that radius. Check the numbers."); r.steps.push(`Move to the center of the car: ${fx(R0,2)} − ${fx(T,2)} ÷ 2 = <b>${fx(R,2)} ${u.d}</b><span class="why">The mark is from the outside tire; the car's center runs a slightly tighter curve.</span>`); }
@@ -763,7 +861,7 @@ function calcYaw(y){
   add("leave out the + M ÷ 2 part of the radius",core(adjT(Cc*Cc/(8*M)),f,e));
   add("use half the chord in C² ÷ (8 × M)",core(adjT((Cc/2)**2/(8*M)+M/2),f,e));
   if(T>0){ add("skip the center-of-car adjustment",core(R0,f,e)); add("subtract the whole track width",core(R0-T,f,e)); }
-  if(e){ add("leave out the bank",core(R,f,0)); add("add the bank without dividing by (1 − f × e)",u.Ky*Math.sqrt(R*(f+e))); add("use the bank in the wrong direction",core(R,f,-e)); }
+  if(e){ add("leave out the bank",core(R,f,0)); add("skip dividing by (1 − f × e) in the bank adjustment",u.Ky*Math.sqrt(R*(f+e))); add("use the bank in the wrong direction",core(R,f,-e)); }
   add("stop before taking the square root and multiplying",inner);
   return r;
 }
@@ -772,7 +870,7 @@ function calcStop(s){
   const u=U(), r=base("Stopping distance"); r.unit=u.d; r.mainLabel="Total stopping distance"; r.absTol=1;
   const S=num(s.S), t=num(s.t), f=num(s.f), n=pct(s.n), G=gradeOf(s);
   if(!(S>0)) return need(r,"Enter the speed."); if(!(t>=0)) return need(r,"Enter the perception-reaction time (1.5 seconds is common).");
-  if(!(f>0)) return need(r,"Enter the drag factor (f)."); if(!(n>0&&n<=1)) return need(r,"Braking efficiency must be 1–100%."); if(!ok(G)) return need(r,"Enter the grade or choose Level.");
+  if(!(f>0)) return need(r,"Enter the drag factor (f)."); if(!(n>=0.01&&n<=1)) return need(r,NMSG); if(!ok(G)) return need(r,"Enter the grade in percent, or choose Level.");
   const fe=f*n+G; if(!(fe>0)) return need(r,"With that downhill grade the car wouldn't stop. Check the numbers.");
   r.rows.push(["Speed",`${fx(S,1)} ${u.s}`],["Perception-reaction time",`${trim(t,2)} sec`],["Drag factor (f)",trim(f,3)]); if(n!==1) r.rows.push(["Braking efficiency (n)",`${trim(n*100,1)}%`]); r.rows.push(["Grade",G?`${trim(Math.abs(G)*100,2)}% ${G>0?"uphill":"downhill"}`:"Level"]);
   const react=u.Kr*S*t, brake=S*S/(u.K*fe); r.S=react+brake;
@@ -784,23 +882,24 @@ function calcStop(s){
   r.extra.push(["Reaction distance",`${fx(react,1)} ${u.d}`],["Braking distance",`${fx(brake,1)} ${u.d}`]);
   const V=r.variants, add=(why,val)=>{ if(ok(val)&&Math.abs(val-r.S)>0.5) V.push({why,val}); };
   add("leave out the reaction distance",brake); add("leave out the braking distance",react);
-  if(n<1) add("leave out braking efficiency",react+S*S/(u.K*(f+G)));
+  if(n<1) add("leave out braking efficiency (n)",react+S*S/(u.K*(f+G)));
   if(G){ add("leave out the grade",react+S*S/(u.K*(f*n))); add("use the grade in the wrong direction",(f*n-G)>0?react+S*S/(u.K*(f*n-G)):NaN); }
   add(C.units==="us"?"use 15 instead of 30":"use 127 instead of 254",react+S*S/(u.K/2*fe));
   add("forget to square the speed",react+S/(u.K*fe));
   return r;
 }
 
-const CALC={skid:()=>calcSkid(C.skid),comb:()=>calcComb(C.comb),drag:()=>calcDrag(C.drag),yaw:()=>calcYaw(C.yaw),stop:()=>calcStop(C.stop)};
+const fin=(r)=>{ if(r.ok&&!ok(r.S)){ r.ok=false; r.msg="A number is too large to work with. Check the inputs."; } return r; };
+const CALC={skid:()=>fin(calcSkid(C.skid)),comb:()=>fin(calcComb(C.comb)),drag:()=>fin(calcDrag(C.drag)),yaw:()=>fin(calcYaw(C.yaw)),stop:()=>fin(calcStop(C.stop))};
 
 // Check your work: same answer within rounding? If not, does it match a common slip?
 function verdict(mod,r){
   const A=num(C[mod].check); if(!ok(A)) return null;
-  if(!r.ok) return {cls:"warn",h:"WAITING FOR INPUTS",t:"Finish the inputs above, then your answer is checked."};
+  if(!r.ok) return {cls:"warn",h:"WAITING FOR INPUTS",t:"Fill in the inputs above and CRASH will check your answer."};
   const unit=r.unit?" "+r.unit:"", d=r.dec, tolOf=(v)=>Math.max(r.absTol||0.6,Math.abs(v)*0.01), diff=A-r.S;
   if(Math.abs(diff)<=tolOf(r.S)){ const exact=Math.abs(diff)<Math.pow(10,-d)/2, near=exact?null:r.variants.find((v)=>Math.abs(A-v.val)<Math.min(Math.abs(diff),Math.pow(10,-d)/2));
-    return {cls:"ok",h:"✓ MATCH",t:exact?`Your ${fx(A,d)}${unit} matches.`:`Your ${fx(A,d)}${unit} vs ${fx(r.S,d)}${unit}, close enough to count (${diff>0?"+":"−"}${fx(Math.abs(diff),d+1)}).`+(near?` It's exactly what you get if you <b style="display:inline">${esc(near.why)}</b>, which makes only a small difference here.`:" Most likely rounding along the way.")}; }
-  const hit=r.variants.find((v)=>Math.abs(A-v.val)<=tolOf(v.val));
+    return {cls:"ok",h:"✓ MATCH",t:exact?`Your ${fx(A,d)}${unit} matches.`:`Your ${fx(A,d)}${unit} is within rounding of ${fx(r.S,d)}${unit} (${diff>0?"+":"−"}${fx(Math.abs(diff),d+1)}).`+(near?` It's exactly what you get if you <b style="display:inline">${esc(near.why)}</b>, which makes only a small difference here.`:" Most likely rounding along the way.")}; }
+  const hit=r.variants.filter((v)=>Math.abs(A-v.val)<=tolOf(v.val)).sort((a,b)=>Math.abs(A-a.val)-Math.abs(A-b.val))[0];
   return {cls:"crit",h:"✗ DOESN'T MATCH",t:`Your ${fx(A,d)}${unit} vs ${fx(r.S,d)}${unit}, off by ${fx(Math.abs(diff),d)}.`+(hit?` Your answer is what you get if you <b style="display:inline">${esc(hit.why)}</b>.`:" It doesn't match a common slip. Compare your numbers with each line of the work above."),hit:hit?hit.why:""};
 }
 
@@ -811,7 +910,7 @@ function render(mod){
   else {
     const big=r.ros?`<div class="ros">${r.ros.map(([k,v])=>`<div class="ro"><div class="k">${esc(k)}</div><div class="v">${fx(v,1)} <small>${esc(r.unit)}</small></div></div>`).join("")}</div>`
       :`<div class="ro"><div class="k">${esc(r.mainLabel)}</div><div class="v">${mod==="drag"?fx(r.S,2):fx(r.S,1)} <small>${esc(r.unit)}</small></div>${r.extra.filter(([k])=>!/Radius used/.test(k)).map(([k,v])=>`<div class="sub">${esc(k)}: <b>${esc(v)}</b></div>`).join("")}</div>`;
-    const uses=mod==="drag"?`<div class="toolrow"><span class="muted">Use this f in:</span><button class="btn mini" type="button" data-usef="skid">SKID</button><button class="btn mini" type="button" data-usef="yaw">YAW</button><button class="btn mini" type="button" data-usef="stop">STOP</button><button class="btn mini" type="button" data-usef="comb">COMBINED (all)</button></div>`:"";
+    const uses=mod==="drag"?`<div class="toolrow"><span class="muted">Use this drag factor in:</span><button class="btn mini" type="button" data-usef="skid">SKID</button><button class="btn mini" type="button" data-usef="yaw">YAW</button><button class="btn mini" type="button" data-usef="stop">STOP</button><button class="btn mini" type="button" data-usef="comb">COMBINED (all lines)</button></div>`:"";
     out.innerHTML=big+(r.warn?`<div class="alert">${esc(r.warn)}</div>`:"")+uses+
       `<details class="sec work" data-work="${mod}"${OPEN[mod]!==false?" open":""}><summary>Show work</summary><div class="in"><ol class="steps">${r.steps.map((s)=>`<li>${s}</li>`).join("")}</ol></div></details>`;
   }
@@ -824,12 +923,12 @@ document.addEventListener("toggle",(e)=>{ const d=e.target; if(d.matches&&d.matc
 
 function paintUnits(){ const u=U();
   document.querySelectorAll("[data-u]").forEach((e)=>{ e.textContent=u[e.dataset.u]; });
-  const F={skid:`S = √(${u.Kname} × d × f × n)`,drag:"",yaw:`S = ${u.Ky} × √(R × f)   R = C²/(8M) + M/2`,stop:`D = ${u.Krname} × S × t + S² ÷ (${u.Kname} × f)`};
+  const F={skid:`S = √(${u.Kname} × d × (f × n ± G))`,drag:"",yaw:`S = ${u.Ky} × √(R × f)   R = C²/(8M) + M/2`,stop:`D = ${u.Krname} × S × t + S² ÷ (${u.Kname} × (f × n ± G))`};
   F.drag=C.drag.mode==="test"?`f = S² ÷ (${u.Kname} × d)`:C.drag.mode==="sled"?"f = pull ÷ weight":"f = deceleration in g";
   document.querySelectorAll("[data-formula]").forEach((e)=>{ e.textContent=F[e.dataset.formula]; }); }
 function paintShows(){ document.querySelectorAll("[data-show]").forEach((e)=>{ const m=/^([\w.]+)(!?=)(\w+)$/.exec(e.dataset.show); if(!m) return; const v=getK(m[1]); e.hidden=m[2]==="="?v!==m[3]:v===m[3]; }); }
-function fillInputs(root){ (root||document).querySelectorAll("[data-k]").forEach((e)=>{ const v=getK(e.dataset.k);
-  if(e.type==="radio") e.checked=String(v)===e.value; else if(e.type==="checkbox") e.checked=!!v; else if(document.activeElement!==e||!root) e.value=v==null?"":v; }); }
+function fillInputs(root,force){ (root||document).querySelectorAll("[data-k]").forEach((e)=>{ const v=getK(e.dataset.k);
+  if(e.type==="radio") e.checked=String(v)===e.value; else if(e.type==="checkbox") e.checked=!!v; else if(force||document.activeElement!==e) e.value=v==null?"":v; }); }
 
 function segHTML(sg,i){ const n=C.comb.segs.length, rm=n>2?`<button class="btn mini danger" type="button" data-rm="comb.segs.${i}" aria-label="Remove line ${i+1}">✕ Remove</button>`:"";
   if(sg.kind==="speed") return `<fieldset class="grp"><legend>Line ${i+1}: known speed</legend><div class="fgrid">
@@ -838,8 +937,8 @@ function segHTML(sg,i){ const n=C.comb.segs.length, rm=n>2?`<button class="btn m
   return `<fieldset class="grp"><legend>Line ${i+1}: skid stretch</legend><div class="fgrid">
     <label class="f">Label<input class="fld" data-k="comb.segs.${i}.label" placeholder="e.g. asphalt" autocomplete="off"></label>
     <label class="f">Skid length<span class="unit"><input class="fld" inputmode="decimal" data-k="comb.segs.${i}.d"><span data-u="d"></span></span></label>
-    <label class="f">Drag factor <span class="lc">(f)</span><input class="fld" inputmode="decimal" data-k="comb.segs.${i}.f"></label>
-    <label class="f">Braking efficiency <span class="lc">(n)</span><span class="unit"><input class="fld" inputmode="decimal" data-k="comb.segs.${i}.n"><span>%</span></span></label>
+    <label class="f"><span class="cap">Drag factor <span class="lc">(f)</span></span><input class="fld" inputmode="decimal" data-k="comb.segs.${i}.f"></label>
+    <label class="f"><span class="cap">Braking efficiency <span class="lc">(n)</span></span><span class="unit"><input class="fld" inputmode="decimal" data-k="comb.segs.${i}.n"><span>%</span></span></label>
     <div class="seg" role="radiogroup" aria-label="Grade direction, line ${i+1}">
       <label><input type="radio" name="cg${i}" value="level" data-k="comb.segs.${i}.dir">Level</label><label><input type="radio" name="cg${i}" value="up" data-k="comb.segs.${i}.dir">Uphill</label><label><input type="radio" name="cg${i}" value="down" data-k="comb.segs.${i}.dir">Downhill</label></div>
     <label class="f" data-show="comb.segs.${i}.dir!=level">Grade<span class="unit"><input class="fld" inputmode="decimal" data-k="comb.segs.${i}.grade"><span>%</span></span></label>
@@ -850,19 +949,20 @@ function drawDrag(){ const g=C.drag, box=$("dragRows"), u=U(); let h="";
       `<div class="toolrow"><button class="btn" type="button" data-addrow="tests">+ Add test skid</button></div><p class="muted">Use a car like the one in the crash, at the scene, in the same direction and conditions. Use the speed the test car was actually doing (radar or a calibrated speedometer).</p>`; }
   else if(g.mode==="sled"){ h=`<label class="f">Sled weight<small>any unit, same as the pulls</small><input class="fld" inputmode="decimal" data-k="drag.sledW"></label>`+
       g.pulls.map((p,i)=>`<div class="rowx"><label class="f">Pull ${i+1}<input class="fld" inputmode="decimal" data-k="drag.pulls.${i}.F"></label><span></span>${g.pulls.length>1?`<button class="btn mini danger" type="button" data-rm="drag.pulls.${i}" aria-label="Remove pull ${i+1}">✕</button>`:"<span></span>"}</div>`).join("")+
-      `<div class="toolrow"><button class="btn" type="button" data-addrow="pulls">+ Add pull</button></div><p class="muted">Pull the sled steadily along the skid path, scale level with the road. Use the steady reading, not the jerk at the start.</p>`; }
+      `<div class="toolrow"><button class="btn" type="button" data-addrow="pulls">+ Add pull</button></div><p class="muted">Pull the sled steadily along the skid path, keeping the scale parallel to the road. Use the steady reading, not the jerk at the start.</p>`; }
   else { h=g.accels.map((a,i)=>`<div class="rowx"><label class="f">Reading ${i+1}<span class="unit"><input class="fld" inputmode="decimal" data-k="drag.accels.${i}.g"><span>g</span></span></label><span></span>${g.accels.length>1?`<button class="btn mini danger" type="button" data-rm="drag.accels.${i}" aria-label="Remove reading ${i+1}">✕</button>`:"<span></span>"}</div>`).join("")+
-      `<div class="toolrow"><button class="btn" type="button" data-addrow="accels">+ Add reading</button></div><p class="muted">Peak or average deceleration from a brake-test accelerometer, in g. Follow the device's own instructions for which reading to use.</p>`; }
+      `<div class="toolrow"><button class="btn" type="button" data-addrow="accels">+ Add reading</button></div><p class="muted">Average (sustained) deceleration over the skid, in g, from a brake-test accelerometer. Don't use the peak. Follow the device's instructions.</p>`; }
   box.innerHTML=h; fillInputs(box); paintUnits(); }
 
 function renderAll(){ ["skid","comb","drag","yaw","stop"].forEach(render); homeLine(); if(CUR==="report") drawReport(); }
 function homeLine(){ const i=C.info, bits=[i.caseNo&&`Case ${i.caseNo}`,i.reportNo&&`Report ${i.reportNo}`,i.location].filter(Boolean);
   const done=["skid","comb","drag","yaw","stop"].filter((m)=>CALC[m]().ok).length;
-  $("homeCase").textContent=(bits.length?`Open case: ${bits.join(" · ")}. `:"No case details yet. ")+`${done} calculator${done===1?"":"s"} with a result. Units: ${U().unitsTxt}.`; }
+  $("homeCase").textContent=(bits.length?`Current case: ${bits.join(" · ")}. `:"No case details yet. ")+`${done} calculator${done===1?"":"s"} with a result. Units: ${U().unitsTxt}.`; }
 
 const MOD_OF=(k)=>({skid:"skid",comb:"comb",drag:"drag",yaw:"yaw",stop:"stop"})[k.split(".")[0]];
 document.addEventListener("input",(e)=>{ const t=e.target; if(!t.dataset||!t.dataset.k||t.type==="radio"||t.type==="checkbox") return; setK(t.dataset.k,t.value); persist(); const m=MOD_OF(t.dataset.k); if(m) render(m); else homeLine(); });
 document.addEventListener("change",(e)=>{ const t=e.target; if(!t.dataset||!t.dataset.k) return;
+  if(t.type!=="radio"&&t.type!=="checkbox"&&t.tagName!=="SELECT") return;   // typing is handled by "input"; rebuilding here would swallow the next click
   if(t.type==="radio"){ if(!t.checked) return;
     if(t.dataset.k==="units"&&t.value!==C.units){ const any=["skid","comb","drag","yaw","stop"].some((m)=>CALC[m]().ok); if(any&&!confirm("Change units? Numbers already entered are not converted.")){ fillInputs(); return; } }
     setK(t.dataset.k,t.value); }
@@ -874,7 +974,7 @@ document.addEventListener("click",(e)=>{
   const ar=e.target.closest("[data-addrow]"); if(ar){ const k=ar.dataset.addrow, L=C.drag[k]; if(L.length>=12) return; L.push(k==="tests"?{S:"",d:""}:k==="pulls"?{F:""}:{g:""}); persist(); drawDrag(); render("drag"); const ins=$("dragRows").querySelectorAll("input"); if(ins.length) ins[ins.length-(k==="tests"?2:1)].focus(); return; }
   const uf=e.target.closest("[data-usef]"); if(uf){ const r=calcDrag(C.drag); if(!r.ok) return; const v=trim(r.S,2), to=uf.dataset.usef;
     if(to==="comb") C.comb.segs.forEach((s)=>{ if(s.kind==="skid") s.f=v; }); else C[to].f=v;
-    if(to==="skid"&&ok(r.lo)&&r.lo!==r.hi){ C.skid.fLo=trim(r.lo,2); C.skid.fHi=trim(r.hi,2); }
+    if(to==="skid"){ if(ok(r.lo)&&r.lo!==r.hi){ C.skid.fLo=trim(r.lo,2); C.skid.fHi=trim(r.hi,2); } else { C.skid.fLo=""; C.skid.fHi=""; } }
     persist(); drawSegs(); fillInputs(); renderAll(); toast(`Drag factor ${v} copied to ${to==="comb"?"COMBINED":to.toUpperCase()}${to==="skid"&&ok(r.lo)&&r.lo!==r.hi?", with the low/high range":""}.`); return; }
 });
 $("combAddSkid").addEventListener("click",()=>{ if(C.comb.segs.length>=12) return; C.comb.segs.push({kind:"skid",label:"",d:"",f:"",n:"100",dir:"level",grade:"",S:""}); persist(); drawSegs(); render("comb"); });
@@ -910,7 +1010,7 @@ function sections(){ const i=C.info, u=U(), out=[];
   const info=[["Case number",i.caseNo],["Report number",i.reportNo],["Date and time of collision",whenTxt(i.when)],["Location",i.location],["Coordinates",i.coords],["Investigator",i.investigator],["Vehicle",i.vehicle],["ABS brakes",i.abs],["Road surface and condition",i.road],["Weather and light",i.weather],["Units",u.unitsTxt]].filter(([,v])=>v);
   const mods=[["skid","SKID TO STOP"],["comb","COMBINED SPEED"],["drag","DRAG FACTOR"],["yaw","YAW MARK CRITICAL SPEED"],["stop","STOPPING DISTANCE"]];
   for(const [m,title] of mods){ if(!C[m].inc) continue; const r=CALC[m](); if(!r.ok) continue;
-    const formula={skid:`S = √(${u.Kname} × d × (f × n ± grade))`,comb:"S = √(S₁² + S₂² + …)",drag:C.drag.mode==="test"?`f = S² ÷ (${u.Kname} × d)`:C.drag.mode==="sled"?"f = pull ÷ weight":"f = deceleration (g)",yaw:`S = ${u.Ky} × √(R × f), R = C² ÷ (8M) + M ÷ 2`,stop:`D = ${u.Krname} × S × t + S² ÷ (${u.Kname} × f × n ± grade)`}[m];
+    const formula={skid:`S = √(${u.Kname} × d × (f × n ± G))`,comb:"S = √(S₁² + S₂² + …)",drag:C.drag.mode==="test"?`f = S² ÷ (${u.Kname} × d)`:C.drag.mode==="sled"?"f = pull ÷ weight":"f = deceleration (g)",yaw:`S = ${u.Ky} × √(R × f), R = C² ÷ (8M) + M ÷ 2`,stop:`D = ${u.Krname} × S × t + S² ÷ (${u.Kname} × (f × n ± G))`}[m];
     const res=m==="drag"?`${r.mainLabel}: ${fx(r.S,2)}`:`${r.mainLabel}: ${fx(r.S,1)} ${r.unit}`;
     const v=verdict(m,r), A=num(C[m].check);
     const chk=v?`Hand calculation checked: ${m==="drag"?trim(A,3):fx(A,1)}${r.unit?" "+r.unit:""} — ${v.cls==="ok"?"matches":"does not match"+(v.hit?` (matches what you get if you ${v.hit})`:"")}.`:"";
@@ -931,10 +1031,11 @@ function reportText(){ const s=sections(), L=["COLLISION SPEED WORKSHEET",`Print
   if(s.info.length){ L.push("CASE"); s.info.forEach(([k,v])=>L.push(`${k}: ${v}`)); L.push(""); }
   for(const x of s.out){ L.push(x.title,`Formula: ${x.formula}`); x.rows.forEach(([k,v])=>L.push(`${k}: ${v}`)); L.push("Work:"); x.steps.forEach((t,i)=>L.push(`  ${i+1}. ${stripTags(t)}`)); L.push(x.res); x.extra.forEach(([k,v])=>L.push(`${k}: ${v}`)); if(x.chk) L.push(x.chk); L.push(""); }
   if(s.notes) L.push("NOTES",s.notes,"");
-  L.push("Minimum speed estimates from standard work-energy formulas. Each result is only as good as the measurements and drag factors used.");
+  L.push("Minimum speed estimates from standard work-energy formulas. Each result is only as good as the measurements and drag factors used. Skid-to-stop speeds don't include speed lost before the tires locked or speed left at impact.");
   return L.join("\n"); }
 function drawReport(){ $("rpPreview").innerHTML=reportHTML(); }
 $("rpPrint").addEventListener("click",()=>{ $("printArea").innerHTML=`<div class="ws">${reportHTML()}</div>`; window.print(); });
+window.addEventListener("beforeprint",()=>{ const pa=$("printArea"); if(!pa.innerHTML.trim()) pa.innerHTML=`<div class="ws">${reportHTML()}</div>`; });
 window.addEventListener("afterprint",()=>{ $("printArea").innerHTML=""; });
 $("rpCopy").addEventListener("click",async()=>{ const t=reportText(); try{ await navigator.clipboard.writeText(t); toast("Worksheet copied as text."); }catch(_){ const ta=document.createElement("textarea"); ta.value=t; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); try{ document.execCommand("copy"); toast("Worksheet copied as text."); }catch(__){ toast("Couldn't copy on this device."); } ta.remove(); } });
 
@@ -962,23 +1063,24 @@ $("rpOpen").addEventListener("change",async(e)=>{ const f=e.target.files&&e.targ
   if(f.size>2e6){ m.textContent="That file is too large to be a CRASH case."; return; }
   try{ const o=JSON.parse(await f.text()); const n=await unpack(o);
     if(caseHasData()&&!confirm("Replace the case on this device with the one in the file?")) return;
-    C=n; persist(); boot(); m.textContent=`Opened ${f.name}.`; toast("Case opened."); }
+    C=n; persist(); boot(true); $("rpPass").value=""; m.textContent=`Opened ${f.name}.`; toast("Case opened."); }
   catch(err){ m.textContent=err instanceof SyntaxError?"That file isn't readable as a CRASH case.":(err.message||"Couldn't open the file."); } });
 function caseHasData(){ return JSON.stringify(C)!==JSON.stringify(Object.assign(blank(),{units:C.units})); }
 $("rpNew").addEventListener("click",()=>{ if(caseHasData()&&!confirm("Start a new case? The current case is cleared from this device. Save a case file first if you need it.")) return;
-  const units=C.units; C=blank(); C.units=units; persist(); boot(); $("rpMsg").textContent="New case started."; });
+  const units=C.units; C=blank(); C.units=units; persist(); boot(true); $("rpPass").value=""; $("rpMsg").textContent="New case started."; });
 
 // ================= HELP =================
 function drawHelp(){ const u=U();
   $("helpBody").innerHTML=`
   <h3>How to use CRASH</h3>
-  <ol><li>Fill in <b>CASE</b> (optional, but it heads the printed worksheet).</li><li>Find the drag factor in <b>DRAG</b>, or type a measured one straight into a calculator.</li><li>Use <b>SKID</b> for one surface, <b>COMBINED</b> for more than one, <b>YAW</b> for curved marks.</li><li>To check a hand calculation, enter the same numbers, then your answer under <b>Check your work</b>.</li><li>Print, copy or save from <b>PRINT / SAVE</b>.</li></ol>
+  <ol><li>Fill in <b>CASE</b> (optional, but it heads the printed worksheet).</li><li>Find the drag factor in <b>DRAG</b>, or type a measured one straight into a calculator.</li><li>Use <b>SKID</b> for one surface, <b>COMBINED</b> for more than one, <b>YAW</b> for curved marks, <b>STOP</b> for stopping distance.</li><li>To check a hand calculation, enter the same numbers, then your answer under <b>Check your work</b>.</li><li>Print, copy or save from <b>PRINT / SAVE</b>.</li></ol>
   <p class="muted">Units now: ${esc(u.unitsTxt)}. Change them in CASE.</p>
   <h3>Skid to stop</h3>
   <p><span class="formula">S = √(${u.Kname} × d × f)</span></p>
   <p>S is the speed when the skid started (${u.s}), d the skid length (${u.d}), f the drag factor. With braking efficiency and grade: <b>S = √(${u.Kname} × d × (f × n ± G))</b>, with the grade G as a decimal (5% = 0.05), added uphill and subtracted downhill.</p>
   <h3>Where the ${u.Kname} comes from</h3>
-  <p>The car's moving energy, ½mv², is used up by friction, f × m × g × d. The mass cancels, so v² = 2 × g × f × d. With g = ${u.g} and speed converted to ${u.s} (1 ${u.s} = ${u.conv} ${C.units==="us"?"ft/s":"… m/s: divide by 3.6"}), 2 × g ÷ conversion² comes to about ${u.Kname}.</p>
+  <p>The car's moving energy, ½mv², is used up by friction, f × m × g × d. The mass cancels, so v² = 2 × g × f × d.</p>
+  <p>${C.units==="us"?"With g = 32.2 ft/s², v² = 64.4 × f × d, with v in ft/s. One mph is 1.467 ft/s. Dividing by 1.467² (about 2.15) gives S² = 30 × f × d, with S in mph.":"With g = 9.81 m/s², v² = 19.62 × f × d, with v in m/s. One m/s is 3.6 km/h. Multiplying by 3.6² (12.96) gives S² = 254 × f × d, with S in km/h."}</p>
   <h3>Braking efficiency (n)</h3>
   <p>The share of the car's weight on wheels that were braking. All four locked: 100%. Front axle only: about the front weight share (often 55–65%). Rear axle only: the rest. <b>Each wheel</b> in SKID works this out from each tire mark: a wheel counts its share only for the distance it was locked.</p>
   <h3>Unequal tire marks</h3>
@@ -990,7 +1092,7 @@ function drawHelp(){ const u=U();
   <p>Test skid: <b>f = S² ÷ (${u.Kname} × d)</b>. Drag sled: <b>f = pull ÷ weight</b>. Accelerometer: the reading in g. The lowest of several tests gives the most conservative (lowest) speed.</p>
   <table class="ref"><thead><tr><th>Surface (passenger car)</th><th>Dry</th><th>Wet</th></tr></thead><tbody>
     <tr><td>Asphalt or concrete, new</td><td class="n">0.80–1.20</td><td class="n">0.50–0.80</td></tr>
-    <tr><td>Asphalt or concrete, travelled</td><td class="n">0.60–0.80</td><td class="n">0.45–0.70</td></tr>
+    <tr><td>Asphalt or concrete, traveled</td><td class="n">0.60–0.80</td><td class="n">0.45–0.70</td></tr>
     <tr><td>Asphalt or concrete, polished</td><td class="n">0.55–0.75</td><td class="n">0.45–0.65</td></tr>
     <tr><td>Gravel, packed</td><td class="n">0.55–0.85</td><td class="n">0.40–0.80</td></tr>
     <tr><td>Gravel, loose</td><td class="n">0.40–0.70</td><td class="n">0.45–0.75</td></tr>
@@ -999,12 +1101,12 @@ function drawHelp(){ const u=U();
   <p class="muted">Typical published ranges, for a sense of scale only. Measure f at the scene for anything you'll report.</p>
   <h3>Yaw marks</h3>
   <p><span class="formula">R = C² ÷ (8 × M) + M ÷ 2</span> &nbsp; <span class="formula">S = ${u.Ky} × √(R × f)</span></p>
-  <p>C is a chord across the mark, M the middle ordinate. ${C.units==="us"?"S = √(15 × R × f) is the same formula (3.86² ≈ 15).":"S = √(127 × R × f) is the same formula (11.27² ≈ 127)."} With a banked road, f becomes (f + e) ÷ (1 − f × e), where e is the bank as a decimal. Yaw marks are left by rotating tires sliding sideways; don't use the skid formula on them.</p>
+  <p>C is a chord across the mark, M the middle ordinate. ${C.units==="us"?"S = √(15 × R × f) is practically the same formula (3.86² ≈ 14.9).":"S = √(127 × R × f) is the same formula (11.27² ≈ 127)."} With a banked road, f becomes (f + e) ÷ (1 − f × e), where e is the bank as a decimal, when the low side is on the inside of the curve. If it slopes the other way, use (f − e) ÷ (1 + f × e). Yaw marks are left by tires that are still rolling while the car slides sideways; don't use the skid formula on them.</p>
   <h3>Stopping distance</h3>
   <p><span class="formula">D = ${u.Krname} × S × t + S² ÷ (${u.Kname} × f)</span></p>
   <p>Reaction distance (the car keeps going at full speed for the perception-reaction time) plus braking distance. 1.5 seconds is a common starting time.</p>
   <h3>Check your work</h3>
-  <p>A match within about 1% (or ${C.units==="us"?"0.6 mph":"0.6 km/h"}) counts as the same answer; that covers rounding. If your answer is off, CRASH tries the usual slips: grade in the wrong direction, braking efficiency left out, 15 instead of ${u.Kname}, no square root, longest instead of average mark, speeds added instead of squares, and more. If one matches, it says which.</p>
+  <p>A match within 1% counts as the same answer; that covers rounding. For small results the minimum is 0.6 ${u.s} for a speed, 0.006 for a drag factor, or 1 ${u.d} for a distance. If your answer is off, CRASH tries the usual slips: grade in the wrong direction, braking efficiency left out, ${C.units==="us"?"15 instead of 30":"127 instead of 254"}, no square root, longest instead of average mark, speeds added instead of squares, and more. If one matches, it says which.</p>
   <h3>Limits</h3>
   <ul><li>These are <b>minimum</b> speeds. Speed lost before the tires locked, and speed left at impact, aren't counted unless you add them.</li><li>Cars with ABS rarely leave dark skid marks; their marks are often faint and broken, and the full-lock drag assumptions may not fit.</li><li>The result is only as good as the drag factor. A range from low and high f is more honest than one number.</li><li>Follow your agency's procedures and training. CRASH is a calculator, not a reconstruction.</li></ul>
   <h3>Further reading</h3>
@@ -1020,12 +1122,14 @@ function route(){ let h=(location.hash||"#home").slice(1).toLowerCase(); if(h===
   if(h==="report") drawReport(); if(h==="help") drawHelp(); if(h==="home") homeLine(); }
 window.addEventListener("hashchange",()=>{ route(); window.scrollTo(0,0); });
 
-function boot(){ drawSegs(); drawDrag(); fillInputs(); paintUnits(); paintShows(); renderAll(); route(); savedNote(""); }
-boot();
+function boot(force){ drawSegs(); drawDrag(); fillInputs(null,force); paintUnits(); paintShows(); renderAll(); route(); savedNote(""); }
+let INSTALL_EV=null;   // declared before boot(): route() can open the install panel on load (#install)
+boot(true);
 
 // ================= TOP BAR: colors, clock, Large mode =================
 (function(){ const top=$("top"), t2=$("top2"), sw=top.querySelector(".theme-sw"), ck=top.querySelector(".clock");
   const c2=sw.cloneNode(true), k2=ck.cloneNode(true); t2.append(c2,k2);       // narrow screens show this second copy below the bar
+  const th=()=>document.documentElement.style.setProperty("--top-h",top.offsetHeight+"px"); th(); window.addEventListener("resize",th); if(window.ResizeObserver) new ResizeObserver(th).observe(top);
   let on=false; const mark=()=>{ const s=window.scrollY>4; if(s!==on){ on=s; top.classList.toggle("stuck",s); } }; window.addEventListener("scroll",mark,{passive:true}); mark(); })();
 // Display color: every visit opens in green; a choice lasts until the page is closed or reloaded (same as IQ Kit and LOGSTAT).
 (function(){ const root=document.documentElement;
@@ -1049,10 +1153,14 @@ boot();
   b.addEventListener("click",()=>{ const on=!root.classList.contains("lg"); root.classList.toggle("lg",on); try{ localStorage.setItem("iq.large",on?"1":"0"); }catch(_){} paint(); });
   window.addEventListener("storage",(e)=>{ if(e.key==="iq.large"){ root.classList.toggle("lg",e.newValue==="1"); paint(); } });
   paint(); })();
-window.addEventListener("storage",(e)=>{ if(e.key===KEY&&e.newValue){ try{ C=merge(JSON.parse(e.newValue)); boot(); }catch(_){} } });   // same case open in two tabs
+// Same case open in two tabs: take the other tab's save, unless this tab has an edit waiting to save (then this tab's save follows and wins).
+window.addEventListener("storage",(e)=>{ if(e.key!==KEY||!e.newValue||saveT) return; try{
+  const a=document.activeElement, k=a&&a.dataset?a.dataset.k:null, s0=a&&"selectionStart" in a?a.selectionStart:null, s1=a&&"selectionEnd" in a?a.selectionEnd:null;
+  C=merge(JSON.parse(e.newValue)); boot(false);
+  if(k){ const n=document.querySelector(`[data-k="${CSS.escape(k)}"]`); if(n&&n!==document.activeElement){ n.focus({preventScroll:true}); try{ if(s0!=null) n.setSelectionRange(s0,s1); }catch(_){} } }
+}catch(_){} });
 
 // ================= INSTALL, OFFLINE COPY, UPDATES, FEEDBACK =================
-let INSTALL_EV=null;
 function openInstall(){ const how=$("iqHowto"), standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
   const ua=navigator.userAgent, ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
   const macSafari=!ios&&/Macintosh/.test(ua)&&/Safari\//.test(ua)&&!/Chrome|Chromium|Edg|OPR|Firefox/.test(ua), chromium=!ios&&/Chrome|Chromium|Edg|SamsungBrowser/.test(ua);
@@ -1063,7 +1171,7 @@ function openInstall(){ const how=$("iqHowto"), standalone=matchMedia("(display-
   setTimeout(()=>how.scrollIntoView({block:"start"}),50); }
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1")){
   window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); });
-  navigator.serviceWorker.addEventListener("message",(e)=>{ if(e.data&&e.data.type==="crash-updated") toast("A new version of CRASH is ready. Reload to use it."); }); }
+  navigator.serviceWorker.addEventListener("message",(e)=>{ if(e.data&&e.data.type==="crash-updated"){ toast("A new version of CRASH is ready."); const tb=$("toast"), b=document.createElement("button"); b.type="button"; b.className="btn mini"; b.textContent="Reload"; b.addEventListener("click",()=>location.reload()); tb.append(b); clearTimeout(toastT); } }); }
 if(/[?&]install\b/.test(location.search)){ try{ history.replaceState(null,"",location.pathname+location.hash); }catch(_){} setTimeout(openInstall,0); }
 $("iqHowtoX").addEventListener("click",()=>{ $("iqHowto").hidden=true; });
 window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); INSTALL_EV=e; if(!$("iqHowto").hidden&&openInstall.show) openInstall.show("iqHowGo"); });
@@ -1080,7 +1188,7 @@ $("icardPrint").addEventListener("click",()=>{ const src=$("icardQR"), img=src.q
     try{ const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration().catch(()=>null); if(reg) await reg.update().catch(()=>{});
       const u=new URL(location.href); u.hash=""; u.search="?crashcheck="+Date.now(); const r=await fetch(u.href,{cache:"no-store"}); if(!r.ok) throw new Error(r.status);
       const txt=await r.text(), m=txt.match(/<meta name="crash-build" content="([^"]*)"/), latest=m?m[1]:"";
-      if(latest&&latest!==mine){ say(`Updating to build ${latest}…`);
+      if(latest&&latest.localeCompare(mine,undefined,{numeric:true})>0){ say(`Updating to build ${latest}…`);
         try{ if(window.caches){ const key=new URL("index.html",location.href).href; for(const k of (await caches.keys()).filter((x)=>x.startsWith("crash-"))) await (await caches.open(k)).put(key,new Response(txt,{headers:{"Content-Type":"text/html; charset=utf-8"}})); } }catch(_){}
         setTimeout(()=>location.reload(),400); return; }
       say(`You're up to date (build ${mine}).`); }
