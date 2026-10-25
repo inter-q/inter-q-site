@@ -2,9 +2,9 @@
 // The saved copy opens right away; a fresh copy is fetched in the background, and if it's a newer build the app
 // shows "A new version is ready" with a Reload button. The app makes no other network requests: your case is never sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "crash-v1";
+const CACHE = "crash-v2";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
-  "./manifest.json", "./qrcode.min.js",
+  "./manifest.json", "./qrcode.min.js", "./install/index.html",
   "./crash-32.png", "./crash-48.png", "./crash-180.png", "./crash-192.png", "./crash-512.png", "./crash-maskable-512.png"];
 
 self.addEventListener("install", (e) => {
@@ -52,7 +52,11 @@ self.addEventListener("fetch", (e) => {
   if (u.origin !== self.location.origin) return;
   if (r.cache === "no-store" || u.searchParams.has("crashcheck")) return;   // "Check for update" always asks the site
   if (r.mode === "navigate") {
-    if (!isAppPage(u)) return;   // install page and anything else: straight to the network
+    if (u.pathname === SCOPE + "install/" || u.pathname === SCOPE + "install/index.html") {   // install link: the site first, the saved copy when offline
+      e.respondWith(fetch(r).catch(() => caches.match("./install/index.html").then((x) => x || Response.error())));
+      return;
+    }
+    if (!isAppPage(u)) return;   // anything else: straight to the network
     e.respondWith((async () => {
       const saved = await caches.match("./index.html");
       if (saved) { e.waitUntil(refreshPage()); return saved; }
