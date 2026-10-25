@@ -2,10 +2,10 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-AgzEdWArtvGpyxugLlDVu3F3eQxc63dVdV6bKn5LYSY=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-KAmc/Bln3tDYzbFCUoBGL49g/WEwLSFMOQXA1mA5yq4=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CRASH</title>
-<meta name="crash-build" content="2026.10.25-2">
+<meta name="crash-build" content="2026.10.25-3">
 <meta name="description" content="Collision speed calculator: skid marks, combined surfaces, drag factor, yaw marks and stopping distance, with the work shown. Works offline; your case stays on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -213,6 +213,8 @@ table.ref td.n { font-family:var(--font-mono); white-space:nowrap; }
 .ws .blk { break-inside:avoid; page-break-inside:avoid; }
 .ws .sig { display:grid; grid-template-columns:1fr 1fr; gap:18px 24px; margin-top:22px; break-inside:avoid; }
 .ws .sig div { border-top:1px solid #000; padding-top:3px; font-size:11px; }
+.ws .lvp { margin:4px 0 6px; padding:5px 8px; border:1px solid #000; font-size:12.5px; line-height:1.55; }
+.ws .lvp div { white-space:pre-wrap; overflow-wrap:anywhere; }
 .ws .disc { margin-top:14px; font-size:10.5px; color:#333; border-top:1px solid #999; padding-top:6px; }
 .ws .notes { white-space:pre-wrap; }
 #printArea { display:none; }
@@ -325,6 +327,20 @@ html { scroll-padding-top:calc(var(--top-h,72px) + 8px); }
   html.lg .top2 { display:flex; flex-wrap:wrap; align-items:stretch; gap:10px; margin:-6px 0 0; }
   html.lg .top2 .theme-sw, html.lg .top2 .clock { flex:1 1 140px; min-width:0; }
 }
+
+/* ---- live formula box ---- */
+.live { background:var(--well); border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo); padding:10px 12px; display:flex; flex-direction:column; gap:3px; font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+.live .lv-h { font-family:var(--font-ui); font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-dim); margin-bottom:2px; }
+.live .lv-f { font-size:13.5px; color:var(--ink-dim); margin-top:4px; }
+.live .lv-s { font-size:16px; color:var(--bright); overflow-wrap:anywhere; }
+.live .lv-c { font-size:16px; color:var(--bright); padding-left:1.4em; overflow-wrap:anywhere; }
+.live .lv-r { font-size:22px; font-weight:bold; color:var(--bright); padding-left:1.4em; }
+.live .lv-t { font-family:var(--font-ui); font-size:12.5px; color:var(--ink-dim); margin-top:4px; }
+.miss { display:inline-block; min-width:1.5em; text-align:center; border:1px dashed var(--warn); color:var(--warn); padding:0 3px; line-height:1.3; font-weight:bold; }
+html.lg .live .lv-s, html.lg .live .lv-c { font-size:18px; } html.lg .live .lv-r { font-size:26px; }
+:root[data-theme="blue"] .live { background:#fff; border-color:#808080 #fff #fff #808080; }
+:root[data-theme="blue"] .live .lv-s, :root[data-theme="blue"] .live .lv-c, :root[data-theme="blue"] .live .lv-r { color:#000080; }
+:root[data-theme="blue"] .miss { color:#8b0000; border-color:#8b0000; }
 /* ---- design pass: units inside boxes, narrower number fields, result emphasis, controls ---- */
 .unit { position:relative; display:block; max-width:var(--num-w,20rem); }
 .unit .fld { padding-right:3.6em; }
@@ -430,7 +446,8 @@ ol.steps li::marker { color:var(--ink-dim); }
         <details class="sec intro">
           <summary>What CRASH does</summary>
           <div class="in">
-            <p>Enter what was measured at the scene. Each calculator gives a result (a minimum speed, a drag factor or a stopping distance) and shows every step of the math, so you can follow it line by line.</p>
+            <p>Enter what was measured at the scene. As you type, each calculator fills the formula in with your numbers, so you can check every value before you rely on the result. The result follows (a minimum speed, a drag factor or a stopping distance), and <b>Show every step</b> opens the full math line by line.</p>
+            <p>Nothing has to be printed. Everything stays on screen, and PRINT / SAVE shows all the work in one place if you want it on paper or as a file.</p>
             <p><b>Checking a hand calculation?</b> Enter the same numbers you used, then type your answer in <b>Check your work</b> under the result. CRASH tells you whether it matches and, if it doesn't, the most likely slip.</p>
           </div>
         </details>
@@ -441,7 +458,7 @@ ol.steps li::marker { color:var(--ink-dim); }
           <a href="#drag"><b>DRAG.EXE</b><span>Find the drag factor from test skids, a drag sled or an accelerometer.</span></a>
           <a href="#yaw"><b>YAW.EXE</b><span>Critical speed from a curved yaw mark (chord and middle ordinate).</span></a>
           <a href="#stop"><b>STOP.EXE</b><span>Stopping distance from a speed: reaction plus braking.</span></a>
-          <a href="#report"><b>PRINT.EXE</b><span>Print the worksheet with all the work shown. Save the case to a file, or open a saved one.</span></a>
+          <a href="#report"><b>PRINT.EXE</b><span>Review or print all the work in one place. Save the case to a file, or open a saved one.</span></a>
           <a href="#help"><b>HELP</b><span>Formulas, where the 30 comes from, a drag factor table and the limits of these estimates.</span></a>
         </div>
         <p class="status" id="homeCase"></p>
@@ -481,7 +498,6 @@ ol.steps li::marker { color:var(--ink-dim); }
     <section class="win view" id="v-skid" hidden aria-labelledby="t-skid">
       <div class="bar"><span id="t-skid">SKID.EXE <span class="bsub">— skid to stop</span></span></div>
       <div class="body calc"><div class="cin">
-        <div class="formula" data-formula="skid"></div>
         <fieldset class="grp"><legend>Skid length</legend>
           <div class="seg" role="radiogroup" aria-label="How to use the tire marks">
             <label><input type="radio" name="skm" value="single" data-k="skid.method">One length</label>
@@ -528,12 +544,12 @@ ol.steps li::marker { color:var(--ink-dim); }
           </div>
         </fieldset>
         </div>
-        <aside class="cout" aria-label="Result"><div data-out="skid"></div>
+        <aside class="cout" aria-label="Result"><div class="live" data-live="skid" aria-live="polite"></div><div data-out="skid"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your answer<span class="unit"><input class="fld" inputmode="decimal" data-k="skid.check" placeholder="the speed you worked out"><span data-u="s"></span></span></label>
           <div data-verdict="skid"></div>
         </div>
-        <label class="inc"><input type="checkbox" data-k="skid.inc">Include in the printed worksheet</label>
+        <label class="inc"><input type="checkbox" data-k="skid.inc">Include when printing</label>
       </aside>
       </div>
     </section>
@@ -541,17 +557,16 @@ ol.steps li::marker { color:var(--ink-dim); }
     <section class="win view" id="v-combined" hidden aria-labelledby="t-combined">
       <div class="bar"><span id="t-combined">COMBINED.EXE <span class="bsub">— more than one surface</span></span></div>
       <div class="body calc"><div class="cin">
-        <div class="formula">S = √(S₁² + S₂² + S₃² …)</div>
         <p class="muted">Work out each stretch on its own, then combine the squares. Energy adds; speeds don't. Add a known speed (for example, impact speed from a momentum analysis) as its own line. Uphill means the car was going uphill on that stretch.</p>
         <div id="combSegs" style="display:flex;flex-direction:column;gap:10px"></div>
         <div class="toolrow"><button class="btn" type="button" id="combAddSkid">+ Add skid stretch</button><button class="btn" type="button" id="combAddSpeed">+ Add known speed</button></div>
         </div>
-        <aside class="cout" aria-label="Result"><div data-out="comb"></div>
+        <aside class="cout" aria-label="Result"><div class="live" data-live="comb" aria-live="polite"></div><div data-out="comb"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your answer<span class="unit"><input class="fld" inputmode="decimal" data-k="comb.check" placeholder="the combined speed you worked out"><span data-u="s"></span></span></label>
           <div data-verdict="comb"></div>
         </div>
-        <label class="inc"><input type="checkbox" data-k="comb.inc">Include in the printed worksheet</label>
+        <label class="inc"><input type="checkbox" data-k="comb.inc">Include when printing</label>
       </aside>
       </div>
     </section>
@@ -564,15 +579,14 @@ ol.steps li::marker { color:var(--ink-dim); }
           <label><input type="radio" name="dgm" value="sled" data-k="drag.mode">Drag sled</label>
           <label><input type="radio" name="dgm" value="accel" data-k="drag.mode">Accelerometer</label>
         </div>
-        <div class="formula" data-formula="drag"></div>
         <div id="dragRows" style="display:flex;flex-direction:column;gap:10px"></div>
         </div>
-        <aside class="cout" aria-label="Result"><div data-out="drag"></div>
+        <aside class="cout" aria-label="Result"><div class="live" data-live="drag" aria-live="polite"></div><div data-out="drag"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your drag factor<input class="fld" inputmode="decimal" data-k="drag.check" placeholder="e.g. 0.72"></label>
           <div data-verdict="drag"></div>
         </div>
-        <label class="inc"><input type="checkbox" data-k="drag.inc">Include in the printed worksheet</label>
+        <label class="inc"><input type="checkbox" data-k="drag.inc">Include when printing</label>
       </aside>
       </div>
     </section>
@@ -580,7 +594,6 @@ ol.steps li::marker { color:var(--ink-dim); }
     <section class="win view" id="v-yaw" hidden aria-labelledby="t-yaw">
       <div class="bar"><span id="t-yaw">YAW.EXE <span class="bsub">— critical speed from a yaw mark</span></span></div>
       <div class="body calc"><div class="cin">
-        <div class="formula" data-formula="yaw"></div>
         <p class="muted">Measure a chord across the yaw mark, then the middle ordinate: the distance from the chord's midpoint to the mark, at a right angle to the chord. Run the chord between two points on the outer edge of the mark. Use the first part of the mark, before the car rotates far.</p>
         <div class="fgrid">
           <label class="f"><span class="cap">Chord <span class="lc">(C)</span></span><span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.C"><span data-u="d"></span></span></label>
@@ -595,12 +608,12 @@ ol.steps li::marker { color:var(--ink-dim); }
           <label class="f" data-show="yaw.edir!=flat">Superelevation (bank)<span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.e"><span>%</span></span></label>
         </div>
         </div>
-        <aside class="cout" aria-label="Result"><div data-out="yaw"></div>
+        <aside class="cout" aria-label="Result"><div class="live" data-live="yaw" aria-live="polite"></div><div data-out="yaw"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your answer<span class="unit"><input class="fld" inputmode="decimal" data-k="yaw.check" placeholder="the speed you worked out"><span data-u="s"></span></span></label>
           <div data-verdict="yaw"></div>
         </div>
-        <label class="inc"><input type="checkbox" data-k="yaw.inc">Include in the printed worksheet</label>
+        <label class="inc"><input type="checkbox" data-k="yaw.inc">Include when printing</label>
       </aside>
       </div>
     </section>
@@ -608,7 +621,6 @@ ol.steps li::marker { color:var(--ink-dim); }
     <section class="win view" id="v-stop" hidden aria-labelledby="t-stop">
       <div class="bar"><span id="t-stop">STOP.EXE <span class="bsub">— stopping distance</span></span></div>
       <div class="body calc"><div class="cin">
-        <div class="formula" data-formula="stop"></div>
         <div class="fgrid">
           <label class="f">Speed<span class="unit"><input class="fld" inputmode="decimal" data-k="stop.S"><span data-u="s"></span></span></label>
           <label class="f">Perception-reaction time<span class="unit"><input class="fld" inputmode="decimal" data-k="stop.t"><span>sec</span></span></label>
@@ -623,12 +635,12 @@ ol.steps li::marker { color:var(--ink-dim); }
           <p class="muted full">Uphill means the car was going uphill. Grade % = rise ÷ run × 100.</p>
         </div>
         </div>
-        <aside class="cout" aria-label="Result"><div data-out="stop"></div>
+        <aside class="cout" aria-label="Result"><div class="live" data-live="stop" aria-live="polite"></div><div data-out="stop"></div>
         <div class="chk"><h3>Check your work</h3>
           <label class="f">Your total stopping distance<span class="unit"><input class="fld" inputmode="decimal" data-k="stop.check"><span data-u="d"></span></span></label>
           <div data-verdict="stop"></div>
         </div>
-        <label class="inc"><input type="checkbox" data-k="stop.inc">Include in the printed worksheet</label>
+        <label class="inc"><input type="checkbox" data-k="stop.inc">Include when printing</label>
       </aside>
       </div>
     </section>
@@ -650,7 +662,7 @@ ol.steps li::marker { color:var(--ink-dim); }
           <p class="status" id="rpMsg" role="status"></p>
         </fieldset>
         </div>
-        <div class="rp-prev"><p class="muted">Preview of the printed worksheet. It includes each calculator that has a result and has “Include in the printed worksheet” ticked.</p>
+        <div class="rp-prev"><p class="muted">All the work in one place. You don't have to print it: this is what Print / PDF and Copy as text would give. It includes each calculator that has a result and has “Include when printing” ticked.</p>
         <div class="paper"><div class="ws" id="rpPreview"></div></div>
       </div>
       </div>
@@ -934,21 +946,101 @@ function verdict(mod,r){
 }
 
 // ================= SCREEN =================
+
+// ================= LIVE FORMULA: the formula with the officer's numbers, filled in as he types =================
+// Each builder returns lines: ["f", formula in letters], ["s", the same with numbers], ["c", a following "= …" step], ["r", the result], ["t", a short note].
+// A value not entered yet shows as its letter in a dashed box, so it's plain what's still missing.
+const miss=(s)=>`<span class="miss" title="Not entered yet">${s}</span>`;
+const SUB="₀₁₂₃₄₅₆₇₈₉", sub=(i)=>String(i).split("").map((c)=>SUB[+c]).join("");
+const dec=(x,d=2)=>ok(x)?fx(x,d):null;
+function gT(o,dirKey,valKey,letter){ const dir=o[dirKey||"dir"]; if(!dir||dir==="level"||dir==="flat") return null;
+  const g=num(o[valKey||"grade"]), plus=dir==="up"||dir==="in"; return {op:plus?"+":"−", plus, v:ok(g)?trim(Math.abs(g)/100,6):miss(letter||"G")}; }
+const q4=(x)=>x.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:4});   // exactly as entered, up to 4 decimals
+const fT=(f)=>ok(f)&&f>0?q4(f):miss("f"), nT=(n)=>ok(n)&&n>0?q4(n):miss("n"), dT=(d,l)=>ok(d)&&d>0?nf(d,4):miss(l||"d");
+function finish(L,r,sq){ if(!r.ok) return L; if(sq) L.push(["c",`= √${fx(r.S*r.S,1)}`]); L.push(["r",`= ${r.unit?fx(r.S,1)+" "+r.unit:fx(r.S,2)}`]); return L; }
+
+const LIVE={
+  skid(s,r){ const u=U(), K=u.Kname, L=[], g=gT(s), f=num(s.f);
+    if(s.method==="stepped"){
+      const fr=pct(s.front), okF=fr>0&&fr<1, sh={lf:fr/2,rf:fr/2,lr:(1-fr)/2,rr:(1-fr)/2};
+      const ws=[["lf","LF"],["rf","RF"],["lr","LR"],["rr","RR"]].map(([k,l])=>({k,l,v:num(s[k])})).filter((m)=>ok(m.v)&&m.v>0);
+      L.push(["f",`S = √(${K} × (f × (w × L, each wheel, added)${g?` ${g.op} G × longest L`:""}))`]);
+      const terms=ws.length?ws.map((m)=>`${okF?q4(sh[m.k]):miss("w")} × ${nf(m.v,4)}`).join(" + "):miss("w × L");
+      const Lx=ws.length?nf(Math.max(...ws.map((m)=>m.v)),4):miss("L");
+      L.push(["s",`S = √(${K} × (${fT(f)} × (${terms})${g?` ${g.op} ${g.v} × ${Lx}`:""}))`]);
+      finish(L,r,true);
+      L.push(["t",`w is each wheel's share of the weight${okF?`: front ${trim(fr*50,2)}% each, rear ${trim((1-fr)*50,2)}% each`:""}. L is that wheel's mark.`]);
+      return L; }
+    const n=pct(s.n); let d=NaN;
+    L.push(["f",`S = √(${K} × d × (f × n${g?` ${g.op} G`:""}))`]);
+    if(s.method==="single") d=num(s.d);
+    else { const ws=["lf","rf","lr","rr"].map((k)=>num(s[k])).filter((v)=>ok(v)&&v>0);
+      if(ws.length&&s.method==="average"){ d=ws.reduce((a,b)=>a+b,0)/ws.length; L.push(["s",`d = (${ws.map((v)=>nf(v,4)).join(" + ")}) ÷ ${ws.length} = ${nf(d,4)}`]); }
+      else if(ws.length){ d=Math.max(...ws); L.push(["s",`d = longest mark = ${nf(d,4)}`]); } }
+    L.push(["s",`S = √(${K} × ${dT(d)} × (${fT(f)} × ${nT(n)}${g?` ${g.op} ${g.v}`:""}))`]);
+    return finish(L,r,true); },
+
+  comb(c,r){ const u=U(), K=u.Kname, L=[["f","S = √(S₁² + S₂² + …)"]], parts=[];
+    c.segs.forEach((sg,i)=>{ const Si=`S${sub(i+1)}²`;
+      if(sg.kind==="speed"){ const S=num(sg.S); L.push(["s",`${Si} = ${ok(S)&&S>=0?nf(S,4):miss("S")}²${ok(S)&&S>=0?` = ${fx(S*S,1)}`:""}`]); parts.push(ok(S)&&S>=0?fx(S*S,1):miss(Si)); return; }
+      const d=num(sg.d), f=num(sg.f), n=pct(sg.n), g=gT(sg), G=g?num(sg.grade)/100*(g.plus?1:-1):0;
+      const v=d>0&&f>0&&n>0&&ok(G)?u.K*d*(f*n+G):NaN;
+      L.push(["s",`${Si} = ${K} × ${dT(d)} × (${fT(f)} × ${nT(n)}${g?` ${g.op} ${g.v}`:""})${v>0?` = ${fx(v,1)}`:""}`]); parts.push(v>0?fx(v,1):miss(Si)); });
+    L.push(["s",`S = √(${parts.join(" + ")})`]);
+    return finish(L,r,true); },
+
+  drag(g,r){ const u=U(), K=u.Kname, L=[], vals=[];
+    if(g.mode==="test"){ L.push(["f",`f = S² ÷ (${K} × d)`]);
+      g.tests.forEach((x,i)=>{ const S=num(x.S), d=num(x.d), v=S>0&&d>0?S*S/(u.K*d):NaN; if(ok(v)) vals.push(v);
+        L.push(["s",`f${sub(i+1)} = ${S>0?nf(S,4):miss("S")}² ÷ (${K} × ${dT(d)})${ok(v)?` = ${ff(v)}`:""}`]); }); }
+    else if(g.mode==="sled"){ const W=num(g.sledW); L.push(["f","f = pull ÷ weight"]);
+      g.pulls.forEach((x,i)=>{ const F=num(x.F), v=F>0&&W>0?F/W:NaN; if(ok(v)) vals.push(v);
+        L.push(["s",`f${sub(i+1)} = ${F>0?nf(F,4):miss("pull")} ÷ ${W>0?nf(W,4):miss("weight")}${ok(v)?` = ${ff(v)}`:""}`]); }); }
+    else { L.push(["f","f = average deceleration, in g"]);
+      g.accels.forEach((x,i)=>{ const v=num(x.g); if(v>0) vals.push(v); L.push(["s",`f${sub(i+1)} = ${v>0?ff(v):miss("g")}`]); }); }
+    if(vals.length>1) L.push(["s",`f = (${vals.map(ff).join(" + ")}) ÷ ${vals.length}`]);
+    return finish(L,r,false); },
+
+  yaw(y,r){ const u=U(), L=[], Cc=num(y.C), M=num(y.M), T=num(y.track), f=num(y.f), g=gT(y,"edir","e","e");
+    const R0=Cc>0&&M>0?Cc*Cc/(8*M)+M/2:NaN, R=ok(R0)?(T>0?R0-T/2:R0):NaN;
+    L.push(["f",`R = C² ÷ (8 × M) + M ÷ 2${T>0?" − track ÷ 2":""}`]);
+    L.push(["s",`R = ${dT(Cc,"C")}² ÷ (8 × ${dT(M,"M")}) + ${dT(M,"M")} ÷ 2${T>0?` − ${nf(T,4)} ÷ 2`:""}${ok(R)?` = ${nf(R,3)} ${u.d}`:""}`]);
+    let fe=f, feT=fT(f);
+    if(g){ const e=num(y.e)/100; L.push(["f",`f′ = (f ${g.op} e) ÷ (1 ${g.plus?"−":"+"} f × e)`]);
+      fe=f>0&&ok(e)?(f+(g.plus?e:-e))/(1-f*(g.plus?e:-e)):NaN;
+      L.push(["s",`f′ = (${fT(f)} ${g.op} ${g.v}) ÷ (1 ${g.plus?"−":"+"} ${fT(f)} × ${g.v})${ok(fe)?` = ${trim(fe,5)}`:""}`]); feT=ok(fe)?trim(fe,5):miss("f′"); }
+    L.push(["f",`S = ${u.Ky} × √(R × ${g?"f′":"f"})`]);
+    L.push(["s",`S = ${u.Ky} × √(${ok(R)?nf(R,3):miss("R")} × ${feT})`]);
+    if(r.ok&&ok(R)&&ok(fe)) L.push(["c",`= ${u.Ky} × √${nf(R*fe,2)}`]);
+    return finish(L,r,false); },
+
+  stop(s,r){ const u=U(), L=[], S=num(s.S), t=num(s.t), f=num(s.f), n=pct(s.n), g=gT(s);
+    L.push(["f",`D = ${u.Krname} × S × t + S² ÷ (${u.Kname} × (f × n${g?` ${g.op} G`:""}))`]);
+    const ST=S>0?nf(S,4):miss("S");
+    L.push(["s",`D = ${u.Krname} × ${ST} × ${t>=0&&String(s.t).trim()!==""?trim(t,2):miss("t")} + ${ST}² ÷ (${u.Kname} × (${fT(f)} × ${nT(n)}${g?` ${g.op} ${g.v}`:""}))`]);
+    if(r.ok){ const [, re]=r.ros[0], [, br]=r.ros[1]; L.push(["c",`= ${fx(re,1)} + ${fx(br,1)}`]); }
+    return finish(L,r,false); },
+};
+function liveHTML(mod,r){ const L=LIVE[mod](C[mod],r), any=L.some(([,h])=>h.includes('class="miss"'));
+  return `<div class="lv-h">Formula with your numbers</div>`+L.map(([k,h])=>`<div class="lv-${k}">${h}</div>`).join("")+
+    (any?`<div class="lv-t">Letters in dashed boxes are still to be entered.</div>`:""); }
+
 function render(mod){
   const r=CALC[mod](), out=document.querySelector(`[data-out="${mod}"]`); if(!out) return r;
+  const lv=document.querySelector(`[data-live="${mod}"]`); if(lv) lv.innerHTML=liveHTML(mod,r);
   if(!r.ok){ out.innerHTML=`<div class="ro need"><div class="k">${esc(r.mainLabel||"Result")}</div><div class="v">${esc(r.msg)}</div></div>`; }
   else {
     const big=r.ros?`<div class="ros">${r.ros.map(([k,v])=>`<div class="ro"><div class="k">${esc(k)}</div><div class="v">${fx(v,1)} <small>${esc(r.unit)}</small></div></div>`).join("")}</div>`
       :`<div class="ro"><div class="k">${esc(r.mainLabel)}</div><div class="v">${mod==="drag"?fx(r.S,2):fx(r.S,1)} <small>${esc(r.unit)}</small></div>${r.extra.filter(([k])=>!/Radius used/.test(k)).map(([k,v])=>`<div class="sub">${esc(k)}: <b>${esc(v)}</b></div>`).join("")}</div>`;
     const uses=mod==="drag"?`<div class="toolrow"><span class="muted">Use this drag factor in:</span><button class="btn mini" type="button" data-usef="skid">SKID</button><button class="btn mini" type="button" data-usef="yaw">YAW</button><button class="btn mini" type="button" data-usef="stop">STOP</button><button class="btn mini" type="button" data-usef="comb">COMBINED (all lines)</button></div>`:"";
     out.innerHTML=big+(r.warn?`<div class="alert">${esc(r.warn)}</div>`:"")+uses+
-      `<details class="sec work" data-work="${mod}"${OPEN[mod]!==false?" open":""}><summary>Show work</summary><div class="in"><ol class="steps">${r.steps.map((s)=>`<li>${s}</li>`).join("")}</ol></div></details>`;
+      `<details class="sec work" data-work="${mod}"${OPEN[mod]===true?" open":""}><summary>Show every step</summary><div class="in"><ol class="steps">${r.steps.map((s)=>`<li>${s}</li>`).join("")}</ol></div></details>`;
   }
   const vb=document.querySelector(`[data-verdict="${mod}"]`), v=verdict(mod,r);
   if(vb) vb.innerHTML=v?`<div class="verdict ${v.cls}"><b>${v.h}</b>${v.t}</div>`:`<p class="muted">Type the answer you worked out by hand. CRASH checks it against the result above.</p>`;
   return r;
 }
-const OPEN={}; // remembers which "Show work" boxes were closed
+const OPEN={}; // remembers which "Show every step" boxes were opened
 document.addEventListener("toggle",(e)=>{ const d=e.target; if(d.matches&&d.matches("details[data-work]")) OPEN[d.dataset.work]=d.open; },true);
 
 function paintUnits(){ const u=U();
@@ -1033,7 +1125,7 @@ $("gpsBtn").addEventListener("click",()=>{ const m=$("gpsMsg");
   (err)=>{ m.textContent=err&&err.code===1?"Location is blocked for this site or app. Allow it in the device's settings, or type the coordinates.":err&&err.code===3?"Timed out. Try again outside, or type the coordinates.":"Couldn't get a location. Type the coordinates instead."; },
   {enableHighAccuracy:true,timeout:20000,maximumAge:30000}); });
 
-// ================= WORKSHEET (print, copy as text) =================
+// ================= PRINTOUT (print, copy as text) =================
 const plainDT=(d)=>new Intl.DateTimeFormat("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(d);
 function whenTxt(v){ if(!v) return ""; const d=new Date(v); return isNaN(d)?v:plainDT(d); }
 const stripTags=(h)=>String(h).replace(/<span class="why">/g," — ").replace(/<[^>]+>/g,"").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,"&");
@@ -1045,22 +1137,22 @@ function sections(){ const i=C.info, u=U(), out=[];
     const res=m==="drag"?`${r.mainLabel}: ${ff(r.S)}`:`${r.mainLabel}: ${fx(r.S,1)} ${r.unit}`;
     const v=verdict(m,r), A=num(C[m].check);
     const chk=v&&ok(A)?`Hand calculation: ${nf(A,m==="drag"?3:2)}${r.unit?" "+r.unit:""}. ${v.cls==="ok"?"Matches.":"Does not match."+(v.hit?` It is what you get if you ${v.hit}.`:"")}`:"";
-    out.push({title,formula,rows:r.rows,steps:r.steps,res,extra:r.extra.filter(([k])=>!/Radius used/.test(k)),chk}); }
+    const live=LIVE[m](C[m],r).filter(([k])=>k!=="t").map(([k,h])=>(k==="f"?"":(k==="s"?"":"   "))+stripTags(h)).filter((x,ix,a)=>x.trim());
+    out.push({title,formula,live,rows:r.rows,steps:r.steps,res,extra:r.extra.filter(([k])=>!/Radius used/.test(k)),chk}); }
   return {info,out,notes:i.notes}; }
 function reportHTML(){ const s=sections();
-  let h=`<h1>COLLISION SPEED WORKSHEET</h1><div class="wsub">Printed ${esc(plainDT(new Date()))}</div>`;
+  let h=`<h1>SPEED CALCULATIONS</h1><div class="wsub">Printed ${esc(plainDT(new Date()))}</div>`;
   if(s.info.length) h+=`<div class="blk"><h2>Case</h2><table>${s.info.map(([k,v])=>`<tr><td class="k">${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table></div>`;
-  if(!s.out.length) h+=`<p style="margin:14px 0">No calculations to print yet. Finish a calculator and tick “Include in the printed worksheet”.</p>`;
-  for(const x of s.out) h+=`<div><h2>${esc(x.title)}</h2><div style="margin:2px 0 4px"><b>Formula:</b> ${esc(x.formula)}</div><table class="blk">${x.rows.map(([k,v])=>`<tr><td class="k">${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table>
+  if(!s.out.length) h+=`<p style="margin:14px 0">No calculations to print yet. Finish a calculator and tick “Include when printing”.</p>`;
+  for(const x of s.out) h+=`<div><h2>${esc(x.title)}</h2><div class="lvp blk">${x.live.map((l)=>`<div>${esc(l)}</div>`).join("")}</div><table class="blk">${x.rows.map(([k,v])=>`<tr><td class="k">${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table>
     <div class="blk"><b style="display:block;margin-top:6px">Work</b><ol>${x.steps.map((t)=>`<li>${esc(stripTags(t))}</li>`).join("")}</ol></div>
     <div class="res blk">${esc(x.res)}${x.extra.map(([k,v])=>`<br><span style="font-weight:normal">${esc(k)}: ${esc(v)}</span>`).join("")}</div>${x.chk?`<div class="chkl">${esc(x.chk)}</div>`:""}</div>`;
   if(s.notes) h+=`<div class="blk"><h2>Notes</h2><div class="notes">${esc(s.notes)}</div></div>`;
-  h+=`<div class="sig"><div>Prepared by</div><div>Date</div><div>Reviewed by</div><div>Date</div></div>
-    <div class="disc">Minimum speed estimates from standard work-energy formulas. Each result is only as good as the measurements and drag factors used. Skid-to-stop speeds don't include speed lost before the tires locked or speed left at impact.</div>`;
+  h+=`<div class="disc">Minimum speed estimates from standard work-energy formulas. Each result is only as good as the measurements and drag factors used. Skid-to-stop speeds don't include speed lost before the tires locked or speed left at impact.</div>`;
   return h; }
-function reportText(){ const s=sections(), L=["COLLISION SPEED WORKSHEET",`Printed ${plainDT(new Date())}`,""];
+function reportText(){ const s=sections(), L=["SPEED CALCULATIONS",`Printed ${plainDT(new Date())}`,""];
   if(s.info.length){ L.push("CASE"); s.info.forEach(([k,v])=>L.push(`${k}: ${v}`)); L.push(""); }
-  for(const x of s.out){ L.push(x.title,`Formula: ${x.formula}`); x.rows.forEach(([k,v])=>L.push(`${k}: ${v}`)); L.push("Work:"); x.steps.forEach((t,i)=>L.push(`  ${i+1}. ${stripTags(t)}`)); L.push(x.res); x.extra.forEach(([k,v])=>L.push(`${k}: ${v}`)); if(x.chk) L.push(x.chk); L.push(""); }
+  for(const x of s.out){ L.push(x.title); x.live.forEach((l)=>L.push(l)); x.rows.forEach(([k,v])=>L.push(`${k}: ${v}`)); L.push("Work:"); x.steps.forEach((t,i)=>L.push(`  ${i+1}. ${stripTags(t)}`)); L.push(x.res); x.extra.forEach(([k,v])=>L.push(`${k}: ${v}`)); if(x.chk) L.push(x.chk); L.push(""); }
   if(s.notes) L.push("NOTES",s.notes,"");
   L.push("Minimum speed estimates from standard work-energy formulas. Each result is only as good as the measurements and drag factors used. Skid-to-stop speeds don't include speed lost before the tires locked or speed left at impact.");
   return L.join("\n"); }
@@ -1068,7 +1160,7 @@ function drawReport(){ $("rpPreview").innerHTML=reportHTML(); }
 $("rpPrint").addEventListener("click",()=>{ $("printArea").innerHTML=`<div class="ws">${reportHTML()}</div>`; window.print(); });
 window.addEventListener("beforeprint",()=>{ const pa=$("printArea"); if(pa.dataset.card!=="1") pa.innerHTML=`<div class="ws">${reportHTML()}</div>`; });
 window.addEventListener("afterprint",()=>{ const pa=$("printArea"); pa.innerHTML=""; pa.dataset.card=""; });
-$("rpCopy").addEventListener("click",async()=>{ const t=reportText(); try{ await navigator.clipboard.writeText(t); toast("Worksheet copied as text."); }catch(_){ const ta=document.createElement("textarea"); ta.value=t; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); try{ document.execCommand("copy"); toast("Worksheet copied as text."); }catch(__){ toast("Couldn't copy on this device."); } ta.remove(); } });
+$("rpCopy").addEventListener("click",async()=>{ const t=reportText(); try{ await navigator.clipboard.writeText(t); toast("Calculations copied as text."); }catch(_){ const ta=document.createElement("textarea"); ta.value=t; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); try{ document.execCommand("copy"); toast("Calculations copied as text."); }catch(__){ toast("Couldn't copy on this device."); } ta.remove(); } });
 
 // ================= SAVE / OPEN (optional passphrase: AES-GCM, key from PBKDF2) =================
 const u8b64=(u)=>{ let s=""; u.forEach((x)=>{ s+=String.fromCharCode(x); }); return btoa(s); }, b64u8=(s)=>Uint8Array.from(atob(s),(c)=>c.charCodeAt(0));
@@ -1104,7 +1196,7 @@ $("rpNew").addEventListener("click",()=>{ if(caseHasData()&&!confirm("Start a ne
 function drawHelp(){ const u=U();
   $("helpBody").innerHTML=`
   <h3>How to use CRASH</h3>
-  <ol><li>Fill in <b>CASE</b> (optional, but it heads the printed worksheet).</li><li>Find the drag factor in <b>DRAG</b>, or type a measured one straight into a calculator.</li><li>Use <b>SKID</b> for one surface, <b>COMBINED</b> for more than one, <b>YAW</b> for curved marks, <b>STOP</b> for stopping distance.</li><li>To check a hand calculation, enter the same numbers, then your answer under <b>Check your work</b>.</li><li>Print, copy or save from <b>PRINT / SAVE</b>.</li></ol>
+  <ol><li>Fill in <b>CASE</b> (optional, but it heads the printout).</li><li>As you type in a calculator, <b>Formula with your numbers</b> shows the formula filled in. A letter in a dashed box is a value still to be entered.</li><li>Find the drag factor in <b>DRAG</b>, or type a measured one straight into a calculator.</li><li>Use <b>SKID</b> for one surface, <b>COMBINED</b> for more than one, <b>YAW</b> for curved marks, <b>STOP</b> for stopping distance.</li><li>To check a hand calculation, enter the same numbers, then your answer under <b>Check your work</b>.</li><li>Print, copy or save from <b>PRINT / SAVE</b>.</li></ol>
   <p class="muted">Units now: ${esc(u.unitsTxt)}. Change them in CASE.</p>
   <h3>Skid to stop</h3>
   <p><span class="formula">S = √(${u.Kname} × d × f)</span></p>
