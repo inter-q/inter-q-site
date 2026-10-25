@@ -1,11 +1,11 @@
-// IQ Contacts — keeps a copy of the app so it opens instantly and offline.
+// CRASH — keeps a copy of the app so it opens instantly and offline.
 // The saved copy opens right away; a fresh copy is fetched in the background, and if it's a newer build the app
-// shows "A new version is ready" with a Reload button. The app makes no other network requests: your cards are never sent anywhere.
+// shows "A new version is ready" with a Reload button. The app makes no other network requests: your case is never sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "iqcontacts-v4";
+const CACHE = "crash-v2";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
-  "./manifest.json", "./qrcode.min.js", "./iqc.svg",
-  "./iqc-32.png", "./iqc-48.png", "./iqc-180.png", "./iqc-192.png", "./iqc-512.png", "./iqc-maskable-512.png"];
+  "./manifest.json", "./qrcode.min.js", "./install/index.html",
+  "./crash-32.png", "./crash-48.png", "./crash-180.png", "./crash-192.png", "./crash-512.png", "./crash-maskable-512.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil((async () => {
@@ -17,18 +17,18 @@ self.addEventListener("install", (e) => {
 
 self.addEventListener("activate", (e) => {
   e.waitUntil((async () => {
-    for (const k of await caches.keys()) if (k.startsWith("iqcontacts-") && k !== CACHE) await caches.delete(k);
+    for (const k of await caches.keys()) if (k.startsWith("crash-") && k !== CACHE) await caches.delete(k);
     await self.clients.claim();
   })());
 });
 
-// The app page is /contacts/ or /contacts/index.html — exactly. /contacts/install/ is a separate forwarding page and must
+// The app page is /crash/ or /crash/index.html — exactly. /crash/install/ is a separate forwarding page and must
 // never replace the saved app.
 const SCOPE = new URL("./", self.location).pathname;
 const isAppPage = (u) => u.pathname === SCOPE || u.pathname === SCOPE + "index.html";
 const isHtml = (res) => (res.headers.get("content-type") || "").includes("text/html");
 const keyOf = (u) => { const k = new URL(u.href); k.search = ""; k.hash = ""; return k.href; };
-const buildOf = (t) => { const m = /<meta name="iqc-build" content="([^"]*)"/.exec(t || ""); return m ? m[1] : ""; };
+const buildOf = (t) => { const m = /<meta name="crash-build" content="([^"]*)"/.exec(t || ""); return m ? m[1] : ""; };
 
 async function refreshPage() {
   try {
@@ -39,9 +39,9 @@ async function refreshPage() {
     const old = await c.match("./index.html");
     const oldBuild = old ? buildOf(await old.text()) : "";
     const newBuild = buildOf(text);
-    if (!newBuild || newBuild === oldBuild) return;
+    if (!newBuild || (oldBuild && newBuild.localeCompare(oldBuild, undefined, { numeric: true }) <= 0)) return;   // only ever move to a newer build
     await c.put("./index.html", new Response(text, { headers: { "Content-Type": "text/html; charset=utf-8" } }));
-    if (oldBuild) for (const cl of await self.clients.matchAll({ type: "window" })) cl.postMessage({ type: "iqc-updated", build: newBuild });
+    if (oldBuild) for (const cl of await self.clients.matchAll({ type: "window" })) cl.postMessage({ type: "crash-updated", build: newBuild });
   } catch (_) { /* offline: keep the saved copy */ }
 }
 
@@ -50,9 +50,13 @@ self.addEventListener("fetch", (e) => {
   if (r.method !== "GET") return;
   const u = new URL(r.url);
   if (u.origin !== self.location.origin) return;
-  if (r.cache === "no-store" || u.searchParams.has("iqccheck")) return;   // "Check for update" always asks the site
+  if (r.cache === "no-store" || u.searchParams.has("crashcheck")) return;   // "Check for update" always asks the site
   if (r.mode === "navigate") {
-    if (!isAppPage(u)) return;   // install page and anything else: straight to the network
+    if (u.pathname === SCOPE + "install/" || u.pathname === SCOPE + "install/index.html") {   // install link: the site first, the saved copy when offline
+      e.respondWith(fetch(r).catch(() => caches.match("./install/index.html").then((x) => x || Response.error())));
+      return;
+    }
+    if (!isAppPage(u)) return;   // anything else: straight to the network
     e.respondWith((async () => {
       const saved = await caches.match("./index.html");
       if (saved) { e.waitUntil(refreshPage()); return saved; }
