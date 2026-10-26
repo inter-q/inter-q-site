@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "LOGSTAT Aid",
+  "name": "LOGSTAT",
   "short_name": "LOGSTAT",
   "description": "Receipt stamper, fleet mileage and the ESAD Form 1970 for ARRO LOGSTAT. Works offline. Aid only: ARRO is the system of record.",
   "start_url": "./",

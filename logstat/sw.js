@@ -1,10 +1,10 @@
-// LOGSTAT — keeps a copy of the app so it opens offline. Same design as IQ Kit's tools/sw.js.
+// LOGSTAT — keeps a copy of the app so it opens offline. Same design as TOOLS' tools/sw.js.
 // Network first for the page itself, so a new upload to GitHub shows up the next time the app opens online.
 // The app makes no other network requests: nothing is sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "logstat-v10";
+const CACHE = "logstat-v12";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
-  "./manifest.json", "./qrcode.min.js", "./pdf-lib.min.js",
+  "./manifest.json", "./qrcode.min.js", "./pdf-lib.min.js", "../prompt.js",
   "./esad-form-1970.pdf", "./std-270-vehicle-accident-report.pdf", "./logstat-workflow.pdf",
   "./caveat-latin-400-normal.woff2", "./caveat-latin-ext-400-normal.woff2", "./dancing-script-latin-400-normal.woff2", "./dancing-script-latin-ext-400-normal.woff2", "./dancing-script-vietnamese-400-normal.woff2", "./great-vibes-latin-400-normal.woff2", "./great-vibes-latin-ext-400-normal.woff2", "./great-vibes-vietnamese-400-normal.woff2", "./homemade-apple-latin-400-normal.woff2",
   "./logstat-32.png", "./logstat-48.png", "./logstat-180.png", "./logstat-apple-512.png", "./logstat-192.png", "./logstat-512.png", "./logstat-maskable-512.png"];
