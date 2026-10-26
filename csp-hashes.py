@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rewrites the Content-Security-Policy <meta> tag in index.html, tools/index.html, logstat/index.html, contacts/index.html and crash/index.html.
+"""Rewrites the Content-Security-Policy <meta> tag in index.html, tools/index.html, logstat/index.html, contacts/index.html, crash/index.html and remove/index.html.
 
 Run from the repo folder after editing ANY inline <script> in any of these pages:  python3 csp-hashes.py
 The policy only lets the page run its own inline scripts (matched by SHA-256 hash) and scripts from this site,
@@ -32,6 +32,10 @@ POLICY = {
     "crash/index.html": "default-src 'self'; script-src 'self' {h}; style-src 'self' 'unsafe-inline'; "
                         "img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; "
                         "manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'",
+    # REMOVE talks to nothing at all: progress stays in this browser. blob: is for saving a progress file.
+    "remove/index.html": "default-src 'self'; script-src 'self' {h}; style-src 'self' 'unsafe-inline'; "
+                         "img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; "
+                         "manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'",
 }
 META = re.compile(r'<meta http-equiv="Content-Security-Policy" content="[^"]*">\n?')
 SCRIPT = re.compile(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', re.S)
