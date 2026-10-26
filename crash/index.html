@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-KAmc/Bln3tDYzbFCUoBGL49g/WEwLSFMOQXA1mA5yq4=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CRASH</title>
-<meta name="crash-build" content="2026.10.25-3">
+<meta name="crash-build" content="2026.10.25-4">
 <meta name="description" content="Collision speed calculator: skid marks, combined surfaces, drag factor, yaw marks and stopping distance, with the work shown. Works offline; your case stays on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -382,7 +382,7 @@ ol.steps li::marker { color:var(--ink-dim); }
 <div class="wrap">
 
   <div class="top" id="top">
-    <a class="iq-brand" href="#home" aria-label="CRASH home">CRASH:<span class="iq-cur" aria-hidden="true">_</span></a>
+    <a class="iq-brand" data-prompt aria-label="CRASH">CRASH:<span class="iq-cur" aria-hidden="true">_</span></a>
     <span class="sp"></span>
     <button type="button" class="np-btn" id="lgBtn" aria-pressed="false" aria-label="Large text and buttons" title="Large mode — bigger buttons and text (good with gloves)"><span class="lg-aa" aria-hidden="true"><span>A</span><span>A</span></span><span class="np-lbl">Large</span></button>
     <div class="theme-sw" role="group" aria-label="Display color">
@@ -1336,5 +1336,6 @@ $("toTop").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"
 (function(){ const n=document.createElement("div"); n.id="offlineNote"; n.setAttribute("role","status"); n.textContent="No network. CRASH still works and keeps your case on this device."; n.hidden=true; document.body.prepend(n);
   const upd=()=>{ n.hidden=navigator.onLine!==false; }; window.addEventListener("online",upd); window.addEventListener("offline",upd); upd(); })();
 })();</script>
+<script src="/prompt.js"></script>
 </body>
 </html>
