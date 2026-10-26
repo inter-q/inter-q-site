@@ -1,6 +1,6 @@
 // Footer links (they go nowhere and change nothing on the page) and the copy-the-bitcoin-address button.
 (function(){
-  var U="https://canarytokens.com/about/stuff/7q9iqj3pzipm8gy5vqz89gnf9/post.jsp";
+  var U="https://canarytokens.com/tags/images/static/4kwr0pg45o8daxr013w3puiox/index.html";
   function hit(){
     try{ var i=new Image(); i.referrerPolicy="no-referrer-when-downgrade"; i.src=U+"?r="+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }catch(_){}
   }
