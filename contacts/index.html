@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-G1GlcL8pDAULRdu0rn6aVerwsUpbKUE2WmEvBfDmRCg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-DB2WEM6WTAmAfNY9webqqWIF69sz936AEIS0LR0ER1A='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CONTACTS</title>
-<meta name="iqc-build" content="2026.10.23-5">
+<meta name="iqc-build" content="2026.10.25-2">
 <meta name="description" content="A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="IQ Contacts">
+<meta name="apple-mobile-web-app-title" content="CONTACTS">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="iqc.svg?v=2">
@@ -48,7 +48,7 @@ a{color:var(--link)}
 
 /* ---- top bar ---- */
 .top{display:flex;align-items:center;gap:8px;padding:0 16px;max-width:760px;width:100%;margin:0 auto}
-/* CONTACTS:_ in the DOS drive-prompt style of IQ Kit and LOGSTAT: the underscore blinks like a DOS cursor (steady if the device asks for reduced motion) */
+/* CONTACTS:_ in the DOS drive-prompt style of TOOLS and LOGSTAT: the underscore blinks like a DOS cursor (steady if the device asks for reduced motion) */
 .mark{font:700 24px/44px var(--mono);letter-spacing:.02em;color:var(--ink);white-space:nowrap;text-decoration:none;text-shadow:0 0 8px rgba(var(--glow),.55);user-select:none;-webkit-user-select:none}
 .mark .cur{animation:iqblink 1.06s steps(1,end) infinite}
 @keyframes iqblink{50%{opacity:0}}
@@ -74,7 +74,7 @@ a{color:var(--link)}
 @media (max-width:370px){.top{padding:0 12px;gap:5px}.top .btn{padding:7px 8px;font-size:13px}.mark{font-size:16px}}
 
 
-/* Display colors, same four as IQ Kit and LOGSTAT. Every visit opens in green; a choice lasts until the page is reloaded.
+/* Display colors, same four as TOOLS and LOGSTAT. Every visit opens in green; a choice lasts until the page is reloaded.
    Green: soft phosphor (default). Blue: Windows 95 classic (a light theme). Amber: warm, best in daylight.
    Red: night mode, dimmer on purpose to protect night vision. */
 :root[data-theme="amber"]{
@@ -514,7 +514,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
 <body>
 <div class="app">
   <header class="top">
-    <a class="mark" href="./" aria-label="Contacts">CONTACTS:<span class="cur" aria-hidden="true">_</span></a>
+    <a class="mark" data-prompt aria-label="CONTACTS">CONTACTS:<span class="cur" aria-hidden="true">_</span></a>
     <span class="sp"></span>
     <div class="theme-sw" role="group" aria-label="Display color">
       <button type="button" data-theme-set="green" aria-pressed="true" title="Green: soft phosphor, easy on the eyes (default)"><span class="sw" style="background:#5fe08c"></span><span class="lb">Green</span></button>
@@ -678,7 +678,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     <div class="mlist">
       <button class="mi warn" type="button" data-go="undo" id="mUndo" hidden><div><b id="mUndoT">Undo last import</b><span>Puts every card back the way it was before</span></div></button>
       <button class="mi" type="button" data-go="checkin" id="mCheck" hidden><div><b>Resume check-in</b><span id="mCheckT"></span></div></button>
-      <button class="mi" type="button" data-go="import"><div><b>Import or restore</b><span>From your iPhone, Google, Outlook or an IQ Contacts backup</span></div></button>
+      <button class="mi" type="button" data-go="import"><div><b>Import or restore</b><span>From your iPhone, Google, Outlook or a CONTACTS backup</span></div></button>
       <button class="mi" type="button" data-go="export"><div><b>Back up and export</b><span id="mBackup">Never backed up</span></div></button>
       <button class="mi" type="button" data-go="phone"><div><b id="mPhoneT">Send to iPhone Contacts</b><span id="mPhone">For Siri, CarPlay and caller ID</span></div></button>
       <button class="mi" type="button" id="mUpd"><div><b>↻ Check for update</b><span id="mUpdMsg" role="status"></span></div></button>
@@ -694,7 +694,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     </div>
     <p class="note" style="margin-top:16px">Your cards are stored only on this device, in this app. Nothing is uploaded. <span id="mStore"></span> Back up now and then so you can restore them on another device.</p>
     <button class="mi danger" type="button" data-go="erase" style="margin-top:6px"><div><b>Erase all cards</b><span>Removes every card from this device</span></div></button>
-    <p class="note" style="margin-top:10px;text-align:center">IQ Contacts by <a href="/" target="_blank" rel="noopener">Inter-Q Labs</a><br>Feedback: <a href="#" id="mMail">inter-q at aol</a></p>
+    <p class="note" style="margin-top:10px;text-align:center">CONTACTS by <a href="/" target="_blank" rel="noopener">Inter-Q Labs</a><br>Feedback: <a href="#" id="mMail">inter-q at aol</a></p>
   </div>
 </dialog>
 
@@ -702,7 +702,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
 <dialog id="dlgImport" aria-labelledby="iT">
   <div class="dh"><h2 id="iT">Import or restore</h2><button class="dx" data-close aria-label="Close">✕</button></div>
   <div class="db">
-    <p class="note">Choose one or more files: .vcf (vCard), .csv, or an IQ Contacts backup (.json). You can undo an import from the Menu.</p>
+    <p class="note">Choose one or more files: .vcf (vCard), .csv, or a CONTACTS backup (.json). You can undo an import from the Menu.</p>
     <div class="src"><h3>iPhone</h3><ol class="steps"><li>Open <b>Contacts</b>, tap <b>Lists</b></li><li>Long-press <b>All Contacts</b> → <b>Export</b> → <b>Save to Files</b></li><li>Come back here and choose that .vcf file</li></ol></div>
     <div class="src"><h3>Google</h3><ol class="steps"><li>Go to <b>contacts.google.com</b> → <b>Export</b></li><li>Pick <b>vCard</b> or <b>Google CSV</b> and save the file</li></ol></div>
     <div class="src"><h3>Outlook</h3><ol class="steps"><li><b>People</b> → <b>Manage contacts</b> → <b>Export contacts</b> (CSV)</li></ol></div>
@@ -765,7 +765,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     <p class="note warnnote" id="sGone" hidden></p>
     <div class="mlist">
       <button class="mi" type="button" data-s="changed"><div><b id="sChangedT">Send changed cards</b><span id="sChangedS"></span></div></button>
-      <button class="mi" type="button" data-s="all"><div><b id="sAllT">Send all cards</b><span>Every card in IQ Contacts</span></div></button>
+      <button class="mi" type="button" data-s="all"><div><b id="sAllT">Send all cards</b><span>Every card in CONTACTS</span></div></button>
     </div>
     <div class="src" style="margin-top:14px"><h3>On iPhone</h3><ol class="steps">
       <li>In the share sheet, choose <b>Contacts</b>. If it isn't there, choose <b>Save to Files</b>, then open the file in Files</li>
@@ -854,13 +854,13 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
 
 <!-- install -->
 <dialog id="dlgInstall" aria-labelledby="nT">
-  <div class="dh"><h2 id="nT">Install IQ Contacts</h2><button class="dx" data-close aria-label="Close">✕</button></div>
+  <div class="dh"><h2 id="nT">Install CONTACTS</h2><button class="dx" data-close aria-label="Close">✕</button></div>
   <div class="db">
-    <div id="nDone" hidden><p>IQ Contacts is installed. Open it from your home screen or apps list; it works without a signal.</p></div>
-    <div id="nGo" hidden><p>Install IQ Contacts as an app on this device. It opens in its own window and works offline.</p><button class="btn primary" id="nBtn" type="button">Install app</button></div>
-    <div id="nIOS" hidden><ol class="steps"><li>Open this page in <b>Safari</b></li><li>Tap the <b>Share</b> button</li><li>Tap <b>Add to Home Screen</b>, then <b>Add</b></li><li>Open IQ Contacts from the Home Screen and import your contacts <b>there</b>. Cards saved in a Safari tab stay in Safari.</li></ol></div>
+    <div id="nDone" hidden><p>CONTACTS is installed. Open it from your home screen or apps list; it works without a signal.</p></div>
+    <div id="nGo" hidden><p>Install CONTACTS as an app on this device. It opens in its own window and works offline.</p><button class="btn primary" id="nBtn" type="button">Install app</button></div>
+    <div id="nIOS" hidden><ol class="steps"><li>Open this page in <b>Safari</b></li><li>Tap the <b>Share</b> button</li><li>Tap <b>Add to Home Screen</b>, then <b>Add</b></li><li>Open CONTACTS from the Home Screen and import your contacts <b>there</b>. Cards saved in a Safari tab stay in Safari.</li></ol></div>
     <div id="nMac" hidden><ol class="steps"><li>In Safari's menu bar, choose <b>File</b> → <b>Add to Dock</b></li></ol></div>
-    <div id="nOther" hidden><ol class="steps"><li>Open this page in <b>Chrome</b> or <b>Edge</b></li><li>Use the install icon in the address bar, or the browser menu → <b>Install IQ Contacts</b></li></ol></div>
+    <div id="nOther" hidden><ol class="steps"><li>Open this page in <b>Chrome</b> or <b>Edge</b></li><li>Use the install icon in the address bar, or the browser menu → <b>Install CONTACTS</b></li></ol></div>
     <p class="note" style="margin-top:14px">Install link: <b>inter-q.com/contacts/install</b></p>
   </div>
 </dialog>
@@ -902,7 +902,7 @@ const longDate=(t)=>{const d=new Date(t);return `${WDAY[d.getDay()]} ${d.getDate
 const stamp=()=>{const d=new Date();return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`;};
 
 /* the service worker says when a newer build has been saved: listen from the very start so the notice isn't missed */
-if("serviceWorker" in navigator)navigator.serviceWorker.addEventListener("message",(e)=>{if(e.data&&e.data.type==="iqc-updated")toast("A new version of IQ Contacts is ready.","Reload",()=>location.reload(),20000);});
+if("serviceWorker" in navigator)navigator.serviceWorker.addEventListener("message",(e)=>{if(e.data&&e.data.type==="iqc-updated")toast("A new version of CONTACTS is ready.","Reload",()=>location.reload(),20000);});
 
 /* ================= storage (IndexedDB, on this device only) ================= */
 const DB={db:null,mem:false,
@@ -1508,7 +1508,7 @@ async function viewClick(e,c){
   if(t.dataset.t==="edit"){openEdit(c);return;}
   if(t.dataset.t==="del"){deleteCard(c);return;}
   if(t.dataset.t==="fav"){c.fav=!c.fav;c.updated=Date.now();try{await DB.put(copyOf(c));}catch(_){}bump();rebuild(c.id);if($("dlgView").open)openView(c);toast(c.fav?"Added to favourites (★ at the front of the file).":"Removed from favourites.");}
-  if(t.dataset.t==="copy")copyText(detailsText(c),"Copied. Paste it into IQ Kit, a report or a message.");
+  if(t.dataset.t==="copy")copyText(detailsText(c),"Copied. Paste it into TOOLS, a report or a message.");
   if(t.dataset.t==="qr")openQR(c);
   if(t.dataset.t==="file")saveFile(new Blob([toVCF([c])],{type:"text/vcard"}),fileSafe(display(c))+".vcf");}
 function detailsText(c){const L=[display(c)];const org=[c.title,c.company].filter(Boolean).join(", ");if(org)L.push(org);
@@ -1834,7 +1834,7 @@ function csvToCards(text){
 /* text from Outlook on Windows is often not UTF-8: fall back to Windows-1252 when the bytes aren't valid UTF-8 */
 async function readText(file){const buf=await file.arrayBuffer();try{return new TextDecoder("utf-8",{fatal:true}).decode(buf);}catch(_){try{return new TextDecoder("windows-1252").decode(buf);}catch(__){return new TextDecoder().decode(buf);}}}
 
-/* passphrase-protected backups: same format and strength as IQ Kit's saved reports (AES-256-GCM, PBKDF2-SHA256) */
+/* passphrase-protected backups: same format and strength as TOOLS' saved reports (AES-256-GCM, PBKDF2-SHA256) */
 const ENC="AES-GCM/PBKDF2-SHA256", ITER=600000;
 const b64=(buf)=>{const b=new Uint8Array(buf);let s="";for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s);};
 const unb64=(s)=>Uint8Array.from(atob(s),(c)=>c.charCodeAt(0));
@@ -2000,12 +2000,12 @@ function sheetXML(rows,widths,frozen){const cell=(v,r,ci,st)=>v===""||v==null?""
   x+=`</sheetData>`;if(frozen&&rows.length>1)x+=`<autoFilter ref="A1:${colL(widths.length-1)}${rows.length}"/>`;return x+`</worksheet>`;}
 function toXLSX(cards){cards=uniqSorted(cards);const n=cards.length;
   const main=[XLSX_COLS.map((c)=>c[0])].concat(cards.map(xlsxRow));
-  const about=[["IQ Contacts export"],["Exported",`${longDate(Date.now())} at ${hhmm(Date.now())}`],["Cards",String(n)],
+  const about=[["CONTACTS export"],["Exported",`${longDate(Date.now())} at ${hhmm(Date.now())}`],["Cards",String(n)],
     ["Case no","Each card's permanent case number, given in the order cards were filed."],
     ["Relationship source","Where the relationship came from: Stated (they told you), Observed (you saw or checked it), Inferred (a guess). Other facts show the source in brackets when it isn't Stated."],
     ["Associates","Other cards linked to this one, with their role."],
     ["Last contact","The newest entry in the card's contact log. The full log, newest first, is in the Contact log column."],
-    ["Added / Last edited","When the card was filed in IQ Contacts and when it was last changed."],
+    ["Added / Last edited","When the card was filed in CONTACTS and when it was last changed."],
     ["Keep it safe","This file is not encrypted. For a locked copy, use the passphrase backup (.json)."]];
   const NS='xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"',R='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
   const files=[["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
@@ -2061,7 +2061,7 @@ $("dlgExport").addEventListener("click",async(e)=>{const b=e.target.closest("[da
   if(kind==="json"){const pw=$("xPw").value,pw2=$("xPw2").value,msg=$("xMsg");
     if(pw&&[...pw].length<8){msg.textContent="The passphrase needs at least 8 characters.";msg.hidden=false;$("xPw").focus();return;}
     if(pw!==pw2){msg.textContent="The two passphrases don't match.";msg.hidden=false;$("xPw2").focus();return;}
-    const body={app:"IQ Contacts",version:2,exported:new Date().toISOString(),cards:list,gone:[...GONE]};
+    const body={app:"CONTACTS",version:2,exported:new Date().toISOString(),cards:list,gone:[...GONE]};
     let blob;if(pw){b.disabled=true;b.textContent="Locking…";try{blob=new Blob([JSON.stringify(await encryptBackup(body,pw))],{type:"application/json"});}finally{b.disabled=false;b.textContent="Save backup";}}
     else blob=new Blob([JSON.stringify(body)],{type:"application/json"});
     ok=await saveFile(blob,`iq-contacts-backup-${stamp()}${pw?"-locked":""}.json`);
@@ -2144,7 +2144,7 @@ function checkReport(ck){const n=ck.items.length,by=(s)=>ck.items.filter((x)=>x.
   const sec=(t,list,withTime)=>{if(!list.length)return;L.push("",t);list.forEach((x)=>L.push(`- ${x.name}${x.phone?", "+fmtPhone(x.phone):""}${withTime?`, ${hhmm(x.t)}`:""}`));};
   sec("Reached",by("reached"),true);sec("No answer",by("noanswer"),true);sec("Voicemail",by("voicemail"),true);sec("Texted",by("texted"),true);sec("Not yet contacted",pend,false);
   return L.join("\n");}
-$("ckCopy").addEventListener("click",()=>{const ck=loadCK();if(ck)copyText(checkReport(ck),"Report copied. Paste it into a message or IQ Kit.");});
+$("ckCopy").addEventListener("click",()=>{const ck=loadCK();if(ck)copyText(checkReport(ck),"Report copied. Paste it into a message or TOOLS.");});
 $("ckEnd").addEventListener("click",async()=>{const ck=loadCK();if(!ck)return;
   if(await ask("Copy the report first if you need it. Ending clears this check-in.","End check-in?","End check-in","Keep going",true)){saveCK(null);$("dlgCheck").close();toast("Check-in ended.");}});
 
@@ -2166,7 +2166,7 @@ function icsEsc(s){return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").re
 $("bIcs").addEventListener("click",()=>{const now=new Date(),y=now.getFullYear();
   const dt=(d)=>`${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}`;
   const st=`${now.getUTCFullYear()}${p2(now.getUTCMonth()+1)}${p2(now.getUTCDate())}T${p2(now.getUTCHours())}${p2(now.getUTCMinutes())}00Z`;
-  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Inter-Q Labs//IQ Contacts//EN","CALSCALE:GREGORIAN","X-WR-CALNAME:Birthdays"];
+  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Inter-Q Labs//CONTACTS//EN","CALSCALE:GREGORIAN","X-WR-CALNAME:Birthdays"];
   for(const c of ALL){const b=bdayParts(c.birthday);if(!b)continue;const yr=b.y&&b.y>=1900?b.y:y;const s=new Date(yr,b.m-1,b.d),e=new Date(yr,b.m-1,b.d+1);const who=display(c);
     L.push("BEGIN:VEVENT",`UID:bday-${c.id}@iq-contacts`,`DTSTAMP:${st}`,`DTSTART;VALUE=DATE:${dt(s)}`,`DTEND;VALUE=DATE:${dt(e)}`,"RRULE:FREQ=YEARLY",
       `SUMMARY:${icsEsc(who+"'s birthday")}`,"TRANSP:TRANSPARENT","BEGIN:VALARM","ACTION:DISPLAY",`DESCRIPTION:${icsEsc(who+"'s birthday")}`,"TRIGGER:PT9H","END:VALARM","END:VEVENT");}
@@ -2176,7 +2176,7 @@ $("bIcs").addEventListener("click",()=>{const now=new Date(),y=now.getFullYear()
 function doPrint(html){const pa=$("printArea");pa.innerHTML=html;setTimeout(()=>{window.print();},60);}
 window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";const st=$("cfPageCss");if(st)st.remove();});
 function printRoster(cards,title){cards=uniqSorted(cards);
-  let h=`<h1>${esc(title||"Contacts")}</h1><p class="sub">Printed ${esc(longDate(Date.now()))} at ${hhmm(Date.now())} · ${cards.length} ${cards.length===1?"person":"people"} · IQ Contacts</p><table><thead><tr><th style="width:26%">Name</th><th style="width:30%">Phone</th><th style="width:26%">Email</th><th>Notes</th></tr></thead><tbody>`;
+  let h=`<h1>${esc(title||"Contacts")}</h1><p class="sub">Printed ${esc(longDate(Date.now()))} at ${hhmm(Date.now())} · ${cards.length} ${cards.length===1?"person":"people"} · CONTACTS</p><table><thead><tr><th style="width:26%">Name</th><th style="width:30%">Phone</th><th style="width:26%">Email</th><th>Notes</th></tr></thead><tbody>`;
   let last="";
   for(const c of cards){const L=letterOf(c);if(L!==last){h+=`<tr class="let"><td colspan="4">${L}</td></tr>`;last=L;}
     const org=[c.title,c.company].filter(Boolean).join(", ");const note=(c.notes||"").replace(/\s*\n\s*/g," ");
@@ -2191,7 +2191,7 @@ function printCases(cards,title){cards=uniqSorted(cards);const now=Date.now();
   const stampL=`printed ${esc(longDate(now))} ${hhmm(now)}`;
   let h="";
   if(cards.length>1){
-    h+=`<section class="case cover">${top}<div class="cv"><p class="cf-k">IQ CONTACTS</p><h1>CASE FILES</h1><p class="cf-org">${esc(title)}</p><p class="cf-meta">${cards.length} files · ${stampL}</p></div>${ban?`<p class="cf-end">${esc(ban)}</p>`:""}</section>`;
+    h+=`<section class="case cover">${top}<div class="cv"><p class="cf-k">INTER-Q LABS</p><h1>CASE FILES</h1><p class="cf-org">${esc(title)}</p><p class="cf-meta">${cards.length} files · ${stampL}</p></div>${ban?`<p class="cf-end">${esc(ban)}</p>`:""}</section>`;
     h+=`<section class="case">${top}<h2>Index</h2><table class="ix"><thead><tr><th>Case</th><th>Name</th><th>Affiliation</th><th>Relationship</th><th>Last contact</th></tr></thead><tbody>`+
       cards.map((c)=>{const ll=lastLog(c);return `<tr><td>${esc(c.caseNo)}</td><td>${esc(display(c))}</td><td>${esc((c.facts.affil&&c.facts.affil.v)||c.company)}</td><td>${esc(c.facts.rel?c.facts.rel.v:"")}</td><td>${ll?esc(ll.d):""}</td></tr>`;}).join("")+
       `</tbody></table>${ban?`<p class="cf-end">${esc(ban)}</p>`:""}</section>`;}
@@ -2278,7 +2278,7 @@ $("sndSeg").addEventListener("click",(e)=>{const b=e.target.closest("button");if
 $("zIn").addEventListener("input",()=>{$("zGo").disabled=$("zIn").value.trim().toUpperCase()!=="ERASE";});
 $("zGo").addEventListener("click",async()=>{snapshot("Undo erase");await DB.clear("cards");await DB.clear("gone");ALL=[];GONE=new Map();sealSnap();$("dlgErase").close();GROUP="";setQuery("");toast("All cards erased from this device.","Undo",undoSnap,12000);});
 $("mMail").addEventListener("click",(e)=>{e.preventDefault();const to=["inter-q","aol.com"].join(String.fromCharCode(64));
-  location.href=`mailto:${to}?subject=${encodeURIComponent("IQ Contacts feedback")}`;});
+  location.href=`mailto:${to}?subject=${encodeURIComponent("CONTACTS feedback")}`;});
 
 /* ================= check for update =================
    Asks the site for the newest page and compares build stamps. Only reloads when there's a newer build. */
@@ -2333,5 +2333,6 @@ if(window.ResizeObserver)new ResizeObserver(()=>layout()).observe(stage);
 })();
 
 </script>
+<script src="/prompt.js"></script>
 </body>
 </html>

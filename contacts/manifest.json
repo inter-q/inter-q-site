@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "IQ Contacts",
-  "short_name": "IQ Contacts",
+  "name": "CONTACTS",
+  "short_name": "CONTACTS",
   "description": "A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.",
   "start_url": "./",
   "scope": "./",

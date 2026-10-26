@@ -1,10 +1,10 @@
-// IQ Contacts — keeps a copy of the app so it opens instantly and offline.
+// CONTACTS — keeps a copy of the app so it opens instantly and offline.
 // The saved copy opens right away; a fresh copy is fetched in the background, and if it's a newer build the app
 // shows "A new version is ready" with a Reload button. The app makes no other network requests: your cards are never sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "iqcontacts-v5";
+const CACHE = "iqcontacts-v7";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
-  "./manifest.json", "./qrcode.min.js", "./iqc.svg",
+  "./manifest.json", "./qrcode.min.js", "./iqc.svg", "../prompt.js",
   "./iqc-32.png", "./iqc-48.png", "./iqc-180.png", "./iqc-192.png", "./iqc-512.png", "./iqc-maskable-512.png"];
 
 self.addEventListener("install", (e) => {
@@ -20,7 +20,7 @@ self.addEventListener("activate", (e) => {
     for (const k of await caches.keys()) {
       if (k.startsWith("iqcontacts-")) { if (k !== CACHE) await caches.delete(k); continue; }
       // 25 Oct 2026: another app's files were briefly published in this folder. Drop any copy of them saved under
-      // this folder by another app's cache, so only IQ Contacts' own saved copy is ever served here.
+      // this folder by another app's cache, so only CONTACTS' own saved copy is ever served here.
       const c = await caches.open(k);
       for (const req of await c.keys()) if (new URL(req.url).pathname.startsWith(SCOPE)) await c.delete(req);
     }
