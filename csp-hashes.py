@@ -14,7 +14,7 @@ FEEDS = ("https://nominatim.openstreetmap.org https://ipapi.co https://api.open-
          "https://api.weather.gov https://api.bart.gov https://www.fema.gov https://www.gdacs.org "
          "https://eonet.gsfc.nasa.gov")
 POLICY = {
-    "index.html": "default-src 'self'; script-src {h}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+    "index.html": "default-src 'self'; script-src 'self' {h}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
                   "font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'",
     "tools/index.html": "default-src 'self'; script-src 'self' {h}; style-src 'self' 'unsafe-inline'; "
                         "img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; "
