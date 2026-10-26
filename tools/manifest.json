@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Inter-Q Field Kit",
-  "short_name": "IQ Kit",
+  "name": "TOOLS",
+  "short_name": "TOOLS",
   "description": "Reports, OSINT, search builder, AI prompts and field tools. Works offline.",
   "start_url": "./",
   "scope": "./",

@@ -1,11 +1,11 @@
-// IQ Kit — keeps a copy of the toolkit page so the app opens offline.
+// TOOLS — keeps a copy of the toolkit page so the app opens offline.
 // The page opens straight from the saved copy (fast on phones and on a weak signal); the newest page is downloaded in the
 // background, and the open page is told when a new build has arrived so it can offer a reload.
 // Live feeds and lookups (weather, news, maps, AI sites) always go straight to the network and are never stored.
 // Bump CACHE whenever a file in CORE changes, so installed apps pick up the new copy.
-const CACHE = "iqkit-v10";
+const CACHE = "iqkit-v12";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
-  "./manifest.json", "./qrcode.min.js",
+  "./manifest.json", "./qrcode.min.js", "../prompt.js",
   "./iqkit-32.png", "./iqkit-48.png", "./iqkit-home-180.png", "./iqkit-home-512.png", "./iqkit-app-192.png", "./iqkit-app-512.png", "./iqkit-app-maskable-512.png"];
 
 self.addEventListener("install", (e) => {
