@@ -1374,6 +1374,7 @@ window.iqFrame=function(host,mark,foot){
             <option value="pw">Passwords (generate &amp; check strength)</option>
             <option value="morse">Morse &amp; phonetic</option>
             <option value="qr">QR code generator</option>
+            <option value="lookup">LOOKUP (large text file viewer &amp; search)</option>
           </optgroup>
         </select>
         <button class="btn" id="toolAll" type="button" hidden>&#9664;&#xFE0E; All tools</button>
@@ -3010,6 +3011,133 @@ document.addEventListener("toggle",(e)=>{ const d=e.target; if(d&&d.dataset&&d.d
     openDescriber("Add to SALUTE",(t,ty)=>{ const f=fld(ty); f.value=dsAppend(f.value,t); f.dispatchEvent(new Event("input",{bubbles:true})); },(ty)=>dsCount(fld(ty).value,ty));
   });
   const toolDefs={
+    lookup(){
+      host.innerHTML="";
+      const d=el(`<div class="toolpane">
+        <div class="full muted" style="margin-bottom:6px">Open a big text file to read it or search inside it — even files too large for Notepad. Your file stays on this computer; nothing is uploaded. Best on a desktop.</div>
+        <div class="full toolrow" id="lk_open">
+          <button class="btn" id="lk_pick" type="button">Open file…</button>
+          <input id="lk_file" type="file" accept=".txt,.csv,.tsv,.log,.json,text/*" hidden>
+          <span class="muted" id="lk_info">No file open. You can also drag a file here.</span>
+        </div>
+        <div class="full" id="lk_body" hidden>
+          <div class="toolrow full" style="flex-wrap:wrap;gap:6px">
+            <button class="btn" id="lk_top" type="button">&#8738; Top</button>
+            <button class="btn" id="lk_prev" type="button">&#9664; Prev</button>
+            <button class="btn" id="lk_next" type="button">Next &#9654;</button>
+            <button class="btn" id="lk_bot" type="button">Bottom &#8739;</button>
+            <span class="muted" id="lk_pos" style="margin-left:auto"></span>
+          </div>
+          <label class="f full">Jump through file<input id="lk_seek" class="fld" type="range" min="0" max="1000" value="0"></label>
+          <div class="full toolrow" style="flex-wrap:wrap;gap:6px">
+            <input id="lk_q" class="fld" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Find text…" style="flex:1;min-width:160px">
+            <label class="muted" style="display:flex;align-items:center;gap:4px"><input id="lk_case" type="checkbox"> Match case</label>
+            <button class="btn" id="lk_find" type="button">Find</button>
+            <button class="btn" id="lk_stop" type="button" hidden>Stop</button>
+          </div>
+          <div class="full muted" id="lk_prog" hidden style="margin-bottom:4px"></div>
+          <div class="full" id="lk_hits" style="max-height:200px;overflow:auto;display:none;border:1px solid #163;margin-bottom:6px"></div>
+          <div class="toolout full" id="lk_view" style="max-height:340px;overflow:auto;white-space:pre;font-family:ui-monospace,Menlo,Consolas,monospace">Open a file to begin.</div>
+        </div></div>`);
+      host.appendChild(d);
+
+      const VIEW=128*1024, WIN=4*1024*1024, OVL=64*1024, MAXHITS=500, MAXLINE=10000;
+      const dec=new TextDecoder("utf-8"), enc=new TextEncoder();
+      let file=null, size=0, viewStart=0, lastEnd=0, busy=false, stop=false, lastHits=[];
+
+      const fmt=(b)=>{ const u=["B","KB","MB","GB"]; let i=0,n=b; while(n>=1024&&i<3){n/=1024;i++;} return (i?n.toFixed(n<10?1:0):n)+" "+u[i]; };
+      const escH=(s)=>String(s).replace(/[&<>]/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+      const mark=(text,q)=>{ const cs=$("lk_case").checked; const hay=cs?text:text.toLowerCase(), n=cs?q:q.toLowerCase();
+        if(!n) return escH(text); let out="",i=0,idx;
+        while((idx=hay.indexOf(n,i))>=0){ out+=escH(text.slice(i,idx))+'<mark style="background:#9f6;color:#000">'+escH(text.slice(idx,idx+n.length))+"</mark>"; i=idx+n.length; }
+        return out+escH(text.slice(i)); };
+      const bytes=async(a,b)=>new Uint8Array(await file.slice(a,b).arrayBuffer());
+      const snap=async(off)=>{ if(off<=0) return 0; const from=Math.max(0,off-65536); const b=await bytes(from,off); const nl=b.lastIndexOf(10); return nl<0?from:from+nl+1; };
+
+      async function renderView(hl){
+        const start=viewStart, end=Math.min(size,start+VIEW);
+        let text=dec.decode(await bytes(start,end));
+        if(end<size){ const i=text.lastIndexOf("\n"); if(i>0) text=text.slice(0,i+1); }
+        lastEnd=start+enc.encode(text).length;
+        const v=$("lk_view");
+        if(hl){ v.innerHTML=mark(text,hl); } else { v.textContent=text; }
+        v.scrollTop=0;
+        if(hl){ const m=v.querySelector("mark"); if(m) m.scrollIntoView({block:"center"}); }
+        $("lk_pos").textContent=`${fmt(start)}–${fmt(lastEnd)} of ${fmt(size)} · ${size?Math.round(start/size*100):0}%`;
+        $("lk_seek").value=String(Math.round((size?start/size:0)*1000));
+      }
+      let rendering=false, pending=null;
+      async function go(s,hl){ if(busy||!file) return; if(rendering){ pending=[s,hl]; return; } rendering=true;
+        viewStart=Math.max(0,Math.min(s,size)); if(viewStart>0) viewStart=await snap(viewStart); await renderView(hl||null);
+        rendering=false; if(pending){ const p=pending; pending=null; go(p[0],p[1]); } }
+
+      function renderHits(q,capped,stopped){
+        const box=$("lk_hits");
+        const head=`<div class="toolrow" style="position:sticky;top:0;background:#000;padding:5px 6px;border-bottom:1px solid #163;gap:6px"><button class="btn" id="lk_copyall" type="button">Copy all matches</button><span class="muted" id="lk_copymsg" style="margin-left:auto"></span></div>`;
+        if(!lastHits.length){ box.innerHTML=head+'<div class="muted" style="padding:6px">No matches.</div>'; return; }
+        box.innerHTML=head+lastHits.map((h,k)=>`<div class="lk-hit" data-i="${k}" style="display:flex;gap:8px;align-items:flex-start;padding:4px 6px;border-bottom:1px solid #163;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px"><span class="lk-line" style="flex:1;white-space:pre-wrap;word-break:break-all">${mark(h.line,q)}</span><button class="btn lk-go" type="button" title="Go to this spot in the file">Go</button><button class="btn lk-cp" type="button" title="Copy this line">Copy</button></div>`).join("");
+      }
+
+      async function find(){
+        const q=$("lk_q").value; if(!q||busy||!file) return;
+        busy=true; stop=false; $("lk_find").hidden=true; $("lk_stop").hidden=false;
+        const prog=$("lk_prog"); prog.hidden=false;
+        const box=$("lk_hits"); box.style.display="block"; box.innerHTML='<div class="muted" style="padding:6px">Searching…</div>';
+        const cs=$("lk_case").checked, needle=cs?q:q.toLowerCase();
+        const step=WIN-OVL; let readStart=0, capped=false; lastHits=[];
+        while(readStart<size && !stop){
+          const end=Math.min(size,readStart+WIN);
+          const raw=dec.decode(await bytes(readStart,end)), hay=cs?raw:raw.toLowerCase();
+          const newFrom=readStart===0?0:OVL;
+          let i=0,idx,prev=0,cum=0;
+          while((idx=hay.indexOf(needle,i))>=0){
+            if(idx>=newFrom){
+              cum+=enc.encode(raw.slice(prev,idx)).length; prev=idx;
+              let ls=raw.lastIndexOf("\n",idx-1)+1, le=raw.indexOf("\n",idx); if(le<0) le=raw.length;
+              let full=raw.slice(ls,le).replace(/\r$/,""); if(full.length>MAXLINE) full=full.slice(0,MAXLINE)+"…";
+              let line=full;
+              if(line.length>300){ const rel=idx-ls, a=Math.max(0,rel-120); line=(a>0?"…":"")+line.slice(a,rel+180)+(le-ls>a+300?"…":""); }
+              lastHits.push({off:readStart+cum, line, full});
+              if(lastHits.length>=MAXHITS){ capped=true; stop=true; break; }
+            }
+            i=idx+needle.length;
+          }
+          prog.textContent=`Searching… ${Math.round(end/size*100)}% · ${lastHits.length} match${lastHits.length===1?"":"es"}`;
+          await new Promise(r=>setTimeout(r,0));
+          if(end>=size) break;
+          readStart+=step;
+        }
+        const stopped=stop&&!capped;
+        renderHits(q,capped,stopped);
+        prog.textContent=`${stopped?"Stopped — ":""}${lastHits.length} match${lastHits.length===1?"":"es"}${capped?` (showing first ${MAXHITS} — narrow your search)`:""}.`;
+        busy=false; $("lk_find").hidden=false; $("lk_stop").hidden=true;
+      }
+
+      async function openFile(f){ file=f; size=f.size; viewStart=0; stop=false; busy=false; lastHits=[];
+        $("lk_info").textContent=`${f.name} · ${fmt(size)}`;
+        $("lk_body").hidden=false; $("lk_hits").style.display="none"; $("lk_prog").hidden=true; $("lk_q").value="";
+        await go(0); }
+
+      $("lk_pick").addEventListener("click",()=>$("lk_file").click());
+      $("lk_file").addEventListener("change",(e)=>{ const f=e.target.files[0]; if(f) openFile(f); });
+      const row=$("lk_open");
+      ["dragover","dragenter"].forEach(ev=>row.addEventListener(ev,(e)=>e.preventDefault()));
+      row.addEventListener("drop",(e)=>{ e.preventDefault(); const f=e.dataTransfer.files[0]; if(f) openFile(f); });
+      $("lk_top").addEventListener("click",()=>go(0));
+      $("lk_bot").addEventListener("click",()=>go(size-VIEW));
+      $("lk_prev").addEventListener("click",()=>go(viewStart-VIEW));
+      $("lk_next").addEventListener("click",()=>{ if(lastEnd<size) go(lastEnd); });
+      $("lk_seek").addEventListener("input",()=>go(Math.round((+$("lk_seek").value/1000)*size)));
+      $("lk_find").addEventListener("click",find);
+      $("lk_q").addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); find(); }});
+      $("lk_stop").addEventListener("click",()=>{ stop=true; });
+      $("lk_hits").addEventListener("click",async(e)=>{
+        if(e.target.id==="lk_copyall"){ icsCopy(lastHits.map(h=>h.full).join("\n"), $("lk_copymsg")); return; }
+        const r=e.target.closest(".lk-hit"); if(!r) return; const h=lastHits[+r.dataset.i]; if(!h) return;
+        if(e.target.classList.contains("lk-cp")){ icsCopy(h.full, $("lk_copymsg")); return; }
+        if(e.target.classList.contains("lk-go")){ let s=h.off-4000; if(s<0)s=0; await go(s,$("lk_q").value); }
+      });
+    },
     describe(){ host.innerHTML=""; host.appendChild(buildDescriber()); },
     unit(){
       const cats=Object.keys(UNITS).concat("Temperature");
