@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-DB2WEM6WTAmAfNY9webqqWIF69sz936AEIS0LR0ER1A='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-inmOzOdn6bzd3IX2d7sWEtrJmmcsKgkpPnLQvF/g4ag='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CONTACTS</title>
-<meta name="iqc-build" content="2026.10.25-2">
+<meta name="iqc-build" content="2026.10.28-1">
 <meta name="description" content="A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -694,7 +694,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     </div>
     <p class="note" style="margin-top:16px">Your cards are stored only on this device, in this app. Nothing is uploaded. <span id="mStore"></span> Back up now and then so you can restore them on another device.</p>
     <button class="mi danger" type="button" data-go="erase" style="margin-top:6px"><div><b>Erase all cards</b><span>Removes every card from this device</span></div></button>
-    <p class="note" style="margin-top:10px;text-align:center">CONTACTS by <a href="/" target="_blank" rel="noopener">Inter-Q Labs</a><br>Feedback: <a href="#" id="mMail">inter-q at aol</a></p>
+    <p class="note" style="margin-top:10px;text-align:center">CONTACTS by <a href="/" target="_blank" rel="noopener">Inter-Q Labs</a><br>Feedback: <a href="#" id="mMail">contact at inter-q.com</a></p>
   </div>
 </dialog>
 
@@ -2277,7 +2277,7 @@ $("mailSeg").addEventListener("click",(e)=>{const b=e.target.closest("button");i
 $("sndSeg").addEventListener("click",(e)=>{const b=e.target.closest("button");if(!b)return;SOUND=b.dataset.v==="on";LS.set("sound",SOUND?"on":"off");syncSeg("sndSeg",b.dataset.v);if(SOUND){audioInit();tick();}});
 $("zIn").addEventListener("input",()=>{$("zGo").disabled=$("zIn").value.trim().toUpperCase()!=="ERASE";});
 $("zGo").addEventListener("click",async()=>{snapshot("Undo erase");await DB.clear("cards");await DB.clear("gone");ALL=[];GONE=new Map();sealSnap();$("dlgErase").close();GROUP="";setQuery("");toast("All cards erased from this device.","Undo",undoSnap,12000);});
-$("mMail").addEventListener("click",(e)=>{e.preventDefault();const to=["inter-q","aol.com"].join(String.fromCharCode(64));
+$("mMail").addEventListener("click",(e)=>{e.preventDefault();const to=["contact","inter-q.com"].join(String.fromCharCode(64));
   location.href=`mailto:${to}?subject=${encodeURIComponent("CONTACTS feedback")}`;});
 
 /* ================= check for update =================

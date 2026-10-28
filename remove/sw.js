@@ -2,7 +2,7 @@
 // The saved copy opens right away; a fresh copy is fetched in the background, and if it's a newer build the app
 // shows "A new version is ready" with a Reload button. The app makes no other network requests: your progress is never sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "iqremove-v2";
+const CACHE = "iqremove-v3";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
   "./manifest.json", "./iqr.svg", "../prompt.js",
   "./iqr-32.png", "./iqr-48.png", "./iqr-180.png", "./iqr-192.png", "./iqr-512.png", "./iqr-maskable-512.png"];

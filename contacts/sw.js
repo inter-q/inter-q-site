@@ -2,7 +2,7 @@
 // The saved copy opens right away; a fresh copy is fetched in the background, and if it's a newer build the app
 // shows "A new version is ready" with a Reload button. The app makes no other network requests: your cards are never sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "iqcontacts-v7";
+const CACHE = "iqcontacts-v8";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
   "./manifest.json", "./qrcode.min.js", "./iqc.svg", "../prompt.js",
   "./iqc-32.png", "./iqc-48.png", "./iqc-180.png", "./iqc-192.png", "./iqc-512.png", "./iqc-maskable-512.png"];

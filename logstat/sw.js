@@ -2,7 +2,7 @@
 // Network first for the page itself, so a new upload to GitHub shows up the next time the app opens online.
 // The app makes no other network requests: nothing is sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "logstat-v12";
+const CACHE = "logstat-v13";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
   "./manifest.json", "./qrcode.min.js", "./pdf-lib.min.js", "../prompt.js",
   "./esad-form-1970.pdf", "./std-270-vehicle-accident-report.pdf", "./logstat-workflow.pdf",

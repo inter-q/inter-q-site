@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY=' 'sha256-CImZUapPo/sw2jj1l2w5v/m5HhKAGUqc1Dtw/Tw+yDU=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-Kd4vwJDGJsb8gzpJYhOGJEZ34MGCM87WaPYwqzkUqRA=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-CImZUapPo/sw2jj1l2w5v/m5HhKAGUqc1Dtw/Tw+yDU=' 'sha256-JdaGLXRb9tA1QSXpqjaXgUZx0F9atrAjP3lU3WfhWxw=' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-25 22:10">
+<meta name="logstat-build" content="2026-10-28 14:20">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -4663,7 +4663,7 @@ function openInstall(){
 // Feedback link: the address is assembled only when tapped, so spam bots reading the page can't collect it.
 (function(){
   const a=$("iqMail"); a.addEventListener("click",(e)=>{ e.preventDefault();
-    const to=["inter-q","aol.com"].join(String.fromCharCode(64)), m=document.querySelector('meta[name="logstat-build"]'), build=m?m.content:"?";
+    const to=["contact","inter-q.com"].join(String.fromCharCode(64)), m=document.querySelector('meta[name="logstat-build"]'), build=m?m.content:"?";
     const ua=navigator.userAgent, dev=/iPhone|iPad/.test(ua)?"iPhone/iPad":/Android/.test(ua)?"Android":/Mac/.test(ua)?"Mac":/Windows/.test(ua)?"Windows":"Other";
     const app=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true?"installed app":"browser";
     const subj=`LOGSTAT feedback (build ${build})`, body=`What happened or what would you like?\n\n\nWhich screen:\n\n---\nBuild: ${build}\nDevice: ${dev}, ${app}\nColor: ${document.documentElement.dataset.theme||"green"}`;

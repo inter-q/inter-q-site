@@ -2,10 +2,10 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-KAmc/Bln3tDYzbFCUoBGL49g/WEwLSFMOQXA1mA5yq4=' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-Il0nIsjKeZbobnTmQ5oe/g2ubG8K+TCPwmnbXlLQw+0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CRASH</title>
-<meta name="crash-build" content="2026.10.25-4">
+<meta name="crash-build" content="2026.10.28-1">
 <meta name="description" content="Collision speed calculator: skid marks, combined surfaces, drag factor, yaw marks and stopping distance, with the work shown. Works offline; your case stays on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -1328,7 +1328,7 @@ $("icardPrint").addEventListener("click",()=>{ const src=$("icardQR"), img=src.q
     catch(_){ say("Couldn't reach the site. Using the saved copy."); }
     btn.disabled=false; }); })();
 $("iqMail").addEventListener("click",(e)=>{ e.preventDefault();
-  const to=["inter-q","aol.com"].join(String.fromCharCode(64)), m=document.querySelector('meta[name="crash-build"]'), build=m?m.content:"?";
+  const to=["contact","inter-q.com"].join(String.fromCharCode(64)), m=document.querySelector('meta[name="crash-build"]'), build=m?m.content:"?";
   const ua=navigator.userAgent, dev=/iPhone|iPad/.test(ua)?"iPhone/iPad":/Android/.test(ua)?"Android":/Mac/.test(ua)?"Mac":/Windows/.test(ua)?"Windows":"Other";
   const app=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true?"installed app":"browser";
   location.href=`mailto:${to}?subject=${encodeURIComponent(`CRASH feedback (build ${build})`)}&body=${encodeURIComponent(`What happened or what would you like?\n\n\nWhich screen: ${CUR}\n\n---\nBuild: ${build}\nDevice: ${dev}, ${app}\nColor: ${document.documentElement.dataset.theme||"green"}`)}`; });

@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-FPwBhv1ycm7GBS4CAzRmocwRudxu9t484d97RnPOVPk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-NSv/oHz5RuR9wcjwWypNAX8PX/ypa/6Zf9GogCjudl8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>REMOVE</title>
-<meta name="iqr-build" content="2026.10.25-3">
+<meta name="iqr-build" content="2026.10.28-1">
 <meta name="description" content="Data removal tracker: get your personal information off people-search sites and data brokers, and check that it stays gone. Works offline; your progress stays on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -643,7 +643,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     </div>
     <p class="note" style="margin-top:16px">Your progress is stored only on this device, in this app. Nothing is uploaded. <span id="mStore"></span> Save to a file now and then so you can open it on another device. This record shows where your information lives, so use a passphrase.</p>
     <button class="mi danger" type="button" data-go="erase" style="margin-top:6px"><div><b>Clear all progress</b><span>Statuses, dates, notes, your details and added sites</span></div></button>
-    <p class="note" style="margin-top:10px;text-align:center">REMOVE by <a href="/" target="_blank" rel="noopener">Inter-Q Labs</a><br>Feedback: <a href="#" id="mMail">inter-q at aol</a></p>
+    <p class="note" style="margin-top:10px;text-align:center">REMOVE by <a href="/" target="_blank" rel="noopener">Inter-Q Labs</a><br>Feedback: <a href="#" id="mMail">contact at inter-q.com</a></p>
   </div>
 </dialog>
 
@@ -1406,7 +1406,7 @@ $("rcSeg").addEventListener("click",(e)=>{const b=e.target.closest("button");if(
 $("sndSeg").addEventListener("click",(e)=>{const b=e.target.closest("button");if(!b)return;SOUND=b.dataset.v==="on";LS.set("sound",SOUND?"on":"off");syncSeg("sndSeg",b.dataset.v);if(SOUND){audioInit();tick();}});
 $("zIn").addEventListener("input",()=>{$("zGo").disabled=$("zIn").value.trim().toUpperCase()!=="CLEAR";});
 $("zGo").addEventListener("click",()=>{snapshot("Undo clear");S=fresh();buildSites();bump();$("dlgErase").close();FILT="";LS.set("filter","");setQuery("");goTo(0,true);toast("All progress cleared from this device.","Undo",undoSnap,12000);});
-$("mMail").addEventListener("click",(e)=>{e.preventDefault();const to=["inter-q","aol.com"].join(String.fromCharCode(64));
+$("mMail").addEventListener("click",(e)=>{e.preventDefault();const to=["contact","inter-q.com"].join(String.fromCharCode(64));
   location.href=`mailto:${to}?subject=${encodeURIComponent("REMOVE feedback")}`;});
 
 /* ================= check for update =================

@@ -2,7 +2,7 @@
 // The saved copy opens right away; a fresh copy is fetched in the background, and if it's a newer build the app
 // shows "A new version is ready" with a Reload button. The app makes no other network requests: your case is never sent anywhere.
 // Bump CACHE whenever a file in CORE other than index.html changes, so installed apps pick up the new copy.
-const CACHE = "crash-v3";
+const CACHE = "crash-v4";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
   "./manifest.json", "./qrcode.min.js", "./install/index.html", "../prompt.js",
   "./crash-32.png", "./crash-48.png", "./crash-180.png", "./crash-192.png", "./crash-512.png", "./crash-maskable-512.png"];
