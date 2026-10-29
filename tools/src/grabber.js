@@ -1,4 +1,4 @@
-function iqGrabber(){
+function iqGrabber(cfg){
   "use strict";
   var W=window, d=document, root=d.documentElement;
   if(W.__iqGrabber&&typeof W.__iqGrabber.stop==="function"){ W.__iqGrabber.stop(); return; }
@@ -173,6 +173,7 @@ function iqGrabber(){
     ".ft{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:8px 10px;border-top:1px solid #1d5a33}"+
     ".m{font-size:12px;color:#c9fbd9;min-height:1em;flex:1 1 100%}"+
     ".e{padding:16px 10px;color:#8fc9a3}"+
+    ".cb{flex:1 1 100%;width:100%;font:11px/1.4 ui-monospace,Consolas,Menlo,monospace;color:#c9fbd9;background:#000;border:1px solid #2f9a57;padding:4px 6px;display:none;resize:vertical;margin:0;border-radius:0}"+
     ".cat{position:fixed;inset:0;pointer-events:auto;cursor:crosshair;background:transparent;display:none;z-index:1}"+
     ".box{position:fixed;pointer-events:none;border:2px solid #5fe08c;background:rgba(95,224,140,.16);display:none;z-index:1}"+
     ".tip{position:fixed;left:50%;top:10px;transform:translateX(-50%);pointer-events:none;background:#5fe08c;color:#03140a;font:12px/1.4 ui-monospace,Consolas,Menlo,monospace;padding:4px 10px;display:none;z-index:3}";
@@ -187,7 +188,8 @@ function iqGrabber(){
   fl.appendChild(q); fl.appendChild(smallL);
   var pickInfo=mk("div","fl"); pickInfo.style.display="none"; var piT=mk("span","","",{}), piAll=mk("button","o","Show all",{type:"button"}); piT.style.cssText="font-size:12px;color:#ffcf6b;flex:1"; pickInfo.appendChild(piT); pickInfo.appendChild(piAll);
   var ls=mk("div","ls"), ft=mk("div","ft"), selAll=mk("button","o","Select all shown",{type:"button"}), bSel=mk("button","","Save selected",{type:"button",disabled:""}), msg=mk("div","m","",{"aria-live":"polite"});
-  ft.appendChild(selAll); ft.appendChild(bSel); ft.appendChild(msg);
+  var bY=mk("button","o","yt-dlp",{type:"button",title:"Copy a yt-dlp command for this page — for streamed video GRABBER can't save itself"}), cmdBox=mk("textarea","cb","",{readonly:"",rows:"3","aria-label":"yt-dlp command",spellcheck:"false"});
+  ft.appendChild(selAll); ft.appendChild(bSel); ft.appendChild(bY); ft.appendChild(cmdBox); ft.appendChild(msg);
   [hd,fl,pickInfo,ls,ft].forEach(function(x){ P.appendChild(x); });
   sh.appendChild(cat); sh.appendChild(box); sh.appendChild(tip); sh.appendChild(P);
   var rs=getComputedStyle(root), rootOdd=(rs.transform!=="none"||rs.filter!=="none"||rs.perspective!=="none"||/paint|layout|strict|content/.test(rs.contain||""));
@@ -246,8 +248,8 @@ function iqGrabber(){
   function noSave(it){ return it.kind==="stream"||it.ms; }
   function paintWarn(it){ var r=rowOf[it.key]; if(!r) return; var w=r.querySelector(".w"); while(w.firstChild) w.removeChild(w.firstChild);
     var sb=r.querySelector(".bt button"), cb=r.querySelector("input[type=checkbox]");
-    if(it.kind==="stream") w.textContent="Streaming playlist — the video comes in many small pieces, so it can't be saved as one file here.";
-    else if(it.ms) w.textContent="Streamed by the player — it isn't one file, so it can't be saved.";
+    if(it.kind==="stream"||it.ms){ w.appendChild(d.createTextNode(it.kind==="stream"?"Streaming playlist — the video comes in many small pieces, so GRABBER can't save it as one file. yt-dlp can: ":"Streamed by the player — it isn't one file, so GRABBER can't save it. yt-dlp can: "));
+      var yb=mk("button","","Copy yt-dlp command",{type:"button",title:"Copies a command that downloads this page's video with yt-dlp, using your name"}); yb.addEventListener("click",function(){ ytCopy(it); }); w.appendChild(yb); }
     else if(it.fail==="bad") w.textContent="This file's data is damaged, so it can't be saved.";
     else if(it.fail&&it.fail.indexOf("http")===0) w.textContent="The website didn't send this file (error "+it.fail.slice(5)+"). It may have moved — try Rescan.";
     else if(it.fail==="cors"){ w.appendChild(d.createTextNode("This site won't let GRABBER save it directly. "));
@@ -349,6 +351,23 @@ function iqGrabber(){
       var it=L[i++];
       save(it,used).then(function(r){ if(r) ok++; else bad++; if(!dead) setTimeout(next,350); }); })();
   }
+  /* ---------- yt-dlp: for video GRABBER can't save itself ---------- */
+  var Y=cfg&&typeof cfg==="object"?cfg:{}, yMac=Y.os?Y.os==="mac":/Mac/i.test(navigator.platform||"");
+  var yDir=String(typeof Y.dir==="string"&&Y.dir?Y.dir:(yMac?"~/Downloads":"~\\Downloads")).replace(/["$%`!\u0000-\u001f\u2018-\u201f]/g,"").replace(/[\\/]+$/,"")||(yMac?"~/Downloads":"~\\Downloads");
+  // Only the options the TOOLS page itself uses are accepted from the bookmark.
+  var YOK={"-S":1,"-x":1,"--audio-format":1,"--audio-quality":1,"--embed-thumbnail":1,"--embed-metadata":1,"--merge-output-format":1,"--remux-video":1,"--write-subs":1,"--write-auto-subs":1,"--sub-langs":1,"--embed-subs":1,"--compat-options":1,"--ignore-errors":1};
+  function yArgs(a,d0){ return Array.isArray(a)&&a.length&&a.every(function(x){ return typeof x==="string"&&(x.charAt(0)==="-"?YOK[x]===1:/^[A-Za-z0-9_.:,*+-]+$/.test(x)); })?a:d0; }
+  var yV=yArgs(Y.v,["-S","res:1080,vcodec:h264,ext:mp4:m4a","--merge-output-format","mp4","--remux-video","mp4"]), yA=yArgs(Y.a,["-x","--audio-format","mp3","--audio-quality","0"]);
+  function yq(x){ x=String(x).replace(/[\u0000-\u001f]/g,""); if(/^[A-Za-z0-9_.:=+\/-]+$/.test(x)) return x; return yMac?"'"+x.replace(/'/g,"'\\''")+"'":'"'+x.replace(/["$`!\u2018-\u201f]/g,"")+'"'; }
+  function yName(n){ return String(n||"").replace(/[\\/:*?"<>|$%`!\u0000-\u001f\u2018-\u201f]+/g,"-").replace(/\.(mp4|mkv|webm|mov|mp3|m4a|aac|opus|ogg|wav|flac|m3u8|mpd)$/i,"").trim().replace(/[. -]+$/,"").replace(/^[. -]+/,"").slice(0,150); }
+  function yUrl(u){ u=String(u).replace(/(?:%[89a-f][0-9a-f])+/gi,function(r){ try{ return decodeURIComponent(r); }catch(_){ return r; } }).replace(/[\u2018-\u201f]/g,encodeURIComponent);
+    return u.replace(/["'`$!\\<>^|\s]/g,function(c){ return c.charCodeAt(0)>127?encodeURIComponent(c):"%"+("0"+c.charCodeAt(0).toString(16).toUpperCase()).slice(-2); }); }
+  function ytCmd(it){ var nm=it&&it.typed?yName(it.name):"", a=["yt-dlp"].concat(it&&it.kind==="audio"?yA:yV,["--no-playlist","-P",yDir,"-o",(nm||"%(title)s")+".%(ext)s",yUrl(location.href)]);
+    return a.map(function(x,i){ return i?yq(x):x; }).join(" "); }
+  function ytCopy(it){ var c=ytCmd(it), help="Paste it into Terminal and press Enter (needs yt-dlp — see GRABBER in inter-q.com/tools).";
+    cmdBox.value=c; cmdBox.style.display="block"; try{ cmdBox.focus({preventScroll:true}); cmdBox.select(); }catch(_){}
+    try{ navigator.clipboard.writeText(c).then(function(){ say("yt-dlp command copied. "+help); },function(){ say("Press Ctrl+C to copy the command. "+help); }); }catch(_){ say("Press Ctrl+C to copy the command. "+help); } }
+  bY.addEventListener("click",function(){ ytCopy(null); });
   /* ---------- on the page ---------- */
   function drawBox(el){ try{ var r=rectOf(el); drawRect(r); }catch(_){ box.style.display="none"; } }
   function drawRect(r){ box.style.display="block"; box.style.left=r.left/kz+"px"; box.style.top=r.top/kz+"px"; box.style.width=Math.max(r.width,4)/kz+"px"; box.style.height=Math.max(r.height,4)/kz+"px"; }
