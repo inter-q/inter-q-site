@@ -350,9 +350,27 @@ function iqGrabber(){
       save(it,used).then(function(r){ if(r) ok++; else bad++; if(!dead) setTimeout(next,350); }); })();
   }
   /* ---------- on the page ---------- */
-  function drawBox(el){ try{ var r=rectOf(el); box.style.display="block"; box.style.left=r.left/kz+"px"; box.style.top=r.top/kz+"px"; box.style.width=Math.max(r.width,4)/kz+"px"; box.style.height=Math.max(r.height,4)/kz+"px"; }catch(_){ box.style.display="none"; } }
-  function showOn(it){ var el=it.els.filter(conn)[0]; if(!el) return; try{ el.scrollIntoView({block:"center",behavior:"smooth"}); }catch(_){ try{ el.scrollIntoView(); }catch(__){} }
-    clearTimeout(hlT); var t0=Date.now(); (function f(){ drawBox(el); if(Date.now()-t0<2200) hlT=setTimeout(f,50); else box.style.display="none"; })(); }
+  function drawBox(el){ try{ var r=rectOf(el); drawRect(r); }catch(_){ box.style.display="none"; } }
+  function drawRect(r){ box.style.display="block"; box.style.left=r.left/kz+"px"; box.style.top=r.top/kz+"px"; box.style.width=Math.max(r.width,4)/kz+"px"; box.style.height=Math.max(r.height,4)/kz+"px"; }
+  function vis(el){ try{ var r=rectOf(el); if(!(r.width>0&&r.height>0)) return false; if(el.checkVisibility) return el.checkVisibility({opacityProperty:true,visibilityProperty:true}); var cs=getComputedStyle(el); return cs.visibility!=="hidden"&&cs.display!=="none"; }catch(_){ return false; } }
+  // The part of the item you can actually see: cut down by the window and by any box around it that hides overflow (slideshows, scrolling panels).
+  function seen(el){ var r=rectOf(el), L=r.left, T=r.top, R=r.right, B=r.bottom, a=up(el), n=0;
+    while(a&&a!==root&&n<60){ try{ var cs=getComputedStyle(a); if(cs.overflowX!=="visible"||cs.overflowY!=="visible"||cs.overflow==="clip"){ var q=rectOf(a); L=Math.max(L,q.left); T=Math.max(T,q.top); R=Math.min(R,q.right); B=Math.min(B,q.bottom); } }catch(_){} a=up(a); n++; }
+    L=Math.max(L,0); T=Math.max(T,0); R=Math.min(R,W.innerWidth*kz); B=Math.min(B,W.innerHeight*kz);
+    return R-L>2&&B-T>2?{left:L,top:T,width:R-L,height:B-T,right:R,bottom:B}:null; }
+  function showOn(it){
+    var all=it.els.filter(conn), el=all.filter(vis)[0];
+    if(!el){ // a closed "more" section: open it
+      for(var i=0;i<all.length&&!el;i++){ var a=up(all[i]), opened=false; while(a){ if(tagOf(a).toUpperCase()==="DETAILS"&&!a.open){ a.open=true; opened=true; } a=up(a); } if(opened&&vis(all[i])) el=all[i]; } }
+    clearTimeout(hlT); box.style.display="none";
+    if(!el){ say("It's on the page but hidden right now — in a menu, a slideshow, or a version of the page for another screen size."); return; }
+    try{ el.scrollIntoView({block:"center",inline:"nearest"}); }catch(_){ try{ el.scrollIntoView(); }catch(__){} }
+    var v=seen(el);
+    if(!v){ say("Found it, but it's hidden right now — probably another slide in a slideshow or out of view in a scrolling box."); return; }
+    var pr=P.getBoundingClientRect(); if(v.right>pr.left*kz&&v.left<pr.right*kz&&v.bottom>pr.top*kz){ side=side==="right"?"left":"right"; P.classList.toggle("left",side==="left"); say("Moved the panel so you can see it. ⇆ moves it back."); }
+    else say("Outlined on the page.");
+    var t0=Date.now(); (function f(){ var w=seen(el); if(w) drawRect(w); else box.style.display="none"; if(Date.now()-t0<2500) hlT=setTimeout(f,50); else box.style.display="none"; })();
+  }
   var pickOn=false, pcur=null;
   function under(x,y){ cat.style.pointerEvents="none"; P.style.visibility="hidden"; try{ var el=d.elementFromPoint(x,y), sr; while(el&&el!==host&&(sr=shadowOf(el))){ var inn=sr.elementFromPoint(x,y); if(!inn||inn===el) break; el=inn; } return el; } finally { cat.style.pointerEvents="auto"; P.style.visibility=""; } }
   function startPick(){ pickOn=true; cat.style.display="block"; tip.style.display="block"; P.style.opacity=".35"; bPick.textContent="Cancel pick"; }
