@@ -2,10 +2,10 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-Joh3jp0xK9/LQoxn8nGVsb/i/vAw5rhZYew/DgP3uag='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-Cpt1CpNgudFyQim885TLTy7q1H2ndOYvNGIZIYNqRvw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CRASH</title>
-<meta name="crash-build" content="2026.10.29-1">
+<meta name="crash-build" content="2026.10.29-2">
 <meta name="description" content="Collision speed calculator: skid marks, combined surfaces, drag factor, yaw marks and stopping distance, with the work shown. Works offline; your case stays on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -407,7 +407,11 @@ ol.steps li::marker { color:var(--ink-dim); }
       </div>
       <div id="iqHowWait" hidden><b>Chrome / Edge / Android</b><p style="margin:6px 0 0">If no install button appears after a few seconds, open the browser menu (<b>⋮</b> or <b>⋯</b>) and choose <b>Install CRASH</b>, <b>Install app</b> or <b>Add to Home screen</b>.</p></div>
       <div id="iqHowDone" hidden><b>CRASH is already installed.</b> You're using the app right now.</div>
-      <div id="iqHowOther" hidden>This browser can't install web apps. Open <b>inter-q.com/crash/install</b> in Chrome, Edge or Safari instead.</div>
+      <div id="iqHowOther" hidden>This browser can't install web apps. Open <b>inter-q.com/crash/install</b> in Chrome, Edge or Safari instead (or Firefox on Windows).</div>
+      <div id="iqHowFF" hidden><b>Firefox</b>
+        <p style="margin:6px 0 0"><b>Windows:</b> click the <b>Add tab to taskbar</b> button at the right end of the address bar, then pin the window it opens to your taskbar. Don't see the button? Update Firefox (menu <b>☰</b> → <b>Help</b> → <b>About Firefox</b>).</p>
+        <p style="margin:6px 0 0"><b>Android:</b> tap <b>⋮</b> → <b>Add to Home screen</b> (some versions say <b>Install</b> or <b>Add app to Home screen</b>).</p>
+        <p style="margin:6px 0 0"><b>Mac or Linux:</b> Firefox can't install it there yet. Keep using it here in Firefox, or open <b>inter-q.com/crash/install</b> in Chrome, Edge or Safari to install it.</p></div>
       <div id="iqHowIOS"><b>iPhone / iPad</b>
         <ol style="margin:6px 0 0;padding-left:22px;line-height:1.6">
           <li>Open this page in <b>Safari</b> (Chrome and Edge work too on iOS 16.4 and later).</li>
@@ -1296,9 +1300,9 @@ window.addEventListener("storage",(e)=>{ if(e.key!==KEY||!e.newValue||saveT) ret
 // ================= INSTALL, OFFLINE COPY, UPDATES, FEEDBACK =================
 function openInstall(){ const how=$("iqHowto"), standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
   const ua=navigator.userAgent, ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-  const macSafari=!ios&&/Macintosh/.test(ua)&&/Safari\//.test(ua)&&!/Chrome|Chromium|Edg|OPR|Firefox/.test(ua), chromium=!ios&&/Chrome|Chromium|Edg|SamsungBrowser/.test(ua);
-  const show=(id)=>["iqHowGo","iqHowWait","iqHowDone","iqHowOther","iqHowIOS","iqHowMac"].forEach((k)=>{ $(k).hidden=k!==id; });
-  show(standalone?"iqHowDone":ios?"iqHowIOS":macSafari?"iqHowMac":INSTALL_EV?"iqHowGo":chromium?"iqHowWait":"iqHowOther"); openInstall.show=show;
+  const macSafari=!ios&&/Macintosh/.test(ua)&&/Safari\//.test(ua)&&!/Chrome|Chromium|Edg|OPR|Firefox/.test(ua), chromium=!ios&&/Chrome|Chromium|Edg|SamsungBrowser/.test(ua), firefox=!ios&&/Firefox\//.test(ua);   // Firefox: its own steps
+  const show=(id)=>["iqHowGo","iqHowWait","iqHowDone","iqHowOther","iqHowIOS","iqHowMac","iqHowFF"].forEach((k)=>{ $(k).hidden=k!==id; });
+  show(standalone?"iqHowDone":ios?"iqHowIOS":macSafari?"iqHowMac":INSTALL_EV?"iqHowGo":firefox?"iqHowFF":chromium?"iqHowWait":"iqHowOther"); openInstall.show=show;
   how.hidden=false; const q=$("icardQR"); if(q&&!q.firstChild){ try{ new QRCode(q,{text:"https://inter-q.com/crash/install",width:130,height:130,correctLevel:QRCode.CorrectLevel.M}); }catch(_){ q.textContent="inter-q.com/crash/install"; } }
   if(location.hash==="#install"){ try{ history.replaceState(null,"",location.pathname+"#"+(CUR||"home")); }catch(_){} }
   setTimeout(()=>how.scrollIntoView({block:"start"}),50); }

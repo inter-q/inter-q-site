@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vtZfgG0qi6zwRfzyjZTgy53QJhuMH5mr0RMCLXQQ+5s='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/zWlzqJ7wkA1MY+BCzbdImUhhL54jnesm3Fbru7mwp8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>REMOVE</title>
-<meta name="iqr-build" content="2026.10.29-1">
+<meta name="iqr-build" content="2026.10.29-2">
 <meta name="description" content="Data removal tracker: get your personal information off people-search sites and data brokers, and check that it stays gone. Works offline; your progress stays on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -724,7 +724,8 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     <div id="nGo" hidden><p>Install REMOVE as an app on this device. It opens in its own window and works offline.</p><button class="btn primary" id="nBtn" type="button">Install app</button></div>
     <div id="nIOS" hidden><ol class="steps"><li>Open this page in <b>Safari</b></li><li>Tap the <b>Share</b> button</li><li>Tap <b>Add to Home Screen</b>, then <b>Add</b></li><li>Open REMOVE from the Home Screen and track your progress <b>there</b>. Progress saved in a Safari tab stays in Safari.</li></ol></div>
     <div id="nMac" hidden><ol class="steps"><li>In Safari's menu bar, choose <b>File</b> → <b>Add to Dock</b></li></ol></div>
-    <div id="nOther" hidden><ol class="steps"><li>Open this page in <b>Chrome</b> or <b>Edge</b></li><li>Use the install icon in the address bar, or the browser menu → <b>Install REMOVE</b></li></ol></div>
+    <div id="nOther" hidden><ol class="steps"><li>Open this page in <b>Chrome</b> or <b>Edge</b> (or Firefox on Windows)</li><li>Use the install icon in the address bar, or the browser menu → <b>Install REMOVE</b></li></ol></div>
+    <div id="nFF" hidden><p><b>Firefox</b></p><ol class="steps"><li><b>Windows:</b> click the <b>Add tab to taskbar</b> button at the right end of the address bar, then pin the window it opens to your taskbar. No button? Update Firefox (menu <b>☰</b> → <b>Help</b> → <b>About Firefox</b>).</li><li><b>Android:</b> tap <b>⋮</b> → <b>Add to Home screen</b> (some versions say <b>Install</b> or <b>Add app to Home screen</b>).</li><li><b>Mac or Linux:</b> Firefox can't install it there yet. Keep using it in Firefox, or open this page in Chrome, Edge or Safari to install it.</li></ol></div>
     <p class="note" style="margin-top:14px">Install link: <b>inter-q.com/remove/install</b></p>
   </div>
 </dialog>
@@ -1442,8 +1443,9 @@ $("mMail").addEventListener("click",(e)=>{e.preventDefault();const to=["contact"
 /* ================= install ================= */
 let INSTALL_EV=null;
 function openInstall(){const macSafari=!isIOS&&/Macintosh/.test(UA)&&/Safari\//.test(UA)&&!/Chrome|Chromium|Edg|OPR|Firefox/.test(UA);
-  const show=standalone?"nDone":isIOS?"nIOS":macSafari?"nMac":INSTALL_EV?"nGo":"nOther";
-  ["nDone","nGo","nIOS","nMac","nOther"].forEach((k)=>{$(k).hidden=k!==show;});openDlg("dlgInstall");}
+  const firefox=!isIOS&&/Firefox\//.test(UA);   // Firefox: its own steps
+  const show=standalone?"nDone":isIOS?"nIOS":macSafari?"nMac":INSTALL_EV?"nGo":firefox?"nFF":"nOther";
+  ["nDone","nGo","nIOS","nMac","nOther","nFF"].forEach((k)=>{$(k).hidden=k!==show;});openDlg("dlgInstall");}
 window.addEventListener("beforeinstallprompt",(e)=>{e.preventDefault();INSTALL_EV=e;});
 {const f=$("instFoot");if(f){if(standalone)f.parentElement.hidden=true;else f.addEventListener("click",openInstall);}}   /* the link under A–Z: hidden in the installed app */
 window.addEventListener("appinstalled",()=>{INSTALL_EV=null;if($("dlgInstall").open)openInstall();});
