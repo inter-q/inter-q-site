@@ -2,10 +2,10 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-Il0nIsjKeZbobnTmQ5oe/g2ubG8K+TCPwmnbXlLQw+0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-Joh3jp0xK9/LQoxn8nGVsb/i/vAw5rhZYew/DgP3uag='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CRASH</title>
-<meta name="crash-build" content="2026.10.28-1">
+<meta name="crash-build" content="2026.10.29-1">
 <meta name="description" content="Collision speed calculator: skid marks, combined surfaces, drag factor, yaw marks and stopping distance, with the work shown. Works offline; your case stays on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -1311,6 +1311,7 @@ window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); INSTALL
 window.addEventListener("appinstalled",()=>{ INSTALL_EV=null; if(!$("iqHowto").hidden&&openInstall.show) openInstall.show("iqHowDone"); });
 $("iqInstall").addEventListener("click",async()=>{ if(!INSTALL_EV) return; INSTALL_EV.prompt(); let okk=false; try{ okk=(await INSTALL_EV.userChoice).outcome==="accepted"; }catch(_){} INSTALL_EV=null; openInstall.show(okk?"iqHowDone":"iqHowWait"); });
 $("iqInstLink").addEventListener("click",(e)=>{ e.preventDefault(); openInstall(); });
+if(matchMedia("(display-mode: standalone)").matches||navigator.standalone===true) $("iqInstLink").hidden=true;   // already the installed app
 $("icardPrint").addEventListener("click",()=>{ const src=$("icardQR"), img=src.querySelector("img[src]")||src.querySelector("canvas"), url=img?(img.tagName==="IMG"?img.src:img.toDataURL()):"";
   const pa=$("printArea"); pa.dataset.card="1"; pa.innerHTML=`<div class="ws" style="display:flex;gap:16px;align-items:center;border:1px dashed #000;padding:14px;max-width:440px"><div><b style="font-size:17px">CRASH app</b><ol style="margin:4px 0 0;padding-left:18px"><li>Scan the code, or open <b style="white-space:nowrap">inter-q.com/crash/install</b></li><li>Tap <b>Install</b>, or Share → <b>Add to Home Screen</b></li></ol></div></div>`;
   if(url){ const im=document.createElement("img"); im.src=url; im.alt=""; im.width=120; im.height=120; pa.querySelector(".ws").prepend(im); } window.print(); });

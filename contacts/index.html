@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-inmOzOdn6bzd3IX2d7sWEtrJmmcsKgkpPnLQvF/g4ag='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-fU06wtb96BZwIRBA/k+mo1MA2WyDWTZfUXWO2GzqZos='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CONTACTS</title>
-<meta name="iqc-build" content="2026.10.28-1">
+<meta name="iqc-build" content="2026.10.29-1">
 <meta name="description" content="A card file for your contacts. Call, text or email from any card. Works offline; your cards stay on this device.">
 <meta name="theme-color" content="#03140a">
 <meta name="robots" content="noindex,nofollow">
@@ -278,6 +278,9 @@ a{color:var(--link)}
 /* ---- A–Z rail ---- */
 .az{position:relative;z-index:5;flex:none;display:flex;justify-content:space-between;width:calc(100% - 24px);max-width:728px;margin:8px auto 0;
   touch-action:none;user-select:none;-webkit-user-select:none}
+.instf{flex:none;text-align:center;margin:2px 0 0}.instf[hidden]{display:none}
+.instf button{background:none;border:0;color:var(--dim);font:400 12px/1.4 var(--mono);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 10px;border-radius:5px}
+.instf button:hover,.instf button:focus-visible{color:var(--ink)}
 .az button{flex:1;min-width:0;height:40px;border:0;background:none;color:var(--ink);font:700 13px/40px var(--mono);cursor:pointer;padding:0;border-radius:5px}
 .az button[disabled]{color:var(--disabled);cursor:default}
 .az button.on{background:var(--ink);color:var(--onink)}
@@ -553,6 +556,7 @@ select.in{appearance:none;-webkit-appearance:none;padding-right:26px;background:
     </div>
   </main>
   <nav class="az" id="az" aria-label="Jump to letter"></nav>
+  <div class="instf"><button type="button" id="instFoot">⬇︎ Install this app</button></div>
 </div>
 <div class="bubble" id="bubble" hidden></div>
 <div class="sr" id="live" aria-live="polite"></div>
@@ -2312,6 +2316,7 @@ function openInstall(){const macSafari=!isIOS&&/Macintosh/.test(UA)&&/Safari\//.
   const show=standalone?"nDone":isIOS?"nIOS":macSafari?"nMac":INSTALL_EV?"nGo":"nOther";
   ["nDone","nGo","nIOS","nMac","nOther"].forEach((k)=>{$(k).hidden=k!==show;});openDlg("dlgInstall");}
 window.addEventListener("beforeinstallprompt",(e)=>{e.preventDefault();INSTALL_EV=e;});
+{const f=$("instFoot");if(f){if(standalone)f.parentElement.hidden=true;else f.addEventListener("click",openInstall);}}   /* the link under A–Z: hidden in the installed app */
 window.addEventListener("appinstalled",()=>{INSTALL_EV=null;if($("dlgInstall").open)openInstall();});
 $("nBtn").addEventListener("click",async()=>{if(!INSTALL_EV)return;INSTALL_EV.prompt();try{await INSTALL_EV.userChoice;}catch(_){}INSTALL_EV=null;openInstall();});
 

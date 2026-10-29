@@ -2,13 +2,13 @@
 <html lang="en" data-theme="green">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-CImZUapPo/sw2jj1l2w5v/m5HhKAGUqc1Dtw/Tw+yDU=' 'sha256-JdaGLXRb9tA1QSXpqjaXgUZx0F9atrAjP3lU3WfhWxw=' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n87Ym/HTZbHxB+CseyHy2yxQwq0QRS6+aF026wpGdD8=' 'sha256-K8fTWrSbfx+bptYkZneQYPR2zKNFZB5Jb9zYxyaf4Vs=' 'sha256-CImZUapPo/sw2jj1l2w5v/m5HhKAGUqc1Dtw/Tw+yDU=' 'sha256-1NZD37dwISgKsQwtColhDoyoeQDZmXJX4HPeimFRJRM=' 'sha256-3/cAiqON0FGUd2toDbwTz9nieuwn99zN0KLRQtE3dWY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LOGSTAT</title>
 <link rel="manifest" href="manifest.json">
 <script>try{ if(localStorage.getItem("iq.large")==="1") document.documentElement.classList.add("lg"); }catch(_){}</script>
 <meta name="referrer" content="no-referrer">
-<meta name="logstat-build" content="2026-10-28 14:20">
+<meta name="logstat-build" content="2026-10-29 08:28">
 <meta name="theme-color" content="#03140a">
 <link rel="icon" type="image/png" sizes="32x32" href="logstat-32.png?v=2">
 <link rel="icon" type="image/png" sizes="48x48" href="logstat-48.png?v=2">
@@ -4636,6 +4636,7 @@ function openInstall(){
   window.addEventListener("appinstalled",()=>{ INSTALL_EV=null; if(!$("iqHowto").hidden&&openInstall.show) openInstall.show("iqHowDone"); });
   $("iqInstall").addEventListener("click",async()=>{ if(!INSTALL_EV) return; INSTALL_EV.prompt(); let ok=false; try{ ok=(await INSTALL_EV.userChoice).outcome==="accepted"; }catch(_){} INSTALL_EV=null; openInstall.show(ok?"iqHowDone":"iqHowWait"); });
   $("iqInstLink").addEventListener("click",(e)=>{ e.preventDefault(); openInstall(); });
+  if(matchMedia("(display-mode: standalone)").matches||navigator.standalone===true) $("iqInstLink").hidden=true;   // already the installed app
   $("icardPrint").addEventListener("click",()=>{ const src=$("icardQR"), img=src.querySelector("img[src]")||src.querySelector("canvas"); const url=img?(img.tagName==="IMG"?img.src:img.toDataURL()):"";
     // The image is made with createElement: an image tag written out inside a script can make the browser fetch a bogus address while it loads.
     const pa=$("printArea"); pa.innerHTML=printWrap(`<div class="pcard"><b style="font-size:18px">LOGSTAT app</b><ol style="margin:0;padding-left:18px;line-height:1.5"><li>Scan the code, or open <b style="white-space:nowrap">inter-q.com/logstat/install</b></li><li>Tap <b>Install</b>, or Share → <b>Add to Home Screen</b></li><li>Scan the setup QR from your ARRO operator</li></ol></div>`);
