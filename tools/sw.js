@@ -2,8 +2,9 @@
 // The page opens straight from the saved copy (fast on phones and on a weak signal); the newest page is downloaded in the
 // background, and the open page is told when a new build has arrived so it can offer a reload.
 // Live feeds and lookups (weather, news, maps, AI sites) always go straight to the network and are never stored.
-// Bump CACHE whenever a file in CORE changes, so installed apps pick up the new copy.
-const CACHE = "iqkit-v25";
+// Bump CACHE whenever a file in CORE changes, so installed apps pick up the new copy — and change the iq-build stamp in
+// index.html with every release: "Check for update" and the "newer version" banner compare that stamp.
+const CACHE = "iqkit-v26";
 const CORE = ["./index.html",   // the page is downloaded once and saved as index.html
   "./manifest.json", "./qrcode.min.js", "../prompt.js", "./pdf-lib.min.js", "./csg-form-10.pdf", "./dd-form-2977.pdf",   // CSG Request for Orders and Risk Assessment fill these offline
   "./iqkit-32.png", "./iqkit-48.png", "./iqkit-home-180.png", "./iqkit-home-512.png", "./iqkit-app-192.png", "./iqkit-app-512.png", "./iqkit-app-maskable-512.png"];
@@ -18,7 +19,19 @@ self.addEventListener("install", (e) => {
 
 self.addEventListener("activate", (e) => {
   e.waitUntil((async () => {
-    for (const k of await caches.keys()) if (k.startsWith("iqkit-") && k !== CACHE) await caches.delete(k);
+    const now = await caches.open(CACHE), core = new Set(CORE.map((p) => new URL(p, self.location).href));
+    for (const k of await caches.keys()) if (k.startsWith("iqkit-") && k !== CACHE) {
+      // Files saved the first time they were used (the PDF reader, signature fonts) come along to the new version, so they
+      // keep working offline after an update. CORE files were just downloaded fresh, so the old copies of those are dropped.
+      try {
+        const old = await caches.open(k);
+        for (const req of await old.keys()) {
+          if (core.has(req.url) || (await now.match(req))) continue;
+          const res = await old.match(req); if (res) await now.put(req, res);
+        }
+      } catch (_) {}
+      await caches.delete(k);
+    }
     await self.clients.claim();
   })());
 });
